@@ -29,7 +29,7 @@ public class DataCmds extends Cmds {
         embed.clear();
     }
 
-    public static void viewCardSets(GuildMessageReceivedEvent event) {
+    public static void viewData(GuildMessageReceivedEvent event) {
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
         int count = 0;
@@ -82,7 +82,7 @@ public class DataCmds extends Cmds {
             }
             Data.sets = newSets;
     
-            Rest.sendMessage(event, "`Data successfully refreshed`");
+            Rest.sendMessage(event, "`Data length changed by " + lengthChange + " unit(s)`");
             try { Data.saveData(); } catch(Exception e) {}
         } catch(NumberFormatException e) {
             Rest.sendMessage(event, "`Invalid length. Please use any integer`");
@@ -107,50 +107,39 @@ public class DataCmds extends Cmds {
                 }
                 page++;
             }
-            Rest.sendMessage(event, count + "");
+            Rest.sendMessage(event, "`Found " + count + " cards for the specified card set`");
         } catch(IOException e) {
-            Rest.sendMessage(event, "`Rate limit reached. Wait for a bit`");
+            Rest.sendMessage(event, "`Rate limit reached. Please wait for a bit`");
         }
     }
 
-    public static void addCardSet(GuildMessageReceivedEvent event, String[] args, String dataType) {
+    public static void addSetContent(GuildMessageReceivedEvent event, String[] args, boolean isNew) {
         try {
             int setNum = Integer.parseInt(args[1]);
             String setCode = "";
 
-            if(dataType.equalsIgnoreCase("new")) {
+            if(isNew) {
                 setCode = Data.setCodes.get(setNum);
-            } else if(dataType.equalsIgnoreCase("old")) {
+            } else {
                 setCode = Data.oldSetCodes.get(setNum);
-            } else if(dataType.equalsIgnoreCase("promo")) {
-                setCode = Data.rareSetCodes.get(setNum);
             }
             if(setCode == null) {
                 Integer.parseInt("$");
 
             } else {
-                String setEmote = "";
-                
                 Rest.sendMessage(event, "`Adding card data for set " + setNum + "...`");
 
-                if(dataType.equalsIgnoreCase("promo")) {
-                    setEmote = event.getJDA().getEmotesByName("PROMO", true).get(0).getAsMention();
-                    //Rest.sendMessage(event, countPromos(setEmote, setCode) + "");
-                } else {
-                    setEmote = event.getJDA().getEmotesByName(setCode, true).get(0).getAsMention();
-                }
-                ArrayList<Data> commons = Data.findSetContents(setEmote, setCode, "common");
-                ArrayList<Data> uncommons = Data.findSetContents(setEmote, setCode, "uncommon");
-                ArrayList<Data> rares = Data.findSetContents(setEmote, setCode, "rare");
-                ArrayList<Data> shinies = Data.findSetContents(setEmote, setCode, "shiny");
+                String setEmote = event.getJDA().getEmotesByName(setCode, true).get(0).getAsMention();
+                ArrayList<Data> commons = Data.crawlSetContent(setEmote, setCode, "common");
+                ArrayList<Data> uncommons = Data.crawlSetContent(setEmote, setCode, "uncommon");
+                ArrayList<Data> rares = Data.crawlSetContent(setEmote, setCode, "rare");
+                ArrayList<Data> shinies = Data.crawlSetContent(setEmote, setCode, "shiny");
                 String setName = commons.get(0).getSetName();
 
-                if(dataType.equalsIgnoreCase("new")) {
+                if(isNew) {
                     Data.sets[setNum - 1] = new Data(setEmote, setName, commons, uncommons, rares, shinies);
-                } else if(dataType.equalsIgnoreCase("old")) {
+                } else {
                     Data.oldSets[setNum - 1] = new Data(setEmote, setName, commons, uncommons, rares, shinies);
-                } else if(dataType.equalsIgnoreCase("promo")) {
-                    //Rest.sendMessage(event, countSetContent(setEmote, setCode) + "");
                 }
                 Rest.sendMessage(event, "`...and successful!`\n"
                 + "```\n"
@@ -162,23 +151,54 @@ public class DataCmds extends Cmds {
                 + "Shinies: " + shinies.size() + "\n"
                 + "```");
 
-                if(dataType.equalsIgnoreCase("new")) {
+                if(isNew) {
                     try { Data.saveData(); } catch(Exception e) {}
-                } else if(dataType.equalsIgnoreCase("old")) {
+                } else {
                     try { Data.saveOldData(); } catch(Exception e) {}
-                } else if(dataType.equalsIgnoreCase("promo")) {
-                    try { Data.saveRareData(); } catch(Exception e) {}
                 }
             }
-        } catch(NumberFormatException | IndexOutOfBoundsException | IOException e) {
+        } catch(NumberFormatException | IOException e) {
             if(e.toString().startsWith("java.lang.NumberFormatException:")) {
                 Rest.sendMessage(event, "`The specified card set does not exist`");
 
-            } else if(e.toString().startsWith("java.lang.IndexOutOfBoundsException:")) {
-                Rest.sendMessage(event, "`Could not locate any cards for this set`");
-
             } else if(e.toString().startsWith("java.io.IOException:")) {
-                Rest.sendMessage(event, "`Rate limit reached. Wait for a bit`");
+                Rest.sendMessage(event, "`Rate limit reached. Please wait for a bit`");
+            }
+        }
+    }
+
+    public static void addSpecSetContent(GuildMessageReceivedEvent event, String[] args) {
+        try {
+            int setNum = Integer.parseInt(args[1]);
+            String setCode = Data.specSetCodes.get(setNum);
+
+            if(setCode == null) {
+                Integer.parseInt("$");
+
+            } else {
+                Rest.sendMessage(event, "`Adding card data for set " + setNum + "...`");
+
+                String setEmote = event.getJDA().getEmotesByName(setCode, true).get(0).getAsMention();
+                ArrayList<Data> specs = Data.crawlSpecSetContent(setEmote, setCode);
+                String setName = specs.get(0).getSetName();
+
+                Data.specSets[setNum - 1] = new Data(setEmote, setName, specs);
+
+                Rest.sendMessage(event, "`...and successful!`\n"
+                + "```\n"
+                + setName + "\n"
+                + "-----\n"
+                + specs.size() + " cards found!\n"
+                + "```");
+
+                try { Data.saveSpecData(); } catch(Exception e) {}
+            }
+        }  catch(NumberFormatException | IOException e) {
+            if(e.toString().startsWith("java.lang.NumberFormatException:")) {
+                Rest.sendMessage(event, "`The specified card set does not exist`");
+                
+            } else if(e.toString().startsWith("java.io.IOException:")) {
+                Rest.sendMessage(event, "`Rate limit reached. Please wait for a bit`");
             }
         }
     }

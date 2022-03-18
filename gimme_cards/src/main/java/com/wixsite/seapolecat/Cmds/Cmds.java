@@ -19,24 +19,23 @@ public class Cmds extends ListenerAdapter implements Emotes {
             if(isValidCommand(event, args, "stats", null)) {
                 DataCmds.viewStats(event);
             }
-            if(isValidCommand(event, args, "sets", null)) {
-                DataCmds.viewCardSets(event);
+            if(isValidCommand(event, args, "data", null)) {
+                DataCmds.viewData(event);
             }
             if(isValidCommand(event, args, "refresh", new String[]{"length change"})) {
                 DataCmds.refreshData(event, args);
             }
-            if(isValidCommand(event, args, "addset", new String[]{"set number"})) {
-                DataCmds.addCardSet(event, args, "new");
-            }
-            if(isValidCommand(event, args, "addoldset", new String[]{"set number"})) {
-                DataCmds.addCardSet(event, args, "old");
-            }
-            if(isValidCommand(event, args, "addpromoset", new String[]{"set number"})) {
-                DataCmds.addCardSet(event, args, "promo");
-            }
-
             if(isValidCommand(event, args, "count", new String[]{"set code"})) {
                 DataCmds.countSetContent(event, args);
+            }
+            if(isValidCommand(event, args, "addset", new String[]{"set number"})) {
+                DataCmds.addSetContent(event, args, true);
+            }
+            if(isValidCommand(event, args, "addoldset", new String[]{"set number"})) {
+                DataCmds.addSetContent(event, args, false);
+            }
+            if(isValidCommand(event, args, "addspecset", new String[]{"set number"})) {
+                DataCmds.addSpecSetContent(event, args);
             }
         }
 

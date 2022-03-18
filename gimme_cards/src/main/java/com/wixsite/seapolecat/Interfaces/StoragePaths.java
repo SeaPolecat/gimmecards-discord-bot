@@ -6,7 +6,7 @@ public interface StoragePaths {
 
     String dataPath = "DataStorage.json";
     String oldDataPath = "OldDataStorage.json";
-    String promoPath = "PromoStorage.json";
-    String serverPath = "ServerStorage.json";
+    String specPath = "PromoStorage.json";
+    String serverPath = "SpecStorage.json";
     String userPath = "UserStorage.json";
 }

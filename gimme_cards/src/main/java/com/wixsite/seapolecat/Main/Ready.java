@@ -23,7 +23,7 @@ public class Ready extends ListenerAdapter {
 
         try { Data.loadData(); } catch(Exception e) {}
         try { Data.loadOldData(); } catch(Exception e) {}
-        try { Data.loadRareData(); } catch(Exception e) {}
+        try { Data.loadSpecData(); } catch(Exception e) {}
         try { User.loadUsers(); } catch(Exception e) {}
         try { Server.loadServers(); } catch(Exception e) {}
 
@@ -121,8 +121,18 @@ public class Ready extends ListenerAdapter {
         Data.oldSetCodes.put(45, "TM");
         Data.oldSetCodes.put(46, "CL");
 
-        //rareSets
-        Data.rareSetCodes.put(1, "NP");
-        Data.rareSetCodes.put(2, "DPP");
+        //specSets
+        Data.specSetCodes.put(1, "NP");
+        Data.specSetCodes.put(2, "DPP");
+        Data.specSetCodes.put(3, "DRV");
+        Data.specSetCodes.put(4, "KSS");
+        Data.specSetCodes.put(5, "DCR");
+        Data.specSetCodes.put(6, "GEN");
+        Data.specSetCodes.put(7, "SLG");
+        Data.specSetCodes.put(8, "DRM");
+        Data.specSetCodes.put(9, "HIF");
+        Data.specSetCodes.put(10, "CPA");
+        Data.specSetCodes.put(11, "SHF");
+        Data.specSetCodes.put(12, "CEL");
     }
 }

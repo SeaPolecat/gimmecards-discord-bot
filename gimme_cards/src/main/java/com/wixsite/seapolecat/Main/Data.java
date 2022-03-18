@@ -23,11 +23,11 @@ public class Data implements StoragePaths {
 
     public static Hashtable<Integer, String> setCodes = new Hashtable<>();
     public static Hashtable<Integer, String> oldSetCodes = new Hashtable<>();
-    public static Hashtable<Integer, String> rareSetCodes = new Hashtable<>();
+    public static Hashtable<Integer, String> specSetCodes = new Hashtable<>();
     //
     public static Data[] sets = new Data[44];
     public static Data[] oldSets = new Data[46];
-    public static Data[] rareSets = new Data[8];
+    public static Data[] specSets = new Data[12];
     //
     private String setEmote;
     private String setName;
@@ -84,6 +84,16 @@ public class Data implements StoragePaths {
     public ArrayList<Data> getRares() { return rares; }
     public ArrayList<Data> getShinies() { return shinies; }
 
+    private ArrayList<Data> specs;
+
+    public Data(String se, String sn, ArrayList<Data> s) {
+        setEmote = se;
+        setName = sn;
+        specs = s;
+    }
+
+    public ArrayList<Data> getSpecs() { return specs; }
+
     private static String determinePath(String dataType) {
         String path = "";
 
@@ -91,8 +101,8 @@ public class Data implements StoragePaths {
             path = dataPath;
         } else if(dataType.equalsIgnoreCase("old")) {
             path = oldDataPath;
-        } else if(dataType.equalsIgnoreCase("promo")) {
-            path = promoPath;
+        } else if(dataType.equalsIgnoreCase("spec")) {
+            path = specPath;
         }
 
         if(Paths.get(path).toFile().length() > 0) {
@@ -116,9 +126,9 @@ public class Data implements StoragePaths {
         reader.close();
     }
 
-    public static void loadRareData() throws Exception {
-        Reader reader = new InputStreamReader(new FileInputStream(determinePath("promo")), "UTF-8");
-        rareSets = new Gson().fromJson(reader, Data[].class);
+    public static void loadSpecData() throws Exception {
+        Reader reader = new InputStreamReader(new FileInputStream(determinePath("spec")), "UTF-8");
+        specSets = new Gson().fromJson(reader, Data[].class);
 
         reader.close();
     }
@@ -137,10 +147,10 @@ public class Data implements StoragePaths {
         writer.close();
     }
 
-    public static void saveRareData() throws Exception {
+    public static void saveSpecData() throws Exception {
         Gson gson = new GsonBuilder().create();
-        Writer writer = new OutputStreamWriter(new FileOutputStream(determinePath("promo")), "UTF-8");
-        gson.toJson(rareSets, writer);
+        Writer writer = new OutputStreamWriter(new FileOutputStream(determinePath("spec")), "UTF-8");
+        gson.toJson(specSets, writer);
         writer.close();
     }
 
@@ -190,10 +200,10 @@ public class Data implements StoragePaths {
                 }
             }
         }
-        return (int) (cardPrice * 100);
+        return (int)(cardPrice * 100);
     }
 
-    public static ArrayList<Data> findSetContents(String setEmote, String setCode, String rarity) throws IOException {
+    public static ArrayList<Data> crawlSetContent(String setEmote, String setCode, String rarity) throws IOException {
         ArrayList<Data> contents = new ArrayList<Data>();
         int page = 1;
 
@@ -227,6 +237,28 @@ public class Data implements StoragePaths {
                             contents.add(new Data(setEmote, j));
                         }
                     }
+                } catch(NullPointerException e) {}
+            }
+            page++;
+        }
+        return contents;
+    }
+
+    public static ArrayList<Data> crawlSpecSetContent(String setEmote, String setCode) throws IOException {
+        ArrayList<Data> contents = new ArrayList<Data>();
+        int page = 1;
+
+        while(true) {
+            URL url = new URL("https://api.pokemontcg.io/v2/cards?q=set.ptcgoCode:" + setCode + "%20&page=" + page + "/key=1bfc1133-79a4-46f6-93d6-6a4dab4b7335");
+            String jsonStr = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8")).readLine();
+            JsonArray jsonArr = JsonParser.parseString(jsonStr).getAsJsonObject().getAsJsonArray("data");
+
+            if(jsonArr.size() < 1) {
+                break;
+            }
+            for(JsonElement j : jsonArr) {
+                try {
+                    contents.add(new Data(setEmote, j));
                 } catch(NullPointerException e) {}
             }
             page++;
