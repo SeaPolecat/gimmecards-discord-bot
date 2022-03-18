@@ -26,13 +26,17 @@ public class Cmds extends ListenerAdapter implements Emotes {
                 DataCmds.refreshData(event, args);
             }
             if(isValidCommand(event, args, "addset", new String[]{"set number"})) {
-                DataCmds.addCardSet(event, args, false);
+                DataCmds.addCardSet(event, args, "new");
             }
             if(isValidCommand(event, args, "addoldset", new String[]{"set number"})) {
-                DataCmds.addCardSet(event, args, true);
+                DataCmds.addCardSet(event, args, "old");
             }
-            if(isValidCommand(event, args, "addpromos", null)) {
-                DataCmds.addPromoCards(event);
+            if(isValidCommand(event, args, "addpromoset", new String[]{"set number"})) {
+                DataCmds.addCardSet(event, args, "promo");
+            }
+
+            if(isValidCommand(event, args, "count", new String[]{"set code"})) {
+                DataCmds.countSetContent(event, args);
             }
         }
 

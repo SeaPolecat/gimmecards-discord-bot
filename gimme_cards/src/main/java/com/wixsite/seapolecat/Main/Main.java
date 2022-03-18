@@ -10,7 +10,7 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import org.discordbots.api.client.DiscordBotListAPI;
-import io.github.cdimascio.dotenv.Dotenv;
+//import io.github.cdimascio.dotenv.Dotenv;
 
 public class Main {
 

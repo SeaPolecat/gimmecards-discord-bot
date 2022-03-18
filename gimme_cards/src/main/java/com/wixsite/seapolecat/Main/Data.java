@@ -5,25 +5,29 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.BufferedReader;
 import java.io.Reader;
 import java.io.Writer;
+import java.io.IOException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonArray;
-import com.google.gson.reflect.TypeToken;
+import com.google.gson.JsonParser;
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.net.URL;
 
 public class Data implements StoragePaths {
 
     public static Hashtable<Integer, String> setCodes = new Hashtable<>();
     public static Hashtable<Integer, String> oldSetCodes = new Hashtable<>();
+    public static Hashtable<Integer, String> rareSetCodes = new Hashtable<>();
     //
-    public static Data[] sets = new Data[43];
+    public static Data[] sets = new Data[44];
     public static Data[] oldSets = new Data[46];
-    public static ArrayList<Data> promos = new ArrayList<Data>();
+    public static Data[] rareSets = new Data[8];
     //
     private String setEmote;
     private String setName;
@@ -112,9 +116,9 @@ public class Data implements StoragePaths {
         reader.close();
     }
 
-    public static void loadPromos() throws Exception {
+    public static void loadRareData() throws Exception {
         Reader reader = new InputStreamReader(new FileInputStream(determinePath("promo")), "UTF-8");
-        promos = new Gson().fromJson(reader, new TypeToken<ArrayList<Data>>() {}.getType());
+        rareSets = new Gson().fromJson(reader, Data[].class);
 
         reader.close();
     }
@@ -133,10 +137,10 @@ public class Data implements StoragePaths {
         writer.close();
     }
 
-    public static void savePromos() throws Exception {
+    public static void saveRareData() throws Exception {
         Gson gson = new GsonBuilder().create();
         Writer writer = new OutputStreamWriter(new FileOutputStream(determinePath("promo")), "UTF-8");
-        gson.toJson(promos, writer);
+        gson.toJson(rareSets, writer);
         writer.close();
     }
 
@@ -187,5 +191,46 @@ public class Data implements StoragePaths {
             }
         }
         return (int) (cardPrice * 100);
+    }
+
+    public static ArrayList<Data> findSetContents(String setEmote, String setCode, String rarity) throws IOException {
+        ArrayList<Data> contents = new ArrayList<Data>();
+        int page = 1;
+
+        while(true) {
+            URL url = new URL("https://api.pokemontcg.io/v2/cards?q=set.ptcgoCode:" + setCode + "%20&page=" + page + "/key=1bfc1133-79a4-46f6-93d6-6a4dab4b7335");
+            String jsonStr = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8")).readLine();
+            JsonArray jsonArr = JsonParser.parseString(jsonStr).getAsJsonObject().getAsJsonArray("data");
+
+            if(jsonArr.size() < 1) {
+                break;
+            }
+            for(JsonElement j : jsonArr) {
+                try {
+                    String cardRarity = j.getAsJsonObject().get("rarity").getAsString();
+
+                    if(rarity.equalsIgnoreCase("shiny")) {
+                        if(cardRarity.toLowerCase().contains("rare") && cardRarity.length() > 4 
+                        || cardRarity.equalsIgnoreCase("legend")) {
+                            contents.add(new Data(setEmote, j));
+                        }
+        
+                    } else if(rarity.equalsIgnoreCase("promo")) {
+                        try {
+                            if(cardRarity.equalsIgnoreCase(rarity)) {
+                                contents.add(new Data(setEmote, j));
+                            }
+                        } catch(UnsupportedOperationException e) {}
+
+                    } else {
+                        if(cardRarity.equalsIgnoreCase(rarity)) {
+                            contents.add(new Data(setEmote, j));
+                        }
+                    }
+                } catch(NullPointerException e) {}
+            }
+            page++;
+        }
+        return contents;
     }
 }

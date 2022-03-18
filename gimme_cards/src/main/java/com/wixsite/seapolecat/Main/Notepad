@@ -1,6 +1,7 @@
 fixes (ALL)
 ----------------------------------
--reduce the spawn rate of ultra rare cards?
+-reduce the spawn rate of shiny cards?
+-disable voting command
 
 
 features (at least 1)
@@ -8,9 +9,18 @@ features (at least 1)
 -surprise cards in chat
 -trading
 
--selling cards gives energy (scaled based on rarity)
+Selling cards gives energy (scaled based on rarity)
+-common
+-uncommon
+-rare
+-shiny
 
-Ways of earning energy:
+
+-try adding special card packs
+-?daily and ?weekly commands (to replace ?claim for now)
+-?favs, which shows all your favourite cards
+
+Ways of earning energy (now add values):
 -opening packs
 -winning minigames
 -voting

@@ -23,11 +23,11 @@ public class Ready extends ListenerAdapter {
 
         try { Data.loadData(); } catch(Exception e) {}
         try { Data.loadOldData(); } catch(Exception e) {}
-        try { Data.loadPromos(); } catch(Exception e) {}
+        try { Data.loadRareData(); } catch(Exception e) {}
         try { User.loadUsers(); } catch(Exception e) {}
         try { Server.loadServers(); } catch(Exception e) {}
 
-        /*
+        //sets
         Data.setCodes.put(1, "BLW");
         Data.setCodes.put(2, "EPO");
         Data.setCodes.put(3, "NVI");
@@ -71,9 +71,9 @@ public class Ready extends ListenerAdapter {
         Data.setCodes.put(41, "CRE");
         Data.setCodes.put(42, "EVS");
         Data.setCodes.put(43, "FST");
-        Data.setCodes.put(44, "BSR");
-        */
-        /*
+        Data.setCodes.put(44, "BRS");
+
+        //oldSets (FL gone)
         Data.oldSetCodes.put(1, "BS");
         Data.oldSetCodes.put(2, "JU");
         Data.oldSetCodes.put(3, "FO");
@@ -120,6 +120,9 @@ public class Ready extends ListenerAdapter {
         Data.oldSetCodes.put(44, "UD");
         Data.oldSetCodes.put(45, "TM");
         Data.oldSetCodes.put(46, "CL");
-        */
+
+        //rareSets
+        Data.rareSetCodes.put(1, "NP");
+        Data.rareSetCodes.put(2, "DPP");
     }
 }

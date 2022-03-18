@@ -31,14 +31,14 @@ public class VoteCmds extends Cmds {
             Rest.sendMessage(event, jigglypuff_ + " Please wait another " + State.findTimeLeft(user.getDailyEpoch(), 720, true));
 
         } else {
-            Main.dbl.hasVoted(user.getUserId()).whenComplete((hasVoted, failure) -> {
+            /*Main.dbl.hasVoted(user.getUserId()).whenComplete((hasVoted, failure) -> {
                 if(!hasVoted) {
                     Rest.sendMessage(event, jigglypuff_ + " You haven't voted for *Gimme Cards* yet! "
                     + "Please use " + UX.formatCmd(server, "vote"));
                     
                 } else {
                     int energyReward = (new Random().nextInt(10) + 1) + 40;
-                    Data reward = Card.pickCard(Data.promos);
+                    Data reward = Card.pickCard(Data.promoSets);
                     String msg = "";
                     String footer = event.getAuthor().getName() + "'s reward";
 
@@ -56,7 +56,7 @@ public class VoteCmds extends Cmds {
                     Display.displayCard(event, user, reward, footer);
                     try { User.saveUsers(); } catch(Exception e) {}
                 }
-            });
+            });*/
         }
     }
 }
