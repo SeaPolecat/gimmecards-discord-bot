@@ -28,6 +28,7 @@ public class Ready extends ListenerAdapter {
         try { Server.loadServers(); } catch(Exception e) {}
 
         //sets
+        /*
         Data.setCodes.put(1, "BLW");
         Data.setCodes.put(2, "EPO");
         Data.setCodes.put(3, "NVI");
@@ -72,8 +73,10 @@ public class Ready extends ListenerAdapter {
         Data.setCodes.put(42, "EVS");
         Data.setCodes.put(43, "FST");
         Data.setCodes.put(44, "BRS");
+        */
 
         //oldSets (FL gone)
+        /*
         Data.oldSetCodes.put(1, "BS");
         Data.oldSetCodes.put(2, "JU");
         Data.oldSetCodes.put(3, "FO");
@@ -120,19 +123,21 @@ public class Ready extends ListenerAdapter {
         Data.oldSetCodes.put(44, "UD");
         Data.oldSetCodes.put(45, "TM");
         Data.oldSetCodes.put(46, "CL");
+        */
 
         //specSets
+        /*
         Data.specSetCodes.put(1, "NP");
         Data.specSetCodes.put(2, "DPP");
         Data.specSetCodes.put(3, "DRV");
-        Data.specSetCodes.put(4, "KSS");
-        Data.specSetCodes.put(5, "DCR");
-        Data.specSetCodes.put(6, "GEN");
-        Data.specSetCodes.put(7, "SLG");
-        Data.specSetCodes.put(8, "DRM");
-        Data.specSetCodes.put(9, "HIF");
-        Data.specSetCodes.put(10, "CPA");
-        Data.specSetCodes.put(11, "SHF");
-        Data.specSetCodes.put(12, "CEL");
+        Data.specSetCodes.put(4, "DCR");
+        Data.specSetCodes.put(5, "GEN");
+        Data.specSetCodes.put(6, "SLG");
+        Data.specSetCodes.put(7, "DRM");
+        Data.specSetCodes.put(8, "HIF");
+        Data.specSetCodes.put(9, "CPA");
+        Data.specSetCodes.put(10, "SHF");
+        Data.specSetCodes.put(11, "CEL");
+        */
     }
 }

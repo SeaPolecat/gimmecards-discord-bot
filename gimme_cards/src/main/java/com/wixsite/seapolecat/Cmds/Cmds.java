@@ -22,6 +22,12 @@ public class Cmds extends ListenerAdapter implements Emotes {
             if(isValidCommand(event, args, "data", null)) {
                 DataCmds.viewData(event);
             }
+            if(isValidCommand(event, args, "olddata", null)) {
+                DataCmds.viewOldData(event);
+            }
+            if(isValidCommand(event, args, "specdata", null)) {
+                DataCmds.viewSpecData(event);
+            }
             if(isValidCommand(event, args, "refresh", new String[]{"length change"})) {
                 DataCmds.refreshData(event, args);
             }

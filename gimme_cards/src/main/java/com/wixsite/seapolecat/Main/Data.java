@@ -27,7 +27,7 @@ public class Data implements StoragePaths {
     //
     public static Data[] sets = new Data[44];
     public static Data[] oldSets = new Data[46];
-    public static Data[] specSets = new Data[12];
+    public static Data[] specSets = new Data[11];
     //
     private String setEmote;
     private String setName;

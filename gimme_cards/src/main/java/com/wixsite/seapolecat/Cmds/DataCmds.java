@@ -18,8 +18,8 @@ public class DataCmds extends Cmds {
         String desc = "";
 
         desc += "┅┅\n";
-        desc += "**Users** ┇ " + User.users.size();
-        desc += "**Servers** ┇ " + event.getJDA().getGuilds().size();
+        desc += "**Users** ┇ " + User.users.size() + "\n";
+        desc += "**Servers** ┇ " + event.getJDA().getGuilds().size() + "\n";
         desc += "┅┅\n";
 
         embed.setTitle(pikameme_ + " Current Stats " + pikameme_);
@@ -33,8 +33,7 @@ public class DataCmds extends Cmds {
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
         int count = 0;
-        
-        desc += pikameme_ + " **Sets** " + pikameme_ + "\n";
+
         for(int i = 0; i < Data.sets.length; i++) {
             if(Data.sets[i] == null) {
                 desc += "**" + (i + 1) + ":** ❌ ";
@@ -47,9 +46,18 @@ public class DataCmds extends Cmds {
                 count = 0;
             }
         }
-        count = 0;
+        embed.setTitle(pikameme_ + " **Card Sets** " + pikameme_);
+        embed.setDescription(desc);
+        embed.setColor(0xE8AE34);
+        Rest.sendEmbed(event, embed);
+        embed.clear();
+    }
 
-        desc += "\n\n" + pikameme_ + " **Legacy Sets** " + pikameme_ + "\n";
+    public static void viewOldData(GuildMessageReceivedEvent event) {
+        EmbedBuilder embed = new EmbedBuilder();
+        String desc = "";
+        int count = 0;
+
         for(int i = 0; i < Data.oldSets.length; i++) {
             if(Data.oldSets[i] == null) {
                 desc += "**" + (i + 1) + ":** ❌ ";
@@ -62,6 +70,31 @@ public class DataCmds extends Cmds {
                 count = 0;
             }
         }
+        embed.setTitle(pikameme_ + " **Old Card Sets** " + pikameme_);
+        embed.setDescription(desc);
+        embed.setColor(0xE8AE34);
+        Rest.sendEmbed(event, embed);
+        embed.clear();
+    }
+
+    public static void viewSpecData(GuildMessageReceivedEvent event) {
+        EmbedBuilder embed = new EmbedBuilder();
+        String desc = "";
+        int count = 0;
+
+        for(int i = 0; i < Data.specSets.length; i++) {
+            if(Data.specSets[i] == null) {
+                desc += "**" + (i + 1) + ":** ❌ ";
+            } else {
+                desc += "**" + (i + 1) + ":** ✅ ";
+            }
+            count++;
+            if(count == 8) {
+                desc += "\n";
+                count = 0;
+            }
+        }
+        embed.setTitle(pikameme_ + " **Special Card Sets** " + pikameme_);
         embed.setDescription(desc);
         embed.setColor(0xE8AE34);
         Rest.sendEmbed(event, embed);
@@ -188,7 +221,7 @@ public class DataCmds extends Cmds {
                 + "```\n"
                 + setName + "\n"
                 + "-----\n"
-                + specs.size() + " cards found!\n"
+                + "Added " + specs.size() + " cards!\n"
                 + "```");
 
                 try { Data.saveSpecData(); } catch(Exception e) {}
