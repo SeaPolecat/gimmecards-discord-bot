@@ -35,10 +35,9 @@ public class ShopCmds extends Cmds {
             }
         }
         desc += "┅┅\n";
-        embed.setTitle(scorbunny_ + " Exclusive Packs Shop " + scorbunny_);
+        embed.setTitle(scorbunny_ + " Exclusive Card Shop " + scorbunny_);
         embed.setDescription(desc);
         embed.setColor(0xE23C1C);
-        
         Rest.sendEmbed(event, embed);
         embed.clear();
     }

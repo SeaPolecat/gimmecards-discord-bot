@@ -27,4 +27,19 @@ public class SearchCmds extends Cmds {
             Rest.sendMessage(event, jigglypuff_ + " Sorry, your search had no results!");
         }
     }
+        
+    public static void viewFavCards(GuildMessageReceivedEvent event) {
+        User user = User.findUser(event);
+        FavDisplay disp = FavDisplay.findFavDisplay(user.getUserId());
+
+        if(user.getCards().size() < 1) {
+            Rest.sendMessage(event, jigglypuff_ + " You don't have any cards yet!");
+
+        } else if(FavDisplay.findFavCards(user).size() < 1) {
+            Rest.sendMessage(event, jigglypuff_ + " You don't have any ❤ favourite cards yet!");
+
+        } else {
+            Rest.sendDynamicEmbed(event, user, null, disp, 1);
+        }
+    }
 }

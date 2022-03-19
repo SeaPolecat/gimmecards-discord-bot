@@ -31,6 +31,7 @@ public class CardCmds extends Cmds {
 
             c.setIsFav(true);
             State.updateCardDisplay(event, user);
+            State.updateFavDisplay(event, user);
 
             Rest.sendMessage(event, "❤ Added **" + cardTitle + "** to your favourites!");
             try { User.saveUsers(); } catch(Exception e) {}
@@ -49,6 +50,7 @@ public class CardCmds extends Cmds {
 
             c.setIsFav(false);
             State.updateCardDisplay(event, user);
+            State.updateFavDisplay(event, user);
 
             Rest.sendMessage(event, "💔 Removed **" + cardTitle + "** from your favourites!");
             try { User.saveUsers(); } catch(Exception e) {}
@@ -121,6 +123,7 @@ public class CardCmds extends Cmds {
             }
             Card.sortCards(user, user.getSortMethod(), user.getSortIncreasing());
             State.updateCardDisplay(event, user);
+            State.updateFavDisplay(event, user);
 
             Rest.sendMessage(event, ditto_ + " Your cards have been sorted!");
             try { User.saveUsers(); } catch(Exception e) {}

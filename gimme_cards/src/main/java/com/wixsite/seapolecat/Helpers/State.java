@@ -7,9 +7,18 @@ import java.util.Calendar;
 
 public class State implements Emotes {
 
-    public static boolean isOldSet(Data data) {        
+    public static boolean isOldSet(Data set) {        
         for(Data d : Data.oldSets) {
-            if(d.getSetName().equalsIgnoreCase(data.getSetName())) {
+            if(d.getSetName().equalsIgnoreCase(set.getSetName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isSpecSet(Data set) {        
+        for(Data d : Data.specSets) {
+            if(d.getSetName().equalsIgnoreCase(set.getSetName())) {
                 return true;
             }
         }
@@ -182,5 +191,20 @@ public class State implements Emotes {
     public static void updateSearchDisplay(GuildMessageReceivedEvent event, SearchDisplay disp) {
         Rest.removeReaction(event, disp, "◀");
         Rest.removeReaction(event, disp, "▶");
+    }
+
+    public static void updateFavDisplay(GuildMessageReceivedEvent event, User user) {
+        FavDisplay disp = FavDisplay.findFavDisplay(user.getUserId());
+
+        if(!disp.getMessageId().isEmpty()) {
+            disp.setPage(1);
+
+            if(FavDisplay.findFavCards(user).size() < 1) {
+                Rest.deleteMessage(event, disp);
+                
+            } else {
+                Rest.editEmbed(event, user, null, disp, 1);
+            }
+        }
     }
 }

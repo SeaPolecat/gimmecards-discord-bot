@@ -169,6 +169,12 @@ public class Data implements StoragePaths {
                 break;
             }
         }
+        for(Data d : specSets) {
+            if(d.getSetName().equalsIgnoreCase(setName)) {
+                set = d;
+                break;
+            }
+        }
         return set;
     }
 

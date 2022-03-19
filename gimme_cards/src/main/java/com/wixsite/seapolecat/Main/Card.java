@@ -117,7 +117,7 @@ public class Card {
         for(int i = 0; i < 3; i++) {
             newCards.add(pickCard(uncommons));
         }
-        if(chance <= 20) {
+        if(chance <= 10) {
             newCards.add(pickCard(shinies));
         } else {
             newCards.add(pickCard(rares));

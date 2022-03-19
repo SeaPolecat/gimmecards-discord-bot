@@ -21,30 +21,50 @@ public class InspectionCmds extends Cmds {
                 }
                 setName = setName.trim();
                 Data set = Data.findSet(setName);
-    
-                if(!State.isPackUnlocked(user, set.getSetName())) {
-                    Rest.sendMessage(event, jigglypuff_ + " This pack is locked!");
-    
-                } else if(user.getTokens() < 1) {
-                    Rest.sendMessage(event, jigglypuff_ + " Sorry, you're out of " + token_ + " **Tokens**");
-    
-                } else {
-                    String msg = "";
 
-                    user.resetOpenEpoch();
-                    Card.addNewCards(user, set);
-                    disp.setDispType("new");
-                    
-                    msg += UX.formatNick(event) + " opened " + set.getSetEmote() + " **" + set.getSetName() + "**";
-                    msg += UX.updateTokens(user, -1);
+                if(State.isSpecSet(set)) {
+                    Data reward = Card.pickCard(set.getSpecs());
+                    String msg = "";
+                    String footer = event.getAuthor().getName() + "'s exclusive card";
+
+                    Card.addSingleCard(user, reward);
+
+                    msg += UX.formatNick(event) + " drew a card from " + set.getSetEmote() + " **" + set.getSetName() + "**";
+                    msg += UX.updateStars(user, -1);
                     msg += UX.updateEnergy(user, UX.randRange(16, 20));
 
                     State.updateBackpackDisplay(event, user);
                     State.updateCardDisplay(event, user);
 
                     Rest.sendMessage(event, msg);
-                    Rest.sendDynamicEmbed(event, user, null, disp, 1);
+                    Display.displayCard(event, user, reward, footer);
                     try { User.saveUsers(); } catch(Exception e) {}
+
+                } else {
+                    if(!State.isPackUnlocked(user, set.getSetName())) {
+                        Rest.sendMessage(event, jigglypuff_ + " This pack is locked!");
+        
+                    } else if(user.getTokens() < 1) {
+                        Rest.sendMessage(event, jigglypuff_ + " Sorry, you're out of " + token_ + " **Tokens**");
+        
+                    } else {
+                        String msg = "";
+    
+                        user.resetOpenEpoch();
+                        Card.addNewCards(user, set);
+                        disp.setDispType("new");
+                        
+                        msg += UX.formatNick(event) + " opened " + set.getSetEmote() + " **" + set.getSetName() + "**";
+                        msg += UX.updateTokens(user, -1);
+                        msg += UX.updateEnergy(user, UX.randRange(16, 20));
+    
+                        State.updateBackpackDisplay(event, user);
+                        State.updateCardDisplay(event, user);
+    
+                        Rest.sendMessage(event, msg);
+                        Rest.sendDynamicEmbed(event, user, null, disp, 1);
+                        try { User.saveUsers(); } catch(Exception e) {}
+                    }
                 }
             } catch(NullPointerException e) {
                 Rest.sendMessage(event, jigglypuff_ + " Whoops, I couldn't find that pack...");

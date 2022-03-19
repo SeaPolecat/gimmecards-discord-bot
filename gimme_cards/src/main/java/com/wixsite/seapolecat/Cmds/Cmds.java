@@ -58,6 +58,9 @@ public class Cmds extends ListenerAdapter implements Emotes {
         if(isValidCommand(event, args, "changelog", null)) {
             HelpCmds.viewChangelog(event);
         }
+        if(isValidCommand(event, args, "leaderboard", null)) {
+            HelpCmds.viewLeaderboard(event);
+        }
 
         //BACKPACK
         if(isValidCommand(event, args, "backpack", null)) {
@@ -150,6 +153,9 @@ public class Cmds extends ListenerAdapter implements Emotes {
         //SEARCH
         if(isValidCommand(event, args, "search", new String[]{"card name"})) {
             SearchCmds.searchCards(event, args);
+        }
+        if(isValidCommand(event, args, "favs", null)) {
+            SearchCmds.viewFavCards(event);
         }
 
         //VOTE

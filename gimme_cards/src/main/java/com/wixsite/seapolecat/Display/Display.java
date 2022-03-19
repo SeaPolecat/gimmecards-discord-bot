@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
+import java.util.ArrayList;
 
 public class Display extends ListenerAdapter implements Emotes {
 
@@ -88,6 +89,7 @@ public class Display extends ListenerAdapter implements Emotes {
         InspectionDisplay inspectionDisp = InspectionDisplay.findInspectionDisplay(user.getUserId());
         InspectionDisplay_ inspectionDisp_ = InspectionDisplay_.findInspectionDisplay_(user.getUserId());
         SearchDisplay searchDisp = SearchDisplay.findSearchDisplay(user.getUserId());
+        FavDisplay favDisp = FavDisplay.findFavDisplay(user.getUserId());
         HelpDisplay helpDisp = HelpDisplay.findHelpDisplay(user.getUserId());
         MarketDisplay marketDisp = MarketDisplay.findMarketDisplay(user.getUserId());
 
@@ -149,6 +151,15 @@ public class Display extends ListenerAdapter implements Emotes {
                 maxPage++;
             }
             flipPage(event, user, server, searchDisp, maxPage);
+
+        } else if(event.getMessageId().equals(favDisp.getMessageId())) {
+            ArrayList<Card> favCards = FavDisplay.findFavCards(user);
+            int maxPage = favCards.size() / 15;
+
+            if(favCards.size() % 15 != 0) {
+                maxPage++;
+            }
+            flipPage(event, user, server, favDisp, maxPage);
 
         } else if(event.getMessageId().equals(helpDisp.getMessageId())) {
             int maxPage = Changelog.changelog.length;

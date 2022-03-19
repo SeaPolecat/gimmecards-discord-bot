@@ -33,7 +33,6 @@ public class MarketCmds extends Cmds {
         embed.setDescription(desc);
         embed.setFooter(event.getGuild().getName(), event.getGuild().getIconUrl());
         embed.setColor(0x76B1EC);
-        
         Rest.sendEmbed(event, embed);
         embed.clear();
     }
@@ -57,8 +56,7 @@ public class MarketCmds extends Cmds {
         Server server = Server.findServer(event);
 
         try {
-            int page = Integer.parseInt(args[1]);
-            int index = page - 1;
+            int index = Integer.parseInt(args[1]) - 1;
 
             if(user.getEnergy() < server.getMarket().get(index).getCardPrice()) {
                 Rest.sendMessage(event, jigglypuff_ + " Sorry, you don't have enough " + energy_ + " **Energy**");
@@ -75,7 +73,6 @@ public class MarketCmds extends Cmds {
 
                 State.updateBackpackDisplay(event, user);
                 State.updateCardDisplay(event, user);
-                State.checkLevelUp(event, user);
 
                 Rest.sendMessage(event, msg);
                 Display.displayCard(event, user, item, footer);

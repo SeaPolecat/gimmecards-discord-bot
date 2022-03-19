@@ -39,7 +39,7 @@ public class UX implements Emotes {
         String msg = "\n";
 
         user.addXP(quantity);
-        msg += "+ " + UX.formatNumber(quantity);
+        msg += "+ " + formatNumber(quantity);
         msg += " " + XP_ + " **XP**";
 
         return msg;
@@ -50,9 +50,9 @@ public class UX implements Emotes {
 
         user.addTokens(quantity);
         if(quantity > 0) {
-            msg += "+ " + UX.formatNumber(quantity);
+            msg += "+ " + formatNumber(quantity);
         } else {
-            msg += "- " + UX.formatNumber(Math.abs(quantity));
+            msg += "- " + formatNumber(Math.abs(quantity));
         }
         msg += " " + token_ + " **Token**";
 
@@ -64,9 +64,9 @@ public class UX implements Emotes {
 
         user.addEnergy(quantity);
         if(quantity > 0) {
-            msg += "+ " + UX.formatNumber(quantity);
+            msg += "+ " + formatNumber(quantity);
         } else {
-            msg += "- " + UX.formatNumber(Math.abs(quantity));
+            msg += "- " + formatNumber(Math.abs(quantity));
         }
         msg += " " + energy_ + " **Energy**";
 
@@ -78,9 +78,9 @@ public class UX implements Emotes {
 
         user.addKeys(quantity);
         if(quantity > 0) {
-            msg += "+ " + UX.formatNumber(quantity);
+            msg += "+ " + formatNumber(quantity);
         } else {
-            msg += "- " + UX.formatNumber(Math.abs(quantity));
+            msg += "- " + formatNumber(Math.abs(quantity));
         }
         msg += " " + key_ + " **Key**";
 
@@ -92,9 +92,9 @@ public class UX implements Emotes {
 
         user.addStars(quantity);
         if(quantity > 0) {
-            msg += "+ " + UX.formatNumber(quantity);
+            msg += "+ " + formatNumber(quantity);
         } else {
-            msg += "- " + UX.formatNumber(Math.abs(quantity));
+            msg += "- " + formatNumber(Math.abs(quantity));
         }
         msg += " " + star_ + " **Star**";
 
@@ -169,7 +169,7 @@ public class UX implements Emotes {
     }
 
     public static String formatXPPrice(Data data) {
-        String XPPrice = XP_ + " **" + UX.formatNumber(data.getCardPrice()) + "**";
+        String XPPrice = XP_ + " **" + formatNumber(data.getCardPrice()) + "**";
 
         if(State.isOldSet(data)) {
             return XPPrice + " 🚫";
@@ -178,7 +178,7 @@ public class UX implements Emotes {
     }
 
     public static String formatEnergyPrice(Data data) {
-        return energy_ + " **" + UX.formatNumber(data.getCardPrice()) + "**";
+        return energy_ + " **" + formatNumber(data.getCardPrice()) + "**";
     }
 
     public static int findEmbedColour(Data data) {

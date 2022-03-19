@@ -31,6 +31,7 @@ public class SellCmds extends Cmds {
                     State.updateCardDisplay(event, user);
                     State.updateBackpackDisplay(event, user);
                     State.updateInspectionDisplay(event, user);
+                    State.updateFavDisplay(event, user);
                     
                     Rest.sendMessage(event, msg);
                     State.checkLevelUp(event, user);
@@ -76,6 +77,7 @@ public class SellCmds extends Cmds {
                         State.updateCardDisplay(event, user);
                         State.updateBackpackDisplay(event, user);
                         State.updateInspectionDisplay(event, user);
+                        State.updateFavDisplay(event, user);
         
                         Rest.sendMessage(event, msg);
                         State.checkLevelUp(event, user);
@@ -105,6 +107,7 @@ public class SellCmds extends Cmds {
             State.updateCardDisplay(event, user);
             State.updateBackpackDisplay(event, user);
             State.updateInspectionDisplay(event, user);
+            State.updateFavDisplay(event, user);
 
             Rest.sendMessage(event, msg);
             State.checkLevelUp(event, user);
@@ -134,6 +137,7 @@ public class SellCmds extends Cmds {
                 State.updateCardDisplay(event, user);
                 State.updateBackpackDisplay(event, user);
                 State.updateInspectionDisplay(event, user);
+                State.updateFavDisplay(event, user);
         
                 Rest.sendMessage(event, msg);
                 State.checkLevelUp(event, user);
