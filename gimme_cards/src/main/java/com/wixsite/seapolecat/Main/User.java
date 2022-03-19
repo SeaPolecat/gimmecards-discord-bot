@@ -25,8 +25,9 @@ public class User implements StoragePaths {
     private Integer XP;
     private Integer maxXP;
     private Integer tokens;
-    private Integer keys;
     private Integer energy;
+    private Integer keys;
+    private Integer stars;
     private Long openEpoch;
     private Long dailyEpoch;
     private Long redeemEpoch;
@@ -45,8 +46,9 @@ public class User implements StoragePaths {
         XP = 0;
         maxXP = 500;
         tokens = 1;
-        keys = 1;
         energy = 0;
+        keys = 1;
+        stars = 0;
         openEpoch = (long)(0);
         dailyEpoch = (long)(0);
         redeemEpoch = (long)(0);
@@ -59,14 +61,37 @@ public class User implements StoragePaths {
         cards = new ArrayList<Card>();
     }
 
+    public User (String id, int cc, int l, int xp, int mxp, int t, int e, int k, int s, long oe, long de, long re, long me, String sm, boolean si, int bc, String bcard, ArrayList<String> p, ArrayList<Card> c) {
+        userId = id;
+        cardCount = cc;
+        level = l;
+        XP = xp;
+        maxXP = mxp;
+        tokens = t;
+        energy = e;
+        keys = k;
+        stars = s;
+        openEpoch = oe;
+        dailyEpoch = de;
+        redeemEpoch = re;
+        minigameEpoch = me;
+        sortMethod = sm;
+        sortIncreasing = si;
+        backpackColor = bc;
+        backpackCard = bcard;
+        packs = p;
+        cards = c;
+    }
+
     public String getUserId() { return userId; }
     public int getCardCount() { return cardCount; }
     public int getLevel() { return level; }
     public int getXP() { return XP; }
     public int getMaxXP() { return maxXP; }
     public int getTokens() { return tokens; }
-    public int getKeys() { return keys; }
     public int getEnergy() { return energy; }
+    public int getKeys() { return keys; }
+    public int getStars() { return stars; }
     public long getOpenEpoch() { return openEpoch; }
     public long getDailyEpoch() { return dailyEpoch; }
     public long getRedeemEpoch() { return redeemEpoch; }
@@ -81,8 +106,9 @@ public class User implements StoragePaths {
     public void addCardCount() { cardCount++; }
     public void addXP(int xp) { XP += xp; }
     public void addTokens(int t) { tokens += t; }
-    public void addKeys(int k) { keys += k; }
     public void addEnergy(int e) { energy += e; }
+    public void addKeys(int k) { keys += k; }
+    public void addStars(int s) { stars += s; }
     public void resetOpenEpoch() { openEpoch = Calendar.getInstance().getTimeInMillis() / 1000; }
     public void resetDailyEpoch() { dailyEpoch = Calendar.getInstance().getTimeInMillis() / 60000; }
     public void resetRedeemEpoch() { redeemEpoch = Calendar.getInstance().getTimeInMillis() / 60000; }

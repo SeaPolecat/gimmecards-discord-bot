@@ -26,6 +26,7 @@ public class SellCmds extends Cmds {
 
                     msg += UX.formatNick(event) + " sold **" + cardTitle + "**";
                     msg += UX.updateXP(user, profit);
+                    msg += UX.updateEnergy(user, (int)(profit * 0.02));
 
                     State.updateCardDisplay(event, user);
                     State.updateBackpackDisplay(event, user);
@@ -70,6 +71,7 @@ public class SellCmds extends Cmds {
 
                         msg += UX.formatNick(event) + " sold **" + cardsSold + "** cards!";
                         msg += UX.updateXP(user, profit);
+                        msg += UX.updateEnergy(user, (int)(profit * 0.02));
 
                         State.updateCardDisplay(event, user);
                         State.updateBackpackDisplay(event, user);
@@ -98,6 +100,7 @@ public class SellCmds extends Cmds {
 
             msg += UX.formatNick(event) + " sold all duplicates!";
             msg += UX.updateXP(user, profit);
+            msg += UX.updateEnergy(user, (int)(profit * 0.02));
 
             State.updateCardDisplay(event, user);
             State.updateBackpackDisplay(event, user);
@@ -126,6 +129,7 @@ public class SellCmds extends Cmds {
 
                 msg += UX.formatNick(event) + " sold all their cards! (except favourites)";
                 msg += UX.updateXP(user, profit);
+                msg += UX.updateEnergy(user, (int)(profit * 0.02));
 
                 State.updateCardDisplay(event, user);
                 State.updateBackpackDisplay(event, user);

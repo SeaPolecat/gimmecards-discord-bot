@@ -1,5 +1,4 @@
 package com.wixsite.seapolecat.Cmds;
-import com.wixsite.seapolecat.Helpers.Rest;
 import com.wixsite.seapolecat.Main.*;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
@@ -80,7 +79,7 @@ public class TesterCmds extends Cmds {
 
     public static void testSomething(GuildMessageReceivedEvent event) {
 
-        for(Data d : Data.oldSets) {
+        /*for(Data d : Data.oldSets) {
             if(d.getSetName().equalsIgnoreCase("Rising Rivals")) {
 
                 for(Data data : d.getShinies()) {
@@ -94,7 +93,7 @@ public class TesterCmds extends Cmds {
             }
         }
         Rest.sendMessage(event, "done testing!");
-        try { User.saveUsers(); } catch(Exception e) {}
+        try { User.saveUsers(); } catch(Exception e) {}*/
 
         /*for(int i = 0; i < Server.servers.size(); i++) {
             Server s = Server.servers.get(i);
@@ -113,6 +112,10 @@ public class TesterCmds extends Cmds {
         Rest.sendMessage(event, "done testing!");*/
         //try { Server.saveServers(); } catch(Exception e) {}
 
+        for(User u : User.users) {
+            System.out.println(u.getEnergy());
+        }
+
         /*for(int i = 0; i < User.users.size(); i++) {
             User u = User.users.get(i);
             User user = new User(
@@ -122,8 +125,9 @@ public class TesterCmds extends Cmds {
                 u.getXP(),
                 u.getMaxXP(),
                 u.getTokens(),
-                u.getKeys(),
                 u.getEnergy(),
+                u.getKeys(),
+                0,
                 u.getOpenEpoch(),
                 u.getDailyEpoch(),
                 u.getRedeemEpoch(),
@@ -138,9 +142,9 @@ public class TesterCmds extends Cmds {
             User.users.set(i, user);
         }
         for(User u : User.users) {
-            System.out.println(u.getNew());
+            System.out.println(u.getStars());
         }
-        Rest.sendMessage(event, "done testing!");*/
-        //try { User.saveUsers(); } catch(Exception e) {}
+        Rest.sendMessage(event, "done testing!");
+        try { User.saveUsers(); } catch(Exception e) {}*/
     }
 }

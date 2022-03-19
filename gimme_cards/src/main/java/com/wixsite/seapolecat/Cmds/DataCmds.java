@@ -29,13 +29,25 @@ public class DataCmds extends Cmds {
         embed.clear();
     }
 
-    public static void viewData(GuildMessageReceivedEvent event) {
+    public static void viewData(GuildMessageReceivedEvent event, String dataType) {
         EmbedBuilder embed = new EmbedBuilder();
+        Data[] dataList = new Data[0];
+        String title = "";
         String desc = "";
         int count = 0;
 
-        for(int i = 0; i < Data.sets.length; i++) {
-            if(Data.sets[i] == null) {
+        if(dataType.equalsIgnoreCase("new")) {
+            dataList = Data.sets;
+            title = pikameme_ + " **Card Sets** " + pikameme_;
+        } else if(dataType.equalsIgnoreCase("old")) {
+            dataList = Data.oldSets;
+            title = pikameme_ + " **Old Card Sets** " + pikameme_;
+        } else if(dataType.equalsIgnoreCase("spec")) {
+            dataList = Data.specSets;
+            title = pikameme_ + " **Special Card Sets** " + pikameme_;
+        }
+        for(int i = 0; i < dataList.length; i++) {
+            if(dataList[i] == null) {
                 desc += "**" + (i + 1) + ":** ❌ ";
             } else {
                 desc += "**" + (i + 1) + ":** ✅ ";
@@ -46,55 +58,7 @@ public class DataCmds extends Cmds {
                 count = 0;
             }
         }
-        embed.setTitle(pikameme_ + " **Card Sets** " + pikameme_);
-        embed.setDescription(desc);
-        embed.setColor(0xE8AE34);
-        Rest.sendEmbed(event, embed);
-        embed.clear();
-    }
-
-    public static void viewOldData(GuildMessageReceivedEvent event) {
-        EmbedBuilder embed = new EmbedBuilder();
-        String desc = "";
-        int count = 0;
-
-        for(int i = 0; i < Data.oldSets.length; i++) {
-            if(Data.oldSets[i] == null) {
-                desc += "**" + (i + 1) + ":** ❌ ";
-            } else {
-                desc += "**" + (i + 1) + ":** ✅ ";
-            }
-            count++;
-            if(count == 8) {
-                desc += "\n";
-                count = 0;
-            }
-        }
-        embed.setTitle(pikameme_ + " **Old Card Sets** " + pikameme_);
-        embed.setDescription(desc);
-        embed.setColor(0xE8AE34);
-        Rest.sendEmbed(event, embed);
-        embed.clear();
-    }
-
-    public static void viewSpecData(GuildMessageReceivedEvent event) {
-        EmbedBuilder embed = new EmbedBuilder();
-        String desc = "";
-        int count = 0;
-
-        for(int i = 0; i < Data.specSets.length; i++) {
-            if(Data.specSets[i] == null) {
-                desc += "**" + (i + 1) + ":** ❌ ";
-            } else {
-                desc += "**" + (i + 1) + ":** ✅ ";
-            }
-            count++;
-            if(count == 8) {
-                desc += "\n";
-                count = 0;
-            }
-        }
-        embed.setTitle(pikameme_ + " **Special Card Sets** " + pikameme_);
+        embed.setTitle(title);
         embed.setDescription(desc);
         embed.setColor(0xE8AE34);
         Rest.sendEmbed(event, embed);

@@ -4,6 +4,7 @@ import com.wixsite.seapolecat.Main.*;
 import com.google.gson.JsonArray;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import java.text.NumberFormat;
+import java.util.Random;
 
 public class UX implements Emotes {
     
@@ -28,6 +29,12 @@ public class UX implements Emotes {
         return userIcon;
     }
 
+    public static int randRange(int min, int max) {
+        int diff = max - min;
+
+        return new Random().nextInt(diff + 1) + min;
+    }
+
     public static String updateXP(User user, int quantity) {
         String msg = "\n";
 
@@ -43,25 +50,11 @@ public class UX implements Emotes {
 
         user.addTokens(quantity);
         if(quantity > 0) {
-            msg += "+ " + quantity;
+            msg += "+ " + UX.formatNumber(quantity);
         } else {
-            msg += "- " + Math.abs(quantity);
+            msg += "- " + UX.formatNumber(Math.abs(quantity));
         }
         msg += " " + token_ + " **Token**";
-
-        return msg;
-    }
-
-    public static String updateKeys(User user, int quantity) {
-        String msg = "\n";
-
-        user.addKeys(quantity);
-        if(quantity > 0) {
-            msg += "+ " + quantity;
-        } else {
-            msg += "- " + Math.abs(quantity);
-        }
-        msg += " " + key_ + " **Key**";
 
         return msg;
     }
@@ -71,11 +64,39 @@ public class UX implements Emotes {
 
         user.addEnergy(quantity);
         if(quantity > 0) {
-            msg += "+ " + quantity;
+            msg += "+ " + UX.formatNumber(quantity);
         } else {
-            msg += "- " + Math.abs(quantity);
+            msg += "- " + UX.formatNumber(Math.abs(quantity));
         }
         msg += " " + energy_ + " **Energy**";
+
+        return msg;
+    }
+
+    public static String updateKeys(User user, int quantity) {
+        String msg = "\n";
+
+        user.addKeys(quantity);
+        if(quantity > 0) {
+            msg += "+ " + UX.formatNumber(quantity);
+        } else {
+            msg += "- " + UX.formatNumber(Math.abs(quantity));
+        }
+        msg += " " + key_ + " **Key**";
+
+        return msg;
+    }
+
+    public static String updateStars(User user, int quantity) {
+        String msg = "\n";
+
+        user.addStars(quantity);
+        if(quantity > 0) {
+            msg += "+ " + UX.formatNumber(quantity);
+        } else {
+            msg += "- " + UX.formatNumber(Math.abs(quantity));
+        }
+        msg += " " + star_ + " **Star**";
 
         return msg;
     }

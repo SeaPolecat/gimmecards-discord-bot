@@ -98,14 +98,18 @@ public class State implements Emotes {
 
     public static void checkLevelUp(GuildMessageReceivedEvent event, User user) {
         while(user.getXP() >= user.getMaxXP()) {
-            int tokenReward = (user.getLevel() + 9) / 10;
+            int tokenReward = ((user.getLevel() + 9) / 10) * 5;
+            int energyReward = (user.getLevel() + 1) * 100;
+            int starReward = (user.getLevel() + 9) / 10;
             String msg = "";
 
             user.levelUp();
 
             msg += UX.formatNick(event) + " is now level **" + user.getLevel() + "**!";
             msg += UX.updateTokens(user, tokenReward);
+            msg += UX.updateEnergy(user, energyReward);
             msg += UX.updateKeys(user, 1);
+            msg += UX.updateStars(user, starReward);
 
             State.updateBackpackDisplay(event, user);
             Rest.sendMessage(event, msg);

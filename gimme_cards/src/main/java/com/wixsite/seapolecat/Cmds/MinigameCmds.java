@@ -3,7 +3,6 @@ import com.wixsite.seapolecat.Main.*;
 import com.wixsite.seapolecat.Display.*;
 import com.wixsite.seapolecat.Helpers.*;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-import java.util.Random;
 
 public class MinigameCmds extends Cmds {
     
@@ -19,6 +18,7 @@ public class MinigameCmds extends Cmds {
             MinigameDisplay disp = MinigameDisplay.findMinigameDisplay(user.getUserId());
             
             user.resetMinigameEpoch();
+            
             Rest.sendDynamicEmbed(event, user, server, disp, -1);
             try { User.saveUsers(); } catch(Exception e) {}
         }
@@ -36,14 +36,13 @@ public class MinigameCmds extends Cmds {
             guess = guess.trim();
 
             if(MinigameDisplay.isGuessCorrect(event, user, guess)) {
-                int energyReward = (new Random().nextInt(10) + 1) + 10;
                 String msg = "";
 
                 MinigameDisplay.removeMinigameDisplay(user);
 
                 msg += UX.formatNick(event) + " won the minigame!";
                 msg += UX.updateTokens(user, 2);
-                msg += UX.updateEnergy(user, energyReward);
+                msg += UX.updateEnergy(user, UX.randRange(80, 100));
 
                 State.updateBackpackDisplay(event, user);
 
@@ -52,13 +51,12 @@ public class MinigameCmds extends Cmds {
 
             } else {
                 if(disp.getTries() < 1) {
-                    int energyReward = (new Random().nextInt(10) + 1);
                     String msg = "";
 
                     MinigameDisplay.removeMinigameDisplay(user);
 
                     msg += UX.formatNick(event) + " lost the minigame... But there's always next time!";
-                    msg += UX.updateEnergy(user, energyReward);
+                    msg += UX.updateEnergy(user, UX.randRange(40, 50));
 
                     Rest.sendMessage(event, msg);
                     try { User.saveUsers(); } catch(Exception e) {}

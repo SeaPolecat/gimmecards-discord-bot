@@ -30,8 +30,9 @@ public class BackpackDisplay extends Display {
         desc += XP_ + " " + UX.formatNumber(user.getXP()) + "/" + UX.formatNumber(user.getMaxXP()) + " until next level\n";
         desc += "┅┅\n";
         desc += token_ + " **Tokens** ┇ " + UX.formatNumber(user.getTokens()) + "\n";
-        desc += key_ + " **Keys** ┇ " + UX.formatNumber(user.getKeys()) + "\n";
         desc += energy_ + " **Energy** ┇ " + UX.formatNumber(user.getEnergy()) + "\n";
+        desc += key_ + " **Keys** ┇ " + UX.formatNumber(user.getKeys()) + "\n";
+        desc += star_ + " **Stars** ┇ " + UX.formatNumber(user.getStars()) + "\n";
         desc += "┅┅\n";
 
         if(!user.getBackpackCard().equals("") && State.ownsFavCard(user)) {

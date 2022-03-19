@@ -20,6 +20,7 @@ public interface Emotes {
     String token_ = "<:token:864598045517414411>";
     String key_ = "<:key:875091820156162048>";
     String energy_ = "<:energy:924813210899599400>";
+    String star_ = "<:star:954519273831800862>";
     String pikameme_ = "<:pikameme:875586830601453569>";
 
     //animated
@@ -31,6 +32,7 @@ public interface Emotes {
     String eevee_ = "<a:eevee:863690068345225227>";
     String snorlax_ = "<a:snorlax:870539998825414698>";
     String mew_ = "<a:mew:926941785815658577>";
+    String scorbunny_ = "<a:scorbunny:954553211493175298>";
     String gift_ = "<a:gift:925118955620794448>";
     String pokeball_ = "<a:pokeball:875091838049071175>";
 }

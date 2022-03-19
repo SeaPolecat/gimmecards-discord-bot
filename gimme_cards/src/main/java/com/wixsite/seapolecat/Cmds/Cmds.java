@@ -20,13 +20,13 @@ public class Cmds extends ListenerAdapter implements Emotes {
                 DataCmds.viewStats(event);
             }
             if(isValidCommand(event, args, "data", null)) {
-                DataCmds.viewData(event);
+                DataCmds.viewData(event, "new");
             }
             if(isValidCommand(event, args, "olddata", null)) {
-                DataCmds.viewOldData(event);
+                DataCmds.viewData(event, "old");
             }
             if(isValidCommand(event, args, "specdata", null)) {
-                DataCmds.viewSpecData(event);
+                DataCmds.viewData(event, "spec");
             }
             if(isValidCommand(event, args, "refresh", new String[]{"length change"})) {
                 DataCmds.refreshData(event, args);
@@ -66,6 +66,9 @@ public class Cmds extends ListenerAdapter implements Emotes {
         if(isValidCommand(event, args, "redeem", null)) {
             BackpackCmds.redeemToken(event);
         }
+        if(isValidCommand(event, args, "daily", null)) {
+            BackpackCmds.receiveDailyReward(event);
+        }
         if(isValidCommand(event, args, "setcolor", new String[]{"hex code"})) {
             BackpackCmds.assignBackpackColor(event, args);
         }
@@ -79,6 +82,9 @@ public class Cmds extends ListenerAdapter implements Emotes {
         }
         if(isValidCommand(event, args, "oldshop", null)) {
             ShopCmds.viewOldShop(event);
+        }
+        if(isValidCommand(event, args, "rareshop", null)) {
+            ShopCmds.viewRareShop(event);
         }
         if(isValidCommand(event, args, "unlock", new String[]{"pack name"})) {
             ShopCmds.unlockPack(event, args);
@@ -147,12 +153,14 @@ public class Cmds extends ListenerAdapter implements Emotes {
         }
 
         //VOTE
+        /*
         if(isValidCommand(event, args, "vote", null)) {
             VoteCmds.voteBot(event);
         }
         if(isValidCommand(event, args, "claim", null)) {
             VoteCmds.claimReward(event);
         }
+        */
     }
 
     private static boolean isValidCommand(GuildMessageReceivedEvent event, String[] args, String cmd, String[] params) {

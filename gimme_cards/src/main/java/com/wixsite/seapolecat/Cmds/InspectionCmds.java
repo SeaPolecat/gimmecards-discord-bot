@@ -3,7 +3,6 @@ import com.wixsite.seapolecat.Main.*;
 import com.wixsite.seapolecat.Display.*;
 import com.wixsite.seapolecat.Helpers.*;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-import java.util.Random;
 
 public class InspectionCmds extends Cmds {
 
@@ -30,7 +29,6 @@ public class InspectionCmds extends Cmds {
                     Rest.sendMessage(event, jigglypuff_ + " Sorry, you're out of " + token_ + " **Tokens**");
     
                 } else {
-                    int energyReward = (new Random().nextInt(10) + 1);
                     String msg = "";
 
                     user.resetOpenEpoch();
@@ -39,7 +37,7 @@ public class InspectionCmds extends Cmds {
                     
                     msg += UX.formatNick(event) + " opened " + set.getSetEmote() + " **" + set.getSetName() + "**";
                     msg += UX.updateTokens(user, -1);
-                    msg += UX.updateEnergy(user, energyReward);
+                    msg += UX.updateEnergy(user, UX.randRange(16, 20));
 
                     State.updateBackpackDisplay(event, user);
                     State.updateCardDisplay(event, user);
