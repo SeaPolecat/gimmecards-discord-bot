@@ -1,5 +1,6 @@
 package com.wixsite.seapolecat.Cmds;
-import com.wixsite.seapolecat.Main.*;
+//import com.wixsite.seapolecat.Helpers.*;
+//import com.wixsite.seapolecat.Main.*;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 public class TesterCmds extends Cmds {
@@ -49,15 +50,16 @@ public class TesterCmds extends Cmds {
         }
     }*/
 
-    /*public User (String id, int cc, int l, int xp, int mxp, int t, int k, int e, long oe, long de, long re, long me, String sm, boolean si, int bc, String bcard, ArrayList<String> p, ArrayList<Card> c) {
+    /*public User (String id, int cc, int l, int xp, int mxp, int t, int e, int k, int s, long oe, long de, long re, long me, String sm, boolean si, int bc, String bcard, ArrayList<String> p, ArrayList<Card> c) {
         userId = id;
         cardCount = cc;
         level = l;
         XP = xp;
         maxXP = mxp;
         tokens = t;
-        keys = k;
         energy = e;
+        keys = k;
+        stars = s;
         openEpoch = oe;
         dailyEpoch = de;
         redeemEpoch = re;
@@ -78,7 +80,7 @@ public class TesterCmds extends Cmds {
     }*/
 
     public static void testSomething(GuildMessageReceivedEvent event) {
-
+        
         /*for(Data d : Data.oldSets) {
             if(d.getSetName().equalsIgnoreCase("Rising Rivals")) {
 
@@ -111,10 +113,6 @@ public class TesterCmds extends Cmds {
         }
         Rest.sendMessage(event, "done testing!");*/
         //try { Server.saveServers(); } catch(Exception e) {}
-
-        for(User u : User.users) {
-            System.out.println(u.getEnergy());
-        }
 
         /*for(int i = 0; i < User.users.size(); i++) {
             User u = User.users.get(i);

@@ -4,9 +4,9 @@ import com.wixsite.seapolecat.Main.*;
 import com.wixsite.seapolecat.Display.*;
 import com.wixsite.seapolecat.Helpers.*;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Member;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.ArrayList;
@@ -110,7 +110,7 @@ public class HelpCmds extends Cmds implements Comparator<User> {
         Rest.sendDynamicEmbed(event, user, server, disp, Changelog.changelog.length);
     }
 
-    public static void viewLeaderboard(GuildMessageReceivedEvent event) {
+    public static void viewRanks(GuildMessageReceivedEvent event) {
         List<Member> members = event.getGuild().getMembers();
         ArrayList<User> localUsers = new ArrayList<User>();
         EmbedBuilder embed = new EmbedBuilder();
@@ -149,7 +149,7 @@ public class HelpCmds extends Cmds implements Comparator<User> {
         }
         desc += "┅┅\n";
 
-        embed.setTitle(trainer_ + " Top 10 Collectors " + trainer_);
+        embed.setTitle(trainer_ + " Top Collectors Here " + trainer_);
         embed.setDescription(desc);
         embed.setFooter(event.getGuild().getName(), event.getGuild().getIconUrl());
         embed.setColor(0xB0252B);

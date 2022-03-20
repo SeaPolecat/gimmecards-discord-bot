@@ -124,6 +124,21 @@ public interface Changelog {
         + "🔹Using [changelog] now shows the entire history of the bot's changes\n"
         + "🔹Changed the designs of the bot's messages\n"
         + "🔹Changed the design of the welcome message that *Gimme Cards* sends when it joins a server\n"
-        + "🔹Fixed a bug where [sell] sells the entire stack of cards, instead of only one\n"
+        + "🔹Fixed a bug where [sell] sells the entire stack of cards, instead of only one",
+
+        //15
+        "**Update 3/20/2022**\n"
+        + "🔸New pack *Fusion Strike*\n"
+        + "🔸New pack *Brilliant Stars*\n"
+        + "🔸Added 11 new _exclusive_ Pokémon TCG packs! Use [rareshop] to see them "
+        + "and [open (pack name)] to draw a single card from any exclusive pack\n"
+        + "🔹Added *Stars*, another new currency system! Use stars to get exclusive cards\n"
+        + "🔹Game balancing: chances of shiny card drops have been decreased (20% to 10%), but "
+        + "using commands now gives much more Energy, so be sure to check out the [market] often :D\n"
+        + "🔹[vote] and [claim] have been temporarily disabled due to technical problems...\n"
+        + "🔹In the meantime, enjoy a new command [daily] that gives a reward every 24 hours\n"
+        + "🔹New command [favs] that shows all your favourite cards\n"
+        + "🔹New command [ranks] that shows the top 10 collectors in the server, based on level\n"
+        + "🔹Minor design changes"
     };
 }

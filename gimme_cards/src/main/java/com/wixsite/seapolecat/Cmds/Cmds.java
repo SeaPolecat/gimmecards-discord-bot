@@ -58,8 +58,8 @@ public class Cmds extends ListenerAdapter implements Emotes {
         if(isValidCommand(event, args, "changelog", null)) {
             HelpCmds.viewChangelog(event);
         }
-        if(isValidCommand(event, args, "leaderboard", null)) {
-            HelpCmds.viewLeaderboard(event);
+        if(isValidCommand(event, args, "ranks", null)) {
+            HelpCmds.viewRanks(event);
         }
 
         //BACKPACK
@@ -157,16 +157,6 @@ public class Cmds extends ListenerAdapter implements Emotes {
         if(isValidCommand(event, args, "favs", null)) {
             SearchCmds.viewFavCards(event);
         }
-
-        //VOTE
-        /*
-        if(isValidCommand(event, args, "vote", null)) {
-            VoteCmds.voteBot(event);
-        }
-        if(isValidCommand(event, args, "claim", null)) {
-            VoteCmds.claimReward(event);
-        }
-        */
     }
 
     private static boolean isValidCommand(GuildMessageReceivedEvent event, String[] args, String cmd, String[] params) {

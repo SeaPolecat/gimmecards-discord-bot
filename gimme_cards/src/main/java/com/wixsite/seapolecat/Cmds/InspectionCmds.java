@@ -23,22 +23,28 @@ public class InspectionCmds extends Cmds {
                 Data set = Data.findSet(setName);
 
                 if(State.isSpecSet(set)) {
-                    Data reward = Card.pickCard(set.getSpecs());
-                    String msg = "";
-                    String footer = event.getAuthor().getName() + "'s exclusive card";
+                    if(user.getStars() < 1) {
+                        Rest.sendMessage(event, jigglypuff_ + " Sorry, you're out of " + star_ + " **Stars**");
 
-                    Card.addSingleCard(user, reward);
-
-                    msg += UX.formatNick(event) + " drew a card from " + set.getSetEmote() + " **" + set.getSetName() + "**";
-                    msg += UX.updateStars(user, -1);
-                    msg += UX.updateEnergy(user, UX.randRange(16, 20));
-
-                    State.updateBackpackDisplay(event, user);
-                    State.updateCardDisplay(event, user);
-
-                    Rest.sendMessage(event, msg);
-                    Display.displayCard(event, user, reward, footer);
-                    try { User.saveUsers(); } catch(Exception e) {}
+                    } else {
+                        Data item = Card.pickCard(set.getSpecs());
+                        String msg = "";
+                        String footer = event.getAuthor().getName() + "'s exclusive card";
+    
+                        user.resetOpenEpoch();
+                        Card.addSingleCard(user, item);
+    
+                        msg += UX.formatNick(event) + " drew a card from " + set.getSetEmote() + " **" + set.getSetName() + "**";
+                        msg += UX.updateEnergy(user, UX.randRange(16, 20));
+                        msg += UX.updateStars(user, -1);
+    
+                        State.updateBackpackDisplay(event, user);
+                        State.updateCardDisplay(event, user);
+    
+                        Rest.sendMessage(event, msg);
+                        Display.displayCard(event, user, item, footer);
+                        try { User.saveUsers(); } catch(Exception e) {}
+                    }
 
                 } else {
                     if(!State.isPackUnlocked(user, set.getSetName())) {

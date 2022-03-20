@@ -3,6 +3,7 @@ import com.wixsite.seapolecat.Main.*;
 import com.wixsite.seapolecat.Display.*;
 import com.wixsite.seapolecat.Helpers.*;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.EmbedBuilder;
 
 public class BackpackCmds extends Cmds {
 
@@ -15,11 +16,13 @@ public class BackpackCmds extends Cmds {
 
     public static void redeemToken(GuildMessageReceivedEvent event) {
         User user = User.findUser(event);
+        Server server = Server.findServer(event);
 
         if(!State.isCooldownDone(user.getRedeemEpoch(), 30, true)) {
             Rest.sendMessage(event, jigglypuff_ + " Please wait another " + State.findTimeLeft(user.getRedeemEpoch(), 30, true));
 
         } else {
+            EmbedBuilder embed = new EmbedBuilder();
             String msg = "";
 
             user.resetRedeemEpoch();
@@ -28,9 +31,14 @@ public class BackpackCmds extends Cmds {
             msg += UX.updateTokens(user, 1);
             msg += UX.updateEnergy(user, UX.randRange(40, 50));
 
+            msg += "\n\nNew update on 3/20/2022 ┇ " + UX.formatCmd(server, "changelog");
+
             State.updateBackpackDisplay(event, user);
 
-            Rest.sendMessage(event, msg);
+            embed.setDescription(msg);
+            embed.setColor(0xCC6385);
+            Rest.sendEmbed(event, embed);
+            embed.clear();
             try { User.saveUsers(); } catch(Exception e) {}
         }
     }
@@ -42,6 +50,7 @@ public class BackpackCmds extends Cmds {
             Rest.sendMessage(event, jigglypuff_ + " Please wait another " + State.findTimeLeft(user.getDailyEpoch(), 1440, true));
 
         } else {
+            EmbedBuilder embed = new EmbedBuilder();
             String msg = "";
 
             user.resetDailyEpoch();
@@ -51,9 +60,15 @@ public class BackpackCmds extends Cmds {
             msg += UX.updateEnergy(user, UX.randRange(400, 500));
             msg += UX.updateStars(user, 2);
 
+            msg += "\n\nYou can still vote for Gimme Cards [here](https://top.gg/bot/814025499381727232/vote)."
+            + " Thank you for your support :D";
+
             State.updateBackpackDisplay(event, user);
 
-            Rest.sendMessage(event, msg);
+            embed.setDescription(msg);
+            embed.setColor(0xCC6385);
+            Rest.sendEmbed(event, embed);
+            embed.clear();
             try { User.saveUsers(); } catch(Exception e) {}
         }
     }

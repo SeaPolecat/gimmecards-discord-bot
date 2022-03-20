@@ -61,28 +61,6 @@ public class User implements StoragePaths {
         cards = new ArrayList<Card>();
     }
 
-    public User (String id, int cc, int l, int xp, int mxp, int t, int e, int k, int s, long oe, long de, long re, long me, String sm, boolean si, int bc, String bcard, ArrayList<String> p, ArrayList<Card> c) {
-        userId = id;
-        cardCount = cc;
-        level = l;
-        XP = xp;
-        maxXP = mxp;
-        tokens = t;
-        energy = e;
-        keys = k;
-        stars = s;
-        openEpoch = oe;
-        dailyEpoch = de;
-        redeemEpoch = re;
-        minigameEpoch = me;
-        sortMethod = sm;
-        sortIncreasing = si;
-        backpackColor = bc;
-        backpackCard = bcard;
-        packs = p;
-        cards = c;
-    }
-
     public String getUserId() { return userId; }
     public int getCardCount() { return cardCount; }
     public int getLevel() { return level; }
