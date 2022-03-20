@@ -1,6 +1,4 @@
 package com.wixsite.seapolecat.Cmds;
-//import com.wixsite.seapolecat.Helpers.*;
-//import com.wixsite.seapolecat.Main.*;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 public class TesterCmds extends Cmds {
@@ -80,7 +78,7 @@ public class TesterCmds extends Cmds {
     }*/
 
     public static void testSomething(GuildMessageReceivedEvent event) {
-        
+
         /*for(Data d : Data.oldSets) {
             if(d.getSetName().equalsIgnoreCase("Rising Rivals")) {
 

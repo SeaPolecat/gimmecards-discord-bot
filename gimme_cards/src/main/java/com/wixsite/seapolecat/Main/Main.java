@@ -10,7 +10,7 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import org.discordbots.api.client.DiscordBotListAPI;
-//import io.github.cdimascio.dotenv.Dotenv;
+import io.github.cdimascio.dotenv.Dotenv;
 
 public class Main {
 
@@ -19,10 +19,10 @@ public class Main {
 
     public static void main(String[] args) throws LoginException {
 
-        //Dotenv dotenv = Dotenv.load();
-        String botToken = "ODY3MTA1NjEzNzIwNTg0MjIy.YPcRCA.Xtytp7Dh2-v3xb1ch1J92DPqUcw";
-        String dblToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgxNDAyNTQ5OTM4MTcyNzIzMiIsImJvdCI6dHJ1ZSwiaWF0IjoxNjQ3NDU5MTA0fQ.LSG6P0ltDzOtMhlMBTdhJyQ7ZstH0n9PR_TLf3gS3Ik";
-        String botId = "814025499381727232";
+        Dotenv dotenv = Dotenv.load();
+        String botToken = dotenv.get("BOT_TOKEN");
+        String dblToken = dotenv.get("BDL_TOKEN");
+        String botId = dotenv.get("BOT_ID");
 
         jda = JDABuilder
         .createDefault(botToken,

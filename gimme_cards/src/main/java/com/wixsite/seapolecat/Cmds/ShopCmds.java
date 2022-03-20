@@ -53,26 +53,31 @@ public class ShopCmds extends Cmds {
             setName = setName.trim();
             Data set = Data.findSet(setName);
 
-            if(State.isPackUnlocked(user, set.getSetName())) {
-                Rest.sendMessage(event, jigglypuff_ + " This pack is already unlocked!");
-
-            } else if(user.getKeys() < 1) {
-                Rest.sendMessage(event, jigglypuff_ + " Sorry, you're out of " + key_ + " **Keys**");
+            if(State.isSpecSet(set)) {
+                Rest.sendMessage(event, jigglypuff_ + " You don't need to unlock exclusive packs!");
 
             } else {
-                String msg = "";
-
-                user.getPacks().add(set.getSetName());
-                
-                msg += UX.formatNick(event) + " unlocked " + set.getSetEmote() + " **" + set.getSetName() + "**";
-                msg += UX.updateKeys(user, -1);
-
-                State.updateBackpackDisplay(event, user);
-                State.updateShopDisplay(event, user);
-                State.updateOldShopDisplay(event, user);
-
-                Rest.sendMessage(event, msg);
-                try { User.saveUsers(); } catch(Exception e) {}
+                if(State.isPackUnlocked(user, set.getSetName())) {
+                    Rest.sendMessage(event, jigglypuff_ + " This pack is already unlocked!");
+    
+                } else if(user.getKeys() < 1) {
+                    Rest.sendMessage(event, jigglypuff_ + " Sorry, you're out of " + key_ + " **Keys**");
+    
+                } else {
+                    String msg = "";
+    
+                    user.getPacks().add(set.getSetName());
+                    
+                    msg += UX.formatNick(event) + " unlocked " + set.getSetEmote() + " **" + set.getSetName() + "**";
+                    msg += UX.updateKeys(user, -1);
+    
+                    State.updateBackpackDisplay(event, user);
+                    State.updateShopDisplay(event, user);
+                    State.updateOldShopDisplay(event, user);
+    
+                    Rest.sendMessage(event, msg);
+                    try { User.saveUsers(); } catch(Exception e) {}
+                }
             }
         } catch(NullPointerException e) {
             Rest.sendMessage(event, jigglypuff_ + " Whoops, I couldn't find that pack...");
