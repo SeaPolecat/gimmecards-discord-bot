@@ -11,8 +11,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -78,13 +78,13 @@ public class Server implements StoragePaths {
         return searchForServer(serverId);
     }
 
-    public static Server findServer(GuildMessageReceivedEvent event) {
+    public static Server findServer(MessageReceivedEvent event) {
         String serverId = event.getGuild().getId();
 
         return searchForServer(serverId);
     }
 
-    public static Server findServer(GuildMessageReactionAddEvent event) {
+    public static Server findServer(MessageReactionAddEvent event) {
         String serverId = event.getGuild().getId();
 
         return searchForServer(serverId);

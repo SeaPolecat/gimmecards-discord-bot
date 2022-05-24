@@ -2,17 +2,17 @@ package com.wixsite.seapolecat.Cmds;
 import com.wixsite.seapolecat.Main.*;
 import com.wixsite.seapolecat.Display.*;
 import com.wixsite.seapolecat.Helpers.*;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class InspectionCmds_ extends Cmds {
     
-    public static void viewCard_(GuildMessageReceivedEvent event, String[] args) {
+    public static void viewCard_(MessageReceivedEvent event, String[] args) {
         User user = User.findUser(event);
         InspectionDisplay_ disp = InspectionDisplay_.findInspectionDisplay_(user.getUserId());
 
         if(args.length > 2) {
             try {
-                String mentionId = event.getMessage().getMentionedUsers().get(0).getId();
+                String mentionId = event.getMessage().getMentions().getUsers().get(0).getId();
                 User mention;
                 try {
                     mention = User.findOtherUser(event, mentionId);

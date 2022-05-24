@@ -3,7 +3,7 @@ import com.wixsite.seapolecat.Interfaces.*;
 import com.wixsite.seapolecat.Main.*;
 import com.wixsite.seapolecat.Display.*;
 import com.wixsite.seapolecat.Helpers.*;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
@@ -24,7 +24,7 @@ public class HelpCmds extends Cmds implements Comparator<User> {
         }
     }
 
-    public static void changePrefix(GuildMessageReceivedEvent event, String[] args) {
+    public static void changePrefix(MessageReceivedEvent event, String[] args) {
         Server server = Server.findServer(event);
 
         if(!event.getMember().hasPermission(Permission.ADMINISTRATOR)) {
@@ -37,7 +37,7 @@ public class HelpCmds extends Cmds implements Comparator<User> {
         }
     }
     
-    public static void viewHelp(GuildMessageReceivedEvent event) {
+    public static void viewHelp(MessageReceivedEvent event) {
         Server server = Server.findServer(event);
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
@@ -46,7 +46,7 @@ public class HelpCmds extends Cmds implements Comparator<User> {
         desc += "My prefix for this server is " + UX.formatCmd(server, "") + "\n\n";
 
         desc += "**Tutorial**\n";
-        desc += "For a quick tutorial and list of commands, please visit the [help website](https://seapolecat.wixsite.com/gimmecards)\n\n";
+        desc += "For a quick tutorial and list of commands, please visit the [help website](https://www.gimmecards.ca/)\n\n";
 
         desc += "**Support Server**\n";
         desc += "Have questions or ideas for new updates? Or just wanna hang out with other collectors? "
@@ -63,7 +63,7 @@ public class HelpCmds extends Cmds implements Comparator<User> {
         embed.clear();
     }
 
-    public static void viewRarities(GuildMessageReceivedEvent event) {
+    public static void viewRarities(MessageReceivedEvent event) {
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
@@ -102,7 +102,7 @@ public class HelpCmds extends Cmds implements Comparator<User> {
         embed.clear();
     }
 
-    public static void viewChangelog(GuildMessageReceivedEvent event) {
+    public static void viewChangelog(MessageReceivedEvent event) {
         User user = User.findUser(event);
         Server server = Server.findServer(event);
         HelpDisplay disp = HelpDisplay.findHelpDisplay(user.getUserId());
@@ -110,7 +110,7 @@ public class HelpCmds extends Cmds implements Comparator<User> {
         Rest.sendDynamicEmbed(event, user, server, disp, Changelog.changelog.length);
     }
 
-    public static void viewRanks(GuildMessageReceivedEvent event) {
+    public static void viewRanks(MessageReceivedEvent event) {
         List<Member> members = event.getGuild().getMembers();
         ArrayList<User> localUsers = new ArrayList<User>();
         EmbedBuilder embed = new EmbedBuilder();

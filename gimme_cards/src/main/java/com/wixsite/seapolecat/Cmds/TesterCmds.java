@@ -1,5 +1,5 @@
 package com.wixsite.seapolecat.Cmds;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class TesterCmds extends Cmds {
 
@@ -77,7 +77,7 @@ public class TesterCmds extends Cmds {
         marketEpoch = me;
     }*/
 
-    public static void testSomething(GuildMessageReceivedEvent event) {
+    public static void testSomething(MessageReceivedEvent event) {
 
         /*for(Data d : Data.oldSets) {
             if(d.getSetName().equalsIgnoreCase("Rising Rivals")) {

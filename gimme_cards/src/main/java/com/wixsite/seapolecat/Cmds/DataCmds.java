@@ -6,14 +6,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
 import java.util.ArrayList;
 import java.net.URL;
 
 public class DataCmds extends Cmds {
 
-    public static void viewStats(GuildMessageReceivedEvent event) {
+    public static void viewStats(MessageReceivedEvent event) {
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
@@ -29,7 +29,7 @@ public class DataCmds extends Cmds {
         embed.clear();
     }
 
-    public static void viewData(GuildMessageReceivedEvent event, String dataType) {
+    public static void viewData(MessageReceivedEvent event, String dataType) {
         EmbedBuilder embed = new EmbedBuilder();
         Data[] dataList = new Data[0];
         String title = "";
@@ -65,7 +65,7 @@ public class DataCmds extends Cmds {
         embed.clear();
     }
 
-    public static void refreshData(GuildMessageReceivedEvent event, String[] args) {
+    public static void refreshData(MessageReceivedEvent event, String[] args) {
         try {
             int lengthChange = Integer.parseInt(args[1]);
             Data[] newSets = new Data[Data.sets.length + lengthChange];
@@ -86,7 +86,7 @@ public class DataCmds extends Cmds {
         }
     }
 
-    public static void countSetContent(GuildMessageReceivedEvent event, String[] args) {
+    public static void countSetContent(MessageReceivedEvent event, String[] args) {
         try {
             String setCode = args[1];
             int page = 1, count = 0;
@@ -110,7 +110,7 @@ public class DataCmds extends Cmds {
         }
     }
 
-    public static void addSetContent(GuildMessageReceivedEvent event, String[] args, boolean isNew) {
+    public static void addSetContent(MessageReceivedEvent event, String[] args, boolean isNew) {
         try {
             int setNum = Integer.parseInt(args[1]);
             String setCode = "";
@@ -164,7 +164,7 @@ public class DataCmds extends Cmds {
         }
     }
 
-    public static void addSpecSetContent(GuildMessageReceivedEvent event, String[] args) {
+    public static void addSpecSetContent(MessageReceivedEvent event, String[] args) {
         try {
             int setNum = Integer.parseInt(args[1]);
             String setCode = Data.specSetCodes.get(setNum);

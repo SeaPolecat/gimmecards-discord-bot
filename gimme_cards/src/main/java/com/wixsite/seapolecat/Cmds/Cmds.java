@@ -3,11 +3,11 @@ import com.wixsite.seapolecat.Interfaces.*;
 import com.wixsite.seapolecat.Main.*;
 import com.wixsite.seapolecat.Helpers.*;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class Cmds extends ListenerAdapter implements Emotes {
     
-    public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
+    public void onMessageReceived(MessageReceivedEvent event) {
         if(event.getAuthor().isBot() == true) { return; }
         String[] args = event.getMessage().getContentRaw().split("\\s+");
 
@@ -157,9 +157,17 @@ public class Cmds extends ListenerAdapter implements Emotes {
         if(isValidCommand(event, args, "favs", null)) {
             SearchCmds.viewFavCards(event);
         }
+
+        //VOTE
+        if(isValidCommand(event, args, "vote", null)) {
+            VoteCmds.voteBot(event);
+        }
+        if(isValidCommand(event, args, "claim", null)) {
+            VoteCmds.claimReward(event);
+        }
     }
 
-    private static boolean isValidCommand(GuildMessageReceivedEvent event, String[] args, String cmd, String[] params) {
+    private static boolean isValidCommand(MessageReceivedEvent event, String[] args, String cmd, String[] params) {
         Server server = Server.findServer(event);
 
         if(args[0].equalsIgnoreCase(server.getPrefix() + cmd)) {

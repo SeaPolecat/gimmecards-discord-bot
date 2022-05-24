@@ -2,19 +2,19 @@ package com.wixsite.seapolecat.Cmds;
 import com.wixsite.seapolecat.Main.*;
 import com.wixsite.seapolecat.Display.*;
 import com.wixsite.seapolecat.Helpers.*;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 public class BackpackCmds extends Cmds {
 
-    public static void viewBackpack(GuildMessageReceivedEvent event) {
+    public static void viewBackpack(MessageReceivedEvent event) {
         User user = User.findUser(event);
         BackpackDisplay disp = BackpackDisplay.findBackpackDisplay(user.getUserId());
 
         Rest.sendDynamicEmbed(event, user, null, disp, -1);
     }
 
-    public static void redeemToken(GuildMessageReceivedEvent event) {
+    public static void redeemToken(MessageReceivedEvent event) {
         User user = User.findUser(event);
         Server server = Server.findServer(event);
 
@@ -43,7 +43,7 @@ public class BackpackCmds extends Cmds {
         }
     }
 
-    public static void receiveDailyReward(GuildMessageReceivedEvent event) {
+    public static void receiveDailyReward(MessageReceivedEvent event) {
         User user = User.findUser(event);
 
         if(!State.isCooldownDone(user.getDailyEpoch(), 1440, true)) {
@@ -73,7 +73,7 @@ public class BackpackCmds extends Cmds {
         }
     }
 
-    public static void assignBackpackColor(GuildMessageReceivedEvent event, String[] args) {
+    public static void assignBackpackColor(MessageReceivedEvent event, String[] args) {
         User user = User.findUser(event);
 
         try {
@@ -89,7 +89,7 @@ public class BackpackCmds extends Cmds {
         }
     }
 
-    public static void assignBackpackCard(GuildMessageReceivedEvent event, String[] args) {
+    public static void assignBackpackCard(MessageReceivedEvent event, String[] args) {
         User user = User.findUser(event);
 
         try {

@@ -2,12 +2,12 @@ package com.wixsite.seapolecat.Cmds;
 import com.wixsite.seapolecat.Main.*;
 import com.wixsite.seapolecat.Display.*;
 import com.wixsite.seapolecat.Helpers.*;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 public class CardCmds extends Cmds {
 
-    public static void viewCards(GuildMessageReceivedEvent event, String[] args) {
+    public static void viewCards(MessageReceivedEvent event, String[] args) {
         User user = User.findUser(event);
         CardDisplay disp = CardDisplay.findCardDisplay(user.getUserId());
 
@@ -21,7 +21,7 @@ public class CardCmds extends Cmds {
         }
     }
 
-    public static void favouriteCard(GuildMessageReceivedEvent event, String[] args) {
+    public static void favouriteCard(MessageReceivedEvent event, String[] args) {
         User user = User.findUser(event);
 
         try {
@@ -40,7 +40,7 @@ public class CardCmds extends Cmds {
         }
     }
 
-    public static void unfavouriteCard(GuildMessageReceivedEvent event, String[] args) {
+    public static void unfavouriteCard(MessageReceivedEvent event, String[] args) {
         User user = User.findUser(event);
 
         try {
@@ -59,7 +59,7 @@ public class CardCmds extends Cmds {
         }
     }
 
-    public static void sortCards(GuildMessageReceivedEvent event, String[] args) {
+    public static void sortCards(MessageReceivedEvent event, String[] args) {
         User user = User.findUser(event);
 
         try {

@@ -2,11 +2,11 @@ package com.wixsite.seapolecat.Cmds;
 import com.wixsite.seapolecat.Main.*;
 import com.wixsite.seapolecat.Display.*;
 import com.wixsite.seapolecat.Helpers.*;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class InspectionCmds extends Cmds {
 
-    public static void openPack(GuildMessageReceivedEvent event, String[] args) {
+    public static void openPack(MessageReceivedEvent event, String[] args) {
         User user = User.findUser(event);
         InspectionDisplay disp = InspectionDisplay.findInspectionDisplay(user.getUserId());
 
@@ -78,7 +78,7 @@ public class InspectionCmds extends Cmds {
         }
     }
 
-    public static void viewCard(GuildMessageReceivedEvent event, String[] args) {
+    public static void viewCard(MessageReceivedEvent event, String[] args) {
         User user = User.findUser(event);
         InspectionDisplay disp = InspectionDisplay.findInspectionDisplay(user.getUserId());
         SearchDisplay disp2 = SearchDisplay.findSearchDisplay(user.getUserId());

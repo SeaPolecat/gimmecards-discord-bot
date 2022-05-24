@@ -2,11 +2,11 @@ package com.wixsite.seapolecat.Cmds;
 import com.wixsite.seapolecat.Main.*;
 import com.wixsite.seapolecat.Display.*;
 import com.wixsite.seapolecat.Helpers.*;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class MinigameCmds extends Cmds {
     
-    public static void startMinigame(GuildMessageReceivedEvent event) {
+    public static void startMinigame(MessageReceivedEvent event) {
         User user = User.findUser(event);
         Server server = Server.findServer(event);
 
@@ -24,7 +24,7 @@ public class MinigameCmds extends Cmds {
         }
     }
 
-    public static void makeGuess(GuildMessageReceivedEvent event, String[] args) {
+    public static void makeGuess(MessageReceivedEvent event, String[] args) {
         User user = User.findUser(event);
         MinigameDisplay disp = MinigameDisplay.findMinigameDisplay(user.getUserId());
 

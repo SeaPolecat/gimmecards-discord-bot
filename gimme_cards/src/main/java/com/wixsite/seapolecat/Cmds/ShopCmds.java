@@ -2,26 +2,26 @@ package com.wixsite.seapolecat.Cmds;
 import com.wixsite.seapolecat.Main.*;
 import com.wixsite.seapolecat.Display.*;
 import com.wixsite.seapolecat.Helpers.*;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 public class ShopCmds extends Cmds {
 
-    public static void viewShop(GuildMessageReceivedEvent event) {
+    public static void viewShop(MessageReceivedEvent event) {
         User user = User.findUser(event);
         ShopDisplay disp = ShopDisplay.findShopDisplay(user.getUserId());
 
         Rest.sendDynamicEmbed(event, user, null, disp, 1);
     }
     
-    public static void viewOldShop(GuildMessageReceivedEvent event) {
+    public static void viewOldShop(MessageReceivedEvent event) {
         User user = User.findUser(event);
         OldShopDisplay disp = OldShopDisplay.findOldShopDisplay(user.getUserId());
 
         Rest.sendDynamicEmbed(event, user, null, disp, 1);
     }
 
-    public static void viewRareShop(GuildMessageReceivedEvent event) {
+    public static void viewRareShop(MessageReceivedEvent event) {
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
@@ -42,7 +42,7 @@ public class ShopCmds extends Cmds {
         embed.clear();
     }
 
-    public static void unlockPack(GuildMessageReceivedEvent event, String[] args) {
+    public static void unlockPack(MessageReceivedEvent event, String[] args) {
         User user = User.findUser(event);
 
         try {

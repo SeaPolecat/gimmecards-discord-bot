@@ -10,8 +10,8 @@ import java.io.Writer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -127,19 +127,19 @@ public class User implements StoragePaths {
         writer.close();
     }
 
-    public static User findUser(GuildMessageReceivedEvent event) {
+    public static User findUser(MessageReceivedEvent event) {
         String authorId = event.getAuthor().getId();
         
         return searchForUser(authorId);
     }
 
-    public static User findUser(GuildMessageReactionAddEvent event) {
+    public static User findUser(MessageReactionAddEvent event) {
         String authorId = event.getUser().getId();
 
         return searchForUser(authorId);
     }
 
-    public static User findOtherUser(GuildMessageReceivedEvent event, String authorId) {
+    public static User findOtherUser(MessageReceivedEvent event, String authorId) {
         return searchForUser(authorId);
     }
 
