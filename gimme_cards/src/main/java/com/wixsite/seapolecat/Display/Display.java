@@ -3,8 +3,8 @@ import com.wixsite.seapolecat.Interfaces.*;
 import com.wixsite.seapolecat.Main.*;
 import com.wixsite.seapolecat.Helpers.*;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
 import java.util.ArrayList;
 
@@ -39,13 +39,13 @@ public class Display extends ListenerAdapter implements Emotes {
         return null;
     }
 
-    public static void displayCard(GuildMessageReceivedEvent event, User user, Data data, String footer) {
+    public static void displayCard(MessageReceivedEvent event, User user, Data data, Card c, String footer) {
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
         desc += "**Rarity** ┇ " + UX.findRarityEmote(data) + " " + data.getCardRarity() + "\n";
         desc += "**Card Set** ┇ " + data.getSetEmote() + " " + data.getSetName() + "\n";
-        desc += "**XP Value** ┇ " + UX.formatXPPrice(data) + "\n\n";
+        desc += "**XP Value** ┇ " + UX.formatXPPrice(data, c.getSellable()) + "\n\n";
         desc += "*Click on image for zoomed view*";
 
         embed.setTitle(UX.findCardTitle(data, false));
@@ -57,7 +57,7 @@ public class Display extends ListenerAdapter implements Emotes {
         embed.clear();
     }
     
-    private static void flipPage(GuildMessageReactionAddEvent event, User user, Server server, Display disp, int maxPage) {
+    private static void flipPage(MessageReactionAddEvent event, User user, Server server, Display disp, int maxPage) {
         if(event.getUser().getId().equals(disp.getUserId()) && event.getMessageId().equals(disp.getMessageId())) {
             if(event.getReactionEmote().getName().equals("◀")) {
                 if(disp.getPage() <= 1) {
@@ -78,7 +78,7 @@ public class Display extends ListenerAdapter implements Emotes {
         }
     }
 
-    public void onGuildMessageReactionAdd(GuildMessageReactionAddEvent event) {
+    public void onMessageReactionAdd(MessageReactionAddEvent event) {
         if(event.getUser().isBot() == true) { return; }
         User user = User.findUser(event);
         Server server = Server.findServer(event);

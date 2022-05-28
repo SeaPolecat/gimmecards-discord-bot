@@ -1,13 +1,13 @@
 package com.wixsite.seapolecat.Main;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 
 public class UserInfo {
     
     private String userName;
     private String userIcon;
 
-    public UserInfo(GuildMessageReceivedEvent event) {
+    public UserInfo(MessageReceivedEvent event) {
         userName = event.getAuthor().getName();
         userIcon = event.getAuthor().getAvatarUrl();
 
@@ -16,7 +16,7 @@ public class UserInfo {
         }
     }
 
-    public UserInfo(GuildMessageReactionAddEvent event) {
+    public UserInfo(MessageReactionAddEvent event) {
         userName = event.getUser().getName();
         userIcon = event.getUser().getAvatarUrl();
 

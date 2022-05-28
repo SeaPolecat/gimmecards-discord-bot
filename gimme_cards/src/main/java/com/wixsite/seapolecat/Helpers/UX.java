@@ -2,7 +2,7 @@ package com.wixsite.seapolecat.Helpers;
 import com.wixsite.seapolecat.Interfaces.*;
 import com.wixsite.seapolecat.Main.*;
 import com.google.gson.JsonArray;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import java.text.NumberFormat;
 import java.util.Random;
 
@@ -16,11 +16,11 @@ public class UX implements Emotes {
         return "`" + server.getPrefix() + cmd + "`";
     }
 
-    public static String formatNick(GuildMessageReceivedEvent event) {
+    public static String formatNick(MessageReceivedEvent event) {
         return "__" + event.getAuthor().getName() + "__";
     }
 
-    public static String findUserIcon(GuildMessageReceivedEvent event) {
+    public static String findUserIcon(MessageReceivedEvent event) {
         String userIcon = event.getAuthor().getAvatarUrl();
 
         if(userIcon == null) {
@@ -168,11 +168,17 @@ public class UX implements Emotes {
         return rarityEmote;
     }
 
-    public static String formatXPPrice(Data data) {
+    public static String formatXPPrice(Data data, Boolean sellable) {
         String XPPrice = XP_ + " **" + formatNumber(data.getCardPrice()) + "**";
 
-        if(State.isOldSet(data)) {
-            return XPPrice + " 🚫";
+        if(sellable == null) {
+            if(State.isOldSet(data)) {
+                return XPPrice + " 🚫";
+            }
+        } else {
+            if(!sellable) {
+                return XPPrice + " 🚫";
+            }
         }
         return XPPrice;
     }

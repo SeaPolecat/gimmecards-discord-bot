@@ -22,6 +22,7 @@ public interface Emotes {
     String energy_ = "<:energy:924813210899599400>";
     String star_ = "<:star:954519273831800862>";
     String pikameme_ = "<:pikameme:875586830601453569>";
+    String logo_ = "<:logo:976498598516760646>";
 
     //animated
     String pikachu_ = "<a:pikachu:863244375969890314>";

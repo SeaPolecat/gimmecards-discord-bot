@@ -1,7 +1,7 @@
 package com.wixsite.seapolecat.Display;
 import com.wixsite.seapolecat.Main.*;
 import com.wixsite.seapolecat.Helpers.*;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
 import java.util.ArrayList;
 
@@ -53,12 +53,12 @@ public class MinigameDisplay extends Display {
         }
     }
 
-    public static boolean isGuessCorrect(GuildMessageReceivedEvent event, User user, String guess) {
+    public static boolean isGuessCorrect(MessageReceivedEvent event, User user, String guess) {
         MinigameDisplay disp = findMinigameDisplay(user.getUserId());
         String cardRarity = disp.getCard().getCardRarity();
 
         disp.minusTries();
-        if(cardRarity.equalsIgnoreCase(guess)) {
+        if(cardRarity.replaceAll("\\s+", "").equalsIgnoreCase(guess.replaceAll("\\s+", ""))) {
             disp.winGame();
             State.updateMinigameDisplay(event, user);
             return true;

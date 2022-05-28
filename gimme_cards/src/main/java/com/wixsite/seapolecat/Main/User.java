@@ -10,8 +10,8 @@ import java.io.Writer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -29,6 +29,7 @@ public class User implements StoragePaths {
     private Integer keys;
     private Integer stars;
     private Long openEpoch;
+    private long voteEpoch;
     private Long dailyEpoch;
     private Long redeemEpoch;
     private Long minigameEpoch;
@@ -50,6 +51,7 @@ public class User implements StoragePaths {
         keys = 1;
         stars = 0;
         openEpoch = (long)(0);
+        voteEpoch = (long)(0);
         dailyEpoch = (long)(0);
         redeemEpoch = (long)(0);
         minigameEpoch = (long)(0);
@@ -71,6 +73,7 @@ public class User implements StoragePaths {
     public int getKeys() { return keys; }
     public int getStars() { return stars; }
     public long getOpenEpoch() { return openEpoch; }
+    public long getVoteEpoch() { return voteEpoch; }
     public long getDailyEpoch() { return dailyEpoch; }
     public long getRedeemEpoch() { return redeemEpoch; }
     public long getMinigameEpoch() { return minigameEpoch; }
@@ -88,6 +91,7 @@ public class User implements StoragePaths {
     public void addKeys(int k) { keys += k; }
     public void addStars(int s) { stars += s; }
     public void resetOpenEpoch() { openEpoch = Calendar.getInstance().getTimeInMillis() / 1000; }
+    public void resetVoteEpoch() { voteEpoch = Calendar.getInstance().getTimeInMillis() / 60000; }
     public void resetDailyEpoch() { dailyEpoch = Calendar.getInstance().getTimeInMillis() / 60000; }
     public void resetRedeemEpoch() { redeemEpoch = Calendar.getInstance().getTimeInMillis() / 60000; }
     public void resetMinigameEpoch() { minigameEpoch = Calendar.getInstance().getTimeInMillis() / 60000; }
@@ -127,19 +131,19 @@ public class User implements StoragePaths {
         writer.close();
     }
 
-    public static User findUser(GuildMessageReceivedEvent event) {
+    public static User findUser(MessageReceivedEvent event) {
         String authorId = event.getAuthor().getId();
         
         return searchForUser(authorId);
     }
 
-    public static User findUser(GuildMessageReactionAddEvent event) {
+    public static User findUser(MessageReactionAddEvent event) {
         String authorId = event.getUser().getId();
 
         return searchForUser(authorId);
     }
 
-    public static User findOtherUser(GuildMessageReceivedEvent event, String authorId) {
+    public static User findOtherUser(MessageReceivedEvent event, String authorId) {
         return searchForUser(authorId);
     }
 

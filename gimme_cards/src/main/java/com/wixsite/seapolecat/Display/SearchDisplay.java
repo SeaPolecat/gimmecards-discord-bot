@@ -51,7 +51,7 @@ public class SearchDisplay extends Display {
             + " ┇ `" + data.getCardId() + "`"
             + " ┇ " + UX.findRarityEmote(data)
             + " ┇ " + data.getSetEmote()
-            + " ┇ " + UX.formatXPPrice(data) + "\n";
+            + " ┇ " + UX.formatXPPrice(data, null) + "\n";
             if(i >= disp.getSearchedCards().size() - 1) {
                 break;
             }

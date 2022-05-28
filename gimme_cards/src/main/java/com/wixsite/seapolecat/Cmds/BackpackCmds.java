@@ -2,19 +2,19 @@ package com.wixsite.seapolecat.Cmds;
 import com.wixsite.seapolecat.Main.*;
 import com.wixsite.seapolecat.Display.*;
 import com.wixsite.seapolecat.Helpers.*;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 public class BackpackCmds extends Cmds {
 
-    public static void viewBackpack(GuildMessageReceivedEvent event) {
+    public static void viewBackpack(MessageReceivedEvent event) {
         User user = User.findUser(event);
         BackpackDisplay disp = BackpackDisplay.findBackpackDisplay(user.getUserId());
 
         Rest.sendDynamicEmbed(event, user, null, disp, -1);
     }
 
-    public static void redeemToken(GuildMessageReceivedEvent event) {
+    public static void redeemToken(MessageReceivedEvent event) {
         User user = User.findUser(event);
         Server server = Server.findServer(event);
 
@@ -29,9 +29,9 @@ public class BackpackCmds extends Cmds {
 
             msg += UX.formatNick(event) + " redeemed a token!";
             msg += UX.updateTokens(user, 1);
-            msg += UX.updateEnergy(user, UX.randRange(40, 50));
+            msg += UX.updateEnergy(user, UX.randRange(24, 30));
 
-            msg += "\n\nNew update on 3/20/2022 ┇ " + UX.formatCmd(server, "changelog");
+            msg += "\n\n:red_circle: New update on 5/27/2022 ┇ " + UX.formatCmd(server, "changelog");
 
             State.updateBackpackDisplay(event, user);
 
@@ -43,37 +43,35 @@ public class BackpackCmds extends Cmds {
         }
     }
 
-    public static void receiveDailyReward(GuildMessageReceivedEvent event) {
+    public static void receiveDailyReward(MessageReceivedEvent event) {
         User user = User.findUser(event);
 
         if(!State.isCooldownDone(user.getDailyEpoch(), 1440, true)) {
             Rest.sendMessage(event, jigglypuff_ + " Please wait another " + State.findTimeLeft(user.getDailyEpoch(), 1440, true));
 
         } else {
-            EmbedBuilder embed = new EmbedBuilder();
+            Card c;
+            Data item = Card.pickRandomCard("shiny");
             String msg = "";
+            String footer = event.getAuthor().getName() + "'s shiny card";
 
             user.resetDailyEpoch();
 
-            msg += UX.formatNick(event) + " claimed their daily reward!";
-            msg += UX.updateTokens(user, 10);
-            msg += UX.updateEnergy(user, UX.randRange(400, 500));
-            msg += UX.updateStars(user, 2);
+            msg += UX.formatNick(event) + " claimed their daily shiny card!";
+            msg += UX.updateEnergy(user, UX.randRange(240, 300));
 
-            msg += "\n\nYou can still vote for Gimme Cards [here](https://top.gg/bot/814025499381727232/vote)."
-            + " Thank you for your support :D";
+            c = Card.addSingleCard(user, item, true);
 
             State.updateBackpackDisplay(event, user);
+            State.updateCardDisplay(event, user);
 
-            embed.setDescription(msg);
-            embed.setColor(0xCC6385);
-            Rest.sendEmbed(event, embed);
-            embed.clear();
+            Rest.sendMessage(event, msg);
+            Display.displayCard(event, user, item, c, footer);
             try { User.saveUsers(); } catch(Exception e) {}
         }
     }
 
-    public static void assignBackpackColor(GuildMessageReceivedEvent event, String[] args) {
+    public static void assignBackpackColor(MessageReceivedEvent event, String[] args) {
         User user = User.findUser(event);
 
         try {
@@ -89,7 +87,7 @@ public class BackpackCmds extends Cmds {
         }
     }
 
-    public static void assignBackpackCard(GuildMessageReceivedEvent event, String[] args) {
+    public static void assignBackpackCard(MessageReceivedEvent event, String[] args) {
         User user = User.findUser(event);
 
         try {

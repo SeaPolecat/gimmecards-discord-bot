@@ -63,7 +63,7 @@ public class FavDisplay extends Display {
             + " ┇ `#" + count + "`"
             + " ┇ " + UX.findRarityEmote(data) 
             + " ┇ " + data.getSetEmote()
-            + " ┇ " + UX.formatXPPrice(data)
+            + " ┇ " + UX.formatXPPrice(data, c.getSellable())
             + " ┇ **x" + c.getCardQuantity() + "**\n";
             count++;
             if(i >= favCards.size() - 1) {

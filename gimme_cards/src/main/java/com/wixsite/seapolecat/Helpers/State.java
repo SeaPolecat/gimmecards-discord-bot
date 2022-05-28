@@ -2,25 +2,35 @@ package com.wixsite.seapolecat.Helpers;
 import com.wixsite.seapolecat.Interfaces.*;
 import com.wixsite.seapolecat.Main.*;
 import com.wixsite.seapolecat.Display.*;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import java.util.Calendar;
 
 public class State implements Emotes {
 
-    public static boolean isOldSet(Data set) {        
+    public static boolean isOldSet(Data data) {        
         for(Data d : Data.oldSets) {
-            if(d.getSetName().equalsIgnoreCase(set.getSetName())) {
+            if(d.getSetName().equalsIgnoreCase(data.getSetName())) {
                 return true;
             }
         }
         return false;
     }
 
-    public static boolean isSpecSet(Data set) {        
+    public static boolean isSpecSet(Data data) {        
         for(Data d : Data.specSets) {
-            if(d.getSetName().equalsIgnoreCase(set.getSetName())) {
+            if(d.getSetName().equalsIgnoreCase(data.getSetName())) {
                 return true;
             }
+        }
+        return false;
+    }
+
+    public static boolean isShinyCard(Data data) {
+        String cardRarity = data.getCardRarity();
+
+        if(cardRarity.toLowerCase().contains("rare") && cardRarity.length() > 4 
+        || cardRarity.equalsIgnoreCase("legend")) {
+            return true;
         }
         return false;
     }
@@ -105,27 +115,25 @@ public class State implements Emotes {
         }
     }
 
-    public static void checkLevelUp(GuildMessageReceivedEvent event, User user) {
+    public static void checkLevelUp(MessageReceivedEvent event, User user) {
         while(user.getXP() >= user.getMaxXP()) {
-            int tokenReward = ((user.getLevel() + 9) / 10) * 5;
-            int energyReward = (user.getLevel() + 1) * 100;
-            int starReward = (user.getLevel() + 9) / 10;
+            int energyReward = ((user.getLevel() + 9) / 10) * 100;
             String msg = "";
 
             user.levelUp();
 
             msg += UX.formatNick(event) + " is now level **" + user.getLevel() + "**!";
-            msg += UX.updateTokens(user, tokenReward);
+            msg += UX.updateTokens(user, 2);
             msg += UX.updateEnergy(user, energyReward);
             msg += UX.updateKeys(user, 1);
-            msg += UX.updateStars(user, starReward);
+            msg += UX.updateStars(user, 1);
 
             State.updateBackpackDisplay(event, user);
             Rest.sendMessage(event, msg);
         }
     }
 
-    public static void updateBackpackDisplay(GuildMessageReceivedEvent event, User user) {
+    public static void updateBackpackDisplay(MessageReceivedEvent event, User user) {
         BackpackDisplay disp = BackpackDisplay.findBackpackDisplay(user.getUserId());
 
         if(!disp.getMessageId().isEmpty()) {
@@ -133,7 +141,7 @@ public class State implements Emotes {
         }
     }
 
-    public static void updateShopDisplay(GuildMessageReceivedEvent event, User user) {
+    public static void updateShopDisplay(MessageReceivedEvent event, User user) {
         ShopDisplay disp = ShopDisplay.findShopDisplay(user.getUserId());
 
         if(!disp.getMessageId().isEmpty()) {
@@ -141,7 +149,7 @@ public class State implements Emotes {
         }
     }
 
-    public static void updateOldShopDisplay(GuildMessageReceivedEvent event, User user) {
+    public static void updateOldShopDisplay(MessageReceivedEvent event, User user) {
         OldShopDisplay disp = OldShopDisplay.findOldShopDisplay(user.getUserId());
 
         if(!disp.getMessageId().isEmpty()) {
@@ -149,7 +157,7 @@ public class State implements Emotes {
         }
     }
 
-    public static void updateCardDisplay(GuildMessageReceivedEvent event, User user) {
+    public static void updateCardDisplay(MessageReceivedEvent event, User user) {
         CardDisplay disp = CardDisplay.findCardDisplay(user.getUserId());
 
         if(!disp.getMessageId().isEmpty()) {
@@ -164,7 +172,7 @@ public class State implements Emotes {
         }
     }
 
-    public static void updateInspectionDisplay(GuildMessageReceivedEvent event, User user) {
+    public static void updateInspectionDisplay(MessageReceivedEvent event, User user) {
         InspectionDisplay disp = InspectionDisplay.findInspectionDisplay(user.getUserId());
 
         if(!disp.getMessageId().isEmpty()) {
@@ -179,7 +187,7 @@ public class State implements Emotes {
         }
     }
 
-    public static void updateMinigameDisplay(GuildMessageReceivedEvent event, User user) {
+    public static void updateMinigameDisplay(MessageReceivedEvent event, User user) {
         Server server = Server.findServer(event);
         MinigameDisplay disp = MinigameDisplay.findMinigameDisplay(user.getUserId());
 
@@ -188,12 +196,12 @@ public class State implements Emotes {
         }
     }
 
-    public static void updateSearchDisplay(GuildMessageReceivedEvent event, SearchDisplay disp) {
+    public static void updateSearchDisplay(MessageReceivedEvent event, SearchDisplay disp) {
         Rest.removeReaction(event, disp, "◀");
         Rest.removeReaction(event, disp, "▶");
     }
 
-    public static void updateFavDisplay(GuildMessageReceivedEvent event, User user) {
+    public static void updateFavDisplay(MessageReceivedEvent event, User user) {
         FavDisplay disp = FavDisplay.findFavDisplay(user.getUserId());
 
         if(!disp.getMessageId().isEmpty()) {

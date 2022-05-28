@@ -1,14 +1,17 @@
-/*package com.wixsite.seapolecat.Cmds;
+package com.wixsite.seapolecat.Cmds;
 import com.wixsite.seapolecat.Main.*;
-import com.wixsite.seapolecat.Display.*;
 import com.wixsite.seapolecat.Helpers.*;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
-import java.util.Random;
+import java.io.IOException;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.net.URI;
 
 public class VoteCmds extends Cmds {
 
-    public static void voteBot(GuildMessageReceivedEvent event) {
+    public static void voteBot(MessageReceivedEvent event) {
         Server server = Server.findServer(event);
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
@@ -23,40 +26,48 @@ public class VoteCmds extends Cmds {
         embed.clear();
     }
     
-    public static void claimReward(GuildMessageReceivedEvent event) {
+    public static void claimReward(MessageReceivedEvent event) {
         User user = User.findUser(event);
         Server server = Server.findServer(event);
 
-        if(!State.isCooldownDone(user.getDailyEpoch(), 720, true)) {
-            Rest.sendMessage(event, jigglypuff_ + " Please wait another " + State.findTimeLeft(user.getDailyEpoch(), 720, true));
+        if(!State.isCooldownDone(user.getVoteEpoch(), 720, true)) {
+            Rest.sendMessage(event, jigglypuff_ + " Please wait another " + State.findTimeLeft(user.getVoteEpoch(), 720, true));
 
         } else {
-            Main.dbl.hasVoted(user.getUserId()).whenComplete((hasVoted, failure) -> {
+            try {
+                HttpClient client = HttpClient.newHttpClient();
+                HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("https://top.gg/api/bots/814025499381727232/check?userId=" + user.getUserId()))
+                .GET()
+                .header("Authorization", Main.dblToken)
+                .build();
+                String response = client.send(request, HttpResponse.BodyHandlers.ofString()).body().toString();
+                boolean hasVoted = response.contains("1");
+    
                 if(!hasVoted) {
                     Rest.sendMessage(event, jigglypuff_ + " You haven't voted for *Gimme Cards* yet! "
                     + "Please use " + UX.formatCmd(server, "vote"));
-                    
+
                 } else {
-                    int energyReward = (new Random().nextInt(10) + 1) + 40;
-                    Data reward = Card.pickCard(Data.promoSets);
+                    EmbedBuilder embed = new EmbedBuilder();
                     String msg = "";
-                    String footer = event.getAuthor().getName() + "'s reward";
 
-                    Card.addSingleCard(user, reward);
-                    user.resetDailyEpoch();
+                    user.resetVoteEpoch();
 
-                    msg += UX.formatNick(event) + " claimed their reward... Thank you for voting!";
+                    msg += UX.formatNick(event) + " claimed their gift! Thank you for voting 😊";
                     msg += UX.updateTokens(user, 5);
-                    msg += UX.updateEnergy(user, energyReward);
-
+                    msg += UX.updateEnergy(user, UX.randRange(120, 150));
+                    msg += UX.updateStars(user, 1);
+    
                     State.updateBackpackDisplay(event, user);
-                    State.updateCardDisplay(event, user);
 
-                    Rest.sendMessage(event, msg);
-                    Display.displayCard(event, user, reward, footer);
+                    embed.setDescription(msg);
+                    embed.setColor(0xCC6385);
+                    Rest.sendEmbed(event, embed);
+                    embed.clear();
                     try { User.saveUsers(); } catch(Exception e) {}
                 }
-            });
+            } catch(IOException | InterruptedException e) {}
         }
     }
-}*/
+}

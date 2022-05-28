@@ -3,14 +3,14 @@ import com.wixsite.seapolecat.Interfaces.*;
 import com.wixsite.seapolecat.Main.*;
 import com.wixsite.seapolecat.Display.*;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 public class Rest implements Emotes {
 
-    public static void sendMessage(GuildMessageReceivedEvent event, String message) {
+    public static void sendMessage(MessageReceivedEvent event, String message) {
         try {
             event.getChannel().sendMessage(message).queue();
         } catch(InsufficientPermissionException e) {}
@@ -22,13 +22,13 @@ public class Rest implements Emotes {
         } catch(InsufficientPermissionException e) {}
     }
 
-    public static void sendEmbed(GuildMessageReceivedEvent event, EmbedBuilder embed) {
+    public static void sendEmbed(MessageReceivedEvent event, EmbedBuilder embed) {
         try {
             event.getChannel().sendMessageEmbeds(embed.build()).queue(message -> {}, failure -> {});
         } catch(InsufficientPermissionException e) {}
     }
 
-    public static void sendDynamicEmbed(GuildMessageReceivedEvent event, User user, Server server, Display disp, int page) {
+    public static void sendDynamicEmbed(MessageReceivedEvent event, User user, Server server, Display disp, int page) {
         UserInfo ui = new UserInfo(event);
         EmbedBuilder embed = disp.buildEmbed(user, ui, server, page);
 
@@ -51,7 +51,7 @@ public class Rest implements Emotes {
         embed.clear();
     }
 
-    public static void editEmbed(GuildMessageReceivedEvent event, User user, Server server, Display disp, int page) {
+    public static void editEmbed(MessageReceivedEvent event, User user, Server server, Display disp, int page) {
         UserInfo ui = new UserInfo(event);
         EmbedBuilder embed = disp.buildEmbed(user, ui, server, page);
 
@@ -65,7 +65,7 @@ public class Rest implements Emotes {
         } catch(NullPointerException | InsufficientPermissionException e) {}
     }
 
-    public static void editEmbed(GuildMessageReactionAddEvent event, User user, Server server, Display disp, int page) {
+    public static void editEmbed(MessageReactionAddEvent event, User user, Server server, Display disp, int page) {
         UserInfo ui = new UserInfo(event);
         EmbedBuilder embed = disp.buildEmbed(user, ui, server, page);
 
@@ -79,7 +79,7 @@ public class Rest implements Emotes {
         } catch(NullPointerException | InsufficientPermissionException e) {}
     }
 
-    public static void deleteMessage(GuildMessageReceivedEvent event, Display disp) {
+    public static void deleteMessage(MessageReceivedEvent event, Display disp) {
         try {
             event.getJDA().getTextChannelById(disp.getChannelId()).retrieveMessageById(disp.getMessageId()).queue(message -> {
                 message.delete().queue();
@@ -87,7 +87,7 @@ public class Rest implements Emotes {
         } catch(NullPointerException | InsufficientPermissionException e) {}
     }
 
-    public static void removeReaction(GuildMessageReceivedEvent event, Display disp, String reaction) {
+    public static void removeReaction(MessageReceivedEvent event, Display disp, String reaction) {
         try {
             event.getJDA().getTextChannelById(disp.getChannelId()).retrieveMessageById(disp.getMessageId()).queue(message -> {
                 message.removeReaction(reaction).queue(message2 -> {}, failure -> {});
@@ -95,7 +95,7 @@ public class Rest implements Emotes {
         } catch(NullPointerException | InsufficientPermissionException e) {}
     }
 
-    public static void removeReaction(GuildMessageReactionAddEvent event) {
+    public static void removeReaction(MessageReactionAddEvent event) {
         try {
             event.getReaction().removeReaction(event.getUser()).queue();
         } catch(InsufficientPermissionException e) {}

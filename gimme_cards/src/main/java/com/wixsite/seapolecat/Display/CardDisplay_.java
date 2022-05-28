@@ -58,7 +58,7 @@ public class CardDisplay_ extends Display {
             + " ┇ `#" + count + "`"
             + " ┇ " + UX.findRarityEmote(data) 
             + " ┇ " + data.getSetEmote()
-            + " ┇ " + UX.formatXPPrice(data)
+            + " ┇ " + UX.formatXPPrice(data, c.getSellable())
             + " ┇ **x" + c.getCardQuantity() + "**\n";
             count++;
             if(i >= mention.getCards().size() - 1) {

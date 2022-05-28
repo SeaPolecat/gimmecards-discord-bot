@@ -2,12 +2,12 @@ package com.wixsite.seapolecat.Cmds;
 import com.wixsite.seapolecat.Main.*;
 import com.wixsite.seapolecat.Display.*;
 import com.wixsite.seapolecat.Helpers.*;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 public class CardCmds extends Cmds {
 
-    public static void viewCards(GuildMessageReceivedEvent event, String[] args) {
+    public static void viewCards(MessageReceivedEvent event, String[] args) {
         User user = User.findUser(event);
         CardDisplay disp = CardDisplay.findCardDisplay(user.getUserId());
 
@@ -21,7 +21,7 @@ public class CardCmds extends Cmds {
         }
     }
 
-    public static void favouriteCard(GuildMessageReceivedEvent event, String[] args) {
+    public static void favouriteCard(MessageReceivedEvent event, String[] args) {
         User user = User.findUser(event);
 
         try {
@@ -40,7 +40,7 @@ public class CardCmds extends Cmds {
         }
     }
 
-    public static void unfavouriteCard(GuildMessageReceivedEvent event, String[] args) {
+    public static void unfavouriteCard(MessageReceivedEvent event, String[] args) {
         User user = User.findUser(event);
 
         try {
@@ -59,7 +59,24 @@ public class CardCmds extends Cmds {
         }
     }
 
-    public static void sortCards(GuildMessageReceivedEvent event, String[] args) {
+    public static void favouriteAll(MessageReceivedEvent event) {
+        User user = User.findUser(event);
+        boolean exists = false;
+
+        for(Card c : user.getCards()) {
+            if(!c.getIsFav() && State.isShinyCard(c.getData())) {
+                exists = true;
+                c.setIsFav(true);
+            }
+        }
+        if(exists) {
+            Rest.sendMessage(event, "💞 Added all your shiny cards to your favourites!");
+        } else {
+            Rest.sendMessage(event, jigglypuff_ + " Sorry, you have no shiny cards left to favourite!");
+        }
+    }
+
+    public static void sortCards(MessageReceivedEvent event, String[] args) {
         User user = User.findUser(event);
 
         try {

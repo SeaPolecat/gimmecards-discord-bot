@@ -38,24 +38,27 @@ public class InspectionDisplay extends Display {
         SearchDisplay disp2 = SearchDisplay.findSearchDisplay(user.getUserId());
         int startIndex = page - 1;
         int maxPage;
+        Card c = user.getCards().get(startIndex);
         Data data;
         String cardTitle;
+        Boolean sellable = null;
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
         if(disp.getDispType().equals("old")) {
             maxPage = user.getCards().size();
             data = user.getCards().get(startIndex).getData();
+            sellable = c.getSellable();
+
         } else if(disp.getDispType().equals("new")) {
             maxPage = disp.getNewCards().size();
             data = disp.getNewCards().get(startIndex);
+
         } else {
             maxPage = disp2.getSearchedCards().size();
             data = disp2.getSearchedCards().get(startIndex);
         }
         if(disp.getDispType().equals("old")) {
-            Card c = user.getCards().get(startIndex);
-
             cardTitle = UX.findCardTitle(c.getData(), c.getIsFav());
         } else {
             cardTitle = UX.findCardTitle(data, false);
@@ -63,7 +66,7 @@ public class InspectionDisplay extends Display {
 
         desc += "**Rarity** ┇ " + UX.findRarityEmote(data) + " " + data.getCardRarity() + "\n";
         desc += "**Card Set** ┇ " + data.getSetEmote() + " " + data.getSetName() + "\n";
-        desc += "**XP Value** ┇ " + UX.formatXPPrice(data) + "\n\n";
+        desc += "**XP Value** ┇ " + UX.formatXPPrice(data, sellable) + "\n\n";
         desc += "*Click on image for zoomed view*";
         
         embed.setTitle(cardTitle);

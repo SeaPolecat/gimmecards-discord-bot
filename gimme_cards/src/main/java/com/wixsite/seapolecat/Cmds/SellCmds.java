@@ -1,11 +1,11 @@
 package com.wixsite.seapolecat.Cmds;
 import com.wixsite.seapolecat.Main.*;
 import com.wixsite.seapolecat.Helpers.*;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class SellCmds extends Cmds {
 
-    public static void sellSingle(GuildMessageReceivedEvent event, String[] args) {
+    public static void sellSingle(MessageReceivedEvent event, String[] args) {
         User user = User.findUser(event);
         
         if(user.getCards().size() < 1) {
@@ -17,6 +17,7 @@ public class SellCmds extends Cmds {
                 Card c = user.getCards().get(index);
                 String cardTitle = UX.findCardTitle(c.getData(), c.getIsFav());
                 int profit = findSingleProfit(user, index);
+                int energyReward = (int)(profit * 0.02);
                 
                 if(profit == -1) {
                     Rest.sendMessage(event, jigglypuff_ + " Sorry, that card is in your favourites!");
@@ -26,7 +27,9 @@ public class SellCmds extends Cmds {
 
                     msg += UX.formatNick(event) + " sold **" + cardTitle + "**";
                     msg += UX.updateXP(user, profit);
-                    msg += UX.updateEnergy(user, (int)(profit * 0.02));
+                    if(energyReward > 0) {
+                        msg += UX.updateEnergy(user, energyReward);
+                    }
 
                     State.updateCardDisplay(event, user);
                     State.updateBackpackDisplay(event, user);
@@ -43,7 +46,7 @@ public class SellCmds extends Cmds {
         }
     }
 
-    public static void sellGroup(GuildMessageReceivedEvent event, String[] args) {
+    public static void sellGroup(MessageReceivedEvent event, String[] args) {
         User user = User.findUser(event);
 
         if(user.getCards().size() < 1) {
@@ -63,6 +66,7 @@ public class SellCmds extends Cmds {
     
                 } else {
                     int profit = findGroupProfit(user, start, end);
+                    int energyReward = (int)(profit * 0.02);
 
                     if(profit == -1) {
                         Rest.sendMessage(event, jigglypuff_ + " Sorry, some of those cards are in your favourites!");
@@ -72,7 +76,9 @@ public class SellCmds extends Cmds {
 
                         msg += UX.formatNick(event) + " sold **" + cardsSold + "** cards!";
                         msg += UX.updateXP(user, profit);
-                        msg += UX.updateEnergy(user, (int)(profit * 0.02));
+                        if(energyReward > 0) {
+                            msg += UX.updateEnergy(user, energyReward);
+                        }
 
                         State.updateCardDisplay(event, user);
                         State.updateBackpackDisplay(event, user);
@@ -90,9 +96,10 @@ public class SellCmds extends Cmds {
         }
     }
 
-    public static void sellDuplicates(GuildMessageReceivedEvent event) {
+    public static void sellDuplicates(MessageReceivedEvent event) {
         User user = User.findUser(event);
         int profit = findDuplicatesProfit(user);
+        int energyReward = (int)(profit * 0.02);
 
         if(profit == 0) {
             Rest.sendMessage(event, jigglypuff_ + " You don't have any duplicate cards!");
@@ -102,7 +109,9 @@ public class SellCmds extends Cmds {
 
             msg += UX.formatNick(event) + " sold all duplicates!";
             msg += UX.updateXP(user, profit);
-            msg += UX.updateEnergy(user, (int)(profit * 0.02));
+            if(energyReward > 0) {
+                msg += UX.updateEnergy(user, energyReward);
+            }
 
             State.updateCardDisplay(event, user);
             State.updateBackpackDisplay(event, user);
@@ -115,7 +124,7 @@ public class SellCmds extends Cmds {
         }
     }
 
-    public static void sellAll(GuildMessageReceivedEvent event) {
+    public static void sellAll(MessageReceivedEvent event) {
         User user = User.findUser(event);
         
         if(user.getCards().size() < 1) {
@@ -123,16 +132,19 @@ public class SellCmds extends Cmds {
 
         } else {
             int profit = findAllProfit(user);
+            int energyReward = (int)(profit * 0.02);
 
             if(profit == -1) {
-                Rest.sendMessage(event, jigglypuff_ + " Sorry, all of your cards are in your favourites!");
+                Rest.sendMessage(event, jigglypuff_ + " Sorry, all your cards are in your favourites!");
 
             } else {
                 String msg = "";
 
                 msg += UX.formatNick(event) + " sold all their cards! (except favourites)";
                 msg += UX.updateXP(user, profit);
-                msg += UX.updateEnergy(user, (int)(profit * 0.02));
+                if(energyReward > 0) {
+                    msg += UX.updateEnergy(user, energyReward);
+                }
 
                 State.updateCardDisplay(event, user);
                 State.updateBackpackDisplay(event, user);
@@ -159,7 +171,7 @@ public class SellCmds extends Cmds {
             } else {
                 c.minusCardQuantity();
             }
-            if(!State.isOldSet(c.getData())) {
+            if(c.getSellable()) {
                 profit += c.getData().getCardPrice();
             }
         }
@@ -182,7 +194,7 @@ public class SellCmds extends Cmds {
             } else {
                 c.minusCardQuantity();
             }
-            if(!State.isOldSet(c.getData())) {
+            if(c.getSellable()) {
                 profit += c.getData().getCardPrice();
             }
         }
@@ -195,7 +207,7 @@ public class SellCmds extends Cmds {
         for(Card c : user.getCards()) {
             while(c.getCardQuantity() > 1) {
                 c.minusCardQuantity();
-                if(!State.isOldSet(c.getData())) {
+                if(c.getSellable()) {
                     profit += c.getData().getCardPrice();
                 }
             }
@@ -214,7 +226,7 @@ public class SellCmds extends Cmds {
                 exists = true;
                 while(c.getCardQuantity() > 0) {
                     c.minusCardQuantity();
-                    if(!State.isOldSet(c.getData())) {
+                    if(c.getSellable()) {
                         profit += c.getData().getCardPrice();
                     }
 

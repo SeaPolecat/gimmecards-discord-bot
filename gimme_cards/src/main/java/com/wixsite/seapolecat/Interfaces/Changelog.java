@@ -139,6 +139,24 @@ public interface Changelog {
         + "🔹In the meantime, enjoy a new command [daily] that gives a reward every 24 hours\n"
         + "🔹New command [favs] that shows all your favourite cards\n"
         + "🔹New command [ranks] that shows the top 10 collectors in the server, based on level\n"
-        + "🔹Minor design changes"
+        + "🔹Minor design changes",
+
+        //16
+        "**Update 5/27/2022**\n"
+        + "🔸Did you see the new website?? 👀 You can go check it out with the [help] command!\n"
+        + "🔹Voting has been fixed! 🥳 You can now use [vote] to vote for *Gimme Cards*, then [claim] "
+        + "to claim a special gift! Let's all vote and make this server huge! 😄\n"
+        + "🔹[daily] now gives a random shiny card instead of tokens and stars\n"
+        + "🔹New command [favall] that favourites all your shiny cards automatically\n"
+        + "🔹New command [leaderboard] that shows the highest level collectors in the world\n"
+        + "🔹[ranks] has been re-designed, and now also shows everyone's XP progress\n"
+        + "🔹Added \"🎁 Promo\" to [rarities]\n"
+        + "🔹Levelling up now gives 1 star each time\n"
+        + "🔹[guess] now accepts guesses that have no spaces, like \"rareholo\" or \"rareshiny\"\n"
+        + "🔹Game balacing: the amount of energy you get has been decreased\n"
+        + "🔹Market cards are now unsellable (due to a loophole where you could convert all your "
+        + "energy into XP)\n"
+        + "🔹Fixed a bug where sometimes you gain -0 energy\n"
+        + "🔹There weren't enough card submissions for the custom booster pack, sorry! We have 5/10"
     };
 }

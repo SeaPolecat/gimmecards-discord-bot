@@ -47,7 +47,7 @@ public class InspectionDisplay_ extends Display {
 
         desc += "**Rarity** ┇ " + UX.findRarityEmote(data) + " " + data.getCardRarity() + "\n";
         desc += "**Card Set** ┇ " + data.getSetEmote() + " " + data.getSetName() + "\n";
-        desc += "**XP Value** ┇ " + UX.formatXPPrice(data) + "\n\n";
+        desc += "**XP Value** ┇ " + UX.formatXPPrice(data, c.getSellable()) + "\n\n";
         desc += "*Click on image for zoomed view*";
 
         embed.setTitle(ui.getUserName() + " ➤ " + disp.getMentionName() + "'s " + UX.findCardTitle(data, c.getIsFav()));
