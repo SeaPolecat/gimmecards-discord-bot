@@ -10,10 +10,10 @@ public class MinigameCmds extends Cmds {
         User user = User.findUser(event);
         Server server = Server.findServer(event);
 
-        if(!State.isCooldownDone(user.getMinigameEpoch(), 60, true)) {
-            Rest.sendMessage(event, jigglypuff_ + " Please wait another " + State.findTimeLeft(user.getMinigameEpoch(), 60, true));
+        //if(!State.isCooldownDone(user.getMinigameEpoch(), 60, true)) {
+            //Rest.sendMessage(event, jigglypuff_ + " Please wait another " + State.findTimeLeft(user.getMinigameEpoch(), 60, true));
 
-        } else {
+        //} else {
             MinigameDisplay.addMinigameDisplay(user);
             MinigameDisplay disp = MinigameDisplay.findMinigameDisplay(user.getUserId());
             
@@ -21,7 +21,7 @@ public class MinigameCmds extends Cmds {
             
             Rest.sendDynamicEmbed(event, user, server, disp, -1);
             try { User.saveUsers(); } catch(Exception e) {}
-        }
+        //}
     }
 
     public static void makeGuess(MessageReceivedEvent event, String[] args) {
@@ -33,7 +33,6 @@ public class MinigameCmds extends Cmds {
             for(int i = 1; i < args.length; i++) {
                 guess += args[i] + " ";
             }
-            guess = guess.trim();
 
             if(MinigameDisplay.isGuessCorrect(event, user, guess)) {
                 String msg = "";
@@ -42,7 +41,7 @@ public class MinigameCmds extends Cmds {
 
                 msg += UX.formatNick(event) + " won the minigame!";
                 msg += UX.updateTokens(user, 2);
-                msg += UX.updateEnergy(user, UX.randRange(80, 100));
+                msg += UX.updateEnergy(user, UX.randRange(48, 60));
 
                 State.updateBackpackDisplay(event, user);
 
@@ -56,7 +55,7 @@ public class MinigameCmds extends Cmds {
                     MinigameDisplay.removeMinigameDisplay(user);
 
                     msg += UX.formatNick(event) + " lost the minigame... But there's always next time!";
-                    msg += UX.updateEnergy(user, UX.randRange(40, 50));
+                    msg += UX.updateEnergy(user, UX.randRange(24, 30));
 
                     Rest.sendMessage(event, msg);
                     try { User.saveUsers(); } catch(Exception e) {}

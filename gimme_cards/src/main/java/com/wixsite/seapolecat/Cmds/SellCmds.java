@@ -135,7 +135,7 @@ public class SellCmds extends Cmds {
             int energyReward = (int)(profit * 0.02);
 
             if(profit == -1) {
-                Rest.sendMessage(event, jigglypuff_ + " Sorry, all of your cards are in your favourites!");
+                Rest.sendMessage(event, jigglypuff_ + " Sorry, all your cards are in your favourites!");
 
             } else {
                 String msg = "";
@@ -171,7 +171,7 @@ public class SellCmds extends Cmds {
             } else {
                 c.minusCardQuantity();
             }
-            if(!State.isOldSet(c.getData())) {
+            if(c.getSellable()) {
                 profit += c.getData().getCardPrice();
             }
         }
@@ -194,7 +194,7 @@ public class SellCmds extends Cmds {
             } else {
                 c.minusCardQuantity();
             }
-            if(!State.isOldSet(c.getData())) {
+            if(c.getSellable()) {
                 profit += c.getData().getCardPrice();
             }
         }
@@ -207,7 +207,7 @@ public class SellCmds extends Cmds {
         for(Card c : user.getCards()) {
             while(c.getCardQuantity() > 1) {
                 c.minusCardQuantity();
-                if(!State.isOldSet(c.getData())) {
+                if(c.getSellable()) {
                     profit += c.getData().getCardPrice();
                 }
             }
@@ -226,7 +226,7 @@ public class SellCmds extends Cmds {
                 exists = true;
                 while(c.getCardQuantity() > 0) {
                     c.minusCardQuantity();
-                    if(!State.isOldSet(c.getData())) {
+                    if(c.getSellable()) {
                         profit += c.getData().getCardPrice();
                     }
 

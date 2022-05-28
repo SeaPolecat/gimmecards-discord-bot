@@ -30,9 +30,8 @@ public class VoteCmds extends Cmds {
         User user = User.findUser(event);
         Server server = Server.findServer(event);
 
-        //make a voting epoch
-        if(!State.isCooldownDone(user.getDailyEpoch(), 720, true)) {
-            Rest.sendMessage(event, jigglypuff_ + " Please wait another " + State.findTimeLeft(user.getDailyEpoch(), 720, true));
+        if(!State.isCooldownDone(user.getVoteEpoch(), 720, true)) {
+            Rest.sendMessage(event, jigglypuff_ + " Please wait another " + State.findTimeLeft(user.getVoteEpoch(), 720, true));
 
         } else {
             try {
@@ -53,7 +52,9 @@ public class VoteCmds extends Cmds {
                     EmbedBuilder embed = new EmbedBuilder();
                     String msg = "";
 
-                    msg += UX.formatNick(event) + " claimed their reward! Thank you for voting 😊";
+                    user.resetVoteEpoch();
+
+                    msg += UX.formatNick(event) + " claimed their gift! Thank you for voting 😊";
                     msg += UX.updateTokens(user, 5);
                     msg += UX.updateEnergy(user, UX.randRange(120, 150));
                     msg += UX.updateStars(user, 1);

@@ -59,6 +59,23 @@ public class CardCmds extends Cmds {
         }
     }
 
+    public static void favouriteAll(MessageReceivedEvent event) {
+        User user = User.findUser(event);
+        boolean exists = false;
+
+        for(Card c : user.getCards()) {
+            if(!c.getIsFav() && State.isShinyCard(c.getData())) {
+                exists = true;
+                c.setIsFav(true);
+            }
+        }
+        if(exists) {
+            Rest.sendMessage(event, "💞 Added all your shiny cards to your favourites!");
+        } else {
+            Rest.sendMessage(event, jigglypuff_ + " Sorry, you have no shiny cards left to favourite!");
+        }
+    }
+
     public static void sortCards(MessageReceivedEvent event, String[] args) {
         User user = User.findUser(event);
 

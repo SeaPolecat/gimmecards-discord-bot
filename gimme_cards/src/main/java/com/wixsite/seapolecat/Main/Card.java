@@ -1,5 +1,6 @@
 package com.wixsite.seapolecat.Main;
 import com.wixsite.seapolecat.Display.*;
+import com.wixsite.seapolecat.Helpers.*;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -8,18 +9,21 @@ public class Card {
     private Data data;
     private Integer cardNum;
     private Integer cardQuantity;
+    private Boolean sellable;
     private Boolean isFav;
 
-    public Card(Data d, int cn) {
+    public Card(Data d, int cn, boolean s) {
         data = d;
         cardNum = cn;
         cardQuantity = 1;
+        sellable = s;
         isFav = false;
     }
 
     public Data getData() { return data; }
     public int getCardNum() { return cardNum; }
     public int getCardQuantity() { return cardQuantity; }
+    public boolean getSellable() { return sellable; }
     public boolean getIsFav() { return isFav; }
     //
     public void addCardQuantity() { cardQuantity++; }
@@ -79,7 +83,7 @@ public class Card {
         return pickCard(cards);
     }
 
-    public static Card addSingleCard(User user, Data data) {
+    public static Card addSingleCard(User user, Data data, boolean sellable) {
         boolean exists = false;
         Card newCard = null;
 
@@ -95,7 +99,7 @@ public class Card {
             }
         }
         if(!exists) {
-            newCard = new Card(data, user.getCardCount());
+            newCard = new Card(data, user.getCardCount(), sellable);
             user.getCards().add(newCard);
         }
         sortCards(user, user.getSortMethod(), user.getSortIncreasing());
@@ -122,21 +126,25 @@ public class Card {
         } else {
             newCards.add(pickCard(rares));
         }
-        for(Data card : newCards) {
+        for(Data data : newCards) {
             boolean exists = false;
 
             user.addCardCount();
             for(Card c : user.getCards()) {
                 String cardId = c.getData().getCardId();
 
-                if(card.getCardId().equals(cardId)) {
+                if(data.getCardId().equals(cardId)) {
                     exists = true;
                     c.addCardQuantity();
                     break;
                 }
             }
             if(!exists) {
-                user.getCards().add(new Card(card, user.getCardCount()));
+                if(State.isOldSet(data)) {
+                    user.getCards().add(new Card(data, user.getCardCount(), false));
+                } else {
+                    user.getCards().add(new Card(data, user.getCardCount(), true));
+                }
             }
         }
         sortCards(user, user.getSortMethod(), user.getSortIncreasing());

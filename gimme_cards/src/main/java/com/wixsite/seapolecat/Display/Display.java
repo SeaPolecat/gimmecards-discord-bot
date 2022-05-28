@@ -39,13 +39,13 @@ public class Display extends ListenerAdapter implements Emotes {
         return null;
     }
 
-    public static void displayCard(MessageReceivedEvent event, User user, Data data, String footer) {
+    public static void displayCard(MessageReceivedEvent event, User user, Data data, Card c, String footer) {
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
         desc += "**Rarity** ┇ " + UX.findRarityEmote(data) + " " + data.getCardRarity() + "\n";
         desc += "**Card Set** ┇ " + data.getSetEmote() + " " + data.getSetName() + "\n";
-        desc += "**XP Value** ┇ " + UX.formatXPPrice(data) + "\n\n";
+        desc += "**XP Value** ┇ " + UX.formatXPPrice(data, c.getSellable()) + "\n\n";
         desc += "*Click on image for zoomed view*";
 
         embed.setTitle(UX.findCardTitle(data, false));

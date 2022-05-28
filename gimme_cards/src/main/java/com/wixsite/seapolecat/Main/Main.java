@@ -9,15 +9,14 @@ import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
-import io.github.cdimascio.dotenv.Dotenv;
+//import io.github.cdimascio.dotenv.Dotenv;
 
 public class Main {
 
-    public static Dotenv dotenv = Dotenv.load();
+    //public static Dotenv dotenv = Dotenv.load();
     public static JDA jda;
     public static final String botToken = "ODY3MTA1NjEzNzIwNTg0MjIy.YPcRCA.Xtytp7Dh2-v3xb1ch1J92DPqUcw";
     public static final String dblToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgxNDAyNTQ5OTM4MTcyNzIzMiIsImJvdCI6dHJ1ZSwiaWF0IjoxNjUzMjA1MjI3fQ.cKoI_mWYtI6WeJ4boujB3zW6QVqe8Fl1YlnoAj57fMw";
-    public static final String botId = "814025499381727232";
 
     public static void main(String[] args) throws LoginException {
 

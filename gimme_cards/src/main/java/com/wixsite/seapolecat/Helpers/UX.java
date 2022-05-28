@@ -168,11 +168,17 @@ public class UX implements Emotes {
         return rarityEmote;
     }
 
-    public static String formatXPPrice(Data data) {
+    public static String formatXPPrice(Data data, Boolean sellable) {
         String XPPrice = XP_ + " **" + formatNumber(data.getCardPrice()) + "**";
 
-        if(State.isOldSet(data)) {
-            return XPPrice + " 🚫";
+        if(sellable == null) {
+            if(State.isOldSet(data)) {
+                return XPPrice + " 🚫";
+            }
+        } else {
+            if(!sellable) {
+                return XPPrice + " 🚫";
+            }
         }
         return XPPrice;
     }

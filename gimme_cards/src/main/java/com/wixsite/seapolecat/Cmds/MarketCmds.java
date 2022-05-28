@@ -62,6 +62,7 @@ public class MarketCmds extends Cmds {
                 Rest.sendMessage(event, jigglypuff_ + " Sorry, you don't have enough " + energy_ + " **Energy**");
 
             } else {
+                Card c;
                 Data item = server.getMarket().get(index);
                 String msg = "";
                 String footer = event.getAuthor().getName() + "'s purchase";
@@ -69,13 +70,13 @@ public class MarketCmds extends Cmds {
                 msg += UX.formatNick(event) + " bought " + UX.findCardTitle(item, false) + " from the market!";
                 msg += UX.updateEnergy(user, -item.getCardPrice());
 
-                Card.addSingleCard(user, item);
+                c = Card.addSingleCard(user, item, false);
 
                 State.updateBackpackDisplay(event, user);
                 State.updateCardDisplay(event, user);
 
                 Rest.sendMessage(event, msg);
-                Display.displayCard(event, user, item, footer);
+                Display.displayCard(event, user, item, c, footer);
                 try { User.saveUsers(); } catch(Exception e) {}
             }
         } catch(NumberFormatException | IndexOutOfBoundsException e) {

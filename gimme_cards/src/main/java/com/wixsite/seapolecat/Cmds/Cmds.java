@@ -61,6 +61,9 @@ public class Cmds extends ListenerAdapter implements Emotes {
         if(isValidCommand(event, args, "ranks", null)) {
             HelpCmds.viewRanks(event);
         }
+        if(isValidCommand(event, args, "leaderboard", null)) {
+            HelpCmds.viewLeaderboard(event);
+        }
 
         //BACKPACK
         if(isValidCommand(event, args, "backpack", null)) {
@@ -103,6 +106,9 @@ public class Cmds extends ListenerAdapter implements Emotes {
         }
         if(isValidCommand(event, args, "unfav", new String[]{"card number"})) {
             CardCmds.unfavouriteCard(event, args);
+        }
+        if(isValidCommand(event, args, "favall", null)) {
+            CardCmds.favouriteAll(event);
         }
         if(isValidCommand(event, args, "sort", null)) {
             CardCmds.sortCards(event, args);

@@ -27,22 +27,23 @@ public class InspectionCmds extends Cmds {
                         Rest.sendMessage(event, jigglypuff_ + " Sorry, you're out of " + star_ + " **Stars**");
 
                     } else {
+                        Card c;
                         Data item = Card.pickCard(set.getSpecs());
                         String msg = "";
                         String footer = event.getAuthor().getName() + "'s exclusive card";
     
                         user.resetOpenEpoch();
-                        Card.addSingleCard(user, item);
+                        c = Card.addSingleCard(user, item, true);
     
                         msg += UX.formatNick(event) + " drew a card from " + set.getSetEmote() + " **" + set.getSetName() + "**";
-                        msg += UX.updateEnergy(user, UX.randRange(16, 20));
+                        msg += UX.updateEnergy(user, UX.randRange(8, 10));
                         msg += UX.updateStars(user, -1);
     
                         State.updateBackpackDisplay(event, user);
                         State.updateCardDisplay(event, user);
     
                         Rest.sendMessage(event, msg);
-                        Display.displayCard(event, user, item, footer);
+                        Display.displayCard(event, user, item, c, footer);
                         try { User.saveUsers(); } catch(Exception e) {}
                     }
 
@@ -62,7 +63,7 @@ public class InspectionCmds extends Cmds {
                         
                         msg += UX.formatNick(event) + " opened " + set.getSetEmote() + " **" + set.getSetName() + "**";
                         msg += UX.updateTokens(user, -1);
-                        msg += UX.updateEnergy(user, UX.randRange(16, 20));
+                        msg += UX.updateEnergy(user, UX.randRange(8, 10));
     
                         State.updateBackpackDisplay(event, user);
                         State.updateCardDisplay(event, user);

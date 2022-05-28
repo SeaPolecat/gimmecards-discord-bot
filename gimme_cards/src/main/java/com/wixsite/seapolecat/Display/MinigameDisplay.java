@@ -58,7 +58,7 @@ public class MinigameDisplay extends Display {
         String cardRarity = disp.getCard().getCardRarity();
 
         disp.minusTries();
-        if(cardRarity.equalsIgnoreCase(guess)) {
+        if(cardRarity.replaceAll("\\s+", "").equalsIgnoreCase(guess.replaceAll("\\s+", ""))) {
             disp.winGame();
             State.updateMinigameDisplay(event, user);
             return true;

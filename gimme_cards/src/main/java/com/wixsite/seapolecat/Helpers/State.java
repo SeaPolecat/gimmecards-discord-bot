@@ -7,20 +7,30 @@ import java.util.Calendar;
 
 public class State implements Emotes {
 
-    public static boolean isOldSet(Data set) {        
+    public static boolean isOldSet(Data data) {        
         for(Data d : Data.oldSets) {
-            if(d.getSetName().equalsIgnoreCase(set.getSetName())) {
+            if(d.getSetName().equalsIgnoreCase(data.getSetName())) {
                 return true;
             }
         }
         return false;
     }
 
-    public static boolean isSpecSet(Data set) {        
+    public static boolean isSpecSet(Data data) {        
         for(Data d : Data.specSets) {
-            if(d.getSetName().equalsIgnoreCase(set.getSetName())) {
+            if(d.getSetName().equalsIgnoreCase(data.getSetName())) {
                 return true;
             }
+        }
+        return false;
+    }
+
+    public static boolean isShinyCard(Data data) {
+        String cardRarity = data.getCardRarity();
+
+        if(cardRarity.toLowerCase().contains("rare") && cardRarity.length() > 4 
+        || cardRarity.equalsIgnoreCase("legend")) {
+            return true;
         }
         return false;
     }
@@ -108,7 +118,7 @@ public class State implements Emotes {
     public static void checkLevelUp(MessageReceivedEvent event, User user) {
         while(user.getXP() >= user.getMaxXP()) {
             int tokenReward = (user.getLevel() + 9) / 10;
-            int energyReward = (user.getLevel() + 1) * 100;
+            int energyReward = ((user.getLevel() + 9) / 10) * 100;
             String msg = "";
 
             user.levelUp();

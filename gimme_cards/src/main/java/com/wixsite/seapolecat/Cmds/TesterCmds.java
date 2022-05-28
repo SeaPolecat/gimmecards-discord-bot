@@ -48,7 +48,7 @@ public class TesterCmds extends Cmds {
         }
     }*/
 
-    /*public User (String id, int cc, int l, int xp, int mxp, int t, int e, int k, int s, long oe, long de, long re, long me, String sm, boolean si, int bc, String bcard, ArrayList<String> p, ArrayList<Card> c) {
+    /*public User (String id, int cc, int l, int xp, int mxp, int t, int e, int k, int s, long oe, long ve, long de, long re, long me, String sm, boolean si, int bc, String bcard, ArrayList<String> p, ArrayList<Card> c) {
         userId = id;
         cardCount = cc;
         level = l;
@@ -59,6 +59,7 @@ public class TesterCmds extends Cmds {
         keys = k;
         stars = s;
         openEpoch = oe;
+        voteEpoch = ve;
         dailyEpoch = de;
         redeemEpoch = re;
         minigameEpoch = me;
@@ -123,8 +124,9 @@ public class TesterCmds extends Cmds {
                 u.getTokens(),
                 u.getEnergy(),
                 u.getKeys(),
-                0,
+                u.getStars(),
                 u.getOpenEpoch(),
+                0,
                 u.getDailyEpoch(),
                 u.getRedeemEpoch(),
                 u.getMinigameEpoch(),
@@ -138,7 +140,7 @@ public class TesterCmds extends Cmds {
             User.users.set(i, user);
         }
         for(User u : User.users) {
-            System.out.println(u.getStars());
+            System.out.println(u.getVoteEpoch());
         }
         Rest.sendMessage(event, "done testing!");
         try { User.saveUsers(); } catch(Exception e) {}*/

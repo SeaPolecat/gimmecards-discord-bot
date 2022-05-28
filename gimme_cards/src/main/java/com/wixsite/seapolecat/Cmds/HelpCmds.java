@@ -4,6 +4,7 @@ import com.wixsite.seapolecat.Main.*;
 import com.wixsite.seapolecat.Display.*;
 import com.wixsite.seapolecat.Helpers.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
@@ -19,8 +20,15 @@ public class HelpCmds extends Cmds implements Comparator<User> {
             return 1;
         } else if(u2.getLevel() < u1.getLevel()) {
             return -1;
+
         } else {
-            return 0;
+            if(u1.getXP() < u2.getXP()) {
+                return 1;
+            } else if(u2.getXP() < u1.getXP()) {
+                return -1;
+            } else {
+                return 0;
+            }
         }
     }
 
@@ -46,7 +54,7 @@ public class HelpCmds extends Cmds implements Comparator<User> {
         desc += "My prefix for this server is " + UX.formatCmd(server, "") + "\n\n";
 
         desc += "**Tutorial**\n";
-        desc += "For a quick tutorial and list of commands, please visit the [help website](https://www.gimmecards.ca/)\n\n";
+        desc += "For a quick tutorial and list of commands, please visit our [official website](https://www.gimmecards.ca/)\n\n";
 
         desc += "**Support Server**\n";
         desc += "Have questions or ideas for new updates? Or just wanna hang out with other collectors? "
@@ -71,7 +79,8 @@ public class HelpCmds extends Cmds implements Comparator<User> {
         desc += "┅┅\n";
         desc += "⚪ Common\n";
         desc += "🔷 Uncommon\n";
-        desc += "⭐ Rare\n\n";
+        desc += "⭐ Rare\n";
+        desc += "🎁 Promo\n\n";
 
         desc += "**🌟 Shiny Cards**\n";
         desc += "┅┅\n";
@@ -111,6 +120,7 @@ public class HelpCmds extends Cmds implements Comparator<User> {
     }
 
     public static void viewRanks(MessageReceivedEvent event) {
+        User user = User.findUser(event);
         List<Member> members = event.getGuild().getMembers();
         ArrayList<User> localUsers = new ArrayList<User>();
         EmbedBuilder embed = new EmbedBuilder();
@@ -141,7 +151,8 @@ public class HelpCmds extends Cmds implements Comparator<User> {
                 desc += "`#" + (i+1) + "`";
             }
             desc += " ┇ **" + userName + "**"
-            + " ┇ *" + "Lvl. " + u.getLevel() + "*\n";
+            + " ┇ *" + "Lvl. " + u.getLevel() + "*"
+            + " ┇ " + XP_ + " `" + UX.formatNumber(u.getXP()) + " / " + UX.formatNumber(u.getMaxXP()) + "`\n";
 
             if(i >= localUsers.size() - 1) {
                 break;
@@ -149,10 +160,82 @@ public class HelpCmds extends Cmds implements Comparator<User> {
         }
         desc += "┅┅\n";
 
+        for(int i = 0; i < localUsers.size(); i++) {
+            if(localUsers.get(i).getUserId().equals(user.getUserId())) {
+                desc += UX.formatNick(event) + " is `#" + (i+1) + "` in this server 🏝️";
+            }
+        }
         embed.setTitle(trainer_ + " Top Collectors Here " + trainer_);
         embed.setDescription(desc);
-        embed.setFooter(event.getGuild().getName(), event.getGuild().getIconUrl());
         embed.setColor(0xB0252B);
+        Rest.sendEmbed(event, embed);
+        embed.clear();
+    }
+
+    public static void viewLeaderboard(MessageReceivedEvent event) {
+        User user = User.findUser(event);
+        List<Guild> guilds = event.getJDA().getGuilds();
+        ArrayList<User> localUsers = new ArrayList<User>();
+        EmbedBuilder embed = new EmbedBuilder();
+        String desc = "";
+
+        for(Guild g : guilds) {
+            List<Member> members = g.getMembers();
+
+            for(Member m : members) {
+                for(User u : User.users) {
+                    if(m.getUser().getId().equals(u.getUserId())) {
+                        boolean exists = false;
+
+                        for(User u2 : localUsers) {
+                            if(u.getUserId().equals(u2.getUserId())) {
+                                exists = true;
+                                break;
+                            }
+                        }
+                        if(exists) {
+                            break;
+                        }
+                        localUsers.add(u);
+                        break;
+                    }
+                }
+            }
+        }
+        Collections.sort(localUsers, new HelpCmds());
+
+        desc += "┅┅\n";
+        for(int i = 0; i < 10; i++) {
+            User u = localUsers.get(i);
+            String userName = event.getJDA().getUserById(u.getUserId()).getName();
+
+            if(i == 0) {
+                desc += "🥇";
+            } else if(i == 1) {
+                desc += "🥈";
+            } else if(i == 2) {
+                desc += "🥉";
+            } else {
+                desc += "`#" + (i+1) + "`";
+            }
+            desc += " ┇ **" + userName + "**"
+            + " ┇ *" + "Lvl. " + u.getLevel() + "*"
+            + " ┇ " + XP_ + " `" + UX.formatNumber(u.getXP()) + " / " + UX.formatNumber(u.getMaxXP()) + "`\n";
+
+            if(i >= localUsers.size() - 1) {
+                break;
+            }
+        }
+        desc += "┅┅\n";
+
+        for(int i = 0; i < localUsers.size(); i++) {
+            if(localUsers.get(i).getUserId().equals(user.getUserId())) {
+                desc += UX.formatNick(event) + " is `#" + (i+1) + "` in the world 🌎";
+            }
+        }
+        embed.setTitle(logo_ + " World's Top Collectors " + logo_);
+        embed.setDescription(desc);
+        embed.setColor(0xE3E5E9);
         Rest.sendEmbed(event, embed);
         embed.clear();
     }
