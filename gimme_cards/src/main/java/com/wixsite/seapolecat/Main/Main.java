@@ -15,7 +15,7 @@ public class Main {
 
     //public static Dotenv dotenv = Dotenv.load();
     public static JDA jda;
-    public static final String botToken = "ODY3MTA1NjEzNzIwNTg0MjIy.YPcRCA.Xtytp7Dh2-v3xb1ch1J92DPqUcw";
+    public static final String botToken = "ODE0MDI1NDk5MzgxNzI3MjMy.YDX2Ug.zM7q9Pv8aFYrqv0IBpWUpzNrScw";
     public static final String dblToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgxNDAyNTQ5OTM4MTcyNzIzMiIsImJvdCI6dHJ1ZSwiaWF0IjoxNjUzMjA1MjI3fQ.cKoI_mWYtI6WeJ4boujB3zW6QVqe8Fl1YlnoAj57fMw";
 
     public static void main(String[] args) throws LoginException {

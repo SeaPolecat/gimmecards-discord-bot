@@ -9,6 +9,10 @@ features (at least 1)
 -surprise cards in chat
 -trading
 
+-open cooldown from 5s to 3s
+-can open with set code instead of the full name
+-add new packs that came out
+
 -custom card pack
 -badge/profile system (?inv is inventory, ?profile is profile)
 -seeing backpacks of other people

@@ -4,7 +4,6 @@ import com.wixsite.seapolecat.Main.*;
 import com.wixsite.seapolecat.Display.*;
 import com.wixsite.seapolecat.Helpers.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
@@ -174,56 +173,42 @@ public class HelpCmds extends Cmds implements Comparator<User> {
 
     public static void viewLeaderboard(MessageReceivedEvent event) {
         User user = User.findUser(event);
-        List<Guild> guilds = event.getJDA().getGuilds();
         ArrayList<User> localUsers = new ArrayList<User>();
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
+        int count = 0, index = 0;
 
-        for(Guild g : guilds) {
-            List<Member> members = g.getMembers();
-
-            for(Member m : members) {
-                for(User u : User.users) {
-                    if(m.getUser().getId().equals(u.getUserId())) {
-                        boolean exists = false;
-
-                        for(User u2 : localUsers) {
-                            if(u.getUserId().equals(u2.getUserId())) {
-                                exists = true;
-                                break;
-                            }
-                        }
-                        if(exists) {
-                            break;
-                        }
-                        localUsers.add(u);
-                        break;
-                    }
-                }
-            }
+        for(User u : User.users) {
+            localUsers.add(u);
         }
         Collections.sort(localUsers, new HelpCmds());
 
         desc += "┅┅\n";
-        for(int i = 0; i < 10; i++) {
-            User u = localUsers.get(i);
-            String userName = event.getJDA().getUserById(u.getUserId()).getName();
-
-            if(i == 0) {
-                desc += "🥇";
-            } else if(i == 1) {
-                desc += "🥈";
-            } else if(i == 2) {
-                desc += "🥉";
-            } else {
-                desc += "`#" + (i+1) + "`";
-            }
-            desc += " ┇ **" + userName + "**"
-            + " ┇ *" + "Lvl. " + u.getLevel() + "*"
-            + " ┇ " + XP_ + " `" + UX.formatNumber(u.getXP()) + " / " + UX.formatNumber(u.getMaxXP()) + "`\n";
-
-            if(i >= localUsers.size() - 1) {
-                break;
+        while(count < 10) {
+            try {
+                User u = localUsers.get(index);
+                String userName = event.getJDA().getUserById(u.getUserId()).getName();
+    
+                if(count == 0) {
+                    desc += "🥇";
+                } else if(count == 1) {
+                    desc += "🥈";
+                } else if(count == 2) {
+                    desc += "🥉";
+                } else {
+                    desc += "`#" + (count+1) + "`";
+                }
+                desc += " ┇ **" + userName + "**"
+                + " ┇ *" + "Lvl. " + u.getLevel() + "*"
+                + " ┇ " + XP_ + " `" + UX.formatNumber(u.getXP()) + " / " + UX.formatNumber(u.getMaxXP()) + "`\n";
+    
+                if(count >= localUsers.size() - 1) {
+                    break;
+                }
+                count++;
+                index++;
+            } catch(NullPointerException e) {
+                index++;
             }
         }
         desc += "┅┅\n";

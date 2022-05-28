@@ -117,14 +117,13 @@ public class State implements Emotes {
 
     public static void checkLevelUp(MessageReceivedEvent event, User user) {
         while(user.getXP() >= user.getMaxXP()) {
-            int tokenReward = (user.getLevel() + 9) / 10;
             int energyReward = ((user.getLevel() + 9) / 10) * 100;
             String msg = "";
 
             user.levelUp();
 
             msg += UX.formatNick(event) + " is now level **" + user.getLevel() + "**!";
-            msg += UX.updateTokens(user, tokenReward);
+            msg += UX.updateTokens(user, 2);
             msg += UX.updateEnergy(user, energyReward);
             msg += UX.updateKeys(user, 1);
             msg += UX.updateStars(user, 1);
