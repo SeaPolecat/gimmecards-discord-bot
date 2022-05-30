@@ -60,7 +60,11 @@ public class BackpackCmds extends Cmds {
             msg += UX.formatNick(event) + " claimed their daily shiny card!";
             msg += UX.updateEnergy(user, UX.randRange(240, 300));
 
-            c = Card.addSingleCard(user, item, true);
+            if(State.isOldSet(item)) {
+                c = Card.addSingleCard(user, item, false);
+            } else {
+                c = Card.addSingleCard(user, item, true);
+            }
 
             State.updateBackpackDisplay(event, user);
             State.updateCardDisplay(event, user);

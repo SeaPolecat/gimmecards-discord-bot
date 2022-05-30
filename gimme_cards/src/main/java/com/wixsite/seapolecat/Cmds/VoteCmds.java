@@ -12,18 +12,25 @@ import java.net.URI;
 public class VoteCmds extends Cmds {
 
     public static void voteBot(MessageReceivedEvent event) {
+        User user = User.findUser(event);
         Server server = Server.findServer(event);
-        EmbedBuilder embed = new EmbedBuilder();
-        String desc = "";
 
-        desc += "Use the link below to vote, then type " + UX.formatCmd(server, "claim") + " to claim your reward!\n\n";
-        desc += "[Vote on Top.gg](https://top.gg/bot/814025499381727232/vote)";
+        if(!State.isCooldownDone(user.getVoteEpoch(), 720, true)) {
+            Rest.sendMessage(event, jigglypuff_ + " Please wait another " + State.findTimeLeft(user.getVoteEpoch(), 720, true));
 
-        embed.setTitle(gift_ + " Voting Reward " + gift_);
-        embed.setDescription(desc);
-        embed.setColor(0xBD2D2D);
-        Rest.sendEmbed(event, embed);
-        embed.clear();
+        } else {
+            EmbedBuilder embed = new EmbedBuilder();
+            String desc = "";
+    
+            desc += "Use the link below to vote, then type " + UX.formatCmd(server, "claim") + " to claim your reward!\n\n";
+            desc += "[Vote on Top.gg](https://top.gg/bot/814025499381727232/vote)";
+    
+            embed.setTitle(gift_ + " Voting Reward " + gift_);
+            embed.setDescription(desc);
+            embed.setColor(0xBD2D2D);
+            Rest.sendEmbed(event, embed);
+            embed.clear();
+        }
     }
     
     public static void claimReward(MessageReceivedEvent event) {

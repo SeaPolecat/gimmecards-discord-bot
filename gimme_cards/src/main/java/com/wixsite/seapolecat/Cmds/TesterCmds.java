@@ -10,6 +10,10 @@ public class TesterCmds extends Cmds {
     embed.addField("Rule 5", "Please do not spam the chat, unless you're using the bot. This includes unneccesary mentions/pings", false);
     embed.addField("Rule 6", "Try to post in the correct channels; they are separated for a reason", false);*/
 
+    /*"**Hotfix 5/29/2022**\n"
+    + "🔹Oldshop cards that you get from [daily] now can't be sold\n"
+    + "🔹[vote] shows the same cooldown as [claim]"*/
+
     /*public static void saitamaBday(GuildMessageReceivedEvent event) {
         User user = User.findUser(event);
 
