@@ -13,13 +13,7 @@ public class InspectionCmds_ extends Cmds {
         if(args.length > 2) {
             try {
                 String mentionId = event.getMessage().getMentions().getUsers().get(0).getId();
-                User mention;
-                try {
-                    mention = User.findOtherUser(event, mentionId);
-                } catch(IndexOutOfBoundsException e) {
-                    Rest.sendMessage(event, jigglypuff_ + " Whoops, I couldn't find that user...");
-                    return;
-                }
+                User mention = User.findOtherUser(event, mentionId);
                 String mentionName = event.getJDA().getUserById(mentionId).getName();
                 int page = Integer.parseInt(args[1]);
 

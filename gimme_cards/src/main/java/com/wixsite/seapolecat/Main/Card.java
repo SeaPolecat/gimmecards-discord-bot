@@ -219,8 +219,7 @@ public class Card {
         }
     }
 
-    public static void searchCards(User user, String key) {
-        SearchDisplay disp = SearchDisplay.findSearchDisplay(user.getUserId());
+    public static ArrayList<Data> searchCards(User user, String key) {
         ArrayList<Data> searchedCards = new ArrayList<Data>();
 
         for(Data set : Data.sets) {
@@ -229,15 +228,16 @@ public class Card {
         for(Data oldSet : Data.oldSets) {
             crawlSet(searchedCards, oldSet, key);
         }
-        disp.setSearchedCards(searchedCards);
-    }
+        for(Data specSet : Data.specSets) {
+            for(Data data : specSet.getSpecs()) {
+                String cardName = data.getCardName();
 
-    private static void swapCards(User user, int i1, int i2) {
-        ArrayList<Card> cards = user.getCards();
-        Card temp = cards.get(i1);
-        
-        cards.set(i1, cards.get(i2));
-        cards.set(i2, temp);
+                if(cardName.toLowerCase().contains(key.toLowerCase())) {
+                    searchedCards.add(data);
+                }
+            }
+        }
+        return searchedCards;
     }
 
     private static void crawlSet(ArrayList<Data> searchedCards, Data set, String key) {
@@ -269,5 +269,13 @@ public class Card {
                 searchedCards.add(data);
             }
         }
+    }
+
+    private static void swapCards(User user, int i1, int i2) {
+        ArrayList<Card> cards = user.getCards();
+        Card temp = cards.get(i1);
+        
+        cards.set(i1, cards.get(i2));
+        cards.set(i2, temp);
     }
 }

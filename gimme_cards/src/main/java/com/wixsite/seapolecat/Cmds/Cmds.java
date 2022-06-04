@@ -127,9 +127,6 @@ public class Cmds extends ListenerAdapter implements Emotes {
         if(isValidCommand(event, args, "sell", new String[]{"card number"})) {
             SellCmds.sellSingle(event, args);
         }
-        if(isValidCommand(event, args, "sellgroup", new String[]{"card number", "card number"})) {
-            SellCmds.sellGroup(event, args);
-        }
         if(isValidCommand(event, args, "selldupes", null)) {
             SellCmds.sellDuplicates(event);
         }
@@ -191,7 +188,6 @@ public class Cmds extends ListenerAdapter implements Emotes {
                 guidance = guidance.trim();
 
                 Rest.sendMessage(event, jigglypuff_ + " Please follow the format: `" + args[0] + " " + guidance + "`");
-                return false;
             }
         }
         return false;

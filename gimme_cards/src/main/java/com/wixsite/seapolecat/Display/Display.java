@@ -40,6 +40,7 @@ public class Display extends ListenerAdapter implements Emotes {
     }
 
     public static void displayCard(MessageReceivedEvent event, User user, Data data, Card c, String footer) {
+        UserInfo ui = new UserInfo(event);
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
@@ -51,7 +52,7 @@ public class Display extends ListenerAdapter implements Emotes {
         embed.setTitle(UX.findCardTitle(data, false));
         embed.setDescription(desc);
         embed.setImage(data.getCardImage());
-        embed.setFooter(footer, UX.findUserIcon(event));
+        embed.setFooter(footer, ui.getUserIcon());
         embed.setColor(UX.findEmbedColour(data));
         Rest.sendEmbed(event, embed);
         embed.clear();

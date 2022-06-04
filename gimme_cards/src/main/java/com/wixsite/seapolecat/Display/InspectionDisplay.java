@@ -38,7 +38,6 @@ public class InspectionDisplay extends Display {
         SearchDisplay disp2 = SearchDisplay.findSearchDisplay(user.getUserId());
         int startIndex = page - 1;
         int maxPage;
-        Card c = user.getCards().get(startIndex);
         Data data;
         String cardTitle;
         Boolean sellable = null;
@@ -46,24 +45,23 @@ public class InspectionDisplay extends Display {
         String desc = "";
 
         if(disp.getDispType().equals("old")) {
+            Card c = user.getCards().get(startIndex);
+
             maxPage = user.getCards().size();
             data = user.getCards().get(startIndex).getData();
+            cardTitle = UX.findCardTitle(data, c.getIsFav());
             sellable = c.getSellable();
 
         } else if(disp.getDispType().equals("new")) {
             maxPage = disp.getNewCards().size();
             data = disp.getNewCards().get(startIndex);
+            cardTitle = UX.findCardTitle(data, false);
 
         } else {
             maxPage = disp2.getSearchedCards().size();
             data = disp2.getSearchedCards().get(startIndex);
-        }
-        if(disp.getDispType().equals("old")) {
-            cardTitle = UX.findCardTitle(c.getData(), c.getIsFav());
-        } else {
             cardTitle = UX.findCardTitle(data, false);
         }
-
         desc += "**Rarity** ┇ " + UX.findRarityEmote(data) + " " + data.getCardRarity() + "\n";
         desc += "**Card Set** ┇ " + data.getSetEmote() + " " + data.getSetName() + "\n";
         desc += "**XP Value** ┇ " + UX.formatXPPrice(data, sellable) + "\n\n";

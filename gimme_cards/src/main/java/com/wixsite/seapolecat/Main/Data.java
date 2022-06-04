@@ -230,13 +230,6 @@ public class Data implements StoragePaths {
                         || cardRarity.equalsIgnoreCase("legend")) {
                             contents.add(new Data(setEmote, j));
                         }
-        
-                    } else if(rarity.equalsIgnoreCase("promo")) {
-                        try {
-                            if(cardRarity.equalsIgnoreCase(rarity)) {
-                                contents.add(new Data(setEmote, j));
-                            }
-                        } catch(UnsupportedOperationException e) {}
 
                     } else {
                         if(cardRarity.equalsIgnoreCase(rarity)) {

@@ -6,17 +6,18 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.ChunkingFilter;
+import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
-//import io.github.cdimascio.dotenv.Dotenv;
+import io.github.cdimascio.dotenv.Dotenv;
 
 public class Main {
 
-    //public static Dotenv dotenv = Dotenv.load();
+    public static Dotenv dotenv = Dotenv.load();
     public static JDA jda;
-    public static final String botToken = "ODE0MDI1NDk5MzgxNzI3MjMy.YDX2Ug.zM7q9Pv8aFYrqv0IBpWUpzNrScw";
-    public static final String dblToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgxNDAyNTQ5OTM4MTcyNzIzMiIsImJvdCI6dHJ1ZSwiaWF0IjoxNjUzMjA1MjI3fQ.cKoI_mWYtI6WeJ4boujB3zW6QVqe8Fl1YlnoAj57fMw";
+    public static final String botToken = dotenv.get("BOT_TOKEN");
+    public static final String dblToken = dotenv.get("DBL_TOKEN");
 
     public static void main(String[] args) throws LoginException {
 
@@ -26,6 +27,7 @@ public class Main {
         GatewayIntent.GUILD_MESSAGE_REACTIONS,
         GatewayIntent.GUILD_MEMBERS)
         .setChunkingFilter(ChunkingFilter.ALL)
+        .setMemberCachePolicy(MemberCachePolicy.ALL)
         .disableCache(CacheFlag.VOICE_STATE, CacheFlag.EMOTE)
         .build();
 

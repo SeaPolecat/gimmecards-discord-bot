@@ -157,6 +157,16 @@ public interface Changelog {
         + "🔹Market cards are now unsellable (due to a loophole where you could convert all your "
         + "energy into XP)\n"
         + "🔹Fixed a bug where sometimes you gain -0 energy\n"
-        + "🔹There weren't enough card submissions for the custom booster pack, sorry! We have 5/10"
+        + "🔹There weren't enough card submissions for the custom booster pack, sorry! We have 5/10",
+
+        //17
+        "**Update 6/4/2022**\n"
+        + "🔸Congrats to all giveaway winners! 🥳 Please check your backpack/cards to see your prizes\n"
+        + "🔹Deleted all *Gimme Cards* accounts under level 2 (to save storage space)\n"
+        + "🔹Exclusive cards now also show up in [search] results\n"
+        + "🔹Removed the [sellgroup] command\n"
+        + "🔹Improved the design of level-up messages\n"
+        + "🔹Other minor design changes\n"
+        + "🔹A few bug fixes"
     };
 }

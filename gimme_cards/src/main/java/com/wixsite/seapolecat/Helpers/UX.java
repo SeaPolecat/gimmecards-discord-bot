@@ -20,15 +20,6 @@ public class UX implements Emotes {
         return "__" + event.getAuthor().getName() + "__";
     }
 
-    public static String findUserIcon(MessageReceivedEvent event) {
-        String userIcon = event.getAuthor().getAvatarUrl();
-
-        if(userIcon == null) {
-            userIcon = event.getAuthor().getDefaultAvatarUrl();
-        }
-        return userIcon;
-    }
-
     public static int randRange(int min, int max) {
         int diff = max - min;
 

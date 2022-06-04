@@ -10,10 +10,10 @@ public class MinigameCmds extends Cmds {
         User user = User.findUser(event);
         Server server = Server.findServer(event);
 
-        //if(!State.isCooldownDone(user.getMinigameEpoch(), 60, true)) {
-            //Rest.sendMessage(event, jigglypuff_ + " Please wait another " + State.findTimeLeft(user.getMinigameEpoch(), 60, true));
+        if(!State.isCooldownDone(user.getMinigameEpoch(), 60, true)) {
+            Rest.sendMessage(event, jigglypuff_ + " Please wait another " + State.findTimeLeft(user.getMinigameEpoch(), 60, true));
 
-        //} else {
+        } else {
             MinigameDisplay.addMinigameDisplay(user);
             MinigameDisplay disp = MinigameDisplay.findMinigameDisplay(user.getUserId());
             
@@ -21,7 +21,7 @@ public class MinigameCmds extends Cmds {
             
             Rest.sendDynamicEmbed(event, user, server, disp, -1);
             try { User.saveUsers(); } catch(Exception e) {}
-        //}
+        }
     }
 
     public static void makeGuess(MessageReceivedEvent event, String[] args) {

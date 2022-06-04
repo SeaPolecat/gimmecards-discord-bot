@@ -1,25 +1,26 @@
 fixes (ALL)
 ----------------------------------
--include exclusive cards in search results too
+-update website and top.gg
 
 
 
 features (at least 1)
 -----------------------------------
--surprise cards in chat
--trading
-
+-add new pack that came out
+-show which cards you sold in ?sellall
 -open cooldown from 5s to 3s
 -can open with set code instead of the full name
--add new packs that came out
-
 -custom card pack
 -badge/profile system (?inv is inventory, ?profile is profile)
 -seeing backpacks of other people
+
+-surprise cards in chat
+-trading
 
 
 
 research (optional)
 -----------------------------------
+-users' card counts are potentially too big
 -find a way to generate true random in Java
--find out why ?claim has stopped working
+-reduce cpu load, try a binary search method and clearing all embeds
