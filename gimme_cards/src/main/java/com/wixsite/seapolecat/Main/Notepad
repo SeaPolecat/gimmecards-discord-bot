@@ -1,19 +1,19 @@
 fixes (ALL)
 ----------------------------------
 -update website and top.gg
+-add ?unfavall command
+-add ?gift cmd
+-update rarities to have custom rarity
 
 
 
 features (at least 1)
 -----------------------------------
--add new pack that came out
 -show which cards you sold in ?sellall
--open cooldown from 5s to 3s
 -can open with set code instead of the full name
--custom card pack
 -badge/profile system (?inv is inventory, ?profile is profile)
 -seeing backpacks of other people
-
+-more options for ?search
 -surprise cards in chat
 -trading
 

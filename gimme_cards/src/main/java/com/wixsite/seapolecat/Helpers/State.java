@@ -17,8 +17,17 @@ public class State implements Emotes {
         return false;
     }
 
-    public static boolean isSpecSet(Data data) {        
-        for(Data d : Data.specSets) {
+    public static boolean isRareSet(Data data) {        
+        for(Data d : Data.rareSets) {
+            if(d.getSetName().equalsIgnoreCase(data.getSetName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isPromoSet(Data data) {        
+        for(Data d : Data.promoSets) {
             if(d.getSetName().equalsIgnoreCase(data.getSetName())) {
                 return true;
             }

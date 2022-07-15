@@ -11,13 +11,11 @@ public class CardCmds extends Cmds {
         User user = User.findUser(event);
         CardDisplay disp = CardDisplay.findCardDisplay(user.getUserId());
 
-        if(args.length < 2) {
-            if(user.getCards().size() < 1) {
-                Rest.sendMessage(event, jigglypuff_ + " You don't have any cards yet!");
-    
-            } else {
-                Rest.sendDynamicEmbed(event, user, null, disp, 1);
-            }
+        if(user.getCards().size() < 1) {
+            Rest.sendMessage(event, jigglypuff_ + " You don't have any cards yet!");
+
+        } else {
+            Rest.sendDynamicEmbed(event, user, null, disp, 1);
         }
     }
 

@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 public class Rest implements Emotes {
@@ -43,8 +44,8 @@ public class Rest implements Emotes {
                 disp.setPage(page);
 
                 if(page != -1) {
-                    message.addReaction("◀").queue();
-                    message.addReaction("▶").queue();
+                    message.addReaction(Emoji.fromFormatted("◀")).queue();
+                    message.addReaction(Emoji.fromFormatted("▶")).queue();
                 }
             });
         } catch(InsufficientPermissionException e) {}
@@ -89,7 +90,7 @@ public class Rest implements Emotes {
     public static void removeReaction(MessageReceivedEvent event, Display disp, String reaction) {
         try {
             event.getJDA().getTextChannelById(disp.getChannelId()).retrieveMessageById(disp.getMessageId()).queue(message -> {
-                message.removeReaction(reaction).queue();
+                message.removeReaction(Emoji.fromFormatted(reaction)).queue();
             });
         } catch(NullPointerException | InsufficientPermissionException e) {}
     }

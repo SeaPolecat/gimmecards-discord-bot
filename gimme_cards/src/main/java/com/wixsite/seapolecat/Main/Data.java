@@ -23,11 +23,13 @@ public class Data implements StoragePaths {
 
     public static Hashtable<Integer, String> setCodes = new Hashtable<>();
     public static Hashtable<Integer, String> oldSetCodes = new Hashtable<>();
-    public static Hashtable<Integer, String> specSetCodes = new Hashtable<>();
+    public static Hashtable<Integer, String> rareSetCodes = new Hashtable<>();
+    public static Hashtable<Integer, String> promoSetCodes = new Hashtable<>();
     //
-    public static Data[] sets = new Data[44];
+    public static Data[] sets = new Data[45];
     public static Data[] oldSets = new Data[46];
-    public static Data[] specSets = new Data[11];
+    public static Data[] rareSets = new Data[9];
+    public static Data[] promoSets = new Data[6];
     //
     private String setEmote;
     private String setName;
@@ -36,10 +38,10 @@ public class Data implements StoragePaths {
     private String cardRarity;
     private String cardImage;
     private String cardSupertype;
-    private JsonArray cardSubtypes;
+    private String[] cardSubtypes;
     private Integer cardPrice;
 
-    public Data(String se, JsonElement j) {
+    public Data(String se, int cp, JsonElement j) {
         setEmote = se;
         setName = j.getAsJsonObject().get("set").getAsJsonObject().get("name").getAsString().replace("—", " ");
         cardId = j.getAsJsonObject().get("id").getAsString();
@@ -47,12 +49,20 @@ public class Data implements StoragePaths {
         cardRarity = j.getAsJsonObject().get("rarity").getAsString();
         cardImage = j.getAsJsonObject().get("images").getAsJsonObject().get("large").getAsString();
         cardSupertype = j.getAsJsonObject().get("supertype").getAsString();
-        try {
-            cardSubtypes = j.getAsJsonObject().get("types").getAsJsonArray();
-        } catch(NullPointerException e) {
-            cardSubtypes = null;
-        }
-        cardPrice = findCardPrice(j);
+        cardSubtypes = findCardSubtypes(j);
+        cardPrice = cp;
+    }
+
+    public Data(String se, String sn, String cId, String cn, String cr, String ci, String cSuper, String[] cSub, int cp) {
+        setEmote = se;
+        setName = sn;
+        cardId = cId;
+        cardName = cn;
+        cardRarity = cr;
+        cardImage = ci;
+        cardSupertype = cSuper;
+        cardSubtypes = cSub;
+        cardPrice = cp;
     }
 
     public String getSetEmote() { return setEmote; }
@@ -62,8 +72,10 @@ public class Data implements StoragePaths {
     public String getCardRarity() { return cardRarity; }
     public String getCardImage() { return cardImage; }
     public String getCardSupertype() { return cardSupertype; }
-    public JsonArray getCardSubtypes() { return cardSubtypes; }
+    public String[] getCardSubtypes() { return cardSubtypes; }
     public int getCardPrice() { return cardPrice; }
+
+    public void setSetEmote(String se) { setEmote = se; }
 
     private ArrayList<Data> commons;
     private ArrayList<Data> uncommons;
@@ -101,8 +113,10 @@ public class Data implements StoragePaths {
             path = dataPath;
         } else if(dataType.equalsIgnoreCase("old")) {
             path = oldDataPath;
-        } else if(dataType.equalsIgnoreCase("spec")) {
-            path = specPath;
+        } else if(dataType.equalsIgnoreCase("rare")) {
+            path = rareDataPath;
+        } else if(dataType.equalsIgnoreCase("promo")) {
+            path = promDataPath;
         }
 
         if(Paths.get(path).toFile().length() > 0) {
@@ -126,9 +140,16 @@ public class Data implements StoragePaths {
         reader.close();
     }
 
-    public static void loadSpecData() throws Exception {
-        Reader reader = new InputStreamReader(new FileInputStream(determinePath("spec")), "UTF-8");
-        specSets = new Gson().fromJson(reader, Data[].class);
+    public static void loadRareData() throws Exception {
+        Reader reader = new InputStreamReader(new FileInputStream(determinePath("rare")), "UTF-8");
+        rareSets = new Gson().fromJson(reader, Data[].class);
+
+        reader.close();
+    }
+
+    public static void loadPromoData() throws Exception {
+        Reader reader = new InputStreamReader(new FileInputStream(determinePath("promo")), "UTF-8");
+        promoSets = new Gson().fromJson(reader, Data[].class);
 
         reader.close();
     }
@@ -147,10 +168,17 @@ public class Data implements StoragePaths {
         writer.close();
     }
 
-    public static void saveSpecData() throws Exception {
+    public static void saveRareData() throws Exception {
         Gson gson = new GsonBuilder().create();
-        Writer writer = new OutputStreamWriter(new FileOutputStream(determinePath("spec")), "UTF-8");
-        gson.toJson(specSets, writer);
+        Writer writer = new OutputStreamWriter(new FileOutputStream(determinePath("rare")), "UTF-8");
+        gson.toJson(rareSets, writer);
+        writer.close();
+    }
+
+    public static void savePromoData() throws Exception {
+        Gson gson = new GsonBuilder().create();
+        Writer writer = new OutputStreamWriter(new FileOutputStream(determinePath("promo")), "UTF-8");
+        gson.toJson(promoSets, writer);
         writer.close();
     }
 
@@ -169,7 +197,13 @@ public class Data implements StoragePaths {
                 break;
             }
         }
-        for(Data d : specSets) {
+        for(Data d : rareSets) {
+            if(d.getSetName().equalsIgnoreCase(setName)) {
+                set = d;
+                break;
+            }
+        }
+        for(Data d : promoSets) {
             if(d.getSetName().equalsIgnoreCase(setName)) {
                 set = d;
                 break;
@@ -178,73 +212,186 @@ public class Data implements StoragePaths {
         return set;
     }
 
-    private static int findCardPrice(JsonElement card) {
-        double cardPrice;
-        String cardRarity = card.getAsJsonObject().get("rarity").getAsString();
-        JsonObject prices = card.getAsJsonObject()
-        .get("tcgplayer").getAsJsonObject()
-        .get("prices").getAsJsonObject();
+    private static String[] findCardSubtypes(JsonElement j) {
+        String[] cardSubtypes;
 
-        if(cardRarity.equalsIgnoreCase("common") || cardRarity.equalsIgnoreCase("uncommon") || cardRarity.equalsIgnoreCase("rare")) {
-            try {
-                cardPrice = prices.get("normal").getAsJsonObject().get("market").getAsDouble();
-            } catch(NullPointerException | UnsupportedOperationException e) {
-                try {
-                    cardPrice = prices.get("reverseholofoil").getAsJsonObject().get("market").getAsDouble();
-                } catch(NullPointerException | UnsupportedOperationException e2) {
-                    cardPrice = prices.get("holofoil").getAsJsonObject().get("market").getAsDouble();
-                }
+        try {
+            JsonArray rawSubtypes = j.getAsJsonObject().get("types").getAsJsonArray();
+            cardSubtypes = new String[rawSubtypes.size()];
+
+            for(int i = 0; i < rawSubtypes.size(); i++) {
+                cardSubtypes[i] = rawSubtypes.get(i).toString().replaceAll("\"", "");
             }
-        } else {
-            try {
-                cardPrice = prices.get("holofoil").getAsJsonObject().get("market").getAsDouble();
-            } catch(NullPointerException | UnsupportedOperationException e) {
-                try {
-                    cardPrice = prices.get("reverseholofoil").getAsJsonObject().get("market").getAsDouble();
-                } catch(NullPointerException | UnsupportedOperationException e2) {
-                    cardPrice = prices.get("normal").getAsJsonObject().get("market").getAsDouble();
-                }
-            }
+            return cardSubtypes;
+        } catch(NullPointerException e) {
+            return null;
         }
-        return (int)(cardPrice * 100);
     }
 
-    public static ArrayList<Data> crawlSetContent(String setEmote, String setCode, String rarity) throws IOException {
-        ArrayList<Data> contents = new ArrayList<Data>();
-        int page = 1;
+    private static int findCardPrice(JsonElement j) {
+        JsonObject prices = null;
 
-        while(true) {
-            URL url = new URL("https://api.pokemontcg.io/v2/cards?q=set.ptcgoCode:" + setCode + "%20&page=" + page + "/key=1bfc1133-79a4-46f6-93d6-6a4dab4b7335");
-            String jsonStr = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8")).readLine();
-            JsonArray jsonArr = JsonParser.parseString(jsonStr).getAsJsonObject().getAsJsonArray("data");
+        try {
+            prices = j.getAsJsonObject().get("tcgplayer").getAsJsonObject().get("prices").getAsJsonObject();
+            return findTcgplayerPrice(prices);
 
-            if(jsonArr.size() < 1) {
-                break;
+        } catch(NullPointerException e) {
+            try {
+                prices = j.getAsJsonObject().get("cardmarket").getAsJsonObject().get("prices").getAsJsonObject();
+                return findCardmarketPrice(prices);
+
+            } catch(NullPointerException error) {
+                System.out.println(j + "\n");
+                return -1;
             }
-            for(JsonElement j : jsonArr) {
+        }
+    }
+
+    private static int findTcgplayerPrice(JsonObject prices) {
+        JsonObject rawPrice = null;
+        double finalPrice = 0;
+
+        try {
+            rawPrice = prices.get("normal").getAsJsonObject();
+        } catch(NullPointerException e) {
+            try {
+                rawPrice = prices.get("reverseHolofoil").getAsJsonObject();
+            } catch(NullPointerException e2) {
                 try {
-                    String cardRarity = j.getAsJsonObject().get("rarity").getAsString();
+                    rawPrice = prices.get("holofoil").getAsJsonObject();
+                } catch(NullPointerException e3) {
+                    try {
+                        rawPrice = prices.get("unlimited").getAsJsonObject();
+                    } catch(NullPointerException e4) {
+                        try {
+                            rawPrice = prices.get("unlimitedReverseHolofoil").getAsJsonObject();
+                        } catch(NullPointerException e5) {
+                            try {
+                                rawPrice = prices.get("unlimitedHolofoil").getAsJsonObject();
+                            } catch(NullPointerException e6) {
+                                try {
+                                    rawPrice = prices.get("1stEditionHolofoil").getAsJsonObject();
 
-                    if(rarity.equalsIgnoreCase("shiny")) {
-                        if(cardRarity.toLowerCase().contains("rare") && cardRarity.length() > 4 
-                        || cardRarity.equalsIgnoreCase("legend")) {
-                            contents.add(new Data(setEmote, j));
-                        }
-
-                    } else {
-                        if(cardRarity.equalsIgnoreCase(rarity)) {
-                            contents.add(new Data(setEmote, j));
+                                } catch(NullPointerException error) {
+                                    System.out.println(prices + "\n");
+                                    return -1;
+                                }
+                            }
                         }
                     }
-                } catch(NullPointerException e) {}
+                }
             }
-            page++;
         }
-        return contents;
+        try {
+            finalPrice = rawPrice.get("market").getAsDouble();
+        } catch(NullPointerException e) {
+            try {
+                finalPrice = rawPrice.get("mid").getAsDouble();
+
+            } catch(NullPointerException error) {
+                System.out.println(prices + "\n");
+                return -1;
+            }
+        }
+        return (int)(finalPrice * 100);
     }
 
-    public static ArrayList<Data> crawlSpecSetContent(String setEmote, String setCode) throws IOException {
-        ArrayList<Data> contents = new ArrayList<Data>();
+    private static int findCardmarketPrice(JsonObject prices) {
+        double finalPrice = 0;
+
+        try {
+            finalPrice = prices.get("averageSellPrice").getAsDouble();
+        } catch(NullPointerException e) {
+            try {
+                finalPrice = prices.get("trendPrice").getAsDouble();
+            } catch(NullPointerException e2) {
+                try {
+                    finalPrice = prices.get("lowPrice").getAsDouble();
+
+                } catch(NullPointerException error) {
+                    System.out.println(prices + "\n");
+                    return -1;
+                }
+            }
+        }
+        return (int)(finalPrice * 100);
+    }
+
+    public static Data findContents(String setEmote, String setCode) throws IOException {
+        JsonArray rawContents = crawlDatabase(setCode);
+        ArrayList<Data> commons = new ArrayList<Data>();
+        ArrayList<Data> uncommons = new ArrayList<Data>();
+        ArrayList<Data> rares = new ArrayList<Data>();
+        ArrayList<Data> shinies = new ArrayList<Data>();
+
+        for(JsonElement j : rawContents) {
+            String cardRarity = j.getAsJsonObject().get("rarity").getAsString();
+
+            if(!cardRarity.equalsIgnoreCase("promo")) {
+                int cardPrice = findCardPrice(j);
+
+                if(cardPrice != -1) {
+                    if(cardRarity.equalsIgnoreCase("common")) {
+                        commons.add(new Data(setEmote, cardPrice, j));
+
+                    } else if(cardRarity.equalsIgnoreCase("uncommon")) {
+                        uncommons.add(new Data(setEmote, cardPrice, j));
+
+                    } else if(cardRarity.equalsIgnoreCase("rare")) {
+                        rares.add(new Data(setEmote, cardPrice, j));
+
+                    } else {
+                        shinies.add(new Data(setEmote, cardPrice, j));
+                    }
+                }
+            }
+        }
+        return new Data(setEmote, commons.get(0).getSetName(), commons, uncommons, rares, shinies);
+    }
+
+    public static Data findRareContents(String setEmote, String setCode) throws IOException {
+        JsonArray rawContents = crawlDatabase(setCode);
+        ArrayList<Data> specs = new ArrayList<Data>();
+
+        for(JsonElement j : rawContents) {
+            int cardPrice = findCardPrice(j);
+
+            if(cardPrice != -1) {
+                try {
+                    specs.add(new Data(setEmote, cardPrice, j));
+                } catch(NullPointerException e) {}
+            }
+        }
+        return new Data(setEmote, specs.get(0).getSetName(), specs);
+    }
+
+    public static Data findPromoContents(String setEmote, String setCode) throws IOException {
+        JsonArray rawContents = crawlDatabase(setCode);
+        ArrayList<Data> specs = new ArrayList<Data>();
+        String cardRarity = "";
+
+        for(JsonElement j : rawContents) {
+            try {
+                cardRarity = j.getAsJsonObject().get("rarity").getAsString();
+            } catch(NullPointerException e) {
+                continue;
+            }
+
+            if(cardRarity.equalsIgnoreCase("promo")) {
+                int cardPrice = findCardPrice(j);
+
+                if(cardPrice != -1) {
+                    try {
+                        specs.add(new Data(setEmote, cardPrice, j));
+                    } catch(NullPointerException e) {}
+                }
+            }
+        }
+        return new Data(setEmote, specs.get(0).getSetName(), specs);
+    }
+
+    public static JsonArray crawlDatabase(String setCode) throws IOException {
+        JsonArray rawContents = new JsonArray();
         int page = 1;
 
         while(true) {
@@ -256,12 +403,10 @@ public class Data implements StoragePaths {
                 break;
             }
             for(JsonElement j : jsonArr) {
-                try {
-                    contents.add(new Data(setEmote, j));
-                } catch(NullPointerException e) {}
+                rawContents.add(j);
             }
             page++;
         }
-        return contents;
+        return rawContents;
     }
 }

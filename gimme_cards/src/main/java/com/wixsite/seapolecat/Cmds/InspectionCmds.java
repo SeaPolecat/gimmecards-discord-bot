@@ -1,10 +1,11 @@
 package com.wixsite.seapolecat.Cmds;
+import com.wixsite.seapolecat.Interfaces.*;
 import com.wixsite.seapolecat.Main.*;
 import com.wixsite.seapolecat.Display.*;
 import com.wixsite.seapolecat.Helpers.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
-public class InspectionCmds extends Cmds {
+public class InspectionCmds extends Cmds implements CustomCards {
 
     public static void openPack(MessageReceivedEvent event, String[] args) {
         User user = User.findUser(event);
@@ -22,7 +23,32 @@ public class InspectionCmds extends Cmds {
                 setName = setName.trim();
                 Data set = Data.findSet(setName);
 
-                if(State.isSpecSet(set)) {
+                if(setName.equalsIgnoreCase("gimme cards")) {
+                    if(user.getStars() < 1) {
+                        Rest.sendMessage(event, jigglypuff_ + " Sorry, you're out of " + star_ + " **Stars**");
+
+                    } else {
+                        Card c;
+                        Data item = Card.pickCard(customs);
+                        String msg = "";
+                        String footer = event.getAuthor().getName() + "'s exclusive card";
+
+                        user.resetOpenEpoch();
+                        c = Card.addSingleCard(user, item, false);
+    
+                        msg += UX.formatNick(event) + " drew a card from " + logo_ + " **Gimme Cards**";
+                        msg += UX.updateEnergy(user, UX.randRange(8, 10));
+                        msg += UX.updateStars(user, -1);
+    
+                        State.updateBackpackDisplay(event, user);
+                        State.updateCardDisplay(event, user);
+    
+                        Rest.sendMessage(event, msg);
+                        Display.displayCard(event, user, item, c, footer);
+                        try { User.saveUsers(); } catch(Exception e) {}
+                    }
+
+                } else if(State.isRareSet(set) || State.isPromoSet(set)) {
                     if(user.getStars() < 1) {
                         Rest.sendMessage(event, jigglypuff_ + " Sorry, you're out of " + star_ + " **Stars**");
 
@@ -30,8 +56,13 @@ public class InspectionCmds extends Cmds {
                         Card c;
                         Data item = Card.pickCard(set.getSpecs());
                         String msg = "";
-                        String footer = event.getAuthor().getName() + "'s exclusive card";
-    
+                        String footer = event.getAuthor().getName();
+
+                        if(State.isRareSet(set)) {
+                            footer += "'s exclusive card";
+                        } else {
+                            footer += "'s promo card";
+                        }
                         user.resetOpenEpoch();
                         c = Card.addSingleCard(user, item, true);
     
@@ -84,29 +115,27 @@ public class InspectionCmds extends Cmds {
         InspectionDisplay disp = InspectionDisplay.findInspectionDisplay(user.getUserId());
         SearchDisplay disp2 = SearchDisplay.findSearchDisplay(user.getUserId());
 
-        if(args.length < 3) {
-            try {
-                int page = Integer.parseInt(args[1]);
+        try {
+            int page = Integer.parseInt(args[1]);
 
-                disp.setDispType("old");
-                Rest.sendDynamicEmbed(event, user, null, disp, page);
-            } catch(NumberFormatException | IndexOutOfBoundsException e) {
-                boolean exists = false;
+            disp.setDispType("old");
+            Rest.sendDynamicEmbed(event, user, null, disp, page);
+        } catch(NumberFormatException | IndexOutOfBoundsException e) {
+            boolean exists = false;
 
-                for(int i = 0; i < disp2.getSearchedCards().size(); i++) {
-                    String cardId = disp2.getSearchedCards().get(i).getCardId();
+            for(int i = 0; i < disp2.getSearchedCards().size(); i++) {
+                String cardId = disp2.getSearchedCards().get(i).getCardId();
 
-                    if(cardId.equals(args[1])) {
-                        exists = true;
+                if(cardId.equals(args[1])) {
+                    exists = true;
 
-                        disp.setDispType("search");
-                        Rest.sendDynamicEmbed(event, user, null, disp, (i+1));
-                        break;
-                    }
+                    disp.setDispType("search");
+                    Rest.sendDynamicEmbed(event, user, null, disp, (i+1));
+                    break;
                 }
-                if(!exists) {
-                    Rest.sendMessage(event, jigglypuff_ + " Whoops, I couldn't find that card...");
-                }
+            }
+            if(!exists) {
+                Rest.sendMessage(event, jigglypuff_ + " Whoops, I couldn't find that card...");
             }
         }
     }

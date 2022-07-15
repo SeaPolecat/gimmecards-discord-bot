@@ -1,6 +1,7 @@
 package com.wixsite.seapolecat.Display;
 import com.wixsite.seapolecat.Interfaces.*;
 import com.wixsite.seapolecat.Main.*;
+import com.wixsite.seapolecat.Display_.*;
 import com.wixsite.seapolecat.Helpers.*;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -60,14 +61,14 @@ public class Display extends ListenerAdapter implements Emotes {
     
     private static void flipPage(MessageReactionAddEvent event, User user, Server server, Display disp, int maxPage) {
         if(event.getUser().getId().equals(disp.getUserId()) && event.getMessageId().equals(disp.getMessageId())) {
-            if(event.getReactionEmote().getName().equals("◀")) {
+            if(event.getEmoji().getName().equals("◀")) {
                 if(disp.getPage() <= 1) {
                     disp.setPage(maxPage);
                 } else {
                     disp.prevPage();
                 }
 
-            } else if(event.getReactionEmote().getName().equals("▶")) {
+            } else if(event.getEmoji().getName().equals("▶")) {
                 if(disp.getPage() >= maxPage) {
                     disp.setPage(1);
                 } else {

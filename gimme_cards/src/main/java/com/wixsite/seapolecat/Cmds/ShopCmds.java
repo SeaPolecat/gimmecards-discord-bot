@@ -26,18 +26,34 @@ public class ShopCmds extends Cmds {
         String desc = "";
 
         desc += "┅┅\n";
-        for(int i = 0; i < Data.specSets.length; i++) {
-            Data set = Data.specSets[i];
+        desc += logo_ + " Gimme Cards ┇ " + star_ + "\n";
+        for(int i = 0; i < Data.rareSets.length; i++) {
+            Data set = Data.rareSets[i];
 
             desc += set.getSetEmote() + " " + set.getSetName() + " ┇ " + star_ + "\n";
-            if(i >= Data.sets.length - 1) {
-                break;
-            }
         }
         desc += "┅┅\n";
-        embed.setTitle(scorbunny_ + " Exclusive Card Shop " + scorbunny_);
+        embed.setTitle(charmander_ + " Exclusive Packs Shop " + charmander_);
         embed.setDescription(desc);
-        embed.setColor(0xE23C1C);
+        embed.setColor(0xFC8035);
+        Rest.sendEmbed(event, embed);
+        embed.clear();
+    }
+
+    public static void viewPromoShop(MessageReceivedEvent event) {
+        EmbedBuilder embed = new EmbedBuilder();
+        String desc = "";
+
+        desc += "┅┅\n";
+        for(int i = 0; i < Data.promoSets.length; i++) {
+            Data set = Data.promoSets[i];
+
+            desc += set.getSetEmote() + " " + set.getSetName() + " ┇ " + star_ + "\n";
+        }
+        desc += "┅┅\n";
+        embed.setTitle(bulbasaur_ + " Promo Packs Shop " + bulbasaur_);
+        embed.setDescription(desc);
+        embed.setColor(0x63A127);
         Rest.sendEmbed(event, embed);
         embed.clear();
     }
@@ -53,8 +69,11 @@ public class ShopCmds extends Cmds {
             setName = setName.trim();
             Data set = Data.findSet(setName);
 
-            if(State.isSpecSet(set)) {
+            if(setName.equalsIgnoreCase("gimme cards") || State.isRareSet(set)) {
                 Rest.sendMessage(event, jigglypuff_ + " You don't need to unlock exclusive packs!");
+
+            } else if(State.isPromoSet(set)) {
+                Rest.sendMessage(event, jigglypuff_ + " You don't need to unlock promo packs!");
 
             } else {
                 if(State.isPackUnlocked(user, set.getSetName())) {

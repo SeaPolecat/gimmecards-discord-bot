@@ -21,21 +21,25 @@ public interface Emotes {
     String key_ = "<:key:875091820156162048>";
     String energy_ = "<:energy:924813210899599400>";
     String star_ = "<:star:954519273831800862>";
+    String promostar_ = "<:promostar:955206901552001185>";
     String pikameme_ = "<:pikameme:875586830601453569>";
     String logo_ = "<:logo:976498598516760646>";
 
     //animated
     String pikachu_ = "<a:pikachu:863244375969890314>";
+    String squirtle_ = "<a:squirtle:996954118990077972>";
+    String charmander_ = "<a:charmander:996954095388721233>";
+    String bulbasaur_ = "<a:bulbasaur:996951939805892669>";
     String ditto_ = "<a:ditto:821910185319989268>";
     String greenditto_ = "<a:greenditto:872946510516617286>";
     String redditto_ = "<a:redditto:954836162403516516>";
     String jigglypuff_ = "<a:jigglypuff:863642018239741954>";
     String clefairy_ = "<a:clefairy:870892940568969267>";
     String eevee_ = "<a:eevee:863690068345225227>";
-    String snorlax_ = "<a:snorlax:870539998825414698>";
     String mew_ = "<a:mew:926941785815658577>";
-    String scorbunny_ = "<a:scorbunny:954553211493175298>";
     String trainer_ = "<a:trainer:954869706177781800>";
-    String gift_ = "<a:gift:925118955620794448>";
     String pokeball_ = "<a:pokeball:875091838049071175>";
+    String gift_ = "<a:gift:925118955620794448>";
+    //String snorlax_ = "<a:snorlax:870539998825414698>";
+    //String scorbunny_ = "<a:scorbunny:954553211493175298>";
 }

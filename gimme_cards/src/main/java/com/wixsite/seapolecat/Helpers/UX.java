@@ -1,7 +1,6 @@
 package com.wixsite.seapolecat.Helpers;
 import com.wixsite.seapolecat.Interfaces.*;
 import com.wixsite.seapolecat.Main.*;
-import com.google.gson.JsonArray;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import java.text.NumberFormat;
 import java.util.Random;
@@ -95,11 +94,18 @@ public class UX implements Emotes {
     public static String findCardTitle(Data data, boolean isFav) {
         String cardTitle = "";
 
-        try {
-            JsonArray cardTypes = data.getCardSubtypes();
+        if(data.getCardSubtypes() == null) {
+            String supertype = data.getCardSupertype();
 
-            for(int i = 0; i < cardTypes.size(); i++) {
-                String cardType = cardTypes.get(i).getAsString();
+            if(supertype.equalsIgnoreCase("trainer")) {
+                cardTitle += "🔧";
+            } else if(supertype.equalsIgnoreCase("energy")) {
+                cardTitle += "💡";
+            }
+
+        } else {
+            for(int i = 0; i < data.getCardSubtypes().length; i++) {
+                String cardType = data.getCardSubtypes()[i];
     
                 if(cardType.equalsIgnoreCase("water")) {
                     cardTitle += water_;
@@ -125,14 +131,6 @@ public class UX implements Emotes {
                     cardTitle += colorless_;
                 }
             }
-        } catch(NullPointerException e) {
-            String supertype = data.getCardSupertype();
-
-            if(supertype.equalsIgnoreCase("trainer")) {
-                cardTitle += "🔧";
-            } else if(supertype.equalsIgnoreCase("energy")) {
-                cardTitle += "💡";
-            }
         }
         cardTitle += " " + data.getCardName();
         if(isFav) {
@@ -153,6 +151,8 @@ public class UX implements Emotes {
             rarityEmote = "⭐ ";
         } else if(cardRarity.equalsIgnoreCase("promo")) {
             rarityEmote = "🎁 ";
+        } else if(cardRarity.equalsIgnoreCase("custom")) {
+            rarityEmote = "✨ ";
         } else {
             rarityEmote = "🌟 ";
         }
@@ -181,9 +181,17 @@ public class UX implements Emotes {
     public static int findEmbedColour(Data data) {
         int embedColour = 0;
 
-        try {
-            JsonArray cardTypes = data.getCardSubtypes();
-            String cardType = cardTypes.get(0).getAsString();
+        if(data.getCardSubtypes() == null) {
+            String supertype = data.getCardSupertype();
+
+            if(supertype.equalsIgnoreCase("trainer")) {
+                embedColour = 0x768696;
+            } else if(supertype.equalsIgnoreCase("energy")) {
+                embedColour = 0xFED171;
+            }
+
+        } else {
+            String cardType = data.getCardSubtypes()[0];
 
             if(cardType.equalsIgnoreCase("water")) {
                 embedColour = 0x1C9EDD;
@@ -207,14 +215,6 @@ public class UX implements Emotes {
                 embedColour = 0x0F2541;
             } else if(cardType.equalsIgnoreCase("colorless")) {
                 embedColour = 0xE8EBEE;
-            }
-        } catch(NullPointerException e) {
-            String supertype = data.getCardSupertype();
-
-            if(supertype.equalsIgnoreCase("trainer")) {
-                embedColour = 0x768696;
-            } else if(supertype.equalsIgnoreCase("energy")) {
-                embedColour = 0xFED171;
             }
         }
         return embedColour;

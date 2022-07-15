@@ -1,6 +1,7 @@
 package com.wixsite.seapolecat.Cmds;
 import com.wixsite.seapolecat.Interfaces.*;
 import com.wixsite.seapolecat.Main.*;
+import com.wixsite.seapolecat.Cmds_.*;
 import com.wixsite.seapolecat.Helpers.*;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -25,8 +26,14 @@ public class Cmds extends ListenerAdapter implements Emotes {
             if(isValidCommand(event, args, "olddata", null)) {
                 DataCmds.viewData(event, "old");
             }
-            if(isValidCommand(event, args, "specdata", null)) {
-                DataCmds.viewData(event, "spec");
+            if(isValidCommand(event, args, "raredata", null)) {
+                DataCmds.viewData(event, "rare");
+            }
+            if(isValidCommand(event, args, "promodata", null)) {
+                DataCmds.viewData(event, "promo");
+            }
+            if(isValidCommand(event, args, "wipe", null)) {
+                DataCmds.wipeData(event);
             }
             if(isValidCommand(event, args, "refresh", new String[]{"length change"})) {
                 DataCmds.refreshData(event, args);
@@ -34,14 +41,17 @@ public class Cmds extends ListenerAdapter implements Emotes {
             if(isValidCommand(event, args, "count", new String[]{"set code"})) {
                 DataCmds.countSetContent(event, args);
             }
-            if(isValidCommand(event, args, "addset", new String[]{"set number"})) {
-                DataCmds.addSetContent(event, args, true);
+            if(isValidCommand(event, args, "add", new String[]{"set number"})) {
+                DataCmds.addContents(event, args, true);
             }
-            if(isValidCommand(event, args, "addoldset", new String[]{"set number"})) {
-                DataCmds.addSetContent(event, args, false);
+            if(isValidCommand(event, args, "addold", new String[]{"set number"})) {
+                DataCmds.addContents(event, args, false);
             }
-            if(isValidCommand(event, args, "addspecset", new String[]{"set number"})) {
-                DataCmds.addSpecSetContent(event, args);
+            if(isValidCommand(event, args, "addrare", new String[]{"set number"})) {
+                DataCmds.addSpecContents(event, args, true);
+            }
+            if(isValidCommand(event, args, "addpromo", new String[]{"set number"})) {
+                DataCmds.addSpecContents(event, args, false);
             }
         }
 
@@ -92,14 +102,20 @@ public class Cmds extends ListenerAdapter implements Emotes {
         if(isValidCommand(event, args, "rareshop", null)) {
             ShopCmds.viewRareShop(event);
         }
+        if(isValidCommand(event, args, "promoshop", null)) {
+            ShopCmds.viewPromoShop(event);
+        }
         if(isValidCommand(event, args, "unlock", new String[]{"pack name"})) {
             ShopCmds.unlockPack(event, args);
         }
 
         //CARD
         if(isValidCommand(event, args, "cards", null)) {
-            CardCmds.viewCards(event, args);
-            CardCmds_.viewCards_(event, args);
+            if(args.length < 2) {
+                CardCmds.viewCards(event, args);
+            } else {
+                CardCmds_.viewCards_(event, args);
+            }
         }
         if(isValidCommand(event, args, "fav", new String[]{"card number"})) {
             CardCmds.favouriteCard(event, args);
@@ -119,8 +135,11 @@ public class Cmds extends ListenerAdapter implements Emotes {
             InspectionCmds.openPack(event, args);
         }
         if(isValidCommand(event, args, "view", new String[]{"card number/id"})) {
-            InspectionCmds.viewCard(event, args);
-            InspectionCmds_.viewCard_(event, args);
+            if(args.length < 3) {
+                InspectionCmds.viewCard(event, args);
+            } else {
+                InspectionCmds_.viewCard_(event, args);
+            }
         }
 
         //SELL

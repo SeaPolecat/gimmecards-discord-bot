@@ -34,6 +34,121 @@ public class TesterCmds extends Cmds {
     }*/
 
     public static void testSomething(MessageReceivedEvent event) {
+        /*
+        int errCount = 0;
+
+        for(User u : User.users) {
+            for(int i = 0; i < u.getCards().size(); i++) {
+                Data newData = null;
+                Card c = u.getCards().get(i);
+                String cardId = c.getData().getCardId();
+
+                for(Data set : Data.sets) {
+                    for(Data data : set.getCommons()) {
+                        if(data.getCardId().equalsIgnoreCase(cardId)) {
+                            newData = data;
+                            break;
+                        }
+                    }
+                    for(Data data : set.getUncommons()) {
+                        if(data.getCardId().equalsIgnoreCase(cardId)) {
+                            newData = data;
+                            break;
+                        }
+                    }
+                    for(Data data : set.getRares()) {
+                        if(data.getCardId().equalsIgnoreCase(cardId)) {
+                            newData = data;
+                            break;
+                        }
+                    }
+                    for(Data data : set.getShinies()) {
+                        if(data.getCardId().equalsIgnoreCase(cardId)) {
+                            newData = data;
+                            break;
+                        }
+                    }
+                }
+                for(Data set : Data.oldSets) {
+                    for(Data data : set.getCommons()) {
+                        if(data.getCardId().equalsIgnoreCase(cardId)) {
+                            newData = data;
+                            break;
+                        }
+                    }
+                    for(Data data : set.getUncommons()) {
+                        if(data.getCardId().equalsIgnoreCase(cardId)) {
+                            newData = data;
+                            break;
+                        }
+                    }
+                    for(Data data : set.getRares()) {
+                        if(data.getCardId().equalsIgnoreCase(cardId)) {
+                            newData = data;
+                            break;
+                        }
+                    }
+                    for(Data data : set.getShinies()) {
+                        if(data.getCardId().equalsIgnoreCase(cardId)) {
+                            newData = data;
+                            break;
+                        }
+                    }
+                }
+                for(Data set : Data.rareSets) {
+                    for(Data data : set.getSpecs()) {
+                        if(data.getCardId().equalsIgnoreCase(cardId)) {
+                            newData = data;
+                            break;
+                        }
+                    }
+                }
+                for(Data set : Data.promoSets) {
+                    for(Data data : set.getSpecs()) {
+                        if(data.getCardId().equalsIgnoreCase(cardId)) {
+                            newData = data;
+                            break;
+                        }
+                    }
+                }
+
+                Card card = new Card(
+                    newData,
+                    c.getCardNum(),
+                    c.getCardQuantity(),
+                    c.getSellable(),
+                    c.getIsFav()
+                );
+                u.getCards().set(i, card);
+                
+                try {
+                    card.getData().getCardName();
+                } catch(NullPointerException e) {
+                    errCount++;
+                }
+            }
+        }
+        Rest.sendMessage(event, "done testing! " + errCount + " errors found");
+        try { User.saveUsers(); } catch(Exception e) {}
+
+        /*
+        for(Data d : Data.promoSets) {
+            for(Data d2 : d.getSpecs()) {
+                try {
+                    d2.getSetEmote().length();
+                    d2.getSetName().length();
+                    d2.getCardId().length();
+                    d2.getCardName().length();
+                    d2.getCardRarity().length();
+                    d2.getCardImage().length();
+                    d2.getCardSupertype().length();
+                } catch(NullPointerException e) {
+                    System.out.println("null found\n");
+                }
+            }
+        }
+        Rest.sendMessage(event, "done testing!");
+
         /*Data mew = null;
         Data gardevoir = null;
         //ecard1-19

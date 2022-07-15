@@ -20,6 +20,14 @@ public class Card {
         isFav = false;
     }
 
+    public Card(Data d, int cn, int cq, boolean s, boolean ifav) {
+        data = d;
+        cardNum = cn;
+        cardQuantity = cq;
+        sellable = s;
+        isFav = ifav;
+    }
+
     public Data getData() { return data; }
     public int getCardNum() { return cardNum; }
     public int getCardQuantity() { return cardQuantity; }
@@ -34,6 +42,12 @@ public class Card {
         Random rand = new Random();
 
         return cards.get(rand.nextInt(cards.size()));
+    }
+
+    public static Data pickCard(Data[] cards) {
+        Random rand = new Random();
+
+        return cards[rand.nextInt(cards.length)];
     }
 
     public static Data pickRandomCard() {
@@ -228,7 +242,7 @@ public class Card {
         for(Data oldSet : Data.oldSets) {
             crawlSet(searchedCards, oldSet, key);
         }
-        for(Data specSet : Data.specSets) {
+        for(Data specSet : Data.rareSets) {
             for(Data data : specSet.getSpecs()) {
                 String cardName = data.getCardName();
 
