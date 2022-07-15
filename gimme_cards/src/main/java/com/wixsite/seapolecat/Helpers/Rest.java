@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 public class Rest implements Emotes {
@@ -18,13 +19,13 @@ public class Rest implements Emotes {
 
     public static void sendEmbed(GuildJoinEvent event, EmbedBuilder embed) {
         try {
-            event.getGuild().getDefaultChannel().sendMessageEmbeds(embed.build()).queue(message -> {}, failure -> {});
+            event.getGuild().getDefaultChannel().sendMessageEmbeds(embed.build()).queue();
         } catch(InsufficientPermissionException e) {}
     }
 
     public static void sendEmbed(MessageReceivedEvent event, EmbedBuilder embed) {
         try {
-            event.getChannel().sendMessageEmbeds(embed.build()).queue(message -> {}, failure -> {});
+            event.getChannel().sendMessageEmbeds(embed.build()).queue();
         } catch(InsufficientPermissionException e) {}
     }
 
@@ -43,12 +44,11 @@ public class Rest implements Emotes {
                 disp.setPage(page);
 
                 if(page != -1) {
-                    message.addReaction("◀").queue(message2 -> {}, failure -> {});
-                    message.addReaction("▶").queue(message2 -> {}, failure -> {});
+                    message.addReaction(Emoji.fromFormatted("◀")).queue();
+                    message.addReaction(Emoji.fromFormatted("▶")).queue();
                 }
-            }, failure -> {});
+            });
         } catch(InsufficientPermissionException e) {}
-        embed.clear();
     }
 
     public static void editEmbed(MessageReceivedEvent event, User user, Server server, Display disp, int page) {
@@ -58,10 +58,10 @@ public class Rest implements Emotes {
         try {
             event.getJDA().getTextChannelById(disp.getChannelId()).retrieveMessageById(disp.getMessageId()).queue(message -> {
                 try {
-                    message.editMessageEmbeds(embed.build()).queue(message2 -> {}, failure -> {});
+                    message.editMessageEmbeds(embed.build()).queue();
                     embed.clear();
                 } catch(InsufficientPermissionException e) {}
-            }, (failure) -> {});
+            });
         } catch(NullPointerException | InsufficientPermissionException e) {}
     }
 
@@ -72,10 +72,10 @@ public class Rest implements Emotes {
         try {
             event.getJDA().getTextChannelById(disp.getChannelId()).retrieveMessageById(disp.getMessageId()).queue(message -> {
                 try {
-                    message.editMessageEmbeds(embed.build()).queue(message2 -> {}, failure -> {});
+                    message.editMessageEmbeds(embed.build()).queue();
                     embed.clear();
                 } catch(InsufficientPermissionException e) {}
-            }, (failure) -> {});
+            });
         } catch(NullPointerException | InsufficientPermissionException e) {}
     }
 
@@ -83,15 +83,15 @@ public class Rest implements Emotes {
         try {
             event.getJDA().getTextChannelById(disp.getChannelId()).retrieveMessageById(disp.getMessageId()).queue(message -> {
                 message.delete().queue();
-            }, (failure) -> {});
+            });
         } catch(NullPointerException | InsufficientPermissionException e) {}
     }
 
     public static void removeReaction(MessageReceivedEvent event, Display disp, String reaction) {
         try {
             event.getJDA().getTextChannelById(disp.getChannelId()).retrieveMessageById(disp.getMessageId()).queue(message -> {
-                message.removeReaction(reaction).queue(message2 -> {}, failure -> {});
-            }, (failure) -> {});
+                message.removeReaction(Emoji.fromFormatted(reaction)).queue();
+            });
         } catch(NullPointerException | InsufficientPermissionException e) {}
     }
 

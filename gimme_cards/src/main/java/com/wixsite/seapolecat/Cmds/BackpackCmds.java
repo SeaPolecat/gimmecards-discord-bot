@@ -31,12 +31,12 @@ public class BackpackCmds extends Cmds {
             msg += UX.updateTokens(user, 1);
             msg += UX.updateEnergy(user, UX.randRange(24, 30));
 
-            msg += "\n\n:red_circle: New update on 5/27/2022 ┇ " + UX.formatCmd(server, "changelog");
+            msg += "\n\n:orange_circle: New update on 6/4/2022 ┇ " + UX.formatCmd(server, "changelog");
 
             State.updateBackpackDisplay(event, user);
 
             embed.setDescription(msg);
-            embed.setColor(0xCC6385);
+            embed.setColor(0xFEBE54);
             Rest.sendEmbed(event, embed);
             embed.clear();
             try { User.saveUsers(); } catch(Exception e) {}
@@ -60,7 +60,11 @@ public class BackpackCmds extends Cmds {
             msg += UX.formatNick(event) + " claimed their daily shiny card!";
             msg += UX.updateEnergy(user, UX.randRange(240, 300));
 
-            c = Card.addSingleCard(user, item, true);
+            if(State.isOldSet(item)) {
+                c = Card.addSingleCard(user, item, false);
+            } else {
+                c = Card.addSingleCard(user, item, true);
+            }
 
             State.updateBackpackDisplay(event, user);
             State.updateCardDisplay(event, user);
@@ -80,7 +84,7 @@ public class BackpackCmds extends Cmds {
             user.setBackpackColor(color);
             State.updateBackpackDisplay(event, user);
 
-            Rest.sendMessage(event, eevee_ + " Set your backpack color to **" + color + "**");
+            Rest.sendMessage(event, eevee_ + " Set your backpack color to **" + args[1].toUpperCase() + "**");
             try { User.saveUsers(); } catch(Exception e) {}
         } catch(NumberFormatException e) {
             Rest.sendMessage(event, jigglypuff_ + " That's not a valid hex code!");

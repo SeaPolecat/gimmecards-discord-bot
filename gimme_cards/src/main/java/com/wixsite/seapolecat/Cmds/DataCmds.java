@@ -1,15 +1,12 @@
 package com.wixsite.seapolecat.Cmds;
 import com.wixsite.seapolecat.Main.*;
 import com.wixsite.seapolecat.Helpers.*;
-import java.io.InputStreamReader;
-import java.io.BufferedReader;
 import java.io.IOException;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonParser;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
 import java.util.ArrayList;
-import java.net.URL;
 
 public class DataCmds extends Cmds {
 
@@ -42,9 +39,12 @@ public class DataCmds extends Cmds {
         } else if(dataType.equalsIgnoreCase("old")) {
             dataList = Data.oldSets;
             title = pikameme_ + " **Old Card Sets** " + pikameme_;
-        } else if(dataType.equalsIgnoreCase("spec")) {
-            dataList = Data.specSets;
-            title = pikameme_ + " **Special Card Sets** " + pikameme_;
+        } else if(dataType.equalsIgnoreCase("rare")) {
+            dataList = Data.rareSets;
+            title = pikameme_ + " **Rare Card Sets** " + pikameme_;
+        } else if(dataType.equalsIgnoreCase("promo")) {
+            dataList = Data.promoSets;
+            title = pikameme_ + " **Promo Card Sets** " + pikameme_;
         }
         for(int i = 0; i < dataList.length; i++) {
             if(dataList[i] == null) {
@@ -63,6 +63,26 @@ public class DataCmds extends Cmds {
         embed.setColor(0xE8AE34);
         Rest.sendEmbed(event, embed);
         embed.clear();
+    }
+
+    public static void wipeData(MessageReceivedEvent event) {
+        for(int i = 0; i < Data.sets.length; i++) {
+            Data.sets[i] = null;
+        }
+        for(int i = 0; i < Data.oldSets.length; i++) {
+            Data.oldSets[i] = null;
+        }
+        for(int i = 0; i < Data.rareSets.length; i++) {
+            Data.rareSets[i] = null;
+        }
+        for(int i = 0; i < Data.promoSets.length; i++) {
+            Data.promoSets[i] = null;
+        }
+        Rest.sendMessage(event, "`Successfully wiped all card data`");
+        try { Data.saveData(); } catch(Exception e) {}
+        try { Data.saveOldData(); } catch(Exception e) {}
+        try { Data.saveRareData(); } catch(Exception e) {}
+        try { Data.savePromoData(); } catch(Exception e) {}
     }
 
     public static void refreshData(MessageReceivedEvent event, String[] args) {
@@ -88,29 +108,49 @@ public class DataCmds extends Cmds {
 
     public static void countSetContent(MessageReceivedEvent event, String[] args) {
         try {
-            String setCode = args[1];
-            int page = 1, count = 0;
+            String setCode = args[1].toUpperCase();
+            ArrayList<JsonElement> promos = new ArrayList<JsonElement>();
+            JsonArray rawContents;
+            String msg = "";
     
-            while(true) {
-                URL url = new URL("https://api.pokemontcg.io/v2/cards?q=set.ptcgoCode:" + setCode + "%20&page=" + page + "/key=1bfc1133-79a4-46f6-93d6-6a4dab4b7335");
-                String jsonStr = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8")).readLine();
-                JsonArray jsonArr = JsonParser.parseString(jsonStr).getAsJsonObject().getAsJsonArray("data");
-    
-                if(jsonArr.size() < 1) {
-                    break;
+            Rest.sendMessage(event, "`Counting the specified card set...`");
+
+            rawContents = Data.crawlDatabase(setCode);
+            for(JsonElement j : rawContents) {
+                try {
+                    String cardRarity = j.getAsJsonObject().get("rarity").getAsString();
+
+                    if(cardRarity.equalsIgnoreCase("promo")) {
+                        promos.add(j);
+                    }
+                } catch(NullPointerException e) {
+                    System.out.println(j + "\n");
                 }
-                for(int i = 0; i < jsonArr.size(); i++) {
-                    count++;
-                }
-                page++;
             }
-            Rest.sendMessage(event, "`Found " + count + " cards for the specified card set`");
+            msg += "`...and counted!`\n"
+            + "```\n";
+
+            if(promos.size() > 0) {
+                String setName = promos.get(0).getAsJsonObject().get("set").getAsJsonObject().get("name").getAsString();
+
+                msg += setName + "\n";
+            } else {
+                msg += "N/A\n";
+            }
+            msg += "-----\n"
+            + "Regulars: " + (int)(rawContents.size() - promos.size()) + "\n"
+            + "Promos: " + promos.size() + "\n"
+            + "-----\n"
+            + "Total: " + rawContents.size() + "\n"
+            + "```";
+
+            Rest.sendMessage(event, msg);
         } catch(IOException e) {
             Rest.sendMessage(event, "`Rate limit reached. Please wait for a bit`");
         }
     }
 
-    public static void addSetContent(MessageReceivedEvent event, String[] args, boolean isNew) {
+    public static void addContents(MessageReceivedEvent event, String[] args, boolean isNew) {
         try {
             int setNum = Integer.parseInt(args[1]);
             String setCode = "";
@@ -126,26 +166,28 @@ public class DataCmds extends Cmds {
             } else {
                 Rest.sendMessage(event, "`Adding card data for set " + setNum + "...`");
 
-                String setEmote = event.getJDA().getEmotesByName(setCode, true).get(0).getAsMention();
-                ArrayList<Data> commons = Data.crawlSetContent(setEmote, setCode, "common");
-                ArrayList<Data> uncommons = Data.crawlSetContent(setEmote, setCode, "uncommon");
-                ArrayList<Data> rares = Data.crawlSetContent(setEmote, setCode, "rare");
-                ArrayList<Data> shinies = Data.crawlSetContent(setEmote, setCode, "shiny");
-                String setName = commons.get(0).getSetName();
+                String setEmote = event.getJDA().getEmojisByName(setCode, true).get(0).getAsMention();
+                Data contents = Data.findContents(setEmote, setCode);
+                ArrayList<Data> commons = contents.getCommons();
+                ArrayList<Data> uncommons = contents.getUncommons();
+                ArrayList<Data> rares = contents.getRares();
+                ArrayList<Data> shinies = contents.getShinies();
 
                 if(isNew) {
-                    Data.sets[setNum - 1] = new Data(setEmote, setName, commons, uncommons, rares, shinies);
+                    Data.sets[setNum - 1] = contents;
                 } else {
-                    Data.oldSets[setNum - 1] = new Data(setEmote, setName, commons, uncommons, rares, shinies);
+                    Data.oldSets[setNum - 1] = contents;
                 }
                 Rest.sendMessage(event, "`...and successful!`\n"
                 + "```\n"
-                + setName + "\n"
+                + contents.getSetName() + "\n"
                 + "-----\n"
                 + "Commons: " + commons.size() + "\n"
                 + "Uncommons: " + uncommons.size() + "\n"
                 + "Rares: " + rares.size() + "\n"
                 + "Shinies: " + shinies.size() + "\n"
+                + "-----\n"
+                + "Total: " + (int)(commons.size() + uncommons.size() + rares.size() + shinies.size())
                 + "```");
 
                 if(isNew) {
@@ -164,31 +206,50 @@ public class DataCmds extends Cmds {
         }
     }
 
-    public static void addSpecSetContent(MessageReceivedEvent event, String[] args) {
+    public static void addSpecContents(MessageReceivedEvent event, String[] args, boolean isRare) {
         try {
             int setNum = Integer.parseInt(args[1]);
-            String setCode = Data.specSetCodes.get(setNum);
+            String setCode = "";
 
+            if(isRare) {
+                setCode = Data.rareSetCodes.get(setNum);
+            } else {
+                setCode = Data.promoSetCodes.get(setNum);
+            }
             if(setCode == null) {
                 Integer.parseInt("$");
 
             } else {
                 Rest.sendMessage(event, "`Adding card data for set " + setNum + "...`");
 
-                String setEmote = event.getJDA().getEmotesByName(setCode, true).get(0).getAsMention();
-                ArrayList<Data> specs = Data.crawlSpecSetContent(setEmote, setCode);
-                String setName = specs.get(0).getSetName();
+                String setEmote;
+                Data contents;
+                if(isRare) {
+                    setEmote = event.getJDA().getEmojisByName(setCode, true).get(0).getAsMention();
+                    contents = Data.findRareContents(setEmote, setCode);
+                } else {
+                    setEmote = promostar_;
+                    contents = Data.findPromoContents(setEmote, setCode);
+                }
+                ArrayList<Data> specs = contents.getSpecs();
 
-                Data.specSets[setNum - 1] = new Data(setEmote, setName, specs);
-
+                if(isRare) {
+                    Data.rareSets[setNum - 1] = contents;
+                } else {
+                    Data.promoSets[setNum - 1] = contents;
+                }
                 Rest.sendMessage(event, "`...and successful!`\n"
                 + "```\n"
-                + setName + "\n"
+                + contents.getSetName() + "\n"
                 + "-----\n"
                 + "Added " + specs.size() + " cards!\n"
                 + "```");
 
-                try { Data.saveSpecData(); } catch(Exception e) {}
+                if(isRare) {
+                    try { Data.saveRareData(); } catch(Exception e) {}
+                } else {
+                    try { Data.savePromoData(); } catch(Exception e) {}
+                }
             }
         }  catch(NumberFormatException | IOException e) {
             if(e.toString().startsWith("java.lang.NumberFormatException:")) {

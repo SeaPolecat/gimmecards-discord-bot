@@ -3,51 +3,6 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class TesterCmds extends Cmds {
 
-    /*embed.addField("Rule 1", "Please follow Discord's [Terms of Service](https://discord.com/terms)", false);
-    embed.addField("Rule 2", "Be respectful to the staff and other server members at all times", false);
-    embed.addField("Rule 3", "NSFW or explicit content/behavior is prohibited, as this is a family-friendly server", false);
-    embed.addField("Rule 4", "Advertising of any kind is not allowed, either in this server or in others' DMs", false);
-    embed.addField("Rule 5", "Please do not spam the chat, unless you're using the bot. This includes unneccesary mentions/pings", false);
-    embed.addField("Rule 6", "Try to post in the correct channels; they are separated for a reason", false);*/
-
-    /*public static void saitamaBday(GuildMessageReceivedEvent event) {
-        User user = User.findUser(event);
-
-        if(Cmds.bdayGift) {
-            Rest.sendMessage(event, jigglypuff_ + " You've gotten your birthday gift already!");
-
-        } else {
-            JsonElement reward = null;
-            EmbedBuilder embed = new EmbedBuilder();
-            String desc = "";
-    
-            for(Data d : Data.oldSets) {
-                for(JsonElement card : d.getShinies()) {
-                    String cardId = card.getAsJsonObject().get("id").getAsString();
-    
-                    if(cardId.equalsIgnoreCase("ex15-100")) {
-                        reward = card;
-                        break;
-                    }
-                }
-            }
-            desc += "*A large shadow suddenly engulfs you, and as you look up, you realize there is something... something huge looming above...*\n\n";
-            desc += "It's the legendary dark charizard! Happy birthday saitama, and thanks for being a legendary friend!\n\n";
-            desc += "(Psst, check your backpack too haha)\n\n";
-            desc += "-Sea\n";
-    
-            embed.setTitle("🥳 Happy Birthday Saitama 🥳");
-            embed.setDescription(desc);
-            embed.setImage("https://pbs.twimg.com/media/EH02mRdWsAEMVOc.jpg:large");
-            embed.setColor(0x8c03fc);
-    
-            user.addTokens(50);
-            Display.displayCard(event, user, Card.addSingleCard(user, reward), "Happy Birthday " + user.getUserNick() + "!!");
-            Rest.sendEmbed(event, embed);
-            try { User.saveUsers(); } catch(Exception e) {}
-        }
-    }*/
-
     /*public User (String id, int cc, int l, int xp, int mxp, int t, int e, int k, int s, long oe, long ve, long de, long re, long me, String sm, boolean si, int bc, String bcard, ArrayList<String> p, ArrayList<Card> c) {
         userId = id;
         cardCount = cc;
@@ -79,39 +34,166 @@ public class TesterCmds extends Cmds {
     }*/
 
     public static void testSomething(MessageReceivedEvent event) {
+        /*
+        int errCount = 0;
 
-        /*for(Data d : Data.oldSets) {
-            if(d.getSetName().equalsIgnoreCase("Rising Rivals")) {
+        for(User u : User.users) {
+            for(int i = 0; i < u.getCards().size(); i++) {
+                Data newData = null;
+                Card c = u.getCards().get(i);
+                String cardId = c.getData().getCardId();
 
-                for(Data data : d.getShinies()) {
-                    if(data.getCardName().equalsIgnoreCase("Flying Pikachu")) {
-                        
-                        for(User u : User.users) {
-                            Card.addSingleCard(u, data);
+                for(Data set : Data.sets) {
+                    for(Data data : set.getCommons()) {
+                        if(data.getCardId().equalsIgnoreCase(cardId)) {
+                            newData = data;
+                            break;
                         }
                     }
+                    for(Data data : set.getUncommons()) {
+                        if(data.getCardId().equalsIgnoreCase(cardId)) {
+                            newData = data;
+                            break;
+                        }
+                    }
+                    for(Data data : set.getRares()) {
+                        if(data.getCardId().equalsIgnoreCase(cardId)) {
+                            newData = data;
+                            break;
+                        }
+                    }
+                    for(Data data : set.getShinies()) {
+                        if(data.getCardId().equalsIgnoreCase(cardId)) {
+                            newData = data;
+                            break;
+                        }
+                    }
+                }
+                for(Data set : Data.oldSets) {
+                    for(Data data : set.getCommons()) {
+                        if(data.getCardId().equalsIgnoreCase(cardId)) {
+                            newData = data;
+                            break;
+                        }
+                    }
+                    for(Data data : set.getUncommons()) {
+                        if(data.getCardId().equalsIgnoreCase(cardId)) {
+                            newData = data;
+                            break;
+                        }
+                    }
+                    for(Data data : set.getRares()) {
+                        if(data.getCardId().equalsIgnoreCase(cardId)) {
+                            newData = data;
+                            break;
+                        }
+                    }
+                    for(Data data : set.getShinies()) {
+                        if(data.getCardId().equalsIgnoreCase(cardId)) {
+                            newData = data;
+                            break;
+                        }
+                    }
+                }
+                for(Data set : Data.rareSets) {
+                    for(Data data : set.getSpecs()) {
+                        if(data.getCardId().equalsIgnoreCase(cardId)) {
+                            newData = data;
+                            break;
+                        }
+                    }
+                }
+                for(Data set : Data.promoSets) {
+                    for(Data data : set.getSpecs()) {
+                        if(data.getCardId().equalsIgnoreCase(cardId)) {
+                            newData = data;
+                            break;
+                        }
+                    }
+                }
+
+                Card card = new Card(
+                    newData,
+                    c.getCardNum(),
+                    c.getCardQuantity(),
+                    c.getSellable(),
+                    c.getIsFav()
+                );
+                u.getCards().set(i, card);
+                
+                try {
+                    card.getData().getCardName();
+                } catch(NullPointerException e) {
+                    errCount++;
+                }
+            }
+        }
+        Rest.sendMessage(event, "done testing! " + errCount + " errors found");
+        try { User.saveUsers(); } catch(Exception e) {}
+
+        /*
+        for(Data d : Data.promoSets) {
+            for(Data d2 : d.getSpecs()) {
+                try {
+                    d2.getSetEmote().length();
+                    d2.getSetName().length();
+                    d2.getCardId().length();
+                    d2.getCardName().length();
+                    d2.getCardRarity().length();
+                    d2.getCardImage().length();
+                    d2.getCardSupertype().length();
+                } catch(NullPointerException e) {
+                    System.out.println("null found\n");
                 }
             }
         }
         Rest.sendMessage(event, "done testing!");
-        try { User.saveUsers(); } catch(Exception e) {}*/
 
-        /*for(int i = 0; i < Server.servers.size(); i++) {
-            Server s = Server.servers.get(i);
-            
-            Server server = new Server(
-                s.getServerId(),
-                s.getPrefix(),
-                new ArrayList<Data>(),
-                (long)(0)
-            );
-            Server.servers.set(i, server);
+        /*Data mew = null;
+        Data gardevoir = null;
+        //ecard1-19
+        //g1-RC30
+        for(Data set : Data.oldSets) {
+            for(Data data : set.getShinies()) {
+                if(data.getCardId().equals("ecard1-19")) {
+                    System.out.println("mew found!");
+                    mew = data;
+                }
+            }
         }
-        for(Server s : Server.servers) {
-            System.out.println(s.getMarket().size());
+        for(Data set : Data.specSets) {
+            for(Data data : set.getSpecs()) {
+                if(data.getCardId().equals("g1-RC30")) {
+                    System.out.println("gardevoir found!");
+                    gardevoir = data;
+                }
+            }
         }
-        Rest.sendMessage(event, "done testing!");*/
-        //try { Server.saveServers(); } catch(Exception e) {}
+
+        for(User u : User.users) {
+            //gallard
+            if(u.getUserId().equals("765490431348834344")) {
+                u.addTokens(50);
+                System.out.println(u.getTokens());
+            }
+            //gawr gura
+            if(u.getUserId().equals("835854670005272616")) {
+                u.addTokens(50);
+                System.out.println(u.getTokens());
+            }
+            //sora
+            if(u.getUserId().equals("973492494413217802")) {
+                u.getCards().add(0, new Card(mew, u.getCardCount() + 1, true));
+                Rest.sendMessage(event, u.getCards().get(0).getData().getCardImage());
+            }
+            //jinny
+            if(u.getUserId().equals("727304307464077413")) {
+                u.getCards().add(0, new Card(gardevoir, u.getCardCount() + 1, true));
+                Rest.sendMessage(event, u.getCards().get(0).getData().getCardImage());
+            }
+        }
+        Rest.sendMessage(event, "done testing!");
+        try { User.saveUsers(); } catch(Exception e) {}*/
 
         /*for(int i = 0; i < User.users.size(); i++) {
             User u = User.users.get(i);

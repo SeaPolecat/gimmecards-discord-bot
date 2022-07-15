@@ -11,13 +11,11 @@ public class CardCmds extends Cmds {
         User user = User.findUser(event);
         CardDisplay disp = CardDisplay.findCardDisplay(user.getUserId());
 
-        if(args.length < 2) {
-            if(user.getCards().size() < 1) {
-                Rest.sendMessage(event, jigglypuff_ + " You don't have any cards yet!");
-    
-            } else {
-                Rest.sendDynamicEmbed(event, user, null, disp, 1);
-            }
+        if(user.getCards().size() < 1) {
+            Rest.sendMessage(event, jigglypuff_ + " You don't have any cards yet!");
+
+        } else {
+            Rest.sendDynamicEmbed(event, user, null, disp, 1);
         }
     }
 
@@ -69,10 +67,15 @@ public class CardCmds extends Cmds {
                 c.setIsFav(true);
             }
         }
-        if(exists) {
-            Rest.sendMessage(event, "💞 Added all your shiny cards to your favourites!");
-        } else {
+        if(!exists) {
             Rest.sendMessage(event, jigglypuff_ + " Sorry, you have no shiny cards left to favourite!");
+
+        } else {
+            State.updateCardDisplay(event, user);
+            State.updateFavDisplay(event, user);
+
+            Rest.sendMessage(event, "💞 Added all your shiny cards to your favourites!");
+            try { User.saveUsers(); } catch(Exception e) {}
         }
     }
 

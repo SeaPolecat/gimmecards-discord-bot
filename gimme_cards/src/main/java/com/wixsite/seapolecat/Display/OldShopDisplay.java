@@ -48,10 +48,10 @@ public class OldShopDisplay extends Display {
             }
         }
         desc += "┅┅\n";
-        embed.setTitle(snorlax_ + " Legacy Packs Shop " + snorlax_);
+        embed.setTitle(squirtle_ + " Legacy Packs Shop " + squirtle_);
         embed.setDescription(desc);
         embed.setFooter("Page " + page + " of " + maxPage, ui.getUserIcon());
-        embed.setColor(0x45749A);
+        embed.setColor(0x7CBAC5);
         return embed;
     }
 }

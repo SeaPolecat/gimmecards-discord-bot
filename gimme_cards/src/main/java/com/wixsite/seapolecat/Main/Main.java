@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.ChunkingFilter;
+import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
@@ -24,9 +25,12 @@ public class Main {
         .createDefault(botToken,
         GatewayIntent.GUILD_MESSAGES,
         GatewayIntent.GUILD_MESSAGE_REACTIONS,
+        GatewayIntent.GUILD_EMOJIS_AND_STICKERS,
         GatewayIntent.GUILD_MEMBERS)
         .setChunkingFilter(ChunkingFilter.ALL)
-        .disableCache(CacheFlag.VOICE_STATE, CacheFlag.EMOTE)
+        .setMemberCachePolicy(MemberCachePolicy.ALL)
+        .enableCache(CacheFlag.EMOJI)
+        .disableCache(CacheFlag.VOICE_STATE)
         .build();
 
         jda.getPresence().setStatus(OnlineStatus.ONLINE);

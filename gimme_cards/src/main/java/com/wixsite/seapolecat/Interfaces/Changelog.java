@@ -157,6 +157,40 @@ public interface Changelog {
         + "🔹Market cards are now unsellable (due to a loophole where you could convert all your "
         + "energy into XP)\n"
         + "🔹Fixed a bug where sometimes you gain -0 energy\n"
-        + "🔹There weren't enough card submissions for the custom booster pack, sorry! We have 5/10"
+        + "🔹There weren't enough card submissions for the custom booster pack, sorry! We have 5/10",
+
+        //17
+        "**Update 6/4/2022**\n"
+        + "🔸Congrats to all giveaway winners! 🥳 Please check your backpack/cards to see your prizes\n"
+        + "🔹Deleted all *Gimme Cards* accounts under level 2 (to save storage space)\n"
+        + "🔹Exclusive cards now also show up in [search] results\n"
+        + "🔹Removed the [sellgroup] command\n"
+        + "🔹Improved the design of level-up messages\n"
+        + "🔹Other minor design changes\n"
+        + "🔹A few bug fixes",
+
+        //18
+        "**Update 7/14/2022**\n"
+        + "🔸New pack *Astral Radiance*\n"
+        + "🔹Promo packs are now separate from exclusive packs- there is a new shop to view them\n"
+        + "🔹New command [promoshop] that brings up the new shop\n"
+        + "🔹Oldshop and rareshop's designs have been changed (psst, Kanto starter trio!)\n"
+        + "🔹Everyone's card XP values have been updated to the most recent market prices "
+        + "(some went up, others went down- it's natural)\n"
+        + "🔸New promo pack *HGSS Black Star Promos*\n"
+        + "🔸New promo pack *BW Black Star Promos*\n"
+        + "🔸New promo pack *XY Black Star Promos*\n"
+        + "🔸New promo pack *SWSH Black Star Promos*\n"
+        + "🔸Added the custom card pack made by you guys! 💛 Use [rareshop] to see it\n\n"
+
+        + "**Developer Letter**\n"
+        + "Hey everyone, Sea here 😄 This is the first time I'm writing something to you guys, but I thought it "
+        + "would be cool! Since it's summer break for me now, I can start making a lot more updates. Today's "
+        + "update is going to start us off, but I have several more exciting features planned "
+        + "(like trading of course), and many of your guys' suggestions have been super helpful. Thank you for "
+        + "submitting so many custom cards- they are hilarious 😂 and really bring out the spirit of Gimme Cards! "
+        + "I also sent off the bot verfication form a week ago, so hopefully Discord will verify it soon. "
+        + "Plus, there will definitely be some sort of celebration/event once that happens, and I'm "
+        + "very excited 👀 But for now, have fun and stay ultra rare!"
     };
 }

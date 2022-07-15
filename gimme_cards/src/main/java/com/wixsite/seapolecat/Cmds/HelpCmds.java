@@ -124,6 +124,7 @@ public class HelpCmds extends Cmds implements Comparator<User> {
         ArrayList<User> localUsers = new ArrayList<User>();
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
+        int place = 0;
 
         for(Member m : members) {
             for(User u : User.users) {
@@ -135,8 +136,13 @@ public class HelpCmds extends Cmds implements Comparator<User> {
         }
         Collections.sort(localUsers, new HelpCmds());
 
+        for(int i = 0; i < localUsers.size(); i++) {
+            if(localUsers.get(i).getUserId().equals(user.getUserId())) {
+                place = i+1;
+            }
+        }
         desc += "┅┅\n";
-        for(int i = 0; i < 10; i++) {
+        for(int i = 0; i < localUsers.size(); i++) {
             User u = localUsers.get(i);
             String userName = event.getGuild().getMemberById(u.getUserId()).getUser().getName();
 
@@ -153,17 +159,13 @@ public class HelpCmds extends Cmds implements Comparator<User> {
             + " ┇ *" + "Lvl. " + u.getLevel() + "*"
             + " ┇ " + XP_ + " `" + UX.formatNumber(u.getXP()) + " / " + UX.formatNumber(u.getMaxXP()) + "`\n";
 
-            if(i >= localUsers.size() - 1) {
+            if(i >= 9) {
                 break;
             }
         }
         desc += "┅┅\n";
+        desc += UX.formatNick(event) + " is `#" + place + "` in this server 🏝️";
 
-        for(int i = 0; i < localUsers.size(); i++) {
-            if(localUsers.get(i).getUserId().equals(user.getUserId())) {
-                desc += UX.formatNick(event) + " is `#" + (i+1) + "` in this server 🏝️";
-            }
-        }
         embed.setTitle(trainer_ + " Top Collectors Here " + trainer_);
         embed.setDescription(desc);
         embed.setColor(0xB0252B);
@@ -173,20 +175,25 @@ public class HelpCmds extends Cmds implements Comparator<User> {
 
     public static void viewLeaderboard(MessageReceivedEvent event) {
         User user = User.findUser(event);
-        ArrayList<User> localUsers = new ArrayList<User>();
+        ArrayList<User> globalUsers = new ArrayList<User>();
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
-        int count = 0, index = 0;
+        int count = 0, place = 0;
 
         for(User u : User.users) {
-            localUsers.add(u);
+            globalUsers.add(u);
         }
-        Collections.sort(localUsers, new HelpCmds());
+        Collections.sort(globalUsers, new HelpCmds());
 
+        for(int i = 0; i < globalUsers.size(); i++) {
+            if(globalUsers.get(i).getUserId().equals(user.getUserId())) {
+                place = i+1;
+            }
+        }
         desc += "┅┅\n";
-        while(count < 10) {
+        for (int i = 0; i < globalUsers.size(); i++) {
             try {
-                User u = localUsers.get(index);
+                User u = globalUsers.get(i);
                 String userName = event.getJDA().getUserById(u.getUserId()).getName();
     
                 if(count == 0) {
@@ -201,23 +208,19 @@ public class HelpCmds extends Cmds implements Comparator<User> {
                 desc += " ┇ **" + userName + "**"
                 + " ┇ *" + "Lvl. " + u.getLevel() + "*"
                 + " ┇ " + XP_ + " `" + UX.formatNumber(u.getXP()) + " / " + UX.formatNumber(u.getMaxXP()) + "`\n";
-    
-                if(count >= localUsers.size() - 1) {
+                
+                if(u.getUserId().equals(user.getUserId())) {
+                    place = count+1;
+                }
+                if(count >= 9) {
                     break;
                 }
                 count++;
-                index++;
-            } catch(NullPointerException e) {
-                index++;
-            }
+            } catch(NullPointerException e) {}
         }
         desc += "┅┅\n";
+        desc += UX.formatNick(event) + " is `#" + place + "` in the world 🌎";
 
-        for(int i = 0; i < localUsers.size(); i++) {
-            if(localUsers.get(i).getUserId().equals(user.getUserId())) {
-                desc += UX.formatNick(event) + " is `#" + (i+1) + "` in the world 🌎";
-            }
-        }
         embed.setTitle(logo_ + " World's Top Collectors " + logo_);
         embed.setDescription(desc);
         embed.setColor(0xE3E5E9);

@@ -1,5 +1,6 @@
-package com.wixsite.seapolecat.Display;
+package com.wixsite.seapolecat.Display_;
 import com.wixsite.seapolecat.Main.*;
+import com.wixsite.seapolecat.Display.*;
 import com.wixsite.seapolecat.Helpers.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 import java.util.ArrayList;

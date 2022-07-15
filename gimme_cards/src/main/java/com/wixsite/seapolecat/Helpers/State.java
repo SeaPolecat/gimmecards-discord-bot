@@ -3,6 +3,7 @@ import com.wixsite.seapolecat.Interfaces.*;
 import com.wixsite.seapolecat.Main.*;
 import com.wixsite.seapolecat.Display.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.EmbedBuilder;
 import java.util.Calendar;
 
 public class State implements Emotes {
@@ -16,8 +17,17 @@ public class State implements Emotes {
         return false;
     }
 
-    public static boolean isSpecSet(Data data) {        
-        for(Data d : Data.specSets) {
+    public static boolean isRareSet(Data data) {        
+        for(Data d : Data.rareSets) {
+            if(d.getSetName().equalsIgnoreCase(data.getSetName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isPromoSet(Data data) {        
+        for(Data d : Data.promoSets) {
             if(d.getSetName().equalsIgnoreCase(data.getSetName())) {
                 return true;
             }
@@ -45,20 +55,6 @@ public class State implements Emotes {
         }
         return false;
     }
-
-    public static int countOwnedPacks(User user, boolean isOld) {
-        int ownedPacks = 0;
-        Data[] sets = isOld ? Data.oldSets : Data.sets;
-
-        for(String name : user.getPacks()) {
-            for(Data d : sets) {
-                if(name.equalsIgnoreCase(d.getSetName())) {
-                    ownedPacks++;
-                }
-            }
-        }
-        return ownedPacks;
-    }
     
     public static boolean isPackUnlocked(User user, String setName) {
         for(String pack : user.getPacks()) {
@@ -76,6 +72,20 @@ public class State implements Emotes {
             return true;
         }
         return false;
+    }
+
+    public static int countOwnedPacks(User user, boolean isOld) {
+        int ownedPacks = 0;
+        Data[] sets = isOld ? Data.oldSets : Data.sets;
+
+        for(String name : user.getPacks()) {
+            for(Data d : sets) {
+                if(name.equalsIgnoreCase(d.getSetName())) {
+                    ownedPacks++;
+                }
+            }
+        }
+        return ownedPacks;
     }
 
     public static String findTimeLeft(Long epoch, int cooldown, boolean isMins) {
@@ -116,20 +126,28 @@ public class State implements Emotes {
     }
 
     public static void checkLevelUp(MessageReceivedEvent event, User user) {
+        UserInfo ui = new UserInfo(event);
+
         while(user.getXP() >= user.getMaxXP()) {
             int energyReward = ((user.getLevel() + 9) / 10) * 100;
+            EmbedBuilder embed = new EmbedBuilder();
             String msg = "";
 
             user.levelUp();
 
-            msg += UX.formatNick(event) + " is now level **" + user.getLevel() + "**!";
+            msg += UX.formatNick(event) + " is now level **" + user.getLevel() + "** :tada:";
             msg += UX.updateTokens(user, 2);
             msg += UX.updateEnergy(user, energyReward);
             msg += UX.updateKeys(user, 1);
             msg += UX.updateStars(user, 1);
 
             State.updateBackpackDisplay(event, user);
-            Rest.sendMessage(event, msg);
+
+            embed.setThumbnail(ui.getUserIcon());
+            embed.setDescription(msg);
+            embed.setColor(0xFEBE54);
+            Rest.sendEmbed(event, embed);
+            embed.clear();
         }
     }
 
@@ -194,11 +212,6 @@ public class State implements Emotes {
         if(!disp.getMessageId().isEmpty()) {
             Rest.editEmbed(event, user, server, disp, -1);
         }
-    }
-
-    public static void updateSearchDisplay(MessageReceivedEvent event, SearchDisplay disp) {
-        Rest.removeReaction(event, disp, "◀");
-        Rest.removeReaction(event, disp, "▶");
     }
 
     public static void updateFavDisplay(MessageReceivedEvent event, User user) {

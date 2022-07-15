@@ -23,7 +23,8 @@ public class Ready extends ListenerAdapter {
 
         try { Data.loadData(); } catch(Exception e) {}
         try { Data.loadOldData(); } catch(Exception e) {}
-        try { Data.loadSpecData(); } catch(Exception e) {}
+        try { Data.loadRareData(); } catch(Exception e) {}
+        try { Data.loadPromoData(); } catch(Exception e) {}
         try { User.loadUsers(); } catch(Exception e) {}
         try { Server.loadServers(); } catch(Exception e) {}
 
@@ -73,6 +74,7 @@ public class Ready extends ListenerAdapter {
         Data.setCodes.put(42, "EVS");
         Data.setCodes.put(43, "FST");
         Data.setCodes.put(44, "BRS");
+        Data.setCodes.put(45, "ASR");
         */
 
         //oldSets (FL gone)
@@ -125,19 +127,27 @@ public class Ready extends ListenerAdapter {
         Data.oldSetCodes.put(46, "CL");
         */
 
-        //specSets
+        //rareSets
         /*
-        Data.specSetCodes.put(1, "NP");
-        Data.specSetCodes.put(2, "DPP");
-        Data.specSetCodes.put(3, "DRV");
-        Data.specSetCodes.put(4, "DCR");
-        Data.specSetCodes.put(5, "GEN");
-        Data.specSetCodes.put(6, "SLG");
-        Data.specSetCodes.put(7, "DRM");
-        Data.specSetCodes.put(8, "HIF");
-        Data.specSetCodes.put(9, "CPA");
-        Data.specSetCodes.put(10, "SHF");
-        Data.specSetCodes.put(11, "CEL");
+        Data.rareSetCodes.put(1, "DRV");
+        Data.rareSetCodes.put(2, "DCR");
+        Data.rareSetCodes.put(3, "GEN");
+        Data.rareSetCodes.put(4, "SLG");
+        Data.rareSetCodes.put(5, "DRM");
+        Data.rareSetCodes.put(6, "HIF");
+        Data.rareSetCodes.put(7, "CPA");
+        Data.rareSetCodes.put(8, "SHF");
+        Data.rareSetCodes.put(9, "CEL");
+        */
+
+        //promSets
+        /*
+        Data.promoSetCodes.put(1, "NP");
+        Data.promoSetCodes.put(2, "DPP");
+        Data.promoSetCodes.put(3, "HS");
+        Data.promoSetCodes.put(4, "BLW");
+        Data.promoSetCodes.put(5, "XY");
+        Data.promoSetCodes.put(6, "SW");
         */
     }
 }
