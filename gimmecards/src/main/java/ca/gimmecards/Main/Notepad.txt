@@ -1,0 +1,22 @@
+fixes (ALL)
+----------------------------------
+-update website and top.gg
+-rename all commands to the actual name of the command
+
+
+
+features (at least 1)
+-----------------------------------
+-show which cards you sold in ?sellall
+-can open with set code instead of the full name
+-surprise cards in chat
+-search by rarity, set, etc.
+-trading
+
+
+
+research (optional)
+-----------------------------------
+-users' card counts are potentially too big
+-find a way to generate true random in Java
+-reduce cpu load, try a binary search method and clearing all embeds
