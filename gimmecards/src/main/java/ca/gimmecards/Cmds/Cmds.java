@@ -12,7 +12,12 @@ public class Cmds extends ListenerAdapter implements Emotes {
         if(event.getAuthor().isBot() == true) { return; }
         String[] args = event.getMessage().getContentRaw().split("\\s+");
 
-        //ADMIN
+        //STAFF
+        if(isValidCommand(event, args, "giftbadge", new String[]{"user"})) {
+            GiftCmds.giftBadge(event, args);
+        }
+
+        //DEVELOPER
         if(event.getAuthor().getId().equals("454773340163538955")) {
             //TESTING
             if(isValidCommand(event, args, "test", null)) {
@@ -66,11 +71,6 @@ public class Cmds extends ListenerAdapter implements Emotes {
             }
         }
 
-        //EVENT
-        if(isValidCommand(event, args, "event", null)) {
-            EventCmds.seeEvent(event);
-        }
-
         //HELP
         if(isValidCommand(event, args, "setprefix", new String[]{"prefix"})) {
             HelpCmds.changePrefix(event, args);
@@ -96,7 +96,11 @@ public class Cmds extends ListenerAdapter implements Emotes {
 
         //BACKPACK
         if(isValidCommand(event, args, "backpack", null)) {
-            BackpackCmds.viewBackpack(event);
+            if(args.length < 2) {
+                BackpackCmds.viewBackpack(event);
+            } else {
+                BackpackCmds_.viewBackpack_(event, args);
+            }
         }
         if(isValidCommand(event, args, "redeem", null)) {
             BackpackCmds.redeemToken(event);

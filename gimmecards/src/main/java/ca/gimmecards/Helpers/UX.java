@@ -23,6 +23,14 @@ public class UX implements Emotes {
         return "__" + event.getJDA().getUserById(user.getUserId()).getName() + "__";
     }
 
+    public static String formatBadge(MessageReceivedEvent event, String badgeEmote, String badgeName) {
+        return UX.formatNick(event) + " has been awarded the " + badgeEmote + " **" + badgeName + "** badge!";
+    }
+
+    public static String formatBadge(User user, MessageReceivedEvent event, String badgeEmote, String badgeName) {
+        return UX.formatNick(user, event) + " has been awarded the " + badgeEmote + " **" + badgeName + "** badge!";
+    }
+
     public static int randRange(int min, int max) {
         int diff = max - min;
 
@@ -35,9 +43,6 @@ public class UX implements Emotes {
         user.addXP(quantity);
         msg += "+ " + formatNumber(quantity);
         msg += " " + XP_ + " **XP**";
-
-        user.addXP((int)(quantity * 0.25));
-        msg += "\n+ " + formatNumber((int)(quantity * 0.25)) + " " + XP_ + " **XP** 🥳";
 
         return msg;
     }
@@ -183,10 +188,6 @@ public class UX implements Emotes {
 
     public static String formatEnergyPrice(Data data) {
         return energy_ + " **" + formatNumber(data.getCardPrice()) + "**";
-    }
-
-    public static String formatEventEnergyPrice(Data data) {
-        return energy_ + " **" + formatNumber((int)(data.getCardPrice() / 2)) + "**";
     }
 
     public static int findEmbedColour(Data data) {

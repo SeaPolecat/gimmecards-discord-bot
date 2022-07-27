@@ -1,10 +1,11 @@
 package ca.gimmecards.Main;
+import ca.gimmecards.Interfaces.*;
 import ca.gimmecards.Display.*;
 import ca.gimmecards.Helpers.*;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Card {
+public class Card implements CustomCards {
 
     private Data data;
     private Integer cardNum;
@@ -53,15 +54,25 @@ public class Card {
     public static Data pickRandomCard() {
         ArrayList<Data> cards = new ArrayList<Data>();
         Random rand = new Random();
-        int setsChance = rand.nextInt(2);
+        int setsChance = rand.nextInt(4);
         int rarityChance = rand.nextInt(4);
-        Data set;
+        Data set = null;
 
         if(setsChance == 0) {
             set = Data.sets[rand.nextInt(Data.sets.length)];
-        } else {
+
+        } else if(setsChance == 1) {
             set = Data.oldSets[rand.nextInt(Data.oldSets.length)];
+
+        } else if(setsChance == 2) {
+            set = Data.rareSets[rand.nextInt(Data.rareSets.length)];
+            return pickCard(set.getSpecs());
+
+        } else if(setsChance == 3) {
+            set = Data.promoSets[rand.nextInt(Data.promoSets.length)];
+            return pickCard(set.getSpecs());
         }
+
         if(rarityChance == 0) {
             cards = set.getCommons();
         } else if(rarityChance == 1) {
@@ -242,15 +253,8 @@ public class Card {
         for(Data oldSet : Data.oldSets) {
             crawlSet(searchedCards, oldSet, key);
         }
-        for(Data specSet : Data.rareSets) {
-            for(Data data : specSet.getSpecs()) {
-                String cardName = data.getCardName();
+        crawlSpecSets(searchedCards, key);
 
-                if(cardName.toLowerCase().contains(key.toLowerCase())) {
-                    searchedCards.add(data);
-                }
-            }
-        }
         return searchedCards;
     }
 
@@ -277,6 +281,34 @@ public class Card {
             }
         }
         for(Data data : set.getShinies()) {
+            String cardName = data.getCardName();
+
+            if(cardName.toLowerCase().contains(key.toLowerCase())) {
+                searchedCards.add(data);
+            }
+        }
+    }
+
+    private static void crawlSpecSets(ArrayList<Data> searchedCards, String key) {
+        for(Data specSet : Data.rareSets) {
+            for(Data data : specSet.getSpecs()) {
+                String cardName = data.getCardName();
+
+                if(cardName.toLowerCase().contains(key.toLowerCase())) {
+                    searchedCards.add(data);
+                }
+            }
+        }
+        for(Data specSet : Data.promoSets) {
+            for(Data data : specSet.getSpecs()) {
+                String cardName = data.getCardName();
+
+                if(cardName.toLowerCase().contains(key.toLowerCase())) {
+                    searchedCards.add(data);
+                }
+            }
+        }
+        for(Data data : customs) {
             String cardName = data.getCardName();
 
             if(cardName.toLowerCase().contains(key.toLowerCase())) {

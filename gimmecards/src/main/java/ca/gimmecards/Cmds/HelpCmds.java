@@ -71,6 +71,7 @@ public class HelpCmds extends Cmds implements Comparator<User> {
     }
 
     public static void viewRarities(MessageReceivedEvent event) {
+        String[] shinies = new String[]{"Amazing Rare","Classic Collection","LEGEND","Radiant Rare","Rare ACE","Rare BREAK","Rare Holo","Rare Holo EX","Rare Holo GX","Rare Holo LV.X","Rare Holo Star","Rare Holo V","Rare Holo VMAX","Rare Holo VSTAR","Rare Prime","Rare Prism Star","Rare Rainbow","Rare Secret","Rare Shining","Rare Shiny","Rare Shiny GX","Rare Ultra","V","VM"};
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
@@ -78,31 +79,15 @@ public class HelpCmds extends Cmds implements Comparator<User> {
         desc += "┅┅\n";
         desc += "⚪ Common\n";
         desc += "🔷 Uncommon\n";
-        desc += "⭐ Rare\n";
-        desc += "🎁 Promo\n\n";
+        desc += "⭐ Rare\n\n";
 
-        desc += "**🌟 Shiny Cards**\n";
+        desc += "**Shiny Cards**\n";
         desc += "┅┅\n";
-        desc += "Amazing Rare\n";
-        desc += "LEGEND\n";
-        desc += "Rare ACE\n";
-        desc += "Rare BREAK\n";
-        desc += "Rare Holo\n";
-        desc += "Rare Holo EX\n";
-        desc += "Rare Holo GX\n";
-        desc += "Rare Holo LV.X\n";
-        desc += "Rare Holo Star\n";
-        desc += "Rare Holo V\n";
-        desc += "Rare Holo VMAX\n";
-        desc += "Rare Prime\n";
-        desc += "Rare Prism Star\n";
-        desc += "Rare Rainbow\n";
-        desc += "Rare Secret\n";
-        desc += "Rare Shining\n";
-        desc += "Rare Shiny\n";
-        desc += "Rare Shiny GX\n";
-        desc += "Rare Ultra";
-
+        desc += "🎁 Promo\n";
+        desc += "✨ Custom\n";
+        for(String rarity : shinies) {
+            desc += "🌟 " + rarity + "\n";
+        }
         embed.setTitle(eevee_ + " All Rarities " + eevee_);
         embed.setDescription(desc);
         embed.setColor(0xE9BB7A);
@@ -120,6 +105,9 @@ public class HelpCmds extends Cmds implements Comparator<User> {
         desc += staffBadge_ + " **Gimme Cards Staff**\n";
         desc += "Given to the staff members in our official [support server](https://discord.gg/urtHCGcE7y)\n\n";
 
+        desc += communityBadge_ + " **Community Helper**\n";
+        desc += "Given to collectors who often help newer players. Only staff members can award you this badge\n\n";
+
         desc += veteranBadge_ + " **Veteran Collector**\n";
         desc += "Given to collectors who are level 50+\n\n";
 
@@ -127,7 +115,7 @@ public class HelpCmds extends Cmds implements Comparator<User> {
         desc += "Given to collectors who are level 100+\n\n";
 
         desc += bdayBadge_ + " **1 Year Anniversary**\n";
-        desc += "Given to collectors who participated in the Gimme Cards 1st Year Anniversary event";
+        desc += "Given to collectors who participated in the Gimme Cards 1 Year Anniversary event";
 
         embed.setTitle(eevee_ + " All Badges " + eevee_);
         embed.setDescription(desc);

@@ -171,5 +171,53 @@ public interface CustomCards extends Emotes {
             new String[]{"Lightning"},
             100
         ),
+
+        new Data(
+            logo_,
+            "Gimme Cards",
+            "custom-14",
+            "Buff Magikarp",
+            "Custom",
+            "https://media.discordapp.net/attachments/995802885487087797/1001966493266870293/unknown.png?width=439&height=623",
+            "Pokémon",
+            new String[]{"Water"},
+            999
+        ),
+
+        new Data(
+            logo_,
+            "Gimme Cards",
+            "custom-15",
+            "Dragon Slayer Azumarill V",
+            "Custom",
+            "https://media.discordapp.net/attachments/995802885487087797/1001966755062751292/unknown.png?width=448&height=622",
+            "Pokémon",
+            new String[]{"Water"},
+            1145
+        ),
+
+        new Data(
+            logo_,
+            "Gimme Cards",
+            "custom-16",
+            "Kirby",
+            "Custom",
+            "https://media.discordapp.net/attachments/995802885487087797/1001967086924480604/unknown.png?width=448&height=623",
+            "Pokémon",
+            new String[]{"Fairy"},
+            100
+        ),
+
+        new Data(
+            logo_,
+            "Gimme Cards",
+            "custom-17",
+            "Bandana Waddle Dee",
+            "Custom",
+            "https://media.discordapp.net/attachments/995802885487087797/1001967469910564904/unknown.png?width=448&height=623",
+            "Trainer",
+            null,
+            1996
+        ),
     };
 }

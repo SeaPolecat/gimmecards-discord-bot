@@ -190,6 +190,24 @@ public interface Changelog {
         + "🔹Added a badge system! Earning a badge will display it on your backpack\n"
         + "🔹New command [badges] that shows what each badge is awarded for\n"
         + "🔹[favall] now also favourites custom cards\n"
-        + "🔹[setfavcard] has been changed to [pin]"
+        + "🔹[setfavcard] has been changed to [pin]",
+
+        //20
+        "**Update 7/27/2022**\n"
+        + "🔸The 1 Year Anniversary event has ended; thank you to everyone who participated! 🎉\n"
+        + "🔹Due to promoshop cards being too OP, they now cost **2** Stars each\n"
+        + "🔹[rarities] has been updated with the newest rarities\n"
+        + "🔹[minigame] now also contains cards from rareshop and promoshop\n"
+        + "🔹Added the *Community Helper Badge*, given to collectors who often help newer players. "
+        + "Only staff members can award you this badge\n"
+        + "🔹You can now see other people's backpacks! Use [backpack (user)]\n"
+        + "🔹You can now search for custom cards too, with [search (card name)]\n"
+        + "🔹A few bug fixes / minor improvements\n"
+        + "🔸Added 4 custom cards\n"
+        + "┅┅\n"
+        + "• Buff Magikarp\n"
+        + "• Dragon Slayer Azumarill V\n"
+        + "• Kirby\n"
+        + "• Bandana Waddle Dee"
     };
 }

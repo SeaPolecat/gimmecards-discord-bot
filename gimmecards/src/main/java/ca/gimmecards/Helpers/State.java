@@ -137,21 +137,16 @@ public class State implements Emotes {
 
             msg += UX.formatNick(event) + " is now level **" + user.getLevel() + "** :tada:";
             msg += UX.updateTokens(user, 2);
-
-            user.addTokens(2);
-            msg += "\n+ 2 " + token_ + " **Token** 🥳";
-
             msg += UX.updateEnergy(user, energyReward);
             msg += UX.updateKeys(user, 1);
             msg += UX.updateStars(user, 1);
 
-            user.addStars(1);
-            msg += "\n+ 1 " + star_ + " **Star** 🥳";
-
             if(user.getLevel() == 50) {
                 user.getBadges().add("veteran");
+                Rest.sendMessage(event, UX.formatBadge(event, veteranBadge_, "Veteran Collector"));
             } else if(user.getLevel() == 100) {
                 user.getBadges().add("master");
+                Rest.sendMessage(event, UX.formatBadge(event, masterBadge_, "Master Collector"));
             }
             State.updateBackpackDisplay(event, user);
 
@@ -238,14 +233,6 @@ public class State implements Emotes {
             } else {
                 Rest.editEmbed(event, user, null, disp, 1);
             }
-        }
-    }
-
-    public static void updateEventDisplay(MessageReceivedEvent event, User user) {
-        EventDisplay disp = EventDisplay.findEventDisplay(user.getUserId());
-
-        if(!disp.getMessageId().isEmpty()) {
-            Rest.editEmbed(event, user, null, disp, -1);
         }
     }
 

@@ -1,11 +1,9 @@
 package ca.gimmecards.Cmds;
-import ca.gimmecards.Helpers.*;
-import ca.gimmecards.Main.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class TestingCmds extends Cmds {
 
-    /*public User(String id, int cc, int l, int xp, int mxp, int t, int e, int k, int s, long oe, long ve, long de, long re, long me, String sm, boolean si, int bc, String bcard, ArrayList<String> p, ArrayList<Card> c) {
+    /*public User(String id, int cc, int l, int xp, int mxp, int t, int e, int k, int s, long oe, long ve, long de, long re, long me, String sm, boolean si, ArrayList<String> b, int bc, String bcard, ArrayList<String> p, ArrayList<Card> c) {
         userId = id;
         cardCount = cc;
         level = l;
@@ -22,53 +20,14 @@ public class TestingCmds extends Cmds {
         minigameEpoch = me;
         sortMethod = sm;
         sortIncreasing = si;
-        badges = new ArrayList<String>();
+        badges = b;
         backpackColor = bc;
         backpackCard = bcard;
         packs = p;
         cards = c;
-        //
-        tasks = 0;
-        giftClaimed = false;
     }*/
 
     public static void testSomething(MessageReceivedEvent event) {
-
-        for(User u : User.users) {
-            u.getBadges().clear();
-        }
-
-        for(User u : User.users) {
-            if(u.getLevel() >= 50) {
-                u.getBadges().add("veteran");
-            }
-        }
-        for(User u : User.users) {
-            if(u.getLevel() >= 100) {
-                u.getBadges().add("master");
-            }
-        }
-        for(User u : User.users) {
-            if(u.getUserId().equals("454773340163538955")) {
-                u.getBadges().add("dev");
-            }
-        }
-        for(User u : User.users) {
-            if(u.getUserId().equals("454773340163538955")
-            || u.getUserId().equals("762805188737237003")
-            || u.getUserId().equals("812361136933699615")
-            || u.getUserId().equals("907415225945452594")
-            || u.getUserId().equals("818314670284210196")) {
-                u.getBadges().add("staff");
-            }
-        }
-        for(User u : User.users) {
-            if(u.getGiftClaimed()) {
-                u.getBadges().add("bday");
-            }
-        }
-        Rest.sendMessage(event, "done testing!");
-        try { User.saveUsers(); } catch(Exception e) {}
 
         /*Data mew = null;
         Data gardevoir = null;
@@ -118,62 +77,33 @@ public class TestingCmds extends Cmds {
 
         /*for(int i = 0; i < User.users.size(); i++) {
             User u = User.users.get(i);
-            User user;
-            try {
-                user = new User(
-                    u.getUserId(),
-                    u.getCardCount(),
-                    u.getLevel(),
-                    u.getXP(),
-                    u.getMaxXP(),
-                    u.getTokens(),
-                    u.getEnergy(),
-                    u.getKeys(),
-                    u.getStars(),
-                    u.getOpenEpoch(),
-                    u.getVoteEpoch(),
-                    u.getDailyEpoch(),
-                    u.getRedeemEpoch(),
-                    u.getMinigameEpoch(),
-                    u.getSortMethod(),
-                    u.getSortIncreasing(),
-                    u.getBackpackColor(),
-                    u.getBackpackCard(),
-                    u.getPacks(),
-                    u.getCards(),
-                    u.getTasks(),
-                    u.getGiftClaimed()
-                );
-            } catch(NullPointerException e) {
-                user = new User(
-                    u.getUserId(),
-                    u.getCardCount(),
-                    u.getLevel(),
-                    u.getXP(),
-                    u.getMaxXP(),
-                    u.getTokens(),
-                    u.getEnergy(),
-                    u.getKeys(),
-                    u.getStars(),
-                    u.getOpenEpoch(),
-                    u.getVoteEpoch(),
-                    u.getDailyEpoch(),
-                    u.getRedeemEpoch(),
-                    u.getMinigameEpoch(),
-                    u.getSortMethod(),
-                    u.getSortIncreasing(),
-                    u.getBackpackColor(),
-                    u.getBackpackCard(),
-                    u.getPacks(),
-                    u.getCards(),
-                    0,
-                    false
-                );
-            }
+            User user = new User(
+                u.getUserId(),
+                u.getCardCount(),
+                u.getLevel(),
+                u.getXP(),
+                u.getMaxXP(),
+                u.getTokens(),
+                u.getEnergy(),
+                u.getKeys(),
+                u.getStars(),
+                u.getOpenEpoch(),
+                u.getVoteEpoch(),
+                u.getDailyEpoch(),
+                u.getRedeemEpoch(),
+                u.getMinigameEpoch(),
+                u.getSortMethod(),
+                u.getSortIncreasing(),
+                u.getBadges(),
+                u.getBackpackColor(),
+                u.getBackpackCard(),
+                u.getPacks(),
+                u.getCards()
+            );
             User.users.set(i, user);
         }
         for(User u : User.users) {
-            System.out.println(u.getTasks());
+            System.out.println(u.getBadges());
         }
         Rest.sendMessage(event, "done testing!");
         try { User.saveUsers(); } catch(Exception e) {}*/

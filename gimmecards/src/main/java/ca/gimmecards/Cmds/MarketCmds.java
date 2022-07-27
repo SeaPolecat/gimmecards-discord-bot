@@ -19,15 +19,13 @@ public class MarketCmds extends Cmds {
         }
         desc += "Next refresh in " + State.findTimeLeft(server.getMarketEpoch(), 1440, true) + "\n";
         desc += "┅┅\n";
-        desc += "🥳 50% off Sale - Happy Bday Gimme Cards!\n";
-        desc += "┅┅\n";
         for(Data data : server.getMarket()) {
             
             desc += UX.findCardTitle(data, false)
             + " ┇ `#" + count + "`"
             + " ┇ " + UX.findRarityEmote(data) 
             + " ┇ " + data.getSetEmote()
-            + " ┇ ~~" + UX.formatEnergyPrice(data) + "~~ " + UX.formatEventEnergyPrice(data) + "\n";
+            + " ┇ " + UX.formatEnergyPrice(data) + "\n";
             count++;
         }
         desc += "┅┅\n";
@@ -61,7 +59,7 @@ public class MarketCmds extends Cmds {
             int index = Integer.parseInt(args[1]) - 1;
             Data item = server.getMarket().get(index);
 
-            if(user.getEnergy() < (int)(item.getCardPrice() / 2)) {
+            if(user.getEnergy() < item.getCardPrice()) {
                 Rest.sendMessage(event, jigglypuff_ + " Sorry, you don't have enough " + energy_ + " **Energy**");
 
             } else {
@@ -70,7 +68,7 @@ public class MarketCmds extends Cmds {
                 String footer = event.getAuthor().getName() + "'s purchase";
 
                 msg += UX.formatNick(event) + " bought " + UX.findCardTitle(item, false) + " from the market!";
-                msg += UX.updateEnergy(user, -(int)(item.getCardPrice() / 2));
+                msg += UX.updateEnergy(user, -item.getCardPrice());
 
                 c = Card.addSingleCard(user, item, false);
 

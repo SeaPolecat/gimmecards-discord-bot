@@ -50,6 +50,12 @@ public class BackpackDisplay extends Display {
                 }
             }
             for(String badge : user.getBadges()) {
+                if(badge.equalsIgnoreCase("community")) {
+                    desc += communityBadge_ + " ";
+                    break;
+                }
+            }
+            for(String badge : user.getBadges()) {
                 if(badge.equalsIgnoreCase("veteran")) {
                     desc += veteranBadge_ + " ";
                     break;

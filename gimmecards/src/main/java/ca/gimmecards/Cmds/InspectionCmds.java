@@ -35,8 +35,6 @@ public class InspectionCmds extends Cmds implements CustomCards {
 
                         user.resetOpenEpoch();
                         c = Card.addSingleCard(user, item, false);
-                        //
-                        user.addTask();
     
                         msg += UX.formatNick(event) + " drew a card from " + logo_ + " **Gimme Cards**";
                         msg += UX.updateEnergy(user, UX.randRange(8, 10));
@@ -44,9 +42,6 @@ public class InspectionCmds extends Cmds implements CustomCards {
     
                         State.updateBackpackDisplay(event, user);
                         State.updateCardDisplay(event, user);
-                        //
-                        State.updateEventDisplay(event, user);
-                        EventCmds.checkTasksComplete(event);
     
                         Rest.sendMessage(event, msg);
                         Display.displayCard(event, user, item, c, footer);
@@ -54,8 +49,19 @@ public class InspectionCmds extends Cmds implements CustomCards {
                     }
 
                 } else if(State.isRareSet(set) || State.isPromoSet(set)) {
-                    if(user.getStars() < 1) {
-                        Rest.sendMessage(event, jigglypuff_ + " Sorry, you're out of " + star_ + " **Stars**");
+                    int starCost;
+
+                    if(State.isRareSet(set)) {
+                        starCost = 1;
+                    } else {
+                        starCost = 2;
+                    }
+                    if(user.getStars() < starCost) {
+                        if(State.isRareSet(set)) {
+                            Rest.sendMessage(event, jigglypuff_ + " Sorry, you're out of " + star_ + " **Stars**");
+                        } else {
+                            Rest.sendMessage(event, jigglypuff_ + " Sorry, you don't have enough " + star_ + " **Stars**");
+                        }
 
                     } else {
                         Card c;
@@ -70,18 +76,13 @@ public class InspectionCmds extends Cmds implements CustomCards {
                         }
                         user.resetOpenEpoch();
                         c = Card.addSingleCard(user, item, true);
-                        //
-                        user.addTask();
     
                         msg += UX.formatNick(event) + " drew a card from " + set.getSetEmote() + " **" + set.getSetName() + "**";
                         msg += UX.updateEnergy(user, UX.randRange(8, 10));
-                        msg += UX.updateStars(user, -1);
+                        msg += UX.updateStars(user, -starCost);
     
                         State.updateBackpackDisplay(event, user);
                         State.updateCardDisplay(event, user);
-                        //
-                        State.updateEventDisplay(event, user);
-                        EventCmds.checkTasksComplete(event);
     
                         Rest.sendMessage(event, msg);
                         Display.displayCard(event, user, item, c, footer);
@@ -101,8 +102,6 @@ public class InspectionCmds extends Cmds implements CustomCards {
                         user.resetOpenEpoch();
                         Card.addNewCards(user, set);
                         disp.setDispType("new");
-                        //
-                        user.addTask();
                         
                         msg += UX.formatNick(event) + " opened " + set.getSetEmote() + " **" + set.getSetName() + "**";
                         msg += UX.updateTokens(user, -1);
@@ -110,9 +109,6 @@ public class InspectionCmds extends Cmds implements CustomCards {
     
                         State.updateBackpackDisplay(event, user);
                         State.updateCardDisplay(event, user);
-                        //
-                        State.updateEventDisplay(event, user);
-                        EventCmds.checkTasksComplete(event);
     
                         Rest.sendMessage(event, msg);
                         Rest.sendDynamicEmbed(event, user, null, disp, 1);

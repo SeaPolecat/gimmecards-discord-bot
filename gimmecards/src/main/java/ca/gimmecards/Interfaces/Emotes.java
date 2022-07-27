@@ -28,6 +28,7 @@ public interface Emotes {
     //badges
     String devBadge_ = "<:GimmeCardsDeveloper:998749089699213362>";
     String staffBadge_ = "<:GimmeCardsStaff:998749109504720956>";
+    String communityBadge_ = "<:CommunityHelper:1001971363013210202>";
     String veteranBadge_ = "<:VeteranCollector:998749128819495012>";
     String masterBadge_ = "<:MasterCollector:998749146435563582>";
     String bdayBadge_ = "<:1YearAnniversary:998749060448129024>";

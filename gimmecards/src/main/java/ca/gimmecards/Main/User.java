@@ -40,9 +40,6 @@ public class User implements StoragePaths {
     private String backpackCard;
     private ArrayList<String> packs;
     private ArrayList<Card> cards;
-    //
-    private Integer tasks;
-    private Boolean giftClaimed;
 
     public User(String ui) {
         userId = ui;
@@ -66,9 +63,6 @@ public class User implements StoragePaths {
         backpackCard = "";
         packs = new ArrayList<String>();
         cards = new ArrayList<Card>();
-        //
-        tasks = 0;
-        giftClaimed = false;
     }
 
     public String getUserId() { return userId; }
@@ -93,9 +87,6 @@ public class User implements StoragePaths {
     public ArrayList<String> getPacks() { return packs; }
     public ArrayList<Card> getCards() { return cards; }
     //
-    public int getTasks() { return tasks; }
-    public boolean getGiftClaimed() { return giftClaimed; }
-    //
     public void addCardCount() { cardCount++; }
     public void addXP(int xp) { XP += xp; }
     public void addTokens(int t) { tokens += t; }
@@ -111,9 +102,6 @@ public class User implements StoragePaths {
     public void setSortIncreasing(boolean si) { sortIncreasing = si; }
     public void setBackpackColor(int bColor) { backpackColor = bColor; }
     public void setBackpackCard(String bCard) { backpackCard = bCard; }
-    //
-    public void addTask() { tasks++; }
-    public void setGiftClaimed(boolean cg) { giftClaimed = cg; }
 
     public void levelUp() {
         int extraXP = XP - maxXP;

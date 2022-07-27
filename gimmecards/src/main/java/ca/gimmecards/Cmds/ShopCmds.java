@@ -48,7 +48,7 @@ public class ShopCmds extends Cmds {
         for(int i = 0; i < Data.promoSets.length; i++) {
             Data set = Data.promoSets[i];
 
-            desc += set.getSetEmote() + " " + set.getSetName() + " ┇ " + star_ + "\n";
+            desc += set.getSetEmote() + " " + set.getSetName() + " ┇ **2** " + star_ + "\n";
         }
         desc += "┅┅\n";
         embed.setTitle(bulbasaur_ + " Promo Packs Shop " + bulbasaur_);

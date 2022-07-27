@@ -75,8 +75,6 @@ public class Data implements StoragePaths {
     public String[] getCardSubtypes() { return cardSubtypes; }
     public int getCardPrice() { return cardPrice; }
 
-    public void setSetEmote(String se) { setEmote = se; }
-
     private ArrayList<Data> commons;
     private ArrayList<Data> uncommons;
     private ArrayList<Data> rares;

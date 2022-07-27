@@ -31,8 +31,7 @@ public class BackpackCmds extends Cmds {
             msg += UX.updateTokens(user, 1);
             msg += UX.updateEnergy(user, UX.randRange(24, 30));
 
-            msg += "\n\n:green_circle: New update on 7/19/2022 ┇ " + UX.formatCmd(server, "changelog") + "\n";
-            msg += "🎉 Event in progress! ┇ " + UX.formatCmd(server, "event");
+            msg += "\n\n🔵 New update on 7/27/2022 ┇ " + UX.formatCmd(server, "changelog") + "\n";
 
             State.updateBackpackDisplay(event, user);
 

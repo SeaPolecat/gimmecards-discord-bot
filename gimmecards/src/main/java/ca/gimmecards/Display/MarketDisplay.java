@@ -32,7 +32,7 @@ public class MarketDisplay extends Display {
 
         desc += "**Rarity** ┇ " + UX.findRarityEmote(data) + " " + data.getCardRarity() + "\n";
         desc += "**Card Set** ┇ " + data.getSetEmote() + " " + data.getSetName() + "\n";
-        desc += "**Market Price** ┇ ~~" + UX.formatEnergyPrice(data) + "~~ " + UX.formatEventEnergyPrice(data) + "\n\n";
+        desc += "**Market Price** ┇ " + UX.formatEnergyPrice(data) + "\n\n";
         desc += "*Click on image for zoomed view*";
 
         embed.setTitle(UX.findCardTitle(data, false));
