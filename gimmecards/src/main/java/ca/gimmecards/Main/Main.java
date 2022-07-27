@@ -18,7 +18,7 @@ public class Main {
     public static JDA jda;
     public static final String botToken = dotenv.get("BOT_TOKEN");
     public static final String testToken = dotenv.get("TEST_TOKEN");
-    public static final String dblToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgxNDAyNTQ5OTM4MTcyNzIzMiIsImJvdCI6dHJ1ZSwiaWF0IjoxNjUzMjA1MjI3fQ.cKoI_mWYtI6WeJ4boujB3zW6QVqe8Fl1YlnoAj57fMw";
+    public static final String dblToken = dotenv.get("DBL_TOKEN");
 
     public static void main(String[] args) throws LoginException {
 
