@@ -1,0 +1,29 @@
+fixes (ALL)
+----------------------------------
+-update website and top.gg
+-rename all commands to the actual name of the command
+-add ?unfavall command
+-update rarities to have custom rarity
+-display getting badge for getting lvl 50+
+
+-fix noob custom card (it has no type)
+-make the promoshop cards cost 2 stars
+
+
+
+features (at least 1)
+-----------------------------------
+-show which cards you sold in ?sellall
+-can open with set code instead of the full name
+-seeing backpacks of other people
+-more options for ?search
+-surprise cards in chat
+-trading
+
+
+
+research (optional)
+-----------------------------------
+-users' card counts are potentially too big
+-find a way to generate true random in Java
+-reduce cpu load, try a binary search method and clearing all embeds
