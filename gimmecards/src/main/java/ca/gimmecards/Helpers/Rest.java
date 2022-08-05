@@ -61,7 +61,7 @@ public class Rest implements Emotes {
                     message.editMessageEmbeds(embed.build()).queue();
                     embed.clear();
                 } catch(InsufficientPermissionException e) {}
-            });
+            }, (failure) -> {});
         } catch(NullPointerException | InsufficientPermissionException e) {}
     }
 
@@ -75,7 +75,7 @@ public class Rest implements Emotes {
                     message.editMessageEmbeds(embed.build()).queue();
                     embed.clear();
                 } catch(InsufficientPermissionException e) {}
-            });
+            }, (failure) -> {});
         } catch(NullPointerException | InsufficientPermissionException e) {}
     }
 
@@ -83,7 +83,7 @@ public class Rest implements Emotes {
         try {
             event.getJDA().getTextChannelById(disp.getChannelId()).retrieveMessageById(disp.getMessageId()).queue(message -> {
                 message.delete().queue();
-            });
+            }, (failure) -> {});
         } catch(NullPointerException | InsufficientPermissionException e) {}
     }
 
@@ -91,7 +91,7 @@ public class Rest implements Emotes {
         try {
             event.getJDA().getTextChannelById(disp.getChannelId()).retrieveMessageById(disp.getMessageId()).queue(message -> {
                 message.removeReaction(Emoji.fromFormatted(reaction)).queue();
-            });
+            }, (failure) -> {});
         } catch(NullPointerException | InsufficientPermissionException e) {}
     }
 

@@ -49,18 +49,22 @@ public class HelpCmds extends Cmds implements Comparator<User> {
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
+        desc += "*[Terms of Service & Privacy Policy](https://docs.google.com/document/d/1agd1vDsueTEL2khcavynOSptHKTLy0c2jymmX3xW5mc/edit?usp=sharing)*\n";
+        desc += "┅┅\n";
+
         desc += "**Prefix**\n";
         desc += "My prefix for this server is " + UX.formatCmd(server, "") + "\n\n";
 
-        desc += "**Tutorial**\n";
-        desc += "For a quick tutorial and list of commands, please visit our [official website](https://www.gimmecards.ca/)\n\n";
+        desc += "**How to Play**\n";
+        desc += "[Click here](https://www.gimmecards.ca/) to visit our website, "
+        + "where you'll find a quick tutorial and list of commands.\n\n";
 
-        desc += "**Support Server**\n";
-        desc += "Have questions or ideas for new updates? Or just wanna hang out with other collectors? "
-        + "Come join our [support server](https://discord.gg/urtHCGcE7y)\n\n";
+        desc += "**Official Server**\n";
+        desc += "[Click here](https://discord.gg/urtHCGcE7y) to join our official server, "
+        + "where you can ask questions, give ideas, or simply hang out with other collectors.\n\n";
 
         desc += "**Invite Me!**\n";
-        desc += "Click [here](https://discord.com/api/oauth2/authorize?client_id=814025499381727232&permissions=354368&scope=bot) "
+        desc += "[Click here](https://discord.com/api/oauth2/authorize?client_id=814025499381727232&permissions=354368&scope=bot) "
         + "to invite me to your own server!";
 
         embed.setTitle(eevee_ + " Getting Started " + eevee_);
@@ -237,7 +241,7 @@ public class HelpCmds extends Cmds implements Comparator<User> {
 
         embed.setTitle(logo_ + " World's Top Collectors " + logo_);
         embed.setDescription(desc);
-        embed.setColor(0xE3E5E9);
+        embed.setColor(0x408CFF);
         Rest.sendEmbed(event, embed);
         embed.clear();
     }

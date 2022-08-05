@@ -21,14 +21,6 @@ public class Card implements CustomCards {
         isFav = false;
     }
 
-    public Card(Data d, int cn, int cq, boolean s, boolean ifav) {
-        data = d;
-        cardNum = cn;
-        cardQuantity = cq;
-        sellable = s;
-        isFav = ifav;
-    }
-
     public Data getData() { return data; }
     public int getCardNum() { return cardNum; }
     public int getCardQuantity() { return cardQuantity; }

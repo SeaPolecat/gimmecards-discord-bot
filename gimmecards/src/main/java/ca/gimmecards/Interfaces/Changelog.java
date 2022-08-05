@@ -208,6 +208,18 @@ public interface Changelog {
         + "• Buff Magikarp\n"
         + "• Dragon Slayer Azumarill V\n"
         + "• Kirby\n"
-        + "• Bandana Waddle Dee"
+        + "• Bandana Waddle Dee",
+
+        "**Update 8/4/2022**\n"
+        + "🔹We've released our **Terms of Service & Privacy Policy**, which can be found within the [help] command. "
+        + "By playing *Gimme Cards*, you automatically agree to them. They also contain important information, "
+        + "like how to delete your user data\n"
+        + "🔹To keep you guys safe, everyone's user data is now encrypted. This may cause the bot to "
+        + "run slightly slower, but safety first!\n"
+        + "🔹Updated the [help] command\n"
+        + "🔹Updated the message that *Gimme Cards* sends when it joins a new server\n"
+        + "🔹Starting from the next market refresh, [market] will now have 15 slots instead of 10\n"
+        + "🔹Newly opened cards are now marked with the 🆕 symbol\n"
+        + "🔸Added *21* more custom cards"
     };
 }

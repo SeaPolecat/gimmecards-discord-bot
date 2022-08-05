@@ -2,6 +2,7 @@ package ca.gimmecards.Main;
 import ca.gimmecards.Helpers.*;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
+import net.dv8tion.jda.api.events.guild.GuildLeaveEvent;
 import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
 
@@ -11,12 +12,24 @@ public class Ready extends ListenerAdapter {
         EmbedBuilder embed = new EmbedBuilder();
 
         embed.setTitle("✨ Thanks for inviting me!");
-        embed.setThumbnail("https://i.ibb.co/pzhgM30/GC-new-logo.png");
+        embed.setThumbnail("https://i.ibb.co/GcC31Sr/logo-rounded.png");
         embed.setDescription("Please use `?help` to get started");
-        embed.setColor(0xF93683);
+        embed.setColor(0x408CFF);
         
         Rest.sendEmbed(event, embed);
         embed.clear();
+    }
+
+    public void onGuildLeave(GuildLeaveEvent event) {
+        for(int i = 0; i < Server.servers.size(); i++) {
+            Server s = Server.servers.get(i);
+
+            if(s.getServerId().equals(event.getGuild().getId())) {
+                Server.servers.remove(i);
+                try { Server.saveServers(); } catch(Exception e) {}
+                break;
+            }
+        }
     }
     
     public void onGuildReady(GuildReadyEvent event) {
