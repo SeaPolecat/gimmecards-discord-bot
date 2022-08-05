@@ -31,12 +31,12 @@ public class BackpackCmds extends Cmds {
             msg += UX.updateTokens(user, 1);
             msg += UX.updateEnergy(user, UX.randRange(24, 30));
 
-            msg += "\n\n🔵 New update on 7/27/2022 ┇ " + UX.formatCmd(server, "changelog") + "\n";
+            msg += "\n\n🟣 New update on 8/4/2022 ┇ " + UX.formatCmd(server, "changelog") + "\n";
 
             State.updateBackpackDisplay(event, user);
 
             embed.setDescription(msg);
-            embed.setColor(0xFEBE54);
+            embed.setColor(0x408CFF);
             Rest.sendEmbed(event, embed);
             embed.clear();
             try { User.saveUsers(); } catch(Exception e) {}

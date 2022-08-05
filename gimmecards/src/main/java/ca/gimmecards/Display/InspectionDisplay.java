@@ -55,7 +55,7 @@ public class InspectionDisplay extends Display {
         } else if(disp.getDispType().equals("new")) {
             maxPage = disp.getNewCards().size();
             data = disp.getNewCards().get(startIndex);
-            cardTitle = UX.findCardTitle(data, false);
+            cardTitle = UX.findCardTitle(data, false) + " 🆕";
 
         } else {
             maxPage = disp2.getSearchedCards().size();

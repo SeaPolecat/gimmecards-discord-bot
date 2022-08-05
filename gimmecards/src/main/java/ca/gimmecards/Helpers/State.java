@@ -152,7 +152,7 @@ public class State implements Emotes {
 
             embed.setThumbnail(ui.getUserIcon());
             embed.setDescription(msg);
-            embed.setColor(0xFEBE54);
+            embed.setColor(0x408CFF);
             Rest.sendEmbed(event, embed);
             embed.clear();
         }
@@ -232,6 +232,18 @@ public class State implements Emotes {
                 
             } else {
                 Rest.editEmbed(event, user, null, disp, 1);
+            }
+        }
+    }
+
+    public static void updatePrivacyDisplay(MessageReceivedEvent event, User user, boolean delete) {
+        PrivacyDisplay disp = PrivacyDisplay.findPrivacyDisplay(user.getUserId());
+
+        if(!disp.getMessageId().isEmpty()) {
+            if(delete) {
+                Rest.deleteMessage(event, disp);
+            } else {
+                Rest.editEmbed(event, user, null, disp, -1);
             }
         }
     }

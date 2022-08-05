@@ -20,19 +20,19 @@ public class Server implements StoragePaths {
     
     public static ArrayList<Server> servers = new ArrayList<Server>();
     //
-    private String serverId;
+    private String serverId; //ENCRYPTED
     private String prefix;
     private ArrayList<Data> market;
     private Long marketEpoch;
 
-    public Server(String sId) {
-        serverId = sId;
+    public Server(String si) {
+        serverId = Main.encryptor.encrypt(si);
         prefix = "?";
         market = new ArrayList<Data>();
         marketEpoch = (long)(0);
     }
 
-    public String getServerId() { return serverId; }
+    public String getServerId() { return Main.encryptor.decrypt(serverId); }
     public String getPrefix() { return prefix; }
     public ArrayList<Data> getMarket() { return market; }
     public long getMarketEpoch() { return marketEpoch; }
@@ -44,7 +44,7 @@ public class Server implements StoragePaths {
         market.clear();
         resetMarketEpoch();
 
-        for(int i = 0; i < 10; i++) {
+        for(int i = 0; i < 15; i++) {
             market.add(Card.pickRandomCard("shiny"));
         }
         try { saveServers(); } catch(Exception e) {}

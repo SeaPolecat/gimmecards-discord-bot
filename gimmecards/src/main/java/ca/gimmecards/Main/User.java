@@ -19,7 +19,7 @@ public class User implements StoragePaths {
 
     public static ArrayList<User> users = new ArrayList<User>();
     //
-    private String userId;
+    private String userId; //ENCRYPTED
     private Integer cardCount;
     private Integer level;
     private Integer XP;
@@ -42,7 +42,7 @@ public class User implements StoragePaths {
     private ArrayList<Card> cards;
 
     public User(String ui) {
-        userId = ui;
+        userId = Main.encryptor.encrypt(ui);
         cardCount = 0;
         level = 1;
         XP = 0;
@@ -65,7 +65,7 @@ public class User implements StoragePaths {
         cards = new ArrayList<Card>();
     }
 
-    public String getUserId() { return userId; }
+    public String getUserId() { return Main.encryptor.decrypt(userId); }
     public int getCardCount() { return cardCount; }
     public int getLevel() { return level; }
     public int getXP() { return XP; }

@@ -71,11 +71,22 @@ public class Cmds extends ListenerAdapter implements Emotes {
             }
         }
 
+        //PRIVACY
+        if(isValidCommand(event, args, "accdelete", null)) {
+            PrivacyCmds.deleteAccount(event);
+        }
+        if(isValidCommand(event, args, "confirm", null)) {
+            PrivacyCmds.confirmDeletion(event);
+        }
+        if(isValidCommand(event, args, "deny", null)) {
+            PrivacyCmds.denyDeletion(event);
+        }
+
         //HELP
         if(isValidCommand(event, args, "setprefix", new String[]{"prefix"})) {
             HelpCmds.changePrefix(event, args);
         }
-        if(isValidCommand(event, args, "help", null) || args[0].equalsIgnoreCase("?help")) {
+        if(isValidCommand(event, args, "help", null)) {
             HelpCmds.viewHelp(event);
         }
         if(isValidCommand(event, args, "rarities", null)) {

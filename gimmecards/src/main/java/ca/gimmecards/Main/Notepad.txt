@@ -13,6 +13,12 @@ features (at least 1)
 -search by rarity, set, etc.
 -trading
 
+-leaderboards having 15 slots and are scrollable
+-Able to open multiple packs at the same time
+-able to start viewing our cards from a different page
+-Poke coins + new minigame
+-Shortcuts for commands
+
 
 
 research (optional)

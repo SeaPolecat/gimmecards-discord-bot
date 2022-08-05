@@ -29,48 +29,16 @@ public class TestingCmds extends Cmds {
 
     public static void testSomething(MessageReceivedEvent event) {
 
-        /*Data mew = null;
-        Data gardevoir = null;
-        //ecard1-19
-        //g1-RC30
-        for(Data set : Data.oldSets) {
-            for(Data data : set.getShinies()) {
-                if(data.getCardId().equals("ecard1-19")) {
-                    System.out.println("mew found!");
-                    mew = data;
-                }
-            }
+        /*for(Server s : Server.servers) {
+            s.setServerId(Main.encryptor.encrypt(s.getServerId()));
+            System.out.println(s.getServerId());
         }
-        for(Data set : Data.specSets) {
-            for(Data data : set.getSpecs()) {
-                if(data.getCardId().equals("g1-RC30")) {
-                    System.out.println("gardevoir found!");
-                    gardevoir = data;
-                }
-            }
-        }
+        Rest.sendMessage(event, "done testing!");
+        try { Server.saveServers(); } catch(Exception e) {}
 
         for(User u : User.users) {
-            //gallard
-            if(u.getUserId().equals("765490431348834344")) {
-                u.addTokens(50);
-                System.out.println(u.getTokens());
-            }
-            //gawr gura
-            if(u.getUserId().equals("835854670005272616")) {
-                u.addTokens(50);
-                System.out.println(u.getTokens());
-            }
-            //sora
-            if(u.getUserId().equals("973492494413217802")) {
-                u.getCards().add(0, new Card(mew, u.getCardCount() + 1, true));
-                Rest.sendMessage(event, u.getCards().get(0).getData().getCardImage());
-            }
-            //jinny
-            if(u.getUserId().equals("727304307464077413")) {
-                u.getCards().add(0, new Card(gardevoir, u.getCardCount() + 1, true));
-                Rest.sendMessage(event, u.getCards().get(0).getData().getCardImage());
-            }
+            u.setUserId(Main.encryptor.encrypt(u.getUserId()));
+            System.out.println(u.getUserId());
         }
         Rest.sendMessage(event, "done testing!");
         try { User.saveUsers(); } catch(Exception e) {}*/

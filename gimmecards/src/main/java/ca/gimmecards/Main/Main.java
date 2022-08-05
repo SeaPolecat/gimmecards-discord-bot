@@ -10,17 +10,22 @@ import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
+import org.jasypt.util.text.BasicTextEncryptor;
 import io.github.cdimascio.dotenv.Dotenv;
 
 public class Main {
 
     public static Dotenv dotenv = Dotenv.load();
     public static JDA jda;
+    public static BasicTextEncryptor encryptor = new BasicTextEncryptor();
     public static final String botToken = dotenv.get("BOT_TOKEN");
     public static final String testToken = dotenv.get("TEST_TOKEN");
     public static final String dblToken = dotenv.get("DBL_TOKEN");
+    public static final String encryptorPass = dotenv.get("ENCRYPTOR_PASS");
 
     public static void main(String[] args) throws LoginException {
+
+        encryptor.setPassword(encryptorPass);
 
         jda = JDABuilder
         .createDefault(testToken,

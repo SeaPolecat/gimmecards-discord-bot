@@ -69,7 +69,7 @@ public class VoteCmds extends Cmds {
                     State.updateBackpackDisplay(event, user);
 
                     embed.setDescription(msg);
-                    embed.setColor(0xFEBE54);
+                    embed.setColor(0x408CFF);
                     Rest.sendEmbed(event, embed);
                     embed.clear();
                     try { User.saveUsers(); } catch(Exception e) {}

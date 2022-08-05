@@ -23,7 +23,7 @@ public interface Emotes {
     String star_ = "<:star:954519273831800862>";
     String promostar_ = "<:promostar:955206901552001185>";
     String pikameme_ = "<:pikameme:875586830601453569>";
-    String logo_ = "<:logo:998853212209676318>";
+    String logo_ = "<:logo:1002625567922856086>";
 
     //badges
     String devBadge_ = "<:GimmeCardsDeveloper:998749089699213362>";
