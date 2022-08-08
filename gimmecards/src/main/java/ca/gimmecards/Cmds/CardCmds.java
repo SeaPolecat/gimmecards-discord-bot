@@ -9,13 +9,13 @@ public class CardCmds extends Cmds {
 
     public static void viewCards(MessageReceivedEvent event, String[] args) {
         User user = User.findUser(event);
-        CardDisplay disp = CardDisplay.findCardDisplay(user.getUserId());
+        CardDisplay disp = new CardDisplay(user.getUserId()).findDisplay();
 
         if(user.getCards().size() < 1) {
-            Rest.sendMessage(event, jigglypuff_ + " You don't have any cards yet!");
+            JDA.sendMessage(event, jigglypuff_ + " You don't have any cards yet!");
 
         } else {
-            Rest.sendDynamicEmbed(event, user, null, disp, 1);
+            JDA.sendDynamicEmbed(event, user, null, disp, 1);
         }
     }
 
@@ -28,13 +28,12 @@ public class CardCmds extends Cmds {
             String cardTitle = UX.findCardTitle(c.getData(), false);
 
             c.setIsFav(true);
-            State.updateCardDisplay(event, user);
-            State.updateFavDisplay(event, user);
+            Update.updateCardDisplay(event, user);
 
-            Rest.sendMessage(event, "❤ Added **" + cardTitle + "** to your favourites!");
+            JDA.sendMessage(event, "❤ Added **" + cardTitle + "** to your favourites!");
             try { User.saveUsers(); } catch(Exception e) {}
         } catch(NumberFormatException | IndexOutOfBoundsException e) {
-            Rest.sendMessage(event, jigglypuff_ + " Whoops, I couldn't find that card...");
+            JDA.sendMessage(event, jigglypuff_ + " Whoops, I couldn't find that card...");
         }
     }
 
@@ -47,13 +46,12 @@ public class CardCmds extends Cmds {
             String cardTitle = UX.findCardTitle(c.getData(), false);
 
             c.setIsFav(false);
-            State.updateCardDisplay(event, user);
-            State.updateFavDisplay(event, user);
+            Update.updateCardDisplay(event, user);
 
-            Rest.sendMessage(event, "💔 Removed **" + cardTitle + "** from your favourites!");
+            JDA.sendMessage(event, "💔 Removed **" + cardTitle + "** from your favourites!");
             try { User.saveUsers(); } catch(Exception e) {}
         } catch(NumberFormatException | IndexOutOfBoundsException e) {
-            Rest.sendMessage(event, jigglypuff_ + " Whoops, I couldn't find that card...");
+            JDA.sendMessage(event, jigglypuff_ + " Whoops, I couldn't find that card...");
         }
     }
 
@@ -62,19 +60,18 @@ public class CardCmds extends Cmds {
         boolean exists = false;
 
         for(Card c : user.getCards()) {
-            if(!c.getIsFav() && State.isShinyCard(c.getData())) {
+            if(!c.getIsFav() && Check.isShinyCard(c.getData())) {
                 exists = true;
                 c.setIsFav(true);
             }
         }
         if(!exists) {
-            Rest.sendMessage(event, jigglypuff_ + " Sorry, you have no shiny cards left to favourite!");
+            JDA.sendMessage(event, jigglypuff_ + " Sorry, you have no shiny cards left to favourite!");
 
         } else {
-            State.updateCardDisplay(event, user);
-            State.updateFavDisplay(event, user);
+            Update.updateCardDisplay(event, user);
 
-            Rest.sendMessage(event, "💞 Added all your shiny cards to your favourites!");
+            JDA.sendMessage(event, "💞 Added all your shiny cards to your favourites!");
             try { User.saveUsers(); } catch(Exception e) {}
         }
     }
@@ -142,10 +139,9 @@ public class CardCmds extends Cmds {
                 Integer.parseInt("$");
             }
             Card.sortCards(user, user.getSortMethod(), user.getSortIncreasing());
-            State.updateCardDisplay(event, user);
-            State.updateFavDisplay(event, user);
+            Update.updateCardDisplay(event, user);
 
-            Rest.sendMessage(event, ditto_ + " Your cards have been sorted!");
+            JDA.sendMessage(event, ditto_ + " Your cards have been sorted!");
             try { User.saveUsers(); } catch(Exception e) {}
         } catch(NumberFormatException e) {
             Server server = Server.findServer(event);
@@ -164,7 +160,7 @@ public class CardCmds extends Cmds {
             embed.setTitle(eevee_ + " Sorting Help " + eevee_);
             embed.setDescription(desc);
             embed.setColor(0xE9BB7A);
-            Rest.sendEmbed(event, embed);
+            JDA.sendEmbed(event, embed);
             embed.clear();
         }
     }

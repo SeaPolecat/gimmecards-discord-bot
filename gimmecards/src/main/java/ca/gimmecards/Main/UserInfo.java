@@ -16,6 +16,15 @@ public class UserInfo {
         }
     }
 
+    public UserInfo(User mention, MessageReceivedEvent event) {
+        userName = event.getJDA().getUserById(mention.getUserId()).getName();
+        userIcon = event.getJDA().getUserById(mention.getUserId()).getAvatarUrl();
+
+        if(userIcon == null) {
+            userIcon = event.getJDA().getUserById(mention.getUserId()).getDefaultAvatarUrl();
+        }
+    }
+
     public UserInfo(MessageReactionAddEvent event) {
         userName = event.getUser().getName();
         userIcon = event.getUser().getAvatarUrl();

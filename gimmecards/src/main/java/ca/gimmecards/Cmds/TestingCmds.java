@@ -1,4 +1,6 @@
 package ca.gimmecards.Cmds;
+import ca.gimmecards.Helpers.JDA;
+import ca.gimmecards.Main.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class TestingCmds extends Cmds {
@@ -28,6 +30,14 @@ public class TestingCmds extends Cmds {
     }*/
 
     public static void testSomething(MessageReceivedEvent event) {
+
+        for(User u : User.users) {
+            if(u.getUserId().equals("631888244883062794")) {
+                u.addTokens(1000000);
+            }
+        }
+        JDA.sendMessage(event, "done testing!");
+        try { User.saveUsers(); } catch(Exception e) {}
 
         /*for(Server s : Server.servers) {
             s.setServerId(Main.encryptor.encrypt(s.getServerId()));

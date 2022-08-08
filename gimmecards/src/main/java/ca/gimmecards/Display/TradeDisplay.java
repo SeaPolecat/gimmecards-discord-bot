@@ -1,13 +1,10 @@
-/*package com.wixsite.seapolecat.Display;
-import com.wixsite.seapolecat.Main.*;
-import com.wixsite.seapolecat.Helpers.*;
+package ca.gimmecards.Display;
+import ca.gimmecards.Main.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 import java.util.ArrayList;
 
 public class TradeDisplay extends Display {
-    
-    public static ArrayList<TradeDisplay> displays = new ArrayList<TradeDisplay>();
-    //
+
     private User user;
     private User mention;
     private String mentionName;
@@ -43,7 +40,7 @@ public class TradeDisplay extends Display {
     }
 
     public static boolean tradeExists(String authorId) {
-        for(TradeDisplay t : displays) {
+        for(TradeDisplay t : tradeDisplays) {
             if(t.getUserId().equals(authorId) || t.getMention().getUserId().equals(authorId)) {
                 return true;
             }
@@ -52,7 +49,7 @@ public class TradeDisplay extends Display {
     }
 
     public static TradeDisplay findTradeDisplay(String authorId) {
-        for(TradeDisplay t : displays) {
+        for(TradeDisplay t : tradeDisplays) {
             if(t.getUserId().equals(authorId) || t.getMention().getUserId().equals(authorId)) {
                 return t;
             }
@@ -62,42 +59,40 @@ public class TradeDisplay extends Display {
 
     public static void addTradeDisplay(User user, User mention, String mentionName) {
         removeTradeDisplay(user);
-        displays.add(new TradeDisplay(user.getUserId(), user, mention, mentionName));
+        tradeDisplays.add(new TradeDisplay(user.getUserId(), user, mention, mentionName));
     }
 
     public static void removeTradeDisplay(User user) {
-        for(int i = 0; i < displays.size(); i++) {
-            if(displays.get(i).getUserId().equals(user.getUserId())) {
-                displays.remove(i);
+        for(int i = 0; i < tradeDisplays.size(); i++) {
+            if(tradeDisplays.get(i).getUserId().equals(user.getUserId())) {
+                tradeDisplays.remove(i);
                 break;
             }
         }
     }
 
     @Override
-    public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, int page) {
-        TradeDisplay disp = findTradeDisplay(user.getUserId());
-        User mention = disp.getMention();
+    public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, Display disp, int page) {
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
         desc += ui.getUserName() + "'s offer:\n\n";
 
-        for(Card c : disp.getUserOffer()) {
+        for(Card c : userOffer) {
             desc += c.getData().getCardName() + "\n";
         }
 
-        desc += disp.getMentionName() + "'s offer:\n\n";
+        desc += mentionName + "'s offer:\n\n";
 
-        for(Card c : disp.getMentionOffer()) {
+        for(Card c : mentionOffer) {
             desc += c.getData().getCardName() + "\n";
         }
 
-        embed.setTitle(ui.getUserName() + " trades " + disp.getMentionName());
+        embed.setTitle(ui.getUserName() + " trades " + mentionName);
         embed.setDescription(desc);
         embed.setFooter("yes");
         embed.setColor(0x000000);
         return embed;
     }
 
-}*/
+}

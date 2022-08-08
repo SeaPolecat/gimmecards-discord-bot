@@ -9,28 +9,25 @@ public class MinigameCmds extends Cmds {
     public static void startMinigame(MessageReceivedEvent event) {
         User user = User.findUser(event);
         Server server = Server.findServer(event);
-        MinigameDisplay disp;
+        MinigameDisplay disp = new MinigameDisplay(user.getUserId()).findDisplay();;
 
-        if(!State.isCooldownDone(user.getMinigameEpoch(), 60, true)) {
-            Rest.sendMessage(event, jigglypuff_ + " Please wait another " + State.findTimeLeft(user.getMinigameEpoch(), 60, true));
+        if(!Check.isCooldownDone(user.getMinigameEpoch(), 60, true)) {
+            JDA.sendMessage(event, jigglypuff_ + " Please wait another " + Check.findTimeLeft(user.getMinigameEpoch(), 60, true));
 
         } else {
-            MinigameDisplay.addMinigameDisplay(user);
-            disp = MinigameDisplay.findMinigameDisplay(user.getUserId());
-            
             user.resetMinigameEpoch();
             
-            Rest.sendDynamicEmbed(event, user, server, disp, -1);
+            JDA.sendDynamicEmbed(event, user, server, disp, -1);
             try { User.saveUsers(); } catch(Exception e) {}
         }
     }
 
     public static void makeGuess(MessageReceivedEvent event, String[] args) {
         User user = User.findUser(event);
-        MinigameDisplay disp = MinigameDisplay.findMinigameDisplay(user.getUserId());
+        MinigameDisplay disp = new MinigameDisplay(user.getUserId()).findDisplay();
 
-        if(disp == null) {
-            Rest.sendMessage(event, jigglypuff_ + " You haven't started a minigame yet!");
+        if(disp.getMessageId().isEmpty()) {
+            JDA.sendMessage(event, jigglypuff_ + " You haven't started a minigame yet!");
 
         } else {
             String guess = "";
@@ -47,9 +44,9 @@ public class MinigameCmds extends Cmds {
                 msg += UX.updateTokens(user, 2);
                 msg += UX.updateEnergy(user, UX.randRange(48, 60));
 
-                State.updateBackpackDisplay(event, user);
+                Update.updateBackpackDisplay(event, user);
 
-                Rest.sendMessage(event, msg);
+                JDA.sendMessage(event, msg);
                 try { User.saveUsers(); } catch(Exception e) {}
 
             } else {
@@ -61,7 +58,7 @@ public class MinigameCmds extends Cmds {
                     msg += UX.formatNick(event) + " lost the minigame... But there's always next time!";
                     msg += UX.updateEnergy(user, UX.randRange(24, 30));
 
-                    Rest.sendMessage(event, msg);
+                    JDA.sendMessage(event, msg);
                     try { User.saveUsers(); } catch(Exception e) {}
 
                 } else {
@@ -73,7 +70,7 @@ public class MinigameCmds extends Cmds {
                     } else {
                         wrong += "tries left!";
                     }
-                    Rest.sendMessage(event, wrong);
+                    JDA.sendMessage(event, wrong);
                 }
             }
         }

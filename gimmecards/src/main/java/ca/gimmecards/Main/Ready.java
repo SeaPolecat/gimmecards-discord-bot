@@ -16,7 +16,7 @@ public class Ready extends ListenerAdapter {
         embed.setDescription("Please use `?help` to get started");
         embed.setColor(0x408CFF);
         
-        Rest.sendEmbed(event, embed);
+        JDA.sendEmbed(event, embed);
         embed.clear();
     }
 

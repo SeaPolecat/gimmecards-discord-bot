@@ -18,10 +18,10 @@ public class Main {
     public static Dotenv dotenv = Dotenv.load();
     public static JDA jda;
     public static BasicTextEncryptor encryptor = new BasicTextEncryptor();
-    public static final String botToken = dotenv.get("BOT_TOKEN");
-    public static final String testToken = dotenv.get("TEST_TOKEN");
-    public static final String dblToken = dotenv.get("DBL_TOKEN");
-    public static final String encryptorPass = dotenv.get("ENCRYPTOR_PASS");
+    public static final String botToken = "ODE0MDI1NDk5MzgxNzI3MjMy.YDX2Ug.zM7q9Pv8aFYrqv0IBpWUpzNrScw";
+    public static final String testToken = "ODY3MTA1NjEzNzIwNTg0MjIy.YPcRCA.Xtytp7Dh2-v3xb1ch1J92DPqUcw";
+    public static final String dblToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgxNDAyNTQ5OTM4MTcyNzIzMiIsImJvdCI6dHJ1ZSwiaWF0IjoxNjUzMjA1MjI3fQ.cKoI_mWYtI6WeJ4boujB3zW6QVqe8Fl1YlnoAj57fMw";
+    public static final String encryptorPass = "uxdfINYH8jS4QILwTLub6HZZz9r2GPstOI5Jh9cWTwsm09fQ7S";
 
     public static void main(String[] args) throws LoginException {
 

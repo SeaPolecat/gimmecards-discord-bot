@@ -13,11 +13,11 @@ public class MarketCmds extends Cmds {
         String desc = "";
         int count = 1;
 
-        if(State.isCooldownDone(server.getMarketEpoch(), 1440, true)) {
+        if(Check.isCooldownDone(server.getMarketEpoch(), 1440, true)) {
             server.refreshMarket();
-            Rest.sendMessage(event, mew_ + " The market has been refreshed!");
+            JDA.sendMessage(event, mew_ + " The market has been refreshed!");
         }
-        desc += "Next refresh in " + State.findTimeLeft(server.getMarketEpoch(), 1440, true) + "\n";
+        desc += "Next refresh in " + Check.findTimeLeft(server.getMarketEpoch(), 1440, true) + "\n";
         desc += "┅┅\n";
         for(Data data : server.getMarket()) {
             
@@ -33,21 +33,21 @@ public class MarketCmds extends Cmds {
         embed.setDescription(desc);
         embed.setFooter(event.getGuild().getName(), event.getGuild().getIconUrl());
         embed.setColor(0x76B1EC);
-        Rest.sendEmbed(event, embed);
+        JDA.sendEmbed(event, embed);
         embed.clear();
     }
 
     public static void viewItem(MessageReceivedEvent event, String[] args) {
         User user = User.findUser(event);
         Server server = Server.findServer(event);
-        MarketDisplay disp = MarketDisplay.findMarketDisplay(user.getUserId());
+        MarketDisplay disp = new MarketDisplay(user.getUserId()).findDisplay();
 
         try {
             int page = Integer.parseInt(args[1]);
 
-            Rest.sendDynamicEmbed(event, user, server, disp, page);
+            JDA.sendDynamicEmbed(event, user, server, disp, page);
         } catch(NumberFormatException | IndexOutOfBoundsException e) {
-            Rest.sendMessage(event, jigglypuff_ + " Whoops, I couldn't find that card...");
+            JDA.sendMessage(event, jigglypuff_ + " Whoops, I couldn't find that card...");
         }
     }
 
@@ -60,7 +60,7 @@ public class MarketCmds extends Cmds {
             Data item = server.getMarket().get(index);
 
             if(user.getEnergy() < item.getCardPrice()) {
-                Rest.sendMessage(event, jigglypuff_ + " Sorry, you don't have enough " + energy_ + " **Energy**");
+                JDA.sendMessage(event, jigglypuff_ + " Sorry, you don't have enough " + energy_ + " **Energy**");
 
             } else {
                 Card c;
@@ -72,15 +72,15 @@ public class MarketCmds extends Cmds {
 
                 c = Card.addSingleCard(user, item, false);
 
-                State.updateBackpackDisplay(event, user);
-                State.updateCardDisplay(event, user);
+                Update.updateBackpackDisplay(event, user);
+                Update.updateCardDisplay(event, user);
 
-                Rest.sendMessage(event, msg);
+                JDA.sendMessage(event, msg);
                 Display.displayCard(event, user, item, c, footer);
                 try { User.saveUsers(); } catch(Exception e) {}
             }
         } catch(NumberFormatException | IndexOutOfBoundsException e) {
-            Rest.sendMessage(event, jigglypuff_ + " Whoops, I couldn't find that card...");
+            JDA.sendMessage(event, jigglypuff_ + " Whoops, I couldn't find that card...");
         }
     }
 }

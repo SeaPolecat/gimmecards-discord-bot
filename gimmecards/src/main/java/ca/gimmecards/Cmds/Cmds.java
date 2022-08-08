@@ -98,11 +98,13 @@ public class Cmds extends ListenerAdapter implements Emotes {
         if(isValidCommand(event, args, "changelog", null)) {
             HelpCmds.viewChangelog(event);
         }
+
+        //LEADERBOARD
         if(isValidCommand(event, args, "ranks", null)) {
-            HelpCmds.viewRanks(event);
+            LeaderboardCmds.viewRanks(event);
         }
         if(isValidCommand(event, args, "leaderboard", null)) {
-            HelpCmds.viewLeaderboard(event);
+            LeaderboardCmds.viewLeaderboard(event);
         }
 
         //BACKPACK
@@ -166,13 +168,13 @@ public class Cmds extends ListenerAdapter implements Emotes {
 
         //INSPECTION
         if(isValidCommand(event, args, "open", new String[]{"pack name"})) {
-            InspectionCmds.openPack(event, args);
+            ViewCmds.openPack(event, args);
         }
         if(isValidCommand(event, args, "view", new String[]{"card number/id"})) {
             if(args.length < 3) {
-                InspectionCmds.viewCard(event, args);
+                ViewCmds.viewCard(event, args);
             } else {
-                InspectionCmds_.viewCard_(event, args);
+                ViewCmds_.viewCard_(event, args);
             }
         }
 
@@ -210,9 +212,6 @@ public class Cmds extends ListenerAdapter implements Emotes {
         if(isValidCommand(event, args, "search", new String[]{"card name"})) {
             SearchCmds.searchCards(event, args);
         }
-        if(isValidCommand(event, args, "favs", null)) {
-            SearchCmds.viewFavCards(event);
-        }
 
         //VOTE
         if(isValidCommand(event, args, "vote", null)) {
@@ -223,12 +222,12 @@ public class Cmds extends ListenerAdapter implements Emotes {
         }
 
         //TRADE
-        /*if(isValidCommand(event, args, "trade", new String[]{"mention"})) {
+        if(isValidCommand(event, args, "trade", new String[]{"mention"})) {
             TradeCmds.sendTrade(event, args);
         }
         if(isValidCommand(event, args, "offer", new String[]{"card number"})) {
             TradeCmds.makeOffer(event, args);
-        }*/
+        }
     }
 
     private static boolean isValidCommand(MessageReceivedEvent event, String[] args, String cmd, String[] params) {
@@ -248,7 +247,7 @@ public class Cmds extends ListenerAdapter implements Emotes {
                 }
                 guidance = guidance.trim();
 
-                Rest.sendMessage(event, jigglypuff_ + " Please follow the format: `" + args[0] + " " + guidance + "`");
+                JDA.sendMessage(event, jigglypuff_ + " Please follow the format: `" + args[0] + " " + guidance + "`");
             }
         }
         return false;

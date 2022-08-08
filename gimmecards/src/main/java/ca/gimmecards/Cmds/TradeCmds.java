@@ -1,7 +1,7 @@
-/*package com.wixsite.seapolecat.Cmds;
-import com.wixsite.seapolecat.Main.*;
-import com.wixsite.seapolecat.Display.*;
-import com.wixsite.seapolecat.Helpers.*;
+package ca.gimmecards.Cmds;
+import ca.gimmecards.Main.*;
+import ca.gimmecards.Display.*;
+import ca.gimmecards.Helpers.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class TradeCmds extends Cmds {
@@ -11,7 +11,7 @@ public class TradeCmds extends Cmds {
         TradeDisplay disp;
 
         if(TradeDisplay.tradeExists(user.getUserId())) {
-            Rest.sendMessage(event, jigglypuff_ + " You're in a trade already!");
+            JDA.sendMessage(event, jigglypuff_ + " You're in a trade already!");
 
         } else {
             try {
@@ -20,16 +20,16 @@ public class TradeCmds extends Cmds {
                 String mentionName = event.getJDA().getUserById(mentionId).getName();
     
                 if(mention.getUserId().equals(user.getUserId())) {
-                    Rest.sendMessage(event, jigglypuff_ + " You can't trade with yourself!");
+                    JDA.sendMessage(event, jigglypuff_ + " You can't trade with yourself!");
     
                 } else {
                     TradeDisplay.addTradeDisplay(user, mention, mentionName);
                     disp = TradeDisplay.findTradeDisplay(user.getUserId());
                     
-                    Rest.sendDynamicEmbed(event, user, null, disp, -1);
+                    JDA.sendDynamicEmbed(event, user, null, disp, -1);
                 }
             } catch(NumberFormatException | IndexOutOfBoundsException e) {
-                Rest.sendMessage(event, jigglypuff_ + " Whoops, I couldn't find that card...");
+                JDA.sendMessage(event, jigglypuff_ + " Whoops, I couldn't find that card...");
             }
         }
     }
@@ -39,7 +39,7 @@ public class TradeCmds extends Cmds {
         TradeDisplay disp = TradeDisplay.findTradeDisplay(user.getUserId());
 
         if(disp == null) {
-            Rest.sendMessage(event, jigglypuff_ + " You haven't started a trade yet!");
+            JDA.sendMessage(event, jigglypuff_ + " You haven't started a trade yet!");
 
         } else {
             try {
@@ -53,11 +53,11 @@ public class TradeCmds extends Cmds {
                     disp.getMentionOffer().add(c);
                 }
 
-                State.updateTradeDisplay(event, user);
+                Update.updateTradeDisplay(event, user);
 
             } catch(IndexOutOfBoundsException e) {
-                Rest.sendMessage(event, jigglypuff_ + " Whoops, I couldn't find that card...");
+                JDA.sendMessage(event, jigglypuff_ + " Whoops, I couldn't find that card...");
             }
         }
     }
-}*/
+}

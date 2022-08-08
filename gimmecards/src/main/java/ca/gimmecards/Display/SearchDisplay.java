@@ -5,9 +5,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import java.util.ArrayList;
 
 public class SearchDisplay extends Display {
-    
-    public static ArrayList<SearchDisplay> displays = new ArrayList<SearchDisplay>();
-    //
+
     private String key;
     private ArrayList<Data> searchedCards;
 
@@ -22,44 +20,47 @@ public class SearchDisplay extends Display {
     public void setKey(String k) { key = k; }
     public void setSearchedCards(ArrayList<Data> sc) { searchedCards = sc; }
 
-    public static SearchDisplay findSearchDisplay(String authorId) {
-        for(SearchDisplay s : displays) {
-            if(s.getUserId().equals(authorId)) {
+    @Override
+    public SearchDisplay findDisplay() {
+        String userId = getUserId();
+
+        for(SearchDisplay s : searchDisplays) {
+            if(s.getUserId().equals(userId)) {
                 return s;
             }
         }
-        displays.add(0, new SearchDisplay(authorId));
-        return displays.get(0);
+        searchDisplays.add(0, new SearchDisplay(userId));
+        return searchDisplays.get(0);
     }
 
     @Override
-    public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, int page) {
-        SearchDisplay disp = SearchDisplay.findSearchDisplay(user.getUserId());
+    public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, Display disp, int page) {
         int startIndex = page * 15 - 15;
-        int maxPage = disp.getSearchedCards().size() / 15;
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
-        if(disp.getSearchedCards().size() % 15 != 0) {
-            maxPage++;
+        disp.setMaxPage(searchedCards.size() / 15);
+
+        if(searchedCards.size() % 15 != 0) {
+            disp.addMaxPage();
         }
         desc += "┅┅\n";
         for(int i = startIndex; i < startIndex + 15; i++) {
-            Data data = disp.getSearchedCards().get(i);
+            Data data = searchedCards.get(i);
 
             desc += UX.findCardTitle(data, false)
             + " ┇ `" + data.getCardId() + "`"
             + " ┇ " + UX.findRarityEmote(data)
             + " ┇ " + data.getSetEmote()
             + " ┇ " + UX.formatXPPrice(data, null) + "\n";
-            if(i >= disp.getSearchedCards().size() - 1) {
+            if(i >= searchedCards.size() - 1) {
                 break;
             }
         }
         desc += "┅┅\n";
-        embed.setTitle(pokeball_ + " Results for \"" + disp.getKey() + "\" " + pokeball_);
+        embed.setTitle(pokeball_ + " Results for \"" + key + "\" " + pokeball_);
         embed.setDescription(desc);
-        embed.setFooter("Page " + page + " of " + maxPage, ui.getUserIcon());
+        embed.setFooter("Page " + page + " of " + disp.getMaxPage(), ui.getUserIcon());
         embed.setColor(0xFB4D53);
         return embed;
     }

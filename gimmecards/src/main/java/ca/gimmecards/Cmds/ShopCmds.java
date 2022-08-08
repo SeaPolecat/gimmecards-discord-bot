@@ -9,16 +9,16 @@ public class ShopCmds extends Cmds {
 
     public static void viewShop(MessageReceivedEvent event) {
         User user = User.findUser(event);
-        ShopDisplay disp = ShopDisplay.findShopDisplay(user.getUserId());
+        ShopDisplay disp = new ShopDisplay(user.getUserId()).findDisplay();
 
-        Rest.sendDynamicEmbed(event, user, null, disp, 1);
+        JDA.sendDynamicEmbed(event, user, null, disp, 1);
     }
     
     public static void viewOldShop(MessageReceivedEvent event) {
         User user = User.findUser(event);
-        OldShopDisplay disp = OldShopDisplay.findOldShopDisplay(user.getUserId());
+        OldShopDisplay disp = new OldShopDisplay(user.getUserId()).findDisplay();
 
-        Rest.sendDynamicEmbed(event, user, null, disp, 1);
+        JDA.sendDynamicEmbed(event, user, null, disp, 1);
     }
 
     public static void viewRareShop(MessageReceivedEvent event) {
@@ -36,7 +36,7 @@ public class ShopCmds extends Cmds {
         embed.setTitle(charmander_ + " Exclusive Packs Shop " + charmander_);
         embed.setDescription(desc);
         embed.setColor(0xFC8035);
-        Rest.sendEmbed(event, embed);
+        JDA.sendEmbed(event, embed);
         embed.clear();
     }
 
@@ -54,7 +54,7 @@ public class ShopCmds extends Cmds {
         embed.setTitle(bulbasaur_ + " Promo Packs Shop " + bulbasaur_);
         embed.setDescription(desc);
         embed.setColor(0x63A127);
-        Rest.sendEmbed(event, embed);
+        JDA.sendEmbed(event, embed);
         embed.clear();
     }
 
@@ -69,18 +69,18 @@ public class ShopCmds extends Cmds {
             setName = setName.trim();
             Data set = Data.findSet(setName);
 
-            if(setName.equalsIgnoreCase("gimme cards") || State.isRareSet(set)) {
-                Rest.sendMessage(event, jigglypuff_ + " You don't need to unlock exclusive packs!");
+            if(setName.equalsIgnoreCase("gimme cards") || Check.isRareSet(set)) {
+                JDA.sendMessage(event, jigglypuff_ + " You don't need to unlock exclusive packs!");
 
-            } else if(State.isPromoSet(set)) {
-                Rest.sendMessage(event, jigglypuff_ + " You don't need to unlock promo packs!");
+            } else if(Check.isPromoSet(set)) {
+                JDA.sendMessage(event, jigglypuff_ + " You don't need to unlock promo packs!");
 
             } else {
-                if(State.isPackUnlocked(user, set.getSetName())) {
-                    Rest.sendMessage(event, jigglypuff_ + " This pack is already unlocked!");
+                if(Check.isPackUnlocked(user, set.getSetName())) {
+                    JDA.sendMessage(event, jigglypuff_ + " This pack is already unlocked!");
     
                 } else if(user.getKeys() < 1) {
-                    Rest.sendMessage(event, jigglypuff_ + " Sorry, you're out of " + key_ + " **Keys**");
+                    JDA.sendMessage(event, jigglypuff_ + " Sorry, you're out of " + key_ + " **Keys**");
     
                 } else {
                     String msg = "";
@@ -90,16 +90,16 @@ public class ShopCmds extends Cmds {
                     msg += UX.formatNick(event) + " unlocked " + set.getSetEmote() + " **" + set.getSetName() + "**";
                     msg += UX.updateKeys(user, -1);
     
-                    State.updateBackpackDisplay(event, user);
-                    State.updateShopDisplay(event, user);
-                    State.updateOldShopDisplay(event, user);
+                    Update.updateBackpackDisplay(event, user);
+                    Update.updateShopDisplay(event, user);
+                    Update.updateOldShopDisplay(event, user);
     
-                    Rest.sendMessage(event, msg);
+                    JDA.sendMessage(event, msg);
                     try { User.saveUsers(); } catch(Exception e) {}
                 }
             }
         } catch(NullPointerException e) {
-            Rest.sendMessage(event, jigglypuff_ + " Whoops, I couldn't find that pack...");
+            JDA.sendMessage(event, jigglypuff_ + " Whoops, I couldn't find that pack...");
         }
     }
 }

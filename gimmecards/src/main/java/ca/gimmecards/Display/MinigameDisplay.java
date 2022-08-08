@@ -3,75 +3,70 @@ import ca.gimmecards.Main.*;
 import ca.gimmecards.Helpers.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
-import java.util.ArrayList;
 
 public class MinigameDisplay extends Display {
-    
-    public static ArrayList<MinigameDisplay> displays = new ArrayList<MinigameDisplay>();
-    //
+
     private int tries;
     private boolean hasWon;
-    private Data card;
+    private Data data;
 
-    public MinigameDisplay(String ui, Data d) {
+    public MinigameDisplay(String ui) {
         super(ui);
         tries = 3;
         hasWon = false;
-        card = d;
+        data = Card.pickRandomCard();
     }
 
     public int getTries() { return tries; }
     public boolean getHasWon() { return hasWon; }
-    public Data getCard() { return card; }
+    public Data getData() { return data; }
     //
     public void minusTries() { tries--; }
     public void winGame() { hasWon = true; }
 
-    public static MinigameDisplay findMinigameDisplay(String authorId) {
-        for(MinigameDisplay m : displays) {
-            if(m.getUserId().equals(authorId)) {
+    @Override
+    public MinigameDisplay findDisplay() {
+        String userId = getUserId();
+
+        for(MinigameDisplay m : minigameDisplays) {
+            if(m.getUserId().equals(userId)) {
                 return m;
             }
         }
-        return null;
-    }
-
-    public static void addMinigameDisplay(User user) {
-        removeMinigameDisplay(user);
-        displays.add(new MinigameDisplay(user.getUserId(), Card.pickRandomCard()));
+        minigameDisplays.add(0, new MinigameDisplay(userId));
+        return minigameDisplays.get(0);
     }
 
     public static void removeMinigameDisplay(User user) {
-        for(int i = 0; i < displays.size(); i++) {
-            if(displays.get(i).getUserId().equals(user.getUserId())) {
-                displays.remove(i);
+        for(int i = 0; i < minigameDisplays.size(); i++) {
+            if(minigameDisplays.get(i).getUserId().equals(user.getUserId())) {
+                minigameDisplays.remove(i);
                 break;
             }
         }
     }
 
     public static boolean isGuessCorrect(MessageReceivedEvent event, User user, String guess) {
-        MinigameDisplay disp = findMinigameDisplay(user.getUserId());
-        String cardRarity = disp.getCard().getCardRarity();
+        MinigameDisplay disp = new MinigameDisplay(user.getUserId()).findDisplay();
+        String cardRarity = disp.getData().getCardRarity();
 
         disp.minusTries();
         if(cardRarity.replaceAll("\\s+", "").equalsIgnoreCase(guess.replaceAll("\\s+", ""))) {
             disp.winGame();
-            State.updateMinigameDisplay(event, user);
+            Update.updateMinigameDisplay(event, user);
             return true;
 
         } else {
-            State.updateMinigameDisplay(event, user);
+            Update.updateMinigameDisplay(event, user);
             return false;
         }
     }
 
     @Override
-    public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, int page) {
-        MinigameDisplay disp = findMinigameDisplay(user.getUserId());
-        String cardRarity = disp.getCard().getCardRarity();
-        String rarityEmote = UX.findRarityEmote(disp.getCard());
-        String cardImage = disp.getCard().getCardImage();
+    public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, Display disp, int page) {
+        String cardRarity = ((MinigameDisplay) disp).getData().getCardRarity();
+        String rarityEmote = UX.findRarityEmote(data);
+        String cardImage = data.getCardImage();
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
@@ -79,20 +74,20 @@ public class MinigameDisplay extends Display {
         desc += UX.formatCmd(server, "rarities") + " for hints\n\n";
 
         desc += "**Rarity** ┇ ";
-        if(!disp.getHasWon() && disp.getTries() > 0) {
+        if(!hasWon && tries > 0) {
             desc += "???\n";
         } else {
             desc += rarityEmote + " " + cardRarity + "\n";
         }
         desc += "**Game Status** ┇ ";
-        if(disp.getHasWon()) {
+        if(hasWon) {
             desc += "🏆 Won\n";
-        } else if(!disp.getHasWon() && disp.getTries() < 1) {
+        } else if(!hasWon && tries < 1) {
             desc += "😭 Lost\n";
         } else {
             desc += "⏳ In Progress\n";
         }
-        desc += "**Tries Left** ┇ " + disp.getTries() + "\n\n";
+        desc += "**Tries Left** ┇ " + tries + "\n\n";
         desc += "*Click on image for zoomed view*";
 
         embed.setTitle(clefairy_ + " Guess My Rarity " + clefairy_);

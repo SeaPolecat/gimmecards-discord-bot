@@ -146,17 +146,17 @@ public class User implements StoragePaths {
         return searchForUser(authorId);
     }
 
-    public static User findOtherUser(MessageReceivedEvent event, String authorId) {
-        return searchForUser(authorId);
+    public static User findOtherUser(MessageReceivedEvent event, String userId) {
+        return searchForUser(userId);
     }
 
-    private static User searchForUser(String authorId) {
+    private static User searchForUser(String userId) {
         for(User u : users) {
-            if(u.getUserId().equals(authorId)) {
+            if(u.getUserId().equals(userId)) {
                 return u;
             }
         }
-        users.add(0, new User(authorId));
+        users.add(0, new User(userId));
         return users.get(0);
     }
 }

@@ -3,51 +3,47 @@ import ca.gimmecards.Main.*;
 import ca.gimmecards.Display.*;
 import ca.gimmecards.Helpers.*;
 import net.dv8tion.jda.api.EmbedBuilder;
-import java.util.ArrayList;
 
 public class CardDisplay_ extends Display {
-    
-    public static ArrayList<CardDisplay_> displays = new ArrayList<CardDisplay_>();
-    //
-    private User user;
+
     private User mention;
-    private String mentionName;
+    private UserInfo mentionInfo;
 
     public CardDisplay_(String ui) {
         super(ui);
     }
 
-    public User getUser() { return user; }
     public User getMention() { return mention; }
-    public String getMentionName() { return mentionName; }
+    public UserInfo getMentionInfo() { return mentionInfo; }
     //
-    public void setUser(User u) { user = u; }
     public void setMention(User m) { mention = m; }
-    public void setMentionName(String mn) { mentionName = mn; }
+    public void setMentionInfo(UserInfo mi) { mentionInfo = mi; }
 
-    public static CardDisplay_ findCardDisplay_(String authorId) {
-        for(CardDisplay_ c : displays) {
-            if(c.getUserId().equals(authorId)) {
+    @Override
+    public CardDisplay_ findDisplay() {
+        String userId = getUserId();
+
+        for(CardDisplay_ c : cardDisplays_) {
+            if(c.getUserId().equals(userId)) {
                 return c;
             }
         }
-        displays.add(0, new CardDisplay_(authorId));
-        return displays.get(0);
+        cardDisplays_.add(0, new CardDisplay_(userId));
+        return cardDisplays_.get(0);
     }
 
     @Override
-    public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, int page) {
-        CardDisplay_ disp = findCardDisplay_(user.getUserId());
-        User mention = disp.getMention();
+    public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, Display disp, int page) {
         int startIndex = page * 15 - 15;
-        int maxPage = mention.getCards().size() / 15;
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
         String sortOrder = mention.getSortIncreasing() ? "increasing" : "decreasing";
         int count = startIndex + 1;
 
+        disp.setMaxPage(mention.getCards().size() / 15);
+
         if(mention.getCards().size() % 15 != 0) {
-            maxPage++;
+            disp.addMaxPage();
         }
         desc += "Sorted by `" + mention.getSortMethod() + "` `" + sortOrder + "`\n";
         desc += "┅┅\n";
@@ -67,10 +63,10 @@ public class CardDisplay_ extends Display {
             }
         }
         desc += "┅┅\n";
-        embed.setTitle(greenditto_ + " " + ui.getUserName() + " ➤ " + disp.getMentionName() + "'s cards " + greenditto_);
+        embed.setTitle(ditto_ + ui.getUserName() + " ➜ " + mentionInfo.getUserName() + "'s Cards " + ditto_);
         embed.setDescription(desc);
-        embed.setFooter("Page " + page + " of " + maxPage, ui.getUserIcon());
-        embed.setColor(0x33A75E);
+        embed.setFooter("Page " + page + " of " + disp.getMaxPage(), ui.getUserIcon());
+        embed.setColor(0xA742D8);
         return embed;
     }
 }

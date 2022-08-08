@@ -2,37 +2,38 @@ package ca.gimmecards.Display;
 import ca.gimmecards.Main.*;
 import ca.gimmecards.Helpers.*;
 import net.dv8tion.jda.api.EmbedBuilder;
-import java.util.ArrayList;
 
 public class CardDisplay extends Display {
-
-    public static ArrayList<CardDisplay> displays = new ArrayList<CardDisplay>();
 
     public CardDisplay(String ui) {
         super(ui);
     }
 
-    public static CardDisplay findCardDisplay(String authorId) {
-        for(CardDisplay c : displays) {
-            if(c.getUserId().equals(authorId)) {
+    @Override
+    public CardDisplay findDisplay() {
+        String userId = getUserId();
+
+        for(CardDisplay c : cardDisplays) {
+            if(c.getUserId().equals(userId)) {
                 return c;
             }
         }
-        displays.add(0, new CardDisplay(authorId));
-        return displays.get(0);
+        cardDisplays.add(0, new CardDisplay(userId));
+        return cardDisplays.get(0);
     }
 
     @Override
-    public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, int page) {
+    public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, Display disp, int page) {
         int startIndex = page * 15 - 15;
-        int maxPage = user.getCards().size() / 15;
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
         String sortOrder = user.getSortIncreasing() ? "increasing" : "decreasing";
         int count = startIndex + 1;
 
+        disp.setMaxPage(user.getCards().size() / 15);
+
         if(user.getCards().size() % 15 != 0) {
-            maxPage++;
+            disp.addMaxPage();
         }
         desc += "Sorted by `" + user.getSortMethod() + "` `" + sortOrder + "`\n";
         desc += "┅┅\n";
@@ -54,7 +55,7 @@ public class CardDisplay extends Display {
         desc += "┅┅\n";
         embed.setTitle(ditto_ + " " + ui.getUserName() + "'s Cards " + ditto_);
         embed.setDescription(desc);
-        embed.setFooter("Page " + page + " of " + maxPage, ui.getUserIcon());
+        embed.setFooter("Page " + page + " of " + disp.getMaxPage(), ui.getUserIcon());
         embed.setColor(0xA742D8);
         return embed;
     }

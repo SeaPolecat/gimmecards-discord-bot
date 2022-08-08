@@ -9,7 +9,7 @@ public class SearchCmds extends Cmds {
 
     public static void searchCards(MessageReceivedEvent event, String[] args) {
         User user = User.findUser(event);
-        SearchDisplay disp = SearchDisplay.findSearchDisplay(user.getUserId());
+        SearchDisplay disp = new SearchDisplay(user.getUserId()).findDisplay();
         String key = "";
         ArrayList<Data> searchedCards = new ArrayList<Data>();
         
@@ -20,27 +20,12 @@ public class SearchCmds extends Cmds {
         searchedCards = Card.searchCards(user, key);
 
         if(searchedCards.size() < 1) {
-            Rest.sendMessage(event, jigglypuff_ + " Sorry, your search had no results!");
+            JDA.sendMessage(event, jigglypuff_ + " Sorry, your search had no results!");
 
         } else {
             disp.setKey(key);
             disp.setSearchedCards(searchedCards);
-            Rest.sendDynamicEmbed(event, user, null, disp, 1);
-        }
-    }
-        
-    public static void viewFavCards(MessageReceivedEvent event) {
-        User user = User.findUser(event);
-        FavDisplay disp = FavDisplay.findFavDisplay(user.getUserId());
-
-        if(user.getCards().size() < 1) {
-            Rest.sendMessage(event, jigglypuff_ + " You don't have any cards yet!");
-
-        } else if(FavDisplay.findFavCards(user).size() < 1) {
-            Rest.sendMessage(event, jigglypuff_ + " You don't have any ❤ favourite cards yet!");
-
-        } else {
-            Rest.sendDynamicEmbed(event, user, null, disp, 1);
+            JDA.sendDynamicEmbed(event, user, null, disp, 1);
         }
     }
 }

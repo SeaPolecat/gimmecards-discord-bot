@@ -14,22 +14,19 @@ public class BackpackCmds_ extends Cmds {
         try {
             String mentionId = event.getMessage().getMentions().getUsers().get(0).getId();
             User mention = User.findOtherUser(event, mentionId);
-            String mentionName = event.getJDA().getUserById(mentionId).getName();
             String mentionIcon = event.getJDA().getUserById(mentionId).getAvatarUrl();
 
             if(mentionIcon == null) {
                 mentionIcon = event.getJDA().getUserById(mentionId).getDefaultAvatarUrl();
             }
-            disp = BackpackDisplay_.findBackpackDisplay_(user.getUserId());
-            disp.setUser(user);
+            disp = new BackpackDisplay_(user.getUserId()).findDisplay();
             disp.setMention(mention);
-            disp.setMentionName(mentionName);
-            disp.setMentionIcon(mentionIcon);
+            disp.setMentionInfo(new UserInfo(mention, event));
 
-            Rest.sendDynamicEmbed(event, user, null, disp, -1);
+            JDA.sendDynamicEmbed(event, user, null, disp, -1);
 
         } catch(IndexOutOfBoundsException e) {
-            Rest.sendMessage(event, jigglypuff_ + " Whoops, I couldn't find that user...");
+            JDA.sendMessage(event, jigglypuff_ + " Whoops, I couldn't find that user...");
         }
     }
 }

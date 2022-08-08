@@ -124,7 +124,7 @@ public class Card implements CustomCards {
     }
 
     public static void addNewCards(User user, Data set) {
-        InspectionDisplay disp = InspectionDisplay.findInspectionDisplay(user.getUserId());
+        ViewDisplay disp = new ViewDisplay(user.getUserId()).findDisplay();
         ArrayList<Data> commons = set.getCommons();
         ArrayList<Data> uncommons = set.getUncommons();
         ArrayList<Data> rares = set.getRares();
@@ -157,7 +157,7 @@ public class Card implements CustomCards {
                 }
             }
             if(!exists) {
-                if(State.isOldSet(data)) {
+                if(Check.isOldSet(data)) {
                     user.getCards().add(new Card(data, user.getCardCount(), false));
                 } else {
                     user.getCards().add(new Card(data, user.getCardCount(), true));

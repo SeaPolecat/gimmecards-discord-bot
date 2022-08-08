@@ -3,45 +3,37 @@ import ca.gimmecards.Main.*;
 import ca.gimmecards.Display.*;
 import ca.gimmecards.Helpers.*;
 import net.dv8tion.jda.api.EmbedBuilder;
-import java.util.ArrayList;
 
 public class BackpackDisplay_ extends Display {
-    
-    public static ArrayList<BackpackDisplay_> displays = new ArrayList<BackpackDisplay_>();
-    //
-    private User user;
+
     private User mention;
-    private String mentionName;
-    private String mentionIcon;
+    private UserInfo mentionInfo;
 
     public BackpackDisplay_(String ui) {
         super(ui);
     }
 
-    public User getUser() { return user; }
     public User getMention() { return mention; }
-    public String getMentionName() { return mentionName; }
-    public String getMentionIcon() { return mentionIcon; }
+    public UserInfo getMentionInfo() { return mentionInfo; }
     //
-    public void setUser(User u) { user = u; }
     public void setMention(User m) { mention = m; }
-    public void setMentionName(String mn) { mentionName = mn; }
-    public void setMentionIcon(String mi) { mentionIcon = mi; }
+    public void setMentionInfo(UserInfo mi) { mentionInfo = mi; }
 
-    public static BackpackDisplay_ findBackpackDisplay_(String authorId) {
-        for(BackpackDisplay_ b : displays) {
-            if(b.getUserId().equals(authorId)) {
+    @Override
+    public BackpackDisplay_ findDisplay() {
+        String userId = getUserId();
+
+        for(BackpackDisplay_ b : backpackDisplays_) {
+            if(b.getUserId().equals(userId)) {
                 return b;
             }
         }
-        displays.add(0, new BackpackDisplay_(authorId));
-        return displays.get(0);
+        backpackDisplays_.add(0, new BackpackDisplay_(userId));
+        return backpackDisplays_.get(0);
     }
 
     @Override
-    public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, int page) {
-        BackpackDisplay_ disp = BackpackDisplay_.findBackpackDisplay_(user.getUserId());
-        User mention = disp.getMention();
+    public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, Display disp, int page) {
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
@@ -93,12 +85,12 @@ public class BackpackDisplay_ extends Display {
             }
             desc += "\n┅┅\n";
         }
-        if(!mention.getBackpackCard().equals("") && State.ownsFavCard(mention)) {
-            desc += "*" + disp.getMentionName() + "'s Favourite*";
+        if(!mention.getBackpackCard().equals("") && Check.ownsFavCard(mention)) {
+            desc += "*" + mentionInfo.getUserName() + "'s Favourite*";
             embed.setImage(mention.getBackpackCard());
         }
-        embed.setTitle(disp.getMentionName() + " ┇ Level " + mention.getLevel());
-        embed.setThumbnail(disp.getMentionIcon());
+        embed.setTitle(mentionInfo.getUserName() + " ┇ Level " + mention.getLevel());
+        embed.setThumbnail(mentionInfo.getUserIcon());
         embed.setDescription(desc);
         embed.setColor(mention.getBackpackColor());
         return embed;

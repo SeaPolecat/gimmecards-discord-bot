@@ -19,8 +19,8 @@ public class UX implements Emotes {
         return "__" + event.getAuthor().getName() + "__";
     }
 
-    public static String formatNick(User user, MessageReceivedEvent event) {
-        return "__" + event.getJDA().getUserById(user.getUserId()).getName() + "__";
+    public static String formatNick(User mention, MessageReceivedEvent event) {
+        return "__" + event.getJDA().getUserById(mention.getUserId()).getName() + "__";
     }
 
     public static String formatBadge(MessageReceivedEvent event, String badgeEmote, String badgeName) {
@@ -175,7 +175,7 @@ public class UX implements Emotes {
         String XPPrice = XP_ + " **" + formatNumber(data.getCardPrice()) + "**";
 
         if(sellable == null) {
-            if(State.isOldSet(data)) {
+            if(Check.isOldSet(data)) {
                 return XPPrice + " 🚫";
             }
         } else {

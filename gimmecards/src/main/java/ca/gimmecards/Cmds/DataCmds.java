@@ -22,7 +22,7 @@ public class DataCmds extends Cmds {
         embed.setTitle(pikameme_ + " Current Stats " + pikameme_);
         embed.setDescription(desc);
         embed.setColor(0xE8AE34);
-        Rest.sendEmbed(event, embed);
+        JDA.sendEmbed(event, embed);
         embed.clear();
     }
 
@@ -61,7 +61,7 @@ public class DataCmds extends Cmds {
         embed.setTitle(title);
         embed.setDescription(desc);
         embed.setColor(0xE8AE34);
-        Rest.sendEmbed(event, embed);
+        JDA.sendEmbed(event, embed);
         embed.clear();
     }
 
@@ -78,7 +78,7 @@ public class DataCmds extends Cmds {
         for(int i = 0; i < Data.promoSets.length; i++) {
             Data.promoSets[i] = null;
         }
-        Rest.sendMessage(event, "`Successfully wiped all card data`");
+        JDA.sendMessage(event, "`Successfully wiped all card data`");
         try { Data.saveData(); } catch(Exception e) {}
         try { Data.saveOldData(); } catch(Exception e) {}
         try { Data.saveRareData(); } catch(Exception e) {}
@@ -99,10 +99,10 @@ public class DataCmds extends Cmds {
             }
             Data.sets = newSets;
     
-            Rest.sendMessage(event, "`Data length changed by " + lengthChange + " unit(s)`");
+            JDA.sendMessage(event, "`Data length changed by " + lengthChange + " unit(s)`");
             try { Data.saveData(); } catch(Exception e) {}
         } catch(NumberFormatException e) {
-            Rest.sendMessage(event, "`Invalid length. Please use any integer`");
+            JDA.sendMessage(event, "`Invalid length. Please use any integer`");
         }
     }
 
@@ -113,7 +113,7 @@ public class DataCmds extends Cmds {
             JsonArray rawContents;
             String msg = "";
     
-            Rest.sendMessage(event, "`Counting the specified card set...`");
+            JDA.sendMessage(event, "`Counting the specified card set...`");
 
             rawContents = Data.crawlDatabase(setCode);
             for(JsonElement j : rawContents) {
@@ -144,9 +144,9 @@ public class DataCmds extends Cmds {
             + "Total: " + rawContents.size() + "\n"
             + "```";
 
-            Rest.sendMessage(event, msg);
+            JDA.sendMessage(event, msg);
         } catch(IOException e) {
-            Rest.sendMessage(event, "`Rate limit reached. Please wait for a bit`");
+            JDA.sendMessage(event, "`Rate limit reached. Please wait for a bit`");
         }
     }
 
@@ -164,7 +164,7 @@ public class DataCmds extends Cmds {
                 Integer.parseInt("$");
 
             } else {
-                Rest.sendMessage(event, "`Adding card data for set " + setNum + "...`");
+                JDA.sendMessage(event, "`Adding card data for set " + setNum + "...`");
 
                 String setEmote = event.getJDA().getEmojisByName(setCode, true).get(0).getAsMention();
                 Data contents = Data.findContents(setEmote, setCode);
@@ -178,7 +178,7 @@ public class DataCmds extends Cmds {
                 } else {
                     Data.oldSets[setNum - 1] = contents;
                 }
-                Rest.sendMessage(event, "`...and successful!`\n"
+                JDA.sendMessage(event, "`...and successful!`\n"
                 + "```\n"
                 + contents.getSetName() + "\n"
                 + "-----\n"
@@ -198,10 +198,10 @@ public class DataCmds extends Cmds {
             }
         } catch(NumberFormatException | IOException e) {
             if(e.toString().startsWith("java.lang.NumberFormatException:")) {
-                Rest.sendMessage(event, "`The specified card set does not exist`");
+                JDA.sendMessage(event, "`The specified card set does not exist`");
 
             } else if(e.toString().startsWith("java.io.IOException:")) {
-                Rest.sendMessage(event, "`Rate limit reached. Please wait for a bit`");
+                JDA.sendMessage(event, "`Rate limit reached. Please wait for a bit`");
             }
         }
     }
@@ -220,7 +220,7 @@ public class DataCmds extends Cmds {
                 Integer.parseInt("$");
 
             } else {
-                Rest.sendMessage(event, "`Adding card data for set " + setNum + "...`");
+                JDA.sendMessage(event, "`Adding card data for set " + setNum + "...`");
 
                 String setEmote;
                 Data contents;
@@ -238,7 +238,7 @@ public class DataCmds extends Cmds {
                 } else {
                     Data.promoSets[setNum - 1] = contents;
                 }
-                Rest.sendMessage(event, "`...and successful!`\n"
+                JDA.sendMessage(event, "`...and successful!`\n"
                 + "```\n"
                 + contents.getSetName() + "\n"
                 + "-----\n"
@@ -253,10 +253,10 @@ public class DataCmds extends Cmds {
             }
         }  catch(NumberFormatException | IOException e) {
             if(e.toString().startsWith("java.lang.NumberFormatException:")) {
-                Rest.sendMessage(event, "`The specified card set does not exist`");
+                JDA.sendMessage(event, "`The specified card set does not exist`");
                 
             } else if(e.toString().startsWith("java.io.IOException:")) {
-                Rest.sendMessage(event, "`Rate limit reached. Please wait for a bit`");
+                JDA.sendMessage(event, "`Rate limit reached. Please wait for a bit`");
             }
         }
     }

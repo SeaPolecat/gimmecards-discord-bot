@@ -16,20 +16,17 @@ public class CardCmds_ extends Cmds {
             User mention = User.findOtherUser(event, mentionId);
 
             if(mention.getCards().size() < 1) {
-                Rest.sendMessage(event, jigglypuff_ + " That user doesn't have any cards yet!");
+                JDA.sendMessage(event, jigglypuff_ + " That user doesn't have any cards yet!");
 
             } else {
-                String mentionName = event.getJDA().getUserById(mentionId).getName();
-
-                disp = CardDisplay_.findCardDisplay_(user.getUserId());
-                disp.setUser(user);
+                disp = new CardDisplay_(user.getUserId()).findDisplay();
                 disp.setMention(mention);
-                disp.setMentionName(mentionName);
+                disp.setMentionInfo(new UserInfo(mention, event));
 
-                Rest.sendDynamicEmbed(event, user, null, disp, 1);
+                JDA.sendDynamicEmbed(event, user, null, disp, 1);
             }
         } catch(IndexOutOfBoundsException e) {
-            Rest.sendMessage(event, jigglypuff_ + " Whoops, I couldn't find that user...");
+            JDA.sendMessage(event, jigglypuff_ + " Whoops, I couldn't find that user...");
         }
     }
 }

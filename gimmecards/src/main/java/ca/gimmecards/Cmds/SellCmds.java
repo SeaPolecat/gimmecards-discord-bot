@@ -9,7 +9,7 @@ public class SellCmds extends Cmds {
         User user = User.findUser(event);
         
         if(user.getCards().size() < 1) {
-            Rest.sendMessage(event, jigglypuff_ + " You don't have any cards to sell!");
+            JDA.sendMessage(event, jigglypuff_ + " You don't have any cards to sell!");
 
         } else {
             try {
@@ -20,7 +20,7 @@ public class SellCmds extends Cmds {
                 int energyReward = (int)(profit * 0.02);
                 
                 if(profit == -1) {
-                    Rest.sendMessage(event, jigglypuff_ + " Sorry, that card is in your favourites!");
+                    JDA.sendMessage(event, jigglypuff_ + " Sorry, that card is in your favourites!");
 
                 } else {
                     String msg = "";
@@ -30,18 +30,17 @@ public class SellCmds extends Cmds {
                     if(energyReward > 0) {
                         msg += UX.updateEnergy(user, energyReward);
                     }
-
-                    State.updateCardDisplay(event, user);
-                    State.updateBackpackDisplay(event, user);
-                    State.updateInspectionDisplay(event, user);
-                    State.updateFavDisplay(event, user);
                     
-                    Rest.sendMessage(event, msg);
-                    State.checkLevelUp(event, user);
+                    Update.updateBackpackDisplay(event, user);
+                    Update.updateCardDisplay(event, user);
+                    Update.updateViewDisplay(event, user);
+                    
+                    JDA.sendMessage(event, msg);
+                    Check.checkLevelUp(event, user);
                     try { User.saveUsers(); } catch(Exception e) {}
                 }
             } catch(NumberFormatException | IndexOutOfBoundsException e) {
-                Rest.sendMessage(event, jigglypuff_ + " Whoops, I couldn't find that card...");
+                JDA.sendMessage(event, jigglypuff_ + " Whoops, I couldn't find that card...");
             }
         }
     }
@@ -50,14 +49,14 @@ public class SellCmds extends Cmds {
         User user = User.findUser(event);
 
         if(user.getCards().size() < 1) {
-            Rest.sendMessage(event, jigglypuff_ + " You don't have any cards to sell!");
+            JDA.sendMessage(event, jigglypuff_ + " You don't have any cards to sell!");
 
         } else {
             int profit = findDuplicatesProfit(user);
             int energyReward = (int)(profit * 0.02);
 
             if(profit == -1) {
-                Rest.sendMessage(event, jigglypuff_ + " You don't have any duplicate cards!");
+                JDA.sendMessage(event, jigglypuff_ + " You don't have any duplicate cards!");
                 
             } else {
                 String msg = "";
@@ -68,13 +67,12 @@ public class SellCmds extends Cmds {
                     msg += UX.updateEnergy(user, energyReward);
                 }
     
-                State.updateCardDisplay(event, user);
-                State.updateBackpackDisplay(event, user);
-                State.updateInspectionDisplay(event, user);
-                State.updateFavDisplay(event, user);
+                Update.updateBackpackDisplay(event, user);
+                Update.updateCardDisplay(event, user);
+                Update.updateViewDisplay(event, user);
     
-                Rest.sendMessage(event, msg);
-                State.checkLevelUp(event, user);
+                JDA.sendMessage(event, msg);
+                Check.checkLevelUp(event, user);
                 try { User.saveUsers(); } catch(Exception e) {}
             }
         }
@@ -84,14 +82,14 @@ public class SellCmds extends Cmds {
         User user = User.findUser(event);
         
         if(user.getCards().size() < 1) {
-            Rest.sendMessage(event, jigglypuff_ + " You don't have any cards to sell!");
+            JDA.sendMessage(event, jigglypuff_ + " You don't have any cards to sell!");
 
         } else {
             int profit = findAllProfit(user);
             int energyReward = (int)(profit * 0.02);
 
             if(profit == -1) {
-                Rest.sendMessage(event, jigglypuff_ + " Sorry, all your cards are in your favourites!");
+                JDA.sendMessage(event, jigglypuff_ + " Sorry, all your cards are in your favourites!");
 
             } else {
                 String msg = "";
@@ -102,13 +100,12 @@ public class SellCmds extends Cmds {
                     msg += UX.updateEnergy(user, energyReward);
                 }
 
-                State.updateCardDisplay(event, user);
-                State.updateBackpackDisplay(event, user);
-                State.updateInspectionDisplay(event, user);
-                State.updateFavDisplay(event, user);
+                Update.updateBackpackDisplay(event, user);
+                Update.updateCardDisplay(event, user);
+                Update.updateViewDisplay(event, user);
         
-                Rest.sendMessage(event, msg);
-                State.checkLevelUp(event, user);
+                JDA.sendMessage(event, msg);
+                Check.checkLevelUp(event, user);
                 try { User.saveUsers(); } catch(Exception e) {}
             }
         }

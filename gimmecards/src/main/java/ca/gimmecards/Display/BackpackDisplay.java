@@ -2,28 +2,28 @@ package ca.gimmecards.Display;
 import ca.gimmecards.Main.*;
 import ca.gimmecards.Helpers.*;
 import net.dv8tion.jda.api.EmbedBuilder;
-import java.util.ArrayList;
 
 public class BackpackDisplay extends Display {
-    
-    public static ArrayList<BackpackDisplay> displays = new ArrayList<BackpackDisplay>();
 
     public BackpackDisplay(String ui) {
         super(ui);
     }
 
-    public static BackpackDisplay findBackpackDisplay(String authorId) {
-        for(BackpackDisplay b : displays) {
-            if(b.getUserId().equals(authorId)) {
+    @Override
+    public BackpackDisplay findDisplay() {
+        String userId = getUserId();
+        
+        for(BackpackDisplay b : backpackDisplays) {
+            if(b.getUserId().equals(userId)) {
                 return b;
             }
         }
-        displays.add(0, new BackpackDisplay(authorId));
-        return displays.get(0);
+        backpackDisplays.add(0, new BackpackDisplay(userId));
+        return backpackDisplays.get(0);
     }
 
     @Override
-    public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, int page) {
+    public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, Display disp, int page) {
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
@@ -75,7 +75,7 @@ public class BackpackDisplay extends Display {
             }
             desc += "\n┅┅\n";
         }
-        if(!user.getBackpackCard().equals("") && State.ownsFavCard(user)) {
+        if(!user.getBackpackCard().equals("") && Check.ownsFavCard(user)) {
             desc += "*" + ui.getUserName() + "'s Favourite*";
             embed.setImage(user.getBackpackCard());
         }
