@@ -27,12 +27,13 @@ public class PrivacyCmds extends Cmds {
 
                 if(u.getUserId().equals(user.getUserId())) {
                     User.users.remove(i);
-
                     disp.setIsSure(true);
+                    
                     Update.updatePrivacyDisplay(event, user, false);
                     PrivacyDisplay.removePrivacyDisplay(user);
 
-                    JDA.sendMessage(event, "`Your Gimme Cards account has been deleted. "
+                    JDA.sendMessage(event, blue_, "",
+                    "`Your Gimme Cards account has been deleted. "
                     + "To ensure that your user data does not get recorded again, "
                     + "do not use any commands from this point onwards.`");
                     try { User.saveUsers(); } catch(Exception e) {}
@@ -53,7 +54,7 @@ public class PrivacyCmds extends Cmds {
             Update.updatePrivacyDisplay(event, user, true);
             PrivacyDisplay.removePrivacyDisplay(user);
 
-            JDA.sendMessage(event, "😊 We're glad you're not going away... *welcome back!*");
+            JDA.sendMessage(event, user.getGameColor(), "😊", "We're glad you're not going away... *welcome back!*");
         }
     }
 }

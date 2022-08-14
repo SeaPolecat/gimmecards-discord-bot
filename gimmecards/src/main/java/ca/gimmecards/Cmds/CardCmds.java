@@ -12,10 +12,18 @@ public class CardCmds extends Cmds {
         CardDisplay disp = new CardDisplay(user.getUserId()).findDisplay();
 
         if(user.getCards().size() < 1) {
-            JDA.sendMessage(event, jigglypuff_ + " You don't have any cards yet!");
+            JDA.sendMessage(event, red_, "❌", "You don't have any cards yet!");
 
         } else {
-            JDA.sendDynamicEmbed(event, user, null, disp, 1);
+            if(args.length > 1) {
+                try {
+                    JDA.sendDynamicEmbed(event, user, null, disp, Integer.parseInt(args[1]));
+                } catch(IndexOutOfBoundsException e) {
+                    JDA.sendMessage(event, red_, "❌", "Whoops, I couldn't find that page...");
+                }
+            } else {
+                JDA.sendDynamicEmbed(event, user, null, disp, 1);
+            }
         }
     }
 
@@ -24,16 +32,23 @@ public class CardCmds extends Cmds {
 
         try {
             int index = Integer.parseInt(args[1]) - 1;
-            Card c = user.getCards().get(index);
-            String cardTitle = UX.findCardTitle(c.getData(), false);
+            Card card = user.getCards().get(index);
+            String cardTitle = UX.findCardTitle(card.getData(), false);
 
-            c.setIsFav(true);
-            Update.updateCardDisplay(event, user);
+            if(card.getIsFav()) {
+                JDA.sendMessage(event, red_, "❌", "That card is already in your favorites!");
 
-            JDA.sendMessage(event, "❤ Added **" + cardTitle + "** to your favourites!");
-            try { User.saveUsers(); } catch(Exception e) {}
+            } else {
+                card.setIsFav(true);
+
+                Update.updateCardDisplay(event, user);
+                Update.updateViewDisplay(event, user);
+    
+                JDA.sendMessage(event, user.getGameColor(), "❤", "Added **" + cardTitle + "** to your favorites!");
+                try { User.saveUsers(); } catch(Exception e) {}
+            }
         } catch(NumberFormatException | IndexOutOfBoundsException e) {
-            JDA.sendMessage(event, jigglypuff_ + " Whoops, I couldn't find that card...");
+            JDA.sendMessage(event, red_, "❌", "Whoops, I couldn't find that card...");
         }
     }
 
@@ -45,13 +60,20 @@ public class CardCmds extends Cmds {
             Card c = user.getCards().get(index);
             String cardTitle = UX.findCardTitle(c.getData(), false);
 
-            c.setIsFav(false);
-            Update.updateCardDisplay(event, user);
+            if(!c.getIsFav()) {
+                JDA.sendMessage(event, red_, "❌", "That card is already non-favorited!");
+                
+            } else {
+                c.setIsFav(false);
 
-            JDA.sendMessage(event, "💔 Removed **" + cardTitle + "** from your favourites!");
-            try { User.saveUsers(); } catch(Exception e) {}
+                Update.updateCardDisplay(event, user);
+                Update.updateViewDisplay(event, user);
+    
+                JDA.sendMessage(event, user.getGameColor(), "💔", "Removed **" + cardTitle + "** from your favorites!");
+                try { User.saveUsers(); } catch(Exception e) {}
+            }
         } catch(NumberFormatException | IndexOutOfBoundsException e) {
-            JDA.sendMessage(event, jigglypuff_ + " Whoops, I couldn't find that card...");
+            JDA.sendMessage(event, red_, "❌", "Whoops, I couldn't find that card...");
         }
     }
 
@@ -66,12 +88,13 @@ public class CardCmds extends Cmds {
             }
         }
         if(!exists) {
-            JDA.sendMessage(event, jigglypuff_ + " Sorry, you have no shiny cards left to favourite!");
+            JDA.sendMessage(event, red_, "❌", "Sorry, you have no shiny cards left to favorite!");
 
         } else {
             Update.updateCardDisplay(event, user);
+            Update.updateViewDisplay(event, user);
 
-            JDA.sendMessage(event, "💞 Added all your shiny cards to your favourites!");
+            JDA.sendMessage(event, user.getGameColor(), "💞", "Added all your shiny cards to your favorites!");
             try { User.saveUsers(); } catch(Exception e) {}
         }
     }
@@ -139,10 +162,13 @@ public class CardCmds extends Cmds {
                 Integer.parseInt("$");
             }
             Card.sortCards(user, user.getSortMethod(), user.getSortIncreasing());
-            Update.updateCardDisplay(event, user);
 
-            JDA.sendMessage(event, ditto_ + " Your cards have been sorted!");
+            Update.updateCardDisplay(event, user);
+            Update.updateViewDisplay(event, user);
+
+            JDA.sendMessage(event, user.getGameColor(), "🎴", "Your cards have been sorted!");
             try { User.saveUsers(); } catch(Exception e) {}
+
         } catch(NumberFormatException e) {
             Server server = Server.findServer(event);
             EmbedBuilder embed = new EmbedBuilder();
@@ -159,7 +185,7 @@ public class CardCmds extends Cmds {
 
             embed.setTitle(eevee_ + " Sorting Help " + eevee_);
             embed.setDescription(desc);
-            embed.setColor(0xE9BB7A);
+            embed.setColor(help_);
             JDA.sendEmbed(event, embed);
             embed.clear();
         }

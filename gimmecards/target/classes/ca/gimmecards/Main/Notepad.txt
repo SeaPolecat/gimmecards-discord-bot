@@ -1,18 +1,7 @@
 fixes (ALL)
 ----------------------------------
--update website and top.gg
--rename all commands to the actual name of the command
-
--remove ?favs command
--change design of multiplayer viewing cards
--fix the "new" label feature
-
--stay on same page when updating disp
--all multiplayer disps automatically get updated
-
--design changes to all commands
-
 -daily local storage deletion
+-make market cards limited (like 5 per day)
 
 
 
@@ -21,16 +10,10 @@ features (at least 1)
 -show which cards you sold in ?sellall
 -can open with set code instead of the full name
 -surprise cards in chat
--search by rarity, set, etc.
--trading
-
--leaderboards having 15 slots and are scrollable
 -Able to open multiple packs at the same time
--able to start viewing our cards from a different page
 -Poke coins + new minigame
--Shortcuts for commands
-
 -able to search your own cards
+-Shortcuts for commands
 
 
 

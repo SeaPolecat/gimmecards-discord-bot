@@ -16,7 +16,7 @@ public class VoteCmds extends Cmds {
         Server server = Server.findServer(event);
 
         if(!Check.isCooldownDone(user.getVoteEpoch(), 720, true)) {
-            JDA.sendMessage(event, jigglypuff_ + " Please wait another " + Check.findTimeLeft(user.getVoteEpoch(), 720, true));
+            JDA.sendMessage(event, red_, "⏰", "Please wait another " + Check.findTimeLeft(user.getVoteEpoch(), 720, true));
 
         } else {
             EmbedBuilder embed = new EmbedBuilder();
@@ -25,9 +25,9 @@ public class VoteCmds extends Cmds {
             desc += "Use the link below to vote, then type " + UX.formatCmd(server, "claim") + " to claim your reward!\n\n";
             desc += "[Vote on Top.gg](https://top.gg/bot/814025499381727232/vote)";
     
-            embed.setTitle(gift_ + " Voting Reward " + gift_);
+            embed.setTitle(lootbox_ + " Voting Reward " + lootbox_);
             embed.setDescription(desc);
-            embed.setColor(0xBD2D2D);
+            embed.setColor(vote_);
             JDA.sendEmbed(event, embed);
             embed.clear();
         }
@@ -38,7 +38,7 @@ public class VoteCmds extends Cmds {
         Server server = Server.findServer(event);
 
         if(!Check.isCooldownDone(user.getVoteEpoch(), 720, true)) {
-            JDA.sendMessage(event, jigglypuff_ + " Please wait another " + Check.findTimeLeft(user.getVoteEpoch(), 720, true));
+            JDA.sendMessage(event, red_, "⏰", "Please wait another " + Check.findTimeLeft(user.getVoteEpoch(), 720, true));
 
         } else {
             try {
@@ -52,26 +52,22 @@ public class VoteCmds extends Cmds {
                 boolean hasVoted = response.contains("1");
     
                 if(!hasVoted) {
-                    JDA.sendMessage(event, jigglypuff_ + " You haven't voted for *Gimme Cards* yet! "
+                    JDA.sendMessage(event, red_, "❌", "You haven't voted for *Gimme Cards* yet! "
                     + "Please use " + UX.formatCmd(server, "vote"));
 
                 } else {
-                    EmbedBuilder embed = new EmbedBuilder();
                     String msg = "";
 
                     user.resetVoteEpoch();
 
                     msg += UX.formatNick(event) + " claimed their gift! Thank you for voting 😊";
-                    msg += UX.updateTokens(user, 5);
-                    msg += UX.updateEnergy(user, UX.randRange(120, 150));
-                    msg += UX.updateStars(user, 1);
+                    msg += user.updateTokens(5, true);
+                    msg += user.updateEnergy(UX.randRange(120, 150), false);
+                    msg += user.updateStars(1, false);
     
                     Update.updateBackpackDisplay(event, user);
 
-                    embed.setDescription(msg);
-                    embed.setColor(0x408CFF);
-                    JDA.sendEmbed(event, embed);
-                    embed.clear();
+                    JDA.sendMessage(event, user.getGameColor(), lootbox_, msg);
                     try { User.saveUsers(); } catch(Exception e) {}
                 }
             } catch(IOException | InterruptedException e) {}

@@ -23,40 +23,40 @@ public class CardDisplay extends Display {
     }
 
     @Override
-    public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, Display disp, int page) {
+    public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, int page) {
         int startIndex = page * 15 - 15;
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
         String sortOrder = user.getSortIncreasing() ? "increasing" : "decreasing";
         int count = startIndex + 1;
 
-        disp.setMaxPage(user.getCards().size() / 15);
+        setMaxPage(user.getCards().size() / 15);
 
         if(user.getCards().size() % 15 != 0) {
-            disp.addMaxPage();
+            addMaxPage();
         }
         desc += "Sorted by `" + user.getSortMethod() + "` `" + sortOrder + "`\n";
         desc += "┅┅\n";
         for(int i = startIndex; i < startIndex + 15; i++) {
-            Card c = user.getCards().get(i);
-            Data data = c.getData();
+            Card card = user.getCards().get(i);
+            Data data = card.getData();
 
-            desc += UX.findCardTitle(data, c.getIsFav())
-            + " ┇ `#" + count + "`"
+            desc += "`#" + count + "` " + UX.findCardTitle(data, card.getIsFav())
             + " ┇ " + UX.findRarityEmote(data) 
             + " ┇ " + data.getSetEmote()
-            + " ┇ " + UX.formatXPPrice(data, c.getSellable())
-            + " ┇ **x" + c.getCardQuantity() + "**\n";
+            + " ┇ " + UX.formatXP(data, card.getSellable())
+            + " ┇ *x" + card.getCardQuantity() + "*\n";
             count++;
+            
             if(i >= user.getCards().size() - 1) {
                 break;
             }
         }
         desc += "┅┅\n";
-        embed.setTitle(ditto_ + " " + ui.getUserName() + "'s Cards " + ditto_);
+        embed.setTitle(ui.getUserName() + "'s Collection ┇ " + Check.countOwnedCards(user) + " Cards");
         embed.setDescription(desc);
-        embed.setFooter("Page " + page + " of " + disp.getMaxPage(), ui.getUserIcon());
-        embed.setColor(0xA742D8);
+        embed.setFooter("Page " + page + " of " + getMaxPage(), ui.getUserIcon());
+        embed.setColor(user.getGameColor());
         return embed;
     }
 }

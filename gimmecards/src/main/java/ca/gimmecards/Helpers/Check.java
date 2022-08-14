@@ -6,6 +6,16 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import java.util.Calendar;
 
 public class Check implements Emotes {
+
+    public static boolean isSellable(Data data) {
+        if(data.getSetName().equalsIgnoreCase("gimme cards")) {
+            return false;
+            
+        } else if(isOldSet(data) || isPromoSet(data)) {
+            return false;
+        }
+        return true;
+    }
     
     public static boolean isOldSet(Data data) {        
         for(Data d : Data.oldSets) {
@@ -44,11 +54,42 @@ public class Check implements Emotes {
         return true;
     }
 
-    public static boolean ownsFavCard(User user) {
-        for(Card c : user.getCards()) {
-            String cardImage = c.getData().getCardImage();
+    public static boolean ownsCard(User user, Data data) {
+        for(Card card : user.getCards()) {
+            String cardId = card.getData().getCardId();
 
-            if(user.getBackpackCard().equals(cardImage)) {
+            if(cardId.equals(data.getCardId()) && card.getCardQuantity() > 1) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean ownsFavCard(User user) {
+        for(Card card : user.getCards()) {
+            String cardImage = card.getData().getCardImage();
+
+            if(user.getPinCard().equals(cardImage)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean ownsShopPack(User user) {
+        for(String pack : user.getPacks()) {
+            for(Data data : Data.sets) {
+                if(pack.equalsIgnoreCase(data.getSetName())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static boolean ownsBadge(User user, String badge) {
+        for(String b : user.getBadges()) {
+            if(b.equalsIgnoreCase(badge)) {
                 return true;
             }
         }
@@ -64,6 +105,29 @@ public class Check implements Emotes {
         return false;
     }
 
+    public static int countOwnedPacks(User user, boolean isOld) {
+        int count = 0;
+        Data[] sets = isOld ? Data.oldSets : Data.sets;
+
+        for(String name : user.getPacks()) {
+            for(Data set : sets) {
+                if(name.equalsIgnoreCase(set.getSetName())) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
+    public static int countOwnedCards(User user) {
+        int count = 0;
+
+        for(Card card : user.getCards()) {
+            count += card.getCardQuantity();
+        }
+        return count;
+    }
+
     public static boolean isCooldownDone(Long epoch, int cooldown, boolean isMins) {
         long current = isMins ? Calendar.getInstance().getTimeInMillis() / 60000 : Calendar.getInstance().getTimeInMillis() / 1000;
 
@@ -71,20 +135,6 @@ public class Check implements Emotes {
             return true;
         }
         return false;
-    }
-
-    public static int countOwnedPacks(User user, boolean isOld) {
-        int ownedPacks = 0;
-        Data[] sets = isOld ? Data.oldSets : Data.sets;
-
-        for(String name : user.getPacks()) {
-            for(Data d : sets) {
-                if(name.equalsIgnoreCase(d.getSetName())) {
-                    ownedPacks++;
-                }
-            }
-        }
-        return ownedPacks;
     }
 
     public static String findTimeLeft(Long epoch, int cooldown, boolean isMins) {
@@ -135,23 +185,23 @@ public class Check implements Emotes {
             user.levelUp();
 
             msg += UX.formatNick(event) + " is now level **" + user.getLevel() + "** :tada:";
-            msg += UX.updateTokens(user, 2);
-            msg += UX.updateEnergy(user, energyReward);
-            msg += UX.updateKeys(user, 1);
-            msg += UX.updateStars(user, 1);
+            msg += user.updateTokens(2, true);
+            msg += user.updateEnergy(energyReward, false);
+            msg += user.updateKeys(1, false);
+            msg += user.updateStars(1, false);
 
             if(user.getLevel() == 50) {
                 user.getBadges().add("veteran");
-                JDA.sendMessage(event, UX.formatBadge(event, veteranBadge_, "Veteran Collector"));
+                JDA.sendMessage(event, user.getGameColor(), "🎒", UX.formatBadge(event, veteranBadge_, "Veteran Collector"));
             } else if(user.getLevel() == 100) {
                 user.getBadges().add("master");
-                JDA.sendMessage(event, UX.formatBadge(event, masterBadge_, "Master Collector"));
+                JDA.sendMessage(event, user.getGameColor(), "🎒", UX.formatBadge(event, masterBadge_, "Master Collector"));
             }
             Update.updateBackpackDisplay(event, user);
 
             embed.setThumbnail(ui.getUserIcon());
             embed.setDescription(msg);
-            embed.setColor(0x408CFF);
+            embed.setColor(user.getGameColor());
             JDA.sendEmbed(event, embed);
             embed.clear();
         }

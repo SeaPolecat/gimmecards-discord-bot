@@ -12,7 +12,7 @@ public class ViewCmds extends Cmds implements CustomCards {
         ViewDisplay disp = new ViewDisplay(user.getUserId()).findDisplay();
 
         if(!Check.isCooldownDone(user.getOpenEpoch(), 5, false)) {
-            JDA.sendMessage(event, jigglypuff_ + " Please wait another " + Check.findTimeLeft(user.getOpenEpoch(), 5, false));
+            JDA.sendMessage(event, red_, "❌", "Please wait another " + Check.findTimeLeft(user.getOpenEpoch(), 5, false));
 
         } else {
             try {
@@ -25,49 +25,37 @@ public class ViewCmds extends Cmds implements CustomCards {
 
                 if(setName.equalsIgnoreCase("gimme cards")) {
                     if(user.getStars() < 1) {
-                        JDA.sendMessage(event, jigglypuff_ + " Sorry, you're out of " + star_ + " **Stars**");
+                        JDA.sendMessage(event, red_, "❌", "Sorry, you're out of " + star_ + " **Stars**");
 
                     } else {
-                        Card c;
-                        Data item = Card.pickCard(customs);
                         String msg = "";
                         String footer = event.getAuthor().getName() + "'s exclusive card";
+                        Data item = Card.pickCard(customs);
 
                         user.resetOpenEpoch();
-                        c = Card.addSingleCard(user, item, false);
+                        Card.addSingleCard(user, item);
     
                         msg += UX.formatNick(event) + " drew a card from " + logo_ + " **Gimme Cards**";
-                        msg += UX.updateEnergy(user, UX.randRange(8, 10));
-                        msg += UX.updateStars(user, -1);
+                        msg += user.updateEnergy(UX.randRange(8, 10), true);
+                        msg += user.updateStars(-1, false);
     
                         Update.updateBackpackDisplay(event, user);
                         Update.updateCardDisplay(event, user);
+                        Update.updateViewDisplay(event, user);
     
-                        JDA.sendMessage(event, msg);
-                        Display.displayCard(event, user, item, c, footer);
+                        JDA.sendMessage(event, user.getGameColor(), charmander_, msg);
+                        Display.displayCard(event, user, item, footer);
                         try { User.saveUsers(); } catch(Exception e) {}
                     }
 
                 } else if(Check.isRareSet(set) || Check.isPromoSet(set)) {
-                    int starCost;
-
-                    if(Check.isRareSet(set)) {
-                        starCost = 1;
-                    } else {
-                        starCost = 2;
-                    }
-                    if(user.getStars() < starCost) {
-                        if(Check.isRareSet(set)) {
-                            JDA.sendMessage(event, jigglypuff_ + " Sorry, you're out of " + star_ + " **Stars**");
-                        } else {
-                            JDA.sendMessage(event, jigglypuff_ + " Sorry, you don't have enough " + star_ + " **Stars**");
-                        }
+                    if(user.getStars() < 1) {
+                        JDA.sendMessage(event, red_, "❌", "Sorry, you're out of " + star_ + " **Stars**");
 
                     } else {
-                        Card c;
-                        Data item = Card.pickCard(set.getSpecs());
                         String msg = "";
                         String footer = event.getAuthor().getName();
+                        Data item = Card.pickCard(set.getSpecs());
 
                         if(Check.isRareSet(set)) {
                             footer += "'s exclusive card";
@@ -75,48 +63,59 @@ public class ViewCmds extends Cmds implements CustomCards {
                             footer += "'s promo card";
                         }
                         user.resetOpenEpoch();
-                        c = Card.addSingleCard(user, item, true);
+                        Card.addSingleCard(user, item);
     
                         msg += UX.formatNick(event) + " drew a card from " + set.getSetEmote() + " **" + set.getSetName() + "**";
-                        msg += UX.updateEnergy(user, UX.randRange(8, 10));
-                        msg += UX.updateStars(user, -starCost);
+                        msg += user.updateEnergy(UX.randRange(8, 10), true);
+                        msg += user.updateStars(-1, false);
     
                         Update.updateBackpackDisplay(event, user);
                         Update.updateCardDisplay(event, user);
-    
-                        JDA.sendMessage(event, msg);
-                        Display.displayCard(event, user, item, c, footer);
+                        Update.updateViewDisplay(event, user);
+
+                        if(Check.isRareSet(set)) {
+                            JDA.sendMessage(event, user.getGameColor(), charmander_, msg);
+                        } else {
+                            JDA.sendMessage(event, user.getGameColor(), bulbasaur_, msg);
+                        }
+                        Display.displayCard(event, user, item, footer);
                         try { User.saveUsers(); } catch(Exception e) {}
                     }
 
                 } else {
                     if(!Check.isPackUnlocked(user, set.getSetName())) {
-                        JDA.sendMessage(event, jigglypuff_ + " This pack is locked!");
+                        JDA.sendMessage(event, red_, "❌", "This pack is locked!");
         
                     } else if(user.getTokens() < 1) {
-                        JDA.sendMessage(event, jigglypuff_ + " Sorry, you're out of " + token_ + " **Tokens**");
+                        JDA.sendMessage(event, red_, "❌", "Sorry, you're out of " + token_ + " **Tokens**");
         
                     } else {
                         String msg = "";
     
-                        user.resetOpenEpoch();
-                        Card.addNewCards(user, set);
                         disp.setDispType("new");
+                        disp.setNewCards(Card.addNewCards(user, set));
+
+                        user.resetOpenEpoch();
                         
                         msg += UX.formatNick(event) + " opened " + set.getSetEmote() + " **" + set.getSetName() + "**";
-                        msg += UX.updateTokens(user, -1);
-                        msg += UX.updateEnergy(user, UX.randRange(8, 10));
+                        msg += user.updateTokens(-1, true);
+                        msg += user.updateEnergy(UX.randRange(8, 10), false);
     
                         Update.updateBackpackDisplay(event, user);
                         Update.updateCardDisplay(event, user);
+                        Update.updateViewDisplay(event, user);
     
-                        JDA.sendMessage(event, msg);
+                        if(Check.isOldSet(set)) {
+                            JDA.sendMessage(event, user.getGameColor(), squirtle_, msg);
+                        } else {
+                            JDA.sendMessage(event, user.getGameColor(), pikachu_, msg);
+                        }
                         JDA.sendDynamicEmbed(event, user, null, disp, 1);
                         try { User.saveUsers(); } catch(Exception e) {}
                     }
                 }
             } catch(NullPointerException e) {
-                JDA.sendMessage(event, jigglypuff_ + " Whoops, I couldn't find that pack...");
+                JDA.sendMessage(event, red_, "❌", "Whoops, I couldn't find that pack...");
             }
         }
     }
@@ -124,35 +123,20 @@ public class ViewCmds extends Cmds implements CustomCards {
     public static void viewCard(MessageReceivedEvent event, String[] args) {
         User user = User.findUser(event);
         ViewDisplay disp = new ViewDisplay(user.getUserId()).findDisplay();
-        SearchDisplay disp2 = new SearchDisplay(user.getUserId()).findDisplay();
 
         try {
             if(user.getCards().size() < 1) {
-                JDA.sendMessage(event, jigglypuff_ + " You don't have any cards yet!");
+                JDA.sendMessage(event, red_, "❌", "You don't have any cards yet!");
 
             } else {
                 int page = Integer.parseInt(args[1]);
 
                 disp.setDispType("old");
+
                 JDA.sendDynamicEmbed(event, user, null, disp, page);
             }
         } catch(NumberFormatException | IndexOutOfBoundsException e) {
-            boolean exists = false;
-
-            for(int i = 0; i < disp2.getSearchedCards().size(); i++) {
-                String cardId = disp2.getSearchedCards().get(i).getCardId();
-
-                if(cardId.equals(args[1])) {
-                    exists = true;
-
-                    disp.setDispType("search");
-                    JDA.sendDynamicEmbed(event, user, null, disp, (i+1));
-                    break;
-                }
-            }
-            if(!exists) {
-                JDA.sendMessage(event, jigglypuff_ + " Whoops, I couldn't find that card...");
-            }
+            JDA.sendMessage(event, red_, "❌", "Whoops, I couldn't find that card...");
         }
     }
 }

@@ -1,7 +1,6 @@
 package ca.gimmecards.Display;
 import ca.gimmecards.Main.*;
 import ca.gimmecards.Helpers.*;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 public class MinigameDisplay extends Display {
@@ -37,34 +36,31 @@ public class MinigameDisplay extends Display {
         return minigameDisplays.get(0);
     }
 
-    public static void removeMinigameDisplay(User user) {
+    public void removeMinigameDisplay() {
         for(int i = 0; i < minigameDisplays.size(); i++) {
-            if(minigameDisplays.get(i).getUserId().equals(user.getUserId())) {
+            if(minigameDisplays.get(i).getUserId().equals(this.getUserId())) {
                 minigameDisplays.remove(i);
                 break;
             }
         }
     }
 
-    public static boolean isGuessCorrect(MessageReceivedEvent event, User user, String guess) {
-        MinigameDisplay disp = new MinigameDisplay(user.getUserId()).findDisplay();
-        String cardRarity = disp.getData().getCardRarity();
+    public boolean isGuessCorrect(String guess) {
+        String cardRarity = data.getCardRarity();
 
-        disp.minusTries();
+        minusTries();
         if(cardRarity.replaceAll("\\s+", "").equalsIgnoreCase(guess.replaceAll("\\s+", ""))) {
-            disp.winGame();
-            Update.updateMinigameDisplay(event, user);
+            winGame();
             return true;
 
         } else {
-            Update.updateMinigameDisplay(event, user);
             return false;
         }
     }
 
     @Override
-    public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, Display disp, int page) {
-        String cardRarity = ((MinigameDisplay) disp).getData().getCardRarity();
+    public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, int page) {
+        String cardRarity = data.getCardRarity();
         String rarityEmote = UX.findRarityEmote(data);
         String cardImage = data.getCardImage();
         EmbedBuilder embed = new EmbedBuilder();
@@ -94,7 +90,7 @@ public class MinigameDisplay extends Display {
         embed.setDescription(desc);
         embed.setImage(cardImage);
         embed.setFooter(ui.getUserName() + "'s minigame", ui.getUserIcon());
-        embed.setColor(0xEF9EC2);
+        embed.setColor(minigame_);
         return embed;
     }
 }

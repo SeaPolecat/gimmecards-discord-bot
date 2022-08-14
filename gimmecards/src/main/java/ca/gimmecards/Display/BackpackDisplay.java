@@ -23,20 +23,20 @@ public class BackpackDisplay extends Display {
     }
 
     @Override
-    public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, Display disp, int page) {
+    public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, int page) {
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
         desc += XP_ + " " + UX.formatNumber(user.getXP()) + "/" + UX.formatNumber(user.getMaxXP()) + " until next level\n";
         desc += "┅┅\n";
         desc += token_ + " **Tokens** ┇ " + UX.formatNumber(user.getTokens()) + "\n";
-        desc += energy_ + " **Energy** ┇ " + UX.formatNumber(user.getEnergy()) + "\n";
-        desc += key_ + " **Keys** ┇ " + UX.formatNumber(user.getKeys()) + "\n";
+        desc += energy_ + " **Credits** ┇ " + UX.formatNumber(user.getEnergy()) + "\n";
         desc += star_ + " **Stars** ┇ " + UX.formatNumber(user.getStars()) + "\n";
+        desc += key_ + " **Keys** ┇ " + UX.formatNumber(user.getKeys()) + "\n";
         desc += "┅┅\n";
 
         if(user.getBadges().size() > 0) {
-            desc += "*Badges* ┇ ";
+            desc += "**Badges** ┇ ";
             for(String badge : user.getBadges()) {
                 if(badge.equalsIgnoreCase("dev")) {
                     desc += devBadge_ + " ";
@@ -73,16 +73,14 @@ public class BackpackDisplay extends Display {
                     break;
                 }
             }
-            desc += "\n┅┅\n";
         }
-        if(!user.getBackpackCard().equals("") && Check.ownsFavCard(user)) {
-            desc += "*" + ui.getUserName() + "'s Favourite*";
-            embed.setImage(user.getBackpackCard());
+        if(!user.getPinCard().equals("") && Check.ownsFavCard(user)) {
+            embed.setImage(user.getPinCard());
         }
         embed.setTitle(ui.getUserName() + " ┇ Level " + user.getLevel());
         embed.setThumbnail(ui.getUserIcon());
         embed.setDescription(desc);
-        embed.setColor(user.getBackpackColor());
+        embed.setColor(user.getGameColor());
         return embed;
     }
 }

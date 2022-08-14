@@ -10,14 +10,16 @@ import net.dv8tion.jda.api.Permission;
 public class HelpCmds extends Cmds {
 
     public static void changePrefix(MessageReceivedEvent event, String[] args) {
+        User user = User.findUser(event);
         Server server = Server.findServer(event);
 
         if(!event.getMember().hasPermission(Permission.ADMINISTRATOR)) {
-            JDA.sendMessage(event, jigglypuff_+ " Sorry, you need administrator powers to change my prefix!");
+            JDA.sendMessage(event, red_, "❌", "Sorry, you need administrator powers to change my prefix!");
 
         } else {
             server.setPrefix(args[1]);
-            JDA.sendMessage(event, eevee_ + " My prefix has been set to " + UX.formatCmd(server, ""));
+            
+            JDA.sendMessage(event, user.getGameColor(), eevee_, "My prefix has been set to " + UX.formatCmd(server, ""));
             try { Server.saveServers(); } catch(Exception e) {}
         }
     }
@@ -47,7 +49,7 @@ public class HelpCmds extends Cmds {
 
         embed.setTitle(eevee_ + " Getting Started " + eevee_);
         embed.setDescription(desc);
-        embed.setColor(0xE9BB7A);
+        embed.setColor(help_);
         JDA.sendEmbed(event, embed);
         embed.clear();
     }
@@ -72,7 +74,7 @@ public class HelpCmds extends Cmds {
         }
         embed.setTitle(eevee_ + " All Rarities " + eevee_);
         embed.setDescription(desc);
-        embed.setColor(0xE9BB7A);
+        embed.setColor(help_);
         JDA.sendEmbed(event, embed);
         embed.clear();
     }
@@ -101,7 +103,7 @@ public class HelpCmds extends Cmds {
 
         embed.setTitle(eevee_ + " All Badges " + eevee_);
         embed.setDescription(desc);
-        embed.setColor(0xE9BB7A);
+        embed.setColor(help_);
         JDA.sendEmbed(event, embed);
         embed.clear();
     }

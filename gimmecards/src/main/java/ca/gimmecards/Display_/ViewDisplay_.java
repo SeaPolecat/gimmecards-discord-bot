@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 
 public class ViewDisplay_ extends Display {
 
+    private User user;
     private User mention;
     private UserInfo mentionInfo;
 
@@ -13,9 +14,11 @@ public class ViewDisplay_ extends Display {
         super(ui);
     }
 
+    public User getUser() { return user; }
     public User getMention() { return mention; }
     public UserInfo getMentionInfo() { return mentionInfo; }
     //
+    public void setUser(User u) { user = u; }
     public void setMention(User m) { mention = m; }
     public void setMentionInfo(UserInfo mi) { mentionInfo = mi; }
 
@@ -33,24 +36,26 @@ public class ViewDisplay_ extends Display {
     }
 
     @Override
-    public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, Display disp, int page) {
+    public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, int page) {
         int startIndex = page - 1;
-        Card c = mention.getCards().get(startIndex);
-        Data data = c.getData();
+        Card card = mention.getCards().get(startIndex);
+        Data data = card.getData();
+        String cardTitle = UX.findCardTitle(data, card.getIsFav());
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
-        disp.setMaxPage(mention.getCards().size());
+        setMaxPage(mention.getCards().size());
 
         desc += "**Rarity** ┇ " + UX.findRarityEmote(data) + " " + data.getCardRarity() + "\n";
         desc += "**Card Set** ┇ " + data.getSetEmote() + " " + data.getSetName() + "\n";
-        desc += "**XP Value** ┇ " + UX.formatXPPrice(data, c.getSellable()) + "\n\n";
+        desc += "**XP Value** ┇ " + UX.formatXP(data, card.getSellable()) + "\n\n";
         desc += "*Click on image for zoomed view*";
-
-        embed.setTitle(ui.getUserName() + " ➜ " + mentionInfo.getUserName() + "'s " + UX.findCardTitle(data, c.getIsFav()));
+        
+        embed.setTitle(ui.getUserName() + " ➜ " + mentionInfo.getUserName()
+        + "'s " + cardTitle);
         embed.setDescription(desc);
         embed.setImage(data.getCardImage());
-        embed.setFooter("Page " + page + " of " + disp.getMaxPage(), ui.getUserIcon());
+        embed.setFooter("Page " + page + " of " + getMaxPage(), ui.getUserIcon());
         embed.setColor(UX.findEmbedColour(data));
         return embed;
     }

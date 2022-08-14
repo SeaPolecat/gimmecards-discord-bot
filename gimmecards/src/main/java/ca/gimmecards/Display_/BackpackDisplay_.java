@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 
 public class BackpackDisplay_ extends Display {
 
+    private User user;
     private User mention;
     private UserInfo mentionInfo;
 
@@ -13,9 +14,11 @@ public class BackpackDisplay_ extends Display {
         super(ui);
     }
 
+    public User getUser() { return user; }
     public User getMention() { return mention; }
     public UserInfo getMentionInfo() { return mentionInfo; }
     //
+    public void setUser(User u) { user = u; }
     public void setMention(User m) { mention = m; }
     public void setMentionInfo(UserInfo mi) { mentionInfo = mi; }
 
@@ -33,20 +36,20 @@ public class BackpackDisplay_ extends Display {
     }
 
     @Override
-    public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, Display disp, int page) {
+    public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, int page) {
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
         desc += XP_ + " " + UX.formatNumber(mention.getXP()) + "/" + UX.formatNumber(mention.getMaxXP()) + " until next level\n";
         desc += "┅┅\n";
         desc += token_ + " **Tokens** ┇ " + UX.formatNumber(mention.getTokens()) + "\n";
-        desc += energy_ + " **Energy** ┇ " + UX.formatNumber(mention.getEnergy()) + "\n";
-        desc += key_ + " **Keys** ┇ " + UX.formatNumber(mention.getKeys()) + "\n";
+        desc += energy_ + " **Credits** ┇ " + UX.formatNumber(mention.getEnergy()) + "\n";
         desc += star_ + " **Stars** ┇ " + UX.formatNumber(mention.getStars()) + "\n";
+        desc += key_ + " **Keys** ┇ " + UX.formatNumber(mention.getKeys()) + "\n";
         desc += "┅┅\n";
 
         if(mention.getBadges().size() > 0) {
-            desc += "*Badges* ┇ ";
+            desc += "**Badges** ┇ ";
             for(String badge : mention.getBadges()) {
                 if(badge.equalsIgnoreCase("dev")) {
                     desc += devBadge_ + " ";
@@ -83,16 +86,15 @@ public class BackpackDisplay_ extends Display {
                     break;
                 }
             }
-            desc += "\n┅┅\n";
         }
-        if(!mention.getBackpackCard().equals("") && Check.ownsFavCard(mention)) {
-            desc += "*" + mentionInfo.getUserName() + "'s Favourite*";
-            embed.setImage(mention.getBackpackCard());
+        if(!mention.getPinCard().equals("") && Check.ownsFavCard(mention)) {
+            embed.setImage(mention.getPinCard());
         }
-        embed.setTitle(mentionInfo.getUserName() + " ┇ Level " + mention.getLevel());
+        embed.setTitle(ui.getUserName() + " ➜ " + mentionInfo.getUserName()
+        + " ┇ Level " + mention.getLevel());
         embed.setThumbnail(mentionInfo.getUserIcon());
         embed.setDescription(desc);
-        embed.setColor(mention.getBackpackColor());
+        embed.setColor(mention.getGameColor());
         return embed;
     }
 }

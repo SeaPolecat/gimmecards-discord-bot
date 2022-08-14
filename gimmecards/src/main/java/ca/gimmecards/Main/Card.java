@@ -1,6 +1,5 @@
 package ca.gimmecards.Main;
 import ca.gimmecards.Interfaces.*;
-import ca.gimmecards.Display.*;
 import ca.gimmecards.Helpers.*;
 import java.util.ArrayList;
 import java.util.Random;
@@ -29,6 +28,7 @@ public class Card implements CustomCards {
     //
     public void addCardQuantity() { cardQuantity++; }
     public void minusCardQuantity() { cardQuantity--; }
+    public void setCardQuantity(int cq) { cardQuantity = cq; }
     public void setIsFav(boolean f) { isFav = f; }
 
     public static Data pickCard(ArrayList<Data> cards) {
@@ -100,8 +100,7 @@ public class Card implements CustomCards {
         return pickCard(cards);
     }
 
-    public static Card addSingleCard(User user, Data data, boolean sellable) {
-        boolean exists = false;
+    public static void addSingleCard(User user, Data data) {
         Card newCard = null;
 
         user.addCardCount();
@@ -109,22 +108,18 @@ public class Card implements CustomCards {
             String cardId2 = c.getData().getCardId();
 
             if(data.getCardId().equals(cardId2)) {
-                exists = true;
                 newCard = c;
                 c.addCardQuantity();
-                break;
+                return;
             }
         }
-        if(!exists) {
-            newCard = new Card(data, user.getCardCount(), sellable);
-            user.getCards().add(newCard);
-        }
+        newCard = new Card(data, user.getCardCount(), Check.isSellable(data));
+        
+        user.getCards().add(newCard);
         sortCards(user, user.getSortMethod(), user.getSortIncreasing());
-        return newCard;
     }
 
-    public static void addNewCards(User user, Data set) {
-        ViewDisplay disp = new ViewDisplay(user.getUserId()).findDisplay();
+    public static ArrayList<Data> addNewCards(User user, Data set) {
         ArrayList<Data> commons = set.getCommons();
         ArrayList<Data> uncommons = set.getUncommons();
         ArrayList<Data> rares = set.getRares();
@@ -157,15 +152,19 @@ public class Card implements CustomCards {
                 }
             }
             if(!exists) {
-                if(Check.isOldSet(data)) {
-                    user.getCards().add(new Card(data, user.getCardCount(), false));
-                } else {
-                    user.getCards().add(new Card(data, user.getCardCount(), true));
-                }
+                user.getCards().add(new Card(data, user.getCardCount(), Check.isSellable(data)));
             }
         }
         sortCards(user, user.getSortMethod(), user.getSortIncreasing());
-        disp.setNewCards(newCards);
+        return newCards;
+    }
+
+    private static void swapCards(User user, int i1, int i2) {
+        ArrayList<Card> cards = user.getCards();
+        Card temp = cards.get(i1);
+        
+        cards.set(i1, cards.get(i2));
+        cards.set(i2, temp);
     }
     
     public static void sortCards(User user, String sortMethod, boolean sortIncreasing) {
@@ -236,84 +235,85 @@ public class Card implements CustomCards {
         }
     }
 
-    public static ArrayList<Data> searchCards(User user, String key) {
+    public static ArrayList<Data> searchCards(User user, String sortMethod, String key) {
         ArrayList<Data> searchedCards = new ArrayList<Data>();
 
         for(Data set : Data.sets) {
-            crawlSet(searchedCards, set, key);
+            crawlSet(searchedCards, set, sortMethod, key);
         }
         for(Data oldSet : Data.oldSets) {
-            crawlSet(searchedCards, oldSet, key);
+            crawlSet(searchedCards, oldSet, sortMethod, key);
         }
-        crawlSpecSets(searchedCards, key);
+        crawlSpecSets(searchedCards, sortMethod, key);
 
         return searchedCards;
     }
 
-    private static void crawlSet(ArrayList<Data> searchedCards, Data set, String key) {
-        for(Data data : set.getCommons()) {
-            String cardName = data.getCardName();
+    private static String findName(Data data, String sortMethod) {
+        if(sortMethod.equalsIgnoreCase("card")) {
+            return data.getCardName();
+        } else if(sortMethod.equalsIgnoreCase("pack")) {
+            return data.getSetName();
+        }
+        return data.getCardRarity();
+    }
 
-            if(cardName.toLowerCase().contains(key.toLowerCase())) {
+    private static void crawlSet(ArrayList<Data> searchedCards, Data set, String sortMethod, String key) {
+        for(Data data : set.getCommons()) {
+            String name = findName(data, sortMethod);
+
+            if(name.toLowerCase().contains(key.toLowerCase())) {
                 searchedCards.add(data);
             }
         }
         for(Data data : set.getUncommons()) {
-            String cardName = data.getCardName();
+            String name = findName(data, sortMethod);
 
-            if(cardName.toLowerCase().contains(key.toLowerCase())) {
+            if(name.toLowerCase().contains(key.toLowerCase())) {
                 searchedCards.add(data);
             }
         }
         for(Data data : set.getRares()) {
-            String cardName = data.getCardName();
+            String name = findName(data, sortMethod);
 
-            if(cardName.toLowerCase().contains(key.toLowerCase())) {
+            if(name.toLowerCase().contains(key.toLowerCase())) {
                 searchedCards.add(data);
             }
         }
         for(Data data : set.getShinies()) {
-            String cardName = data.getCardName();
-
-            if(cardName.toLowerCase().contains(key.toLowerCase())) {
+            String name = findName(data, sortMethod);
+            
+            if(name.toLowerCase().contains(key.toLowerCase())) {
                 searchedCards.add(data);
             }
         }
     }
 
-    private static void crawlSpecSets(ArrayList<Data> searchedCards, String key) {
+    private static void crawlSpecSets(ArrayList<Data> searchedCards, String sortMethod, String key) {
         for(Data specSet : Data.rareSets) {
             for(Data data : specSet.getSpecs()) {
-                String cardName = data.getCardName();
+                String name = findName(data, sortMethod);
 
-                if(cardName.toLowerCase().contains(key.toLowerCase())) {
+                if(name.toLowerCase().contains(key.toLowerCase())) {
                     searchedCards.add(data);
                 }
             }
         }
         for(Data specSet : Data.promoSets) {
             for(Data data : specSet.getSpecs()) {
-                String cardName = data.getCardName();
+                String name = findName(data, sortMethod);
 
-                if(cardName.toLowerCase().contains(key.toLowerCase())) {
+                if(name.toLowerCase().contains(key.toLowerCase())) {
                     searchedCards.add(data);
                 }
             }
         }
         for(Data data : customs) {
-            String cardName = data.getCardName();
-
-            if(cardName.toLowerCase().contains(key.toLowerCase())) {
+            String name = findName(data, sortMethod);
+            
+            if(name.toLowerCase().contains(key.toLowerCase())) {
                 searchedCards.add(data);
             }
         }
-    }
-
-    private static void swapCards(User user, int i1, int i2) {
-        ArrayList<Card> cards = user.getCards();
-        Card temp = cards.get(i1);
-        
-        cards.set(i1, cards.get(i2));
-        cards.set(i2, temp);
     }
 }

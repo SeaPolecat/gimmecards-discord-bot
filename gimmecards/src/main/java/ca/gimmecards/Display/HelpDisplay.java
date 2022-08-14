@@ -23,18 +23,18 @@ public class HelpDisplay extends Display {
     }
 
     @Override
-    public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, Display disp, int page) {
+    public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, int page) {
         int startIndex = page - 1;
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
-        disp.setMaxPage(Changelog.changelog.length);
+        setMaxPage(Changelog.changelog.length);
         desc = Changelog.changelog[startIndex].replace("[", "`" + server.getPrefix()).replace("]", "`");
         
         embed.setTitle(eevee_ + " Le Changelog " + eevee_);
         embed.setDescription(desc);
-        embed.setFooter("Page " + page + " of " + disp.getMaxPage(), ui.getUserIcon());
-        embed.setColor(0xE9BB7A);
+        embed.setFooter("Page " + page + " of " + getMaxPage(), ui.getUserIcon());
+        embed.setColor(help_);
         return embed;
     }
 }

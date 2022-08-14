@@ -13,6 +13,19 @@ public class Update implements Displays, Emotes {
         if(!disp.getMessageId().isEmpty()) {
             JDA.editEmbed(event, user, null, disp, -1);
         }
+        for(BackpackDisplay_ disp_ : backpackDisplays_) {
+            if(!disp_.getMessageId().isEmpty()) {
+                updateBackpackDisplay_(event, disp_.getUser());
+            }
+        }
+    }
+
+    public static void updateBackpackDisplay_(MessageReceivedEvent event, User user) {
+        BackpackDisplay_ disp = new BackpackDisplay_(user.getUserId()).findDisplay();
+
+        if(!disp.getMessageId().isEmpty()) {
+            JDA.editEmbed(event, user, null, disp, -1);
+        }
     }
 
     public static void updateCardDisplay(MessageReceivedEvent event, User user) {
@@ -34,24 +47,22 @@ public class Update implements Displays, Emotes {
             }
         }
         for(CardDisplay_ disp_ : cardDisplays_) {
-            if(!disp_.getMessageId().isEmpty() 
-            && disp_.getMention().getUserId().equals(user.getUserId())) {
-                updateCardDisplay_(event, disp_.getUserId());
+            if(!disp_.getMessageId().isEmpty()) {
+                updateCardDisplay_(event, disp_.getUser(), disp_.getMention());
             }
         }
     }
 
-    private static void updateCardDisplay_(MessageReceivedEvent event, String userId) {
-        User user = User.findOtherUser(event, userId);
-        CardDisplay_ disp = new CardDisplay_(userId).findDisplay();
-
+    public static void updateCardDisplay_(MessageReceivedEvent event, User user, User mention) {
+        CardDisplay_ disp = new CardDisplay_(user.getUserId()).findDisplay();
+        
         if(!disp.getMessageId().isEmpty()) {
-            if(user.getCards().size() < 1) {
+            if(mention.getCards().size() < 1) {
                 disp.setPage(1);
                 JDA.deleteMessage(event, disp);
 
-            } else if(user.getCards().size() <= (disp.getPage() * 15) - 15) {
-                while(user.getCards().size() <= (disp.getPage() * 15) - 15) {
+            } else if(mention.getCards().size() <= (disp.getPage() * 15) - 15) {
+                while(mention.getCards().size() <= (disp.getPage() * 15) - 15) {
                     disp.prevPage();
                 }
                 JDA.editEmbed(event, user, null, disp, disp.getPage());
@@ -102,7 +113,7 @@ public class Update implements Displays, Emotes {
 
     public static void updateTradeDisplay(MessageReceivedEvent event, User user) {
         Server server = Server.findServer(event);
-        TradeDisplay disp = TradeDisplay.findTradeDisplay(user.getUserId());
+        TradeDisplay disp = new TradeDisplay(user.getUserId()).findDisplay();
 
         if(!disp.getMessageId().isEmpty()) {
             JDA.editEmbed(event, user, server, disp, -1);
@@ -112,13 +123,15 @@ public class Update implements Displays, Emotes {
     public static void updateViewDisplay(MessageReceivedEvent event, User user) {
         ViewDisplay disp = new ViewDisplay(user.getUserId()).findDisplay();
 
-        if(!disp.getMessageId().isEmpty()) {
+        if(!disp.getMessageId().isEmpty() && disp.getDispType().equals("old")) {
             if(user.getCards().size() < 1) {
                 disp.setPage(1);
                 JDA.deleteMessage(event, disp);
 
             } else if(user.getCards().size() < disp.getPage()) {
-                disp.prevPage();
+                while(user.getCards().size() < disp.getPage()) {
+                    disp.prevPage();
+                }
                 JDA.editEmbed(event, user, null, disp, disp.getPage());
                 
             } else {
@@ -126,24 +139,24 @@ public class Update implements Displays, Emotes {
             }
         }
         for(ViewDisplay_ disp_ : viewDisplays_) {
-            if(!disp_.getMessageId().isEmpty() 
-            && disp_.getMention().getUserId().equals(user.getUserId())) {
-                updateViewDisplay_(event, disp_.getUserId());
+            if(!disp_.getMessageId().isEmpty()) {
+                updateViewDisplay_(event, disp_.getUser(), disp_.getMention());
             }
         }
     }
 
-    private static void updateViewDisplay_(MessageReceivedEvent event, String userId) {
-        User user = User.findOtherUser(event, userId);
-        ViewDisplay_ disp = new ViewDisplay_(userId).findDisplay();
+    public static void updateViewDisplay_(MessageReceivedEvent event, User user, User mention) {
+        ViewDisplay_ disp = new ViewDisplay_(user.getUserId()).findDisplay();
 
         if(!disp.getMessageId().isEmpty()) {
-            if(user.getCards().size() < 1) {
+            if(mention.getCards().size() < 1) {
                 disp.setPage(1);
                 JDA.deleteMessage(event, disp);
 
-            } else if(user.getCards().size() < disp.getPage()) {
-                disp.prevPage();
+            } else if(mention.getCards().size() < disp.getPage()) {
+                while(mention.getCards().size() < disp.getPage()) {
+                    disp.prevPage();
+                }
                 JDA.editEmbed(event, user, null, disp, disp.getPage());
                 
             } else {

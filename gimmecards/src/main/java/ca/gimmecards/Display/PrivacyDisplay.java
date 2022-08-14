@@ -39,7 +39,7 @@ public class PrivacyDisplay extends Display {
     }
 
     @Override
-    public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, Display disp, int page) {
+    public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, int page) {
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
@@ -48,7 +48,7 @@ public class PrivacyDisplay extends Display {
 
         desc += "**Account Status** ┇ ";
         if(!isSure) {
-            desc += "✅ Still Active\n\n";
+            desc += "✅ Active\n\n";
         } else {
             desc += "❌ Deleted\n\n";
         }
@@ -61,7 +61,7 @@ public class PrivacyDisplay extends Display {
             embed.setTitle(logo_ + " We'll Miss You " + logo_);
             embed.setImage("https://c.tenor.com/J6lraJXFl4IAAAAC/pokemon-pikachu.gif");
             embed.setFooter("the end of " + ui.getUserName() + "'s journey", ui.getUserIcon());
-            embed.setColor(0x408CFF);
+            embed.setColor(blue_);
         } else {
             embed.setTitle("We'll Miss You");
         }

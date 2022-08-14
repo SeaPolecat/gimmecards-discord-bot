@@ -11,9 +11,14 @@ import net.dv8tion.jda.api.EmbedBuilder;
 
 public class JDA implements Emotes {
 
-    public static void sendMessage(MessageReceivedEvent event, String message) {
+    public static void sendMessage(MessageReceivedEvent event, int color, String emote, String msg) {
         try {
-            event.getChannel().sendMessage(message).queue();
+            EmbedBuilder embed = new EmbedBuilder();
+
+            embed.setDescription(emote + " " + msg);
+            embed.setColor(color);
+            sendEmbed(event, embed);
+            embed.clear();
         } catch(InsufficientPermissionException e) {}
     }
 
@@ -31,7 +36,7 @@ public class JDA implements Emotes {
 
     public static void sendDynamicEmbed(MessageReceivedEvent event, User user, Server server, Display disp, int page) {
         UserInfo ui = new UserInfo(event);
-        EmbedBuilder embed = disp.buildEmbed(user, ui, server, disp, page);
+        EmbedBuilder embed = disp.buildEmbed(user, ui, server, page);
 
         if(!disp.getMessageId().equals("")) {
             JDA.removeReaction(event, disp, "◀");
@@ -52,8 +57,8 @@ public class JDA implements Emotes {
     }
 
     public static void editEmbed(MessageReceivedEvent event, User user, Server server, Display disp, int page) {
-        UserInfo ui = new UserInfo(event);
-        EmbedBuilder embed = disp.buildEmbed(user, ui, server, disp, page);
+        UserInfo ui = new UserInfo(user, event); //so it shows the correct pfp for updating multiplayer disps
+        EmbedBuilder embed = disp.buildEmbed(user, ui, server, page);
 
         try {
             event.getJDA().getTextChannelById(disp.getChannelId()).retrieveMessageById(disp.getMessageId()).queue(message -> {
@@ -67,7 +72,7 @@ public class JDA implements Emotes {
 
     public static void editEmbed(MessageReactionAddEvent event, User user, Server server, Display disp, int page) {
         UserInfo ui = new UserInfo(event);
-        EmbedBuilder embed = disp.buildEmbed(user, ui, server, disp, page);
+        EmbedBuilder embed = disp.buildEmbed(user, ui, server, page);
 
         try {
             event.getJDA().getTextChannelById(disp.getChannelId()).retrieveMessageById(disp.getMessageId()).queue(message -> {

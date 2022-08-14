@@ -34,45 +34,43 @@ public class ViewDisplay extends Display {
     }
 
     @Override
-    public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, Display disp, int page) {
-        SearchDisplay searchDisp = new SearchDisplay(user.getUserId()).findDisplay();
+    public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, int page) {
         int startIndex = page - 1;
-        Data data;
-        String cardTitle;
+        Data data = null;
+        String cardTitle = "";
         Boolean sellable = null;
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
         if(dispType.equals("old")) {
-            Card c = user.getCards().get(startIndex);
-
-            disp.setMaxPage(user.getCards().size());
+            setMaxPage(user.getCards().size());
+        } else if(dispType.equals("new")) {
+            setMaxPage(newCards.size());
+        }
+        if(dispType.equals("old")) {
+            Card card = user.getCards().get(startIndex);
 
             data = user.getCards().get(startIndex).getData();
-            cardTitle = UX.findCardTitle(data, c.getIsFav());
-            sellable = c.getSellable();
+            cardTitle = UX.findCardTitle(data, card.getIsFav());
+            sellable = card.getSellable();
 
         } else if(dispType.equals("new")) {
-            disp.setMaxPage(newCards.size());
-
             data = newCards.get(startIndex);
-            cardTitle = UX.findCardTitle(data, false) + " 🆕";
-
-        } else {
-            disp.setMaxPage(searchDisp.getSearchedCards().size());
-
-            data = searchDisp.getSearchedCards().get(startIndex);
             cardTitle = UX.findCardTitle(data, false);
+
+            if(!Check.ownsCard(user, data)) {
+                cardTitle += " 🆕";
+            }
         }
         desc += "**Rarity** ┇ " + UX.findRarityEmote(data) + " " + data.getCardRarity() + "\n";
         desc += "**Card Set** ┇ " + data.getSetEmote() + " " + data.getSetName() + "\n";
-        desc += "**XP Value** ┇ " + UX.formatXPPrice(data, sellable) + "\n\n";
+        desc += "**XP Value** ┇ " + UX.formatXP(data, sellable) + "\n\n";
         desc += "*Click on image for zoomed view*";
         
         embed.setTitle(cardTitle);
         embed.setDescription(desc);
         embed.setImage(data.getCardImage());
-        embed.setFooter("Page " + page + " of " + disp.getMaxPage(), ui.getUserIcon());
+        embed.setFooter("Page " + page + " of " + getMaxPage(), ui.getUserIcon());
         embed.setColor(UX.findEmbedColour(data));
         return embed;
     }

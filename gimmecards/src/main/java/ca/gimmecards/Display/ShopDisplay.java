@@ -23,22 +23,22 @@ public class ShopDisplay extends Display {
     }
 
     @Override
-    public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, Display disp, int page) {
+    public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, int page) {
         int startIndex = page * 8 - 8;
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
-        disp.setMaxPage(Data.sets.length / 8);
+        setMaxPage(Data.sets.length / 8);
 
         if(Data.sets.length % 8 != 0) {
-            disp.addMaxPage();
+            addMaxPage();
         }
         desc += "`" + Check.countOwnedPacks(user, false) + "/" + Data.sets.length + "` packs unlocked\n";
         desc += "┅┅\n";
         for(int i = startIndex; i < startIndex + 8; i++) {
             Data set = Data.sets[i];
 
-            desc += set.getSetEmote() + " " + set.getSetName() + " ┇ ";
+            desc += token_ + " " + set.getSetEmote() + " " + set.getSetName() + " ┇ ";
             if(Check.isPackUnlocked(user, set.getSetName())) {
                 desc += "✅\n";
             } else {
@@ -51,8 +51,8 @@ public class ShopDisplay extends Display {
         desc += "┅┅\n";
         embed.setTitle(pikachu_ + " Poké Packs Shop " + pikachu_);
         embed.setDescription(desc);
-        embed.setFooter("Page " + page + " of " + disp.getMaxPage(), ui.getUserIcon());
-        embed.setColor(0xF2E442);
+        embed.setFooter("Page " + page + " of " + getMaxPage(), ui.getUserIcon());
+        embed.setColor(shop_);
         return embed;
     }
 }

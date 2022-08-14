@@ -34,34 +34,35 @@ public class SearchDisplay extends Display {
     }
 
     @Override
-    public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, Display disp, int page) {
+    public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, int page) {
         int startIndex = page * 15 - 15;
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
-        disp.setMaxPage(searchedCards.size() / 15);
+        setMaxPage(searchedCards.size() / 15);
 
         if(searchedCards.size() % 15 != 0) {
-            disp.addMaxPage();
+            addMaxPage();
         }
+        desc += "`" + UX.formatNumber(searchedCards.size()) + "` search results\n";
         desc += "┅┅\n";
         for(int i = startIndex; i < startIndex + 15; i++) {
             Data data = searchedCards.get(i);
 
             desc += UX.findCardTitle(data, false)
-            + " ┇ `" + data.getCardId() + "`"
             + " ┇ " + UX.findRarityEmote(data)
             + " ┇ " + data.getSetEmote()
-            + " ┇ " + UX.formatXPPrice(data, null) + "\n";
+            + " ┇ " + UX.formatXP(data, null)
+            + " ┇ `" + data.getCardId() + "`\n";
             if(i >= searchedCards.size() - 1) {
                 break;
             }
         }
         desc += "┅┅\n";
-        embed.setTitle(pokeball_ + " Results for \"" + key + "\" " + pokeball_);
+        embed.setTitle(pokeball_ + " Searching for \"" + key + "\" " + pokeball_);
         embed.setDescription(desc);
-        embed.setFooter("Page " + page + " of " + disp.getMaxPage(), ui.getUserIcon());
-        embed.setColor(0xFB4D53);
+        embed.setFooter("Page " + page + " of " + getMaxPage(), ui.getUserIcon());
+        embed.setColor(search_);
         return embed;
     }
 }

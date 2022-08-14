@@ -8,7 +8,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
 
-public class Display extends ListenerAdapter implements Displays, Emotes {
+public class Display extends ListenerAdapter implements Displays, Emotes, Colors {
 
     private String userId;
     private String channelId;
@@ -44,18 +44,18 @@ public class Display extends ListenerAdapter implements Displays, Emotes {
         return null;
     }
 
-    public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, Display disp, int page) {
+    public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, int page) {
         return null;
     }
 
-    public static void displayCard(MessageReceivedEvent event, User user, Data data, Card c, String footer) {
+    public static void displayCard(MessageReceivedEvent event, User user, Data data, String footer) {
         UserInfo ui = new UserInfo(event);
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
         desc += "**Rarity** ┇ " + UX.findRarityEmote(data) + " " + data.getCardRarity() + "\n";
         desc += "**Card Set** ┇ " + data.getSetEmote() + " " + data.getSetName() + "\n";
-        desc += "**XP Value** ┇ " + UX.formatXPPrice(data, c.getSellable()) + "\n\n";
+        desc += "**XP Value** ┇ " + UX.formatXP(data, Check.isSellable(data)) + "\n\n";
         desc += "*Click on image for zoomed view*";
 
         embed.setTitle(UX.findCardTitle(data, false));
@@ -67,7 +67,7 @@ public class Display extends ListenerAdapter implements Displays, Emotes {
         embed.clear();
     }
 
-    private static void flipPage(MessageReactionAddEvent event, User user, Server server, Display disp) {
+    private void flipPage(MessageReactionAddEvent event, User user, Server server, Display disp) {
         if(event.getUser().getId().equals(disp.getUserId()) && event.getMessageId().equals(disp.getMessageId())) {
             if(event.getEmoji().getName().equals("◀")) {
                 if(disp.getPage() <= 1) {
@@ -96,6 +96,7 @@ public class Display extends ListenerAdapter implements Displays, Emotes {
         CardDisplay cardDisp = new CardDisplay(user.getUserId()).findDisplay();
         CardDisplay_ cardDisp_ = new CardDisplay_(user.getUserId()).findDisplay();
         HelpDisplay helpDisp = new HelpDisplay(user.getUserId()).findDisplay();
+        LeaderboardDisplay leaderboardDisp = new LeaderboardDisplay(user.getUserId()).findDisplay();
         MarketDisplay marketDisp = new MarketDisplay(user.getUserId()).findDisplay();
         OldShopDisplay oldShopDisp = new OldShopDisplay(user.getUserId()).findDisplay();
         SearchDisplay searchDisp = new SearchDisplay(user.getUserId()).findDisplay();
@@ -111,6 +112,9 @@ public class Display extends ListenerAdapter implements Displays, Emotes {
         }
         if(event.getMessageId().equals(helpDisp.getMessageId())) {
             flipPage(event, user, server, helpDisp);
+        }
+        if(event.getMessageId().equals(leaderboardDisp.getMessageId())) {
+            flipPage(event, user, server, leaderboardDisp);
         }
         if(event.getMessageId().equals(marketDisp.getMessageId())) {
             flipPage(event, user, server, marketDisp);

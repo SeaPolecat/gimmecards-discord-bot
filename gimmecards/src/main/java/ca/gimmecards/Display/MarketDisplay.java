@@ -23,23 +23,23 @@ public class MarketDisplay extends Display {
     }
 
     @Override
-    public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, Display disp, int page) {
+    public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, int page) {
         int startIndex = page - 1;
         Data data = server.getMarket().get(startIndex);
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
-        disp.setMaxPage(server.getMarket().size());
+        setMaxPage(server.getMarket().size());
 
         desc += "**Rarity** ┇ " + UX.findRarityEmote(data) + " " + data.getCardRarity() + "\n";
         desc += "**Card Set** ┇ " + data.getSetEmote() + " " + data.getSetName() + "\n";
-        desc += "**Market Price** ┇ " + UX.formatEnergyPrice(data) + "\n\n";
+        desc += "**Market Price** ┇ " + UX.formatEnergy(data) + "\n\n";
         desc += "*Click on image for zoomed view*";
 
         embed.setTitle(UX.findCardTitle(data, false));
         embed.setDescription(desc);
         embed.setImage(data.getCardImage());
-        embed.setFooter("Page " + page + " of " + disp.getMaxPage(), ui.getUserIcon());
+        embed.setFooter("Page " + page + " of " + getMaxPage(), ui.getUserIcon());
         embed.setColor(UX.findEmbedColour(data));
         return embed;
     }

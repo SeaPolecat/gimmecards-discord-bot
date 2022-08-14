@@ -9,20 +9,25 @@ public class ViewCmds_ extends Cmds {
     
     public static void viewCard_(MessageReceivedEvent event, String[] args) {
         User user = User.findUser(event);
-        ViewDisplay_ disp;
+        ViewDisplay_ disp = new ViewDisplay_(user.getUserId()).findDisplay();
 
         try {
             String mentionId = event.getMessage().getMentions().getUsers().get(0).getId();
             User mention = User.findOtherUser(event, mentionId);
             int page = Integer.parseInt(args[1]);
 
-            disp = new ViewDisplay_(user.getUserId()).findDisplay();
-            disp.setMention(mention);
-            disp.setMentionInfo(new UserInfo(mention, event));
+            if(mention.getCards().size() < 1) {
+                JDA.sendMessage(event, red_, "❌", "That user doesn't have any cards yet!");
 
-            JDA.sendDynamicEmbed(event, user, null, disp, page);
+            } else {
+                disp.setUser(user);
+                disp.setMention(mention);
+                disp.setMentionInfo(new UserInfo(mention, event));
+    
+                JDA.sendDynamicEmbed(event, user, null, disp, page);
+            }
         } catch(NumberFormatException | IndexOutOfBoundsException e) {
-            JDA.sendMessage(event, jigglypuff_ + " Whoops, I couldn't find that card...");
+            JDA.sendMessage(event, red_, "❌", "Whoops, I couldn't find that card...");
         }
     }
 }

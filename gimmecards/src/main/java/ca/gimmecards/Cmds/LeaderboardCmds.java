@@ -1,9 +1,9 @@
 package ca.gimmecards.Cmds;
 import ca.gimmecards.Main.*;
+import ca.gimmecards.Display.LeaderboardDisplay;
 import ca.gimmecards.Helpers.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.EmbedBuilder;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.ArrayList;
@@ -30,111 +30,53 @@ public class LeaderboardCmds extends Cmds implements Comparator<User> {
     
     public static void viewRanks(MessageReceivedEvent event) {
         User user = User.findUser(event);
+        LeaderboardDisplay disp = new LeaderboardDisplay(user.getUserId()).findDisplay();
         List<Member> members = event.getGuild().getMembers();
-        ArrayList<User> localUsers = new ArrayList<User>();
-        EmbedBuilder embed = new EmbedBuilder();
-        String desc = "";
-        int place = 0;
+        ArrayList<User> players = new ArrayList<User>();
+        ArrayList<UserInfo> playerInfos = new ArrayList<UserInfo>();
 
-        for(Member m : members) {
-            for(User u : User.users) {
-                if(m.getUser().getId().equals(u.getUserId())) {
-                    localUsers.add(u);
+        for(Member member : members) {
+            for(User player : User.users) {
+                if(member.getUser().getId().equals(player.getUserId())) {
+                    players.add(player);
                     break;
                 }
             }
         }
-        Collections.sort(localUsers, new LeaderboardCmds());
+        Collections.sort(players, new LeaderboardCmds());
 
-        for(int i = 0; i < localUsers.size(); i++) {
-            if(localUsers.get(i).getUserId().equals(user.getUserId())) {
-                place = i+1;
-            }
+        for(User player : players) {
+            playerInfos.add(new UserInfo(player, event));
         }
-        desc += "┅┅\n";
-        for(int i = 0; i < localUsers.size(); i++) {
-            User u = localUsers.get(i);
-            String userName = event.getGuild().getMemberById(u.getUserId()).getUser().getName();
+        disp.setDispType("ranks");
+        disp.setPlayers(players);
+        disp.setPlayerInfos(playerInfos);
 
-            if(i == 0) {
-                desc += "🥇";
-            } else if(i == 1) {
-                desc += "🥈";
-            } else if(i == 2) {
-                desc += "🥉";
-            } else {
-                desc += "`#" + (i+1) + "`";
-            }
-            desc += " ┇ **" + userName + "**"
-            + " ┇ *" + "Lvl. " + u.getLevel() + "*"
-            + " ┇ " + XP_ + " `" + UX.formatNumber(u.getXP()) + " / " + UX.formatNumber(u.getMaxXP()) + "`\n";
-
-            if(i >= 9) {
-                break;
-            }
-        }
-        desc += "┅┅\n";
-        desc += UX.formatNick(event) + " is `#" + place + "` in this server 🏝️";
-
-        embed.setTitle(trainer_ + " Top Collectors Here " + trainer_);
-        embed.setDescription(desc);
-        embed.setColor(0xB0252B);
-        JDA.sendEmbed(event, embed);
-        embed.clear();
+        JDA.sendDynamicEmbed(event, user, null, disp, 1);
     }
 
     public static void viewLeaderboard(MessageReceivedEvent event) {
         User user = User.findUser(event);
-        ArrayList<User> globalUsers = new ArrayList<User>();
-        EmbedBuilder embed = new EmbedBuilder();
-        String desc = "";
-        int count = 0, place = 0;
+        LeaderboardDisplay disp = new LeaderboardDisplay(user.getUserId()).findDisplay();
+        ArrayList<User> players = new ArrayList<User>();
+        ArrayList<UserInfo> playerInfos = new ArrayList<UserInfo>();
 
         for(User u : User.users) {
-            globalUsers.add(u);
-        }
-        Collections.sort(globalUsers, new LeaderboardCmds());
-
-        for(int i = 0; i < globalUsers.size(); i++) {
-            if(globalUsers.get(i).getUserId().equals(user.getUserId())) {
-                place = i+1;
-            }
-        }
-        desc += "┅┅\n";
-        for (int i = 0; i < globalUsers.size(); i++) {
             try {
-                User u = globalUsers.get(i);
-                String userName = event.getJDA().getUserById(u.getUserId()).getName();
-    
-                if(count == 0) {
-                    desc += "🥇";
-                } else if(count == 1) {
-                    desc += "🥈";
-                } else if(count == 2) {
-                    desc += "🥉";
-                } else {
-                    desc += "`#" + (count+1) + "`";
-                }
-                desc += " ┇ **" + userName + "**"
-                + " ┇ *" + "Lvl. " + u.getLevel() + "*"
-                + " ┇ " + XP_ + " `" + UX.formatNumber(u.getXP()) + " / " + UX.formatNumber(u.getMaxXP()) + "`\n";
-                
-                if(u.getUserId().equals(user.getUserId())) {
-                    place = count+1;
-                }
-                if(count >= 9) {
-                    break;
-                }
-                count++;
+                new UserInfo(u, event);
+                players.add(u);
             } catch(NullPointerException e) {}
         }
-        desc += "┅┅\n";
-        desc += UX.formatNick(event) + " is `#" + place + "` in the world 🌎";
+        Collections.sort(players, new LeaderboardCmds());
 
-        embed.setTitle(logo_ + " World's Top Collectors " + logo_);
-        embed.setDescription(desc);
-        embed.setColor(0x408CFF);
-        JDA.sendEmbed(event, embed);
-        embed.clear();
+        for(User player : players) {
+            playerInfos.add(new UserInfo(player, event));
+        }
+
+        disp.setDispType("leaderboard");
+        disp.setPlayers(players);
+        disp.setPlayerInfos(playerInfos);
+
+        JDA.sendDynamicEmbed(event, user, null, disp, 1);
     }
 }

@@ -4,6 +4,7 @@ public interface StoragePaths {
     
     String header = "C:\\Users\\wangw\\Documents\\GimmeCards\\gimmecards\\src\\main\\java\\ca\\gimmecards\\Storage\\";
 
+    String trackerPath = "Tracker.json";
     String dataPath = "Data.json";
     String oldDataPath = "OldData.json";
     String rareDataPath = "RareData.json";

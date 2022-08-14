@@ -9,24 +9,35 @@ public class CardCmds_ extends Cmds {
     
     public static void viewCards_(MessageReceivedEvent event, String[] args) {
         User user = User.findUser(event);
-        CardDisplay_ disp;
+        CardDisplay_ disp = new CardDisplay_(user.getUserId()).findDisplay();
 
         try {
             String mentionId = event.getMessage().getMentions().getUsers().get(0).getId();
             User mention = User.findOtherUser(event, mentionId);
 
             if(mention.getCards().size() < 1) {
-                JDA.sendMessage(event, jigglypuff_ + " That user doesn't have any cards yet!");
+                JDA.sendMessage(event, red_, "❌", "That user doesn't have any cards yet!");
 
             } else {
-                disp = new CardDisplay_(user.getUserId()).findDisplay();
+                disp.setUser(user);
                 disp.setMention(mention);
                 disp.setMentionInfo(new UserInfo(mention, event));
 
-                JDA.sendDynamicEmbed(event, user, null, disp, 1);
+                if(args.length > 2) {
+                    try {
+                        int page = Integer.parseInt(args[2]);
+
+                        JDA.sendDynamicEmbed(event, user, null, disp, page);
+
+                    } catch(NumberFormatException | IndexOutOfBoundsException e) {
+                        JDA.sendMessage(event, red_, "❌", "Whoops, I couldn't find that page...");
+                    }
+                } else {
+                    JDA.sendDynamicEmbed(event, user, null, disp, 1);
+                }
             }
         } catch(IndexOutOfBoundsException e) {
-            JDA.sendMessage(event, jigglypuff_ + " Whoops, I couldn't find that user...");
+            JDA.sendMessage(event, red_, "❌", "Whoops, I couldn't find that user...");
         }
     }
 }

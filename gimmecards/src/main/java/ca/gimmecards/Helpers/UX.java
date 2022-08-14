@@ -16,11 +16,11 @@ public class UX implements Emotes {
     }
 
     public static String formatNick(MessageReceivedEvent event) {
-        return "__" + event.getAuthor().getName() + "__";
+        return event.getAuthor().getAsMention();
     }
 
     public static String formatNick(User mention, MessageReceivedEvent event) {
-        return "__" + event.getJDA().getUserById(mention.getUserId()).getName() + "__";
+        return event.getJDA().getUserById(mention.getUserId()).getAsMention();
     }
 
     public static String formatBadge(MessageReceivedEvent event, String badgeEmote, String badgeName) {
@@ -35,72 +35,6 @@ public class UX implements Emotes {
         int diff = max - min;
 
         return new Random().nextInt(diff + 1) + min;
-    }
-
-    public static String updateXP(User user, int quantity) {
-        String msg = "\n";
-
-        user.addXP(quantity);
-        msg += "+ " + formatNumber(quantity);
-        msg += " " + XP_ + " **XP**";
-
-        return msg;
-    }
-
-    public static String updateTokens(User user, int quantity) {
-        String msg = "\n";
-
-        user.addTokens(quantity);
-        if(quantity > 0) {
-            msg += "+ " + formatNumber(quantity);
-        } else {
-            msg += "- " + formatNumber(Math.abs(quantity));
-        }
-        msg += " " + token_ + " **Token**";
-
-        return msg;
-    }
-
-    public static String updateEnergy(User user, int quantity) {
-        String msg = "\n";
-
-        user.addEnergy(quantity);
-        if(quantity > 0) {
-            msg += "+ " + formatNumber(quantity);
-        } else {
-            msg += "- " + formatNumber(Math.abs(quantity));
-        }
-        msg += " " + energy_ + " **Energy**";
-
-        return msg;
-    }
-
-    public static String updateKeys(User user, int quantity) {
-        String msg = "\n";
-
-        user.addKeys(quantity);
-        if(quantity > 0) {
-            msg += "+ " + formatNumber(quantity);
-        } else {
-            msg += "- " + formatNumber(Math.abs(quantity));
-        }
-        msg += " " + key_ + " **Key**";
-
-        return msg;
-    }
-
-    public static String updateStars(User user, int quantity) {
-        String msg = "\n";
-
-        user.addStars(quantity);
-        if(quantity > 0) {
-            msg += "+ " + formatNumber(quantity);
-        } else {
-            msg += "- " + formatNumber(Math.abs(quantity));
-        }
-        msg += " " + star_ + " **Star**";
-
-        return msg;
     }
     
     public static String findCardTitle(Data data, boolean isFav) {
@@ -171,23 +105,31 @@ public class UX implements Emotes {
         return rarityEmote;
     }
 
-    public static String formatXPPrice(Data data, Boolean sellable) {
-        String XPPrice = XP_ + " **" + formatNumber(data.getCardPrice()) + "**";
+    public static String formatXP(Data data, Boolean sellable) {
+        String formattedXP = XP_ + " **" + formatNumber(data.getCardPrice()) + "**";
 
         if(sellable == null) {
-            if(Check.isOldSet(data)) {
-                return XPPrice + " 🚫";
+            if(!Check.isSellable(data)) {
+                return formattedXP + " 🚫";
             }
-        } else {
-            if(!sellable) {
-                return XPPrice + " 🚫";
-            }
+
+        } else if(!sellable) {
+            return formattedXP + " 🚫";
         }
-        return XPPrice;
+        return formattedXP;
     }
 
-    public static String formatEnergyPrice(Data data) {
-        return energy_ + " **" + formatNumber(data.getCardPrice()) + "**";
+    public static String formatEnergy(Data data) {
+        String formattedEnergy = energy_ + " **" + UX.formatNumber(data.getCardPrice()) + "**";
+
+        if(!Check.isSellable(data)) {
+            return formattedEnergy + " 🚫";
+        }
+        return formattedEnergy;
+    }
+
+    public static String formatEnergy(int amount) {
+        return energy_ + " **" + UX.formatNumber(amount) + "**";
     }
 
     public static int findEmbedColour(Data data) {
