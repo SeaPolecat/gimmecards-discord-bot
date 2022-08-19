@@ -6,15 +6,28 @@ import ca.gimmecards.Helpers.*;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
-public class Cmds extends ListenerAdapter implements Emotes {
+public class Cmds extends ListenerAdapter implements Emotes, Colors {
     
     public void onMessageReceived(MessageReceivedEvent event) {
         if(event.getAuthor().isBot() == true) { return; }
         String[] args = event.getMessage().getContentRaw().split("\\s+");
 
-        //STAFF
-        if(isValidCommand(event, args, "giftbadge", new String[]{"user"})) {
-            GiftCmds.giftBadge(event, args);
+        if(event.getAuthor().getId().equals("454773340163538955")) {
+            if(args[0].equalsIgnoreCase("?lockbot")) {
+                Main.isLocked = true;
+                JDA.sendMessage(event, blue_, "", "`Locked Gimme Cards.`");
+            }
+            if(args[0].equalsIgnoreCase("?unlockbot")) {
+                Main.isLocked = false;
+                JDA.sendMessage(event, blue_, "", "`Unlocked Gimme Cards.`");
+            }
+        }
+
+        if(Main.isLocked && isCommand(event, args)) {
+            JDA.sendMessage(event, red_, "⏰", 
+            "The developer has locked *Gimme Cards*, either to fix a bug or prepare for an update; "
+            + "please wait until it comes back online!");
+            return;
         }
 
         //DEVELOPER
@@ -25,14 +38,6 @@ public class Cmds extends ListenerAdapter implements Emotes {
             }
             if(isValidCommand(event, args, "stats", null)) {
                 DataCmds.viewStats(event);
-            }
-
-            //GIFT
-            if(isValidCommand(event, args, "gifttoken", new String[]{"user", "amount"})) {
-                GiftCmds.giftToken(event, args);
-            }
-            if(isValidCommand(event, args, "giftstar", new String[]{"user", "amount"})) {
-                GiftCmds.giftStar(event, args);
             }
 
             //DATA
@@ -57,16 +62,16 @@ public class Cmds extends ListenerAdapter implements Emotes {
             if(isValidCommand(event, args, "count", new String[]{"set code"})) {
                 DataCmds.countSetContent(event, args);
             }
-            if(isValidCommand(event, args, "add", new String[]{"set number"})) {
+            if(isValidCommand(event, args, "add", new String[]{"set #"})) {
                 DataCmds.addContents(event, args, true);
             }
-            if(isValidCommand(event, args, "addold", new String[]{"set number"})) {
+            if(isValidCommand(event, args, "addold", new String[]{"set #"})) {
                 DataCmds.addContents(event, args, false);
             }
-            if(isValidCommand(event, args, "addrare", new String[]{"set number"})) {
+            if(isValidCommand(event, args, "addrare", new String[]{"set #"})) {
                 DataCmds.addSpecContents(event, args, true);
             }
-            if(isValidCommand(event, args, "addpromo", new String[]{"set number"})) {
+            if(isValidCommand(event, args, "addpromo", new String[]{"set #"})) {
                 DataCmds.addSpecContents(event, args, false);
             }
         }
@@ -82,11 +87,37 @@ public class Cmds extends ListenerAdapter implements Emotes {
             PrivacyCmds.denyDeletion(event);
         }
 
+        //GIFT
+        if(isValidCommand(event, args, "gifttoken", new String[]{"user", "amount"})) {
+            GiftCmds.giftToken(event, args);
+        }
+        if(isValidCommand(event, args, "giftstar", new String[]{"user", "amount"})) {
+            GiftCmds.giftStar(event, args);
+        }
+        if(isValidCommand(event, args, "giftcard", new String[]{"user", "card ID"})) {
+            GiftCmds.giftCard(event, args);
+        }
+        if(isValidCommand(event, args, "tier1", new String[]{"user"})) {
+            GiftCmds.giftRare(event, args);
+        }
+        if(isValidCommand(event, args, "tier2", new String[]{"user"})) {
+            GiftCmds.giftRadiantRare(event, args);
+        }
+        if(isValidCommand(event, args, "untier", new String[]{"user"})) {
+            GiftCmds.removePatreonRewards(event, args);
+        }
+        if(isValidCommand(event, args, "giftbadge", new String[]{"user"})) {
+            GiftCmds.giftHelperBadge(event, args);
+        }
+        if(isValidCommand(event, args, "ungiftbadge", new String[]{"user"})) {
+            GiftCmds.removeHelperBadge(event, args);
+        }
+
         //HELP
         if(isValidCommand(event, args, "setprefix", new String[]{"prefix"})) {
             HelpCmds.changePrefix(event, args);
         }
-        if(isValidCommand(event, args, "help", null)) {
+        if(isValidCommand(event, args, "help", null) || args[0].equalsIgnoreCase("?help")) {
             HelpCmds.viewHelp(event);
         }
         if(isValidCommand(event, args, "rarities", null)) {
@@ -98,11 +129,13 @@ public class Cmds extends ListenerAdapter implements Emotes {
         if(isValidCommand(event, args, "changelog", null)) {
             HelpCmds.viewChangelog(event);
         }
+
+        //LEADERBOARD
         if(isValidCommand(event, args, "ranks", null)) {
-            HelpCmds.viewRanks(event);
+            LeaderboardCmds.viewRanks(event);
         }
         if(isValidCommand(event, args, "leaderboard", null)) {
-            HelpCmds.viewLeaderboard(event);
+            LeaderboardCmds.viewLeaderboard(event);
         }
 
         //BACKPACK
@@ -120,10 +153,13 @@ public class Cmds extends ListenerAdapter implements Emotes {
             BackpackCmds.receiveDailyReward(event);
         }
         if(isValidCommand(event, args, "setcolor", new String[]{"hex code"})) {
-            BackpackCmds.assignBackpackColor(event, args);
+            BackpackCmds.assignGameColor(event, args);
         }
-        if(isValidCommand(event, args, "pin", new String[]{"card number"})) {
-            BackpackCmds.assignBackpackCard(event, args);
+        if(isValidCommand(event, args, "pin", new String[]{"card #"})) {
+            BackpackCmds.pinCard(event, args);
+        }
+        if(isValidCommand(event, args, "cooldowns", null)) {
+            BackpackCmds.viewCooldowns(event);
         }
 
         //SHOP
@@ -148,36 +184,41 @@ public class Cmds extends ListenerAdapter implements Emotes {
             if(args.length < 2) {
                 CardCmds.viewCards(event, args);
             } else {
-                CardCmds_.viewCards_(event, args);
+                try {
+                    Integer.parseInt(args[1]);
+                    CardCmds.viewCards(event, args);
+                } catch(NumberFormatException e) {
+                    CardCmds_.viewCards_(event, args);
+                }
             }
         }
-        if(isValidCommand(event, args, "fav", new String[]{"card number"})) {
+        if(isValidCommand(event, args, "fav", new String[]{"card #"})) {
             CardCmds.favouriteCard(event, args);
         }
-        if(isValidCommand(event, args, "unfav", new String[]{"card number"})) {
+        if(isValidCommand(event, args, "unfav", new String[]{"card #"})) {
             CardCmds.unfavouriteCard(event, args);
         }
         if(isValidCommand(event, args, "favall", null)) {
             CardCmds.favouriteAll(event);
         }
-        if(isValidCommand(event, args, "sort", null)) {
+        if(isValidCommand(event, args, "sort", null)) { //conditions in command
             CardCmds.sortCards(event, args);
         }
 
-        //INSPECTION
+        //VIEW
         if(isValidCommand(event, args, "open", new String[]{"pack name"})) {
-            InspectionCmds.openPack(event, args);
+            ViewCmds.openPack(event, args);
         }
-        if(isValidCommand(event, args, "view", new String[]{"card number/id"})) {
+        if(isValidCommand(event, args, "view", new String[]{"card #"})) {
             if(args.length < 3) {
-                InspectionCmds.viewCard(event, args);
+                ViewCmds.viewCard(event, args);
             } else {
-                InspectionCmds_.viewCard_(event, args);
+                ViewCmds_.viewCard_(event, args);
             }
         }
 
         //SELL
-        if(isValidCommand(event, args, "sell", new String[]{"card number"})) {
+        if(isValidCommand(event, args, "sell", new String[]{"card #"})) {
             SellCmds.sellSingle(event, args);
         }
         if(isValidCommand(event, args, "selldupes", null)) {
@@ -199,19 +240,19 @@ public class Cmds extends ListenerAdapter implements Emotes {
         if(isValidCommand(event, args, "market", null)) {
             MarketCmds.viewMarket(event);
         }
-        if(isValidCommand(event, args, "mview", new String[]{"card number"})) {
+        if(isValidCommand(event, args, "mview", new String[]{"card #"})) {
             MarketCmds.viewItem(event, args);
         }
-        if(isValidCommand(event, args, "buy", new String[]{"card number"})) {
+        if(isValidCommand(event, args, "buy", new String[]{"card #"})) {
             MarketCmds.purchaseItem(event, args);
         }
 
         //SEARCH
-        if(isValidCommand(event, args, "search", new String[]{"card name"})) {
+        if(isValidCommand(event, args, "search", null)) { //conditions in command
             SearchCmds.searchCards(event, args);
         }
-        if(isValidCommand(event, args, "favs", null)) {
-            SearchCmds.viewFavCards(event);
+        if(isValidCommand(event, args, "sview", new String[]{"card ID"})) {
+            SearchCmds.viewAnyCard(event, args);
         }
 
         //VOTE
@@ -223,12 +264,33 @@ public class Cmds extends ListenerAdapter implements Emotes {
         }
 
         //TRADE
-        /*if(isValidCommand(event, args, "trade", new String[]{"mention"})) {
+        if(isValidCommand(event, args, "trade", new String[]{"user"})) {
             TradeCmds.sendTrade(event, args);
         }
-        if(isValidCommand(event, args, "offer", new String[]{"card number"})) {
-            TradeCmds.makeOffer(event, args);
-        }*/
+        if(isValidCommand(event, args, "offer", new String[]{"card #"})) {
+            TradeCmds.offerCard(event, args);
+        }
+        if(isValidCommand(event, args, "unoffer", new String[]{"trade #"})) {
+            TradeCmds.unofferCard(event, args);
+        }
+        if(isValidCommand(event, args, "accept", null)) {
+            TradeCmds.acceptOffer(event);
+        }
+        if(isValidCommand(event, args, "unaccept", null)) {
+            TradeCmds.unacceptOffer(event);
+        }
+        if(isValidCommand(event, args, "reject", null)) {
+            TradeCmds.rejectOffer(event);
+        }
+    }
+
+    private static boolean isCommand(MessageReceivedEvent event, String[] args) {
+        Server server = Server.findServer(event);
+
+        if(args[0].toLowerCase().startsWith(server.getPrefix().toLowerCase())) {
+            return true;
+        }
+        return false;
     }
 
     private static boolean isValidCommand(MessageReceivedEvent event, String[] args, String cmd, String[] params) {
@@ -248,7 +310,7 @@ public class Cmds extends ListenerAdapter implements Emotes {
                 }
                 guidance = guidance.trim();
 
-                Rest.sendMessage(event, jigglypuff_ + " Please follow the format: `" + args[0] + " " + guidance + "`");
+                JDA.sendMessage(event, red_, "❌", "Please follow the format: `" + args[0] + " " + guidance + "`");
             }
         }
         return false;

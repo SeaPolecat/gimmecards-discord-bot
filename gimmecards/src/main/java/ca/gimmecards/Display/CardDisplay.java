@@ -2,60 +2,61 @@ package ca.gimmecards.Display;
 import ca.gimmecards.Main.*;
 import ca.gimmecards.Helpers.*;
 import net.dv8tion.jda.api.EmbedBuilder;
-import java.util.ArrayList;
 
 public class CardDisplay extends Display {
-
-    public static ArrayList<CardDisplay> displays = new ArrayList<CardDisplay>();
 
     public CardDisplay(String ui) {
         super(ui);
     }
 
-    public static CardDisplay findCardDisplay(String authorId) {
-        for(CardDisplay c : displays) {
-            if(c.getUserId().equals(authorId)) {
+    @Override
+    public CardDisplay findDisplay() {
+        String userId = getUserId();
+
+        for(CardDisplay c : cardDisplays) {
+            if(c.getUserId().equals(userId)) {
                 return c;
             }
         }
-        displays.add(0, new CardDisplay(authorId));
-        return displays.get(0);
+        cardDisplays.add(0, new CardDisplay(userId));
+        return cardDisplays.get(0);
     }
 
     @Override
     public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, int page) {
         int startIndex = page * 15 - 15;
-        int maxPage = user.getCards().size() / 15;
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
         String sortOrder = user.getSortIncreasing() ? "increasing" : "decreasing";
         int count = startIndex + 1;
 
+        setMaxPage(user.getCards().size() / 15);
+
         if(user.getCards().size() % 15 != 0) {
-            maxPage++;
+            addMaxPage();
         }
         desc += "Sorted by `" + user.getSortMethod() + "` `" + sortOrder + "`\n";
         desc += "┅┅\n";
         for(int i = startIndex; i < startIndex + 15; i++) {
-            Card c = user.getCards().get(i);
-            Data data = c.getData();
+            Card card = user.getCards().get(i);
+            Data data = card.getData();
 
-            desc += UX.findCardTitle(data, c.getIsFav())
-            + " ┇ `#" + count + "`"
+            desc += "`#" + count + "` " + UX.findCardTitle(data, card.getIsFav())
             + " ┇ " + UX.findRarityEmote(data) 
             + " ┇ " + data.getSetEmote()
-            + " ┇ " + UX.formatXPPrice(data, c.getSellable())
-            + " ┇ **x" + c.getCardQuantity() + "**\n";
+            + " ┇ " + UX.formatXP(data, card.getSellable())
+            + " ┇ *x" + card.getCardQuantity() + "*\n";
             count++;
+            
             if(i >= user.getCards().size() - 1) {
                 break;
             }
         }
         desc += "┅┅\n";
-        embed.setTitle(ditto_ + " " + ui.getUserName() + "'s Cards " + ditto_);
+        embed.setTitle(ui.getUserName() + "'s Collection ┇ " + UX.formatNumber(Check.countOwnedCards(user)) + " Cards");
         embed.setDescription(desc);
-        embed.setFooter("Page " + page + " of " + maxPage, ui.getUserIcon());
-        embed.setColor(0xA742D8);
+        embed.setFooter("Page " + page + " of " + getMaxPage(), ui.getUserIcon());
+        embed.setColor(user.getGameColor());
         return embed;
     }
 }

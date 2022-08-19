@@ -1,12 +1,82 @@
 package ca.gimmecards.Main;
+import ca.gimmecards.Interfaces.*;
 import ca.gimmecards.Helpers.*;
+/*import java.nio.file.Paths;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.Writer;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;*/
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+//import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.guild.GuildLeaveEvent;
 import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
+//import java.util.Calendar;
 
-public class Ready extends ListenerAdapter {
+public class Ready extends ListenerAdapter implements StoragePaths, Displays, Colors {
+
+    /*private static long purgeEpoch;
+    private static int day;
+
+    private static void resetPurgeEpoch() { purgeEpoch = Calendar.getInstance().getTimeInMillis() / 60000; }
+
+    private static String determinePath() {
+        if(Paths.get(trackerPath).toFile().length() > 0) {
+            return trackerPath;
+        } else {
+            return header + trackerPath;
+        }
+    }
+
+    private static void loadTracker() throws Exception {
+        Reader reader = new InputStreamReader(new FileInputStream(determinePath()), "UTF-8");
+        purgeEpoch = new Gson().fromJson(reader, long.class);
+
+        reader.close();
+    }
+
+    private static void saveTracker() throws Exception {
+        Gson gson = new GsonBuilder().create();
+        Writer writer = new OutputStreamWriter(new FileOutputStream(determinePath()), "UTF-8");
+        gson.toJson(purgeEpoch, writer);
+        writer.close();
+    }
+
+    public void onMessageReceived(MessageReceivedEvent event) {
+        if(Check.isCooldownDone(purgeEpoch, 1440, true)) {
+            String log = "";
+
+            resetPurgeEpoch();
+
+            backpackDisplays.clear();
+            cardDisplays.clear();
+            helpDisplays.clear();
+            marketDisplays.clear();
+            minigameDisplays.clear();
+            oldShopDisplays.clear();
+            privacyDisplays.clear();
+            searchDisplays.clear();
+            shopDisplays.clear();
+            tradeDisplays.clear();
+            viewDisplays.clear();
+            //
+            backpackDisplays_.clear();
+            cardDisplays_.clear();
+            viewDisplays_.clear();
+
+            day++;
+            log += "Displays purged on " + Calendar.getInstance().getTime();
+            log += " - Day " + day;
+
+            System.out.println(log);
+            try { saveTracker(); } catch(Exception e) {}
+        }
+    }*/
 
     public void onGuildJoin(GuildJoinEvent event) {
         EmbedBuilder embed = new EmbedBuilder();
@@ -14,9 +84,9 @@ public class Ready extends ListenerAdapter {
         embed.setTitle("✨ Thanks for inviting me!");
         embed.setThumbnail("https://i.ibb.co/GcC31Sr/logo-rounded.png");
         embed.setDescription("Please use `?help` to get started");
-        embed.setColor(0x408CFF);
+        embed.setColor(blue_);
         
-        Rest.sendEmbed(event, embed);
+        JDA.sendEmbed(event, embed);
         embed.clear();
     }
 
@@ -34,6 +104,7 @@ public class Ready extends ListenerAdapter {
     
     public void onGuildReady(GuildReadyEvent event) {
 
+        //try { loadTracker(); } catch(Exception e) {}
         try { Data.loadData(); } catch(Exception e) {}
         try { Data.loadOldData(); } catch(Exception e) {}
         try { Data.loadRareData(); } catch(Exception e) {}

@@ -9,28 +9,26 @@ public class MinigameCmds extends Cmds {
     public static void startMinigame(MessageReceivedEvent event) {
         User user = User.findUser(event);
         Server server = Server.findServer(event);
-        MinigameDisplay disp;
+        MinigameDisplay disp = new MinigameDisplay(user.getUserId()).findDisplay();;
 
-        if(!State.isCooldownDone(user.getMinigameEpoch(), 60, true)) {
-            Rest.sendMessage(event, jigglypuff_ + " Please wait another " + State.findTimeLeft(user.getMinigameEpoch(), 60, true));
+        if(!Check.isCooldownDone(user.getMinigameEpoch(), Check.findCooldown(user, 60), true)) {
+            JDA.sendMessage(event, red_, "⏰", "Please wait another " 
+            + Check.findTimeLeft(user.getMinigameEpoch(), Check.findCooldown(user, 60), true));
 
         } else {
-            MinigameDisplay.addMinigameDisplay(user);
-            disp = MinigameDisplay.findMinigameDisplay(user.getUserId());
-            
             user.resetMinigameEpoch();
             
-            Rest.sendDynamicEmbed(event, user, server, disp, -1);
+            JDA.sendDynamicEmbed(event, user, server, disp, -1);
             try { User.saveUsers(); } catch(Exception e) {}
         }
     }
 
     public static void makeGuess(MessageReceivedEvent event, String[] args) {
         User user = User.findUser(event);
-        MinigameDisplay disp = MinigameDisplay.findMinigameDisplay(user.getUserId());
+        MinigameDisplay disp = new MinigameDisplay(user.getUserId()).findDisplay();
 
-        if(disp == null) {
-            Rest.sendMessage(event, jigglypuff_ + " You haven't started a minigame yet!");
+        if(disp.getMessageId().isEmpty()) {
+            JDA.sendMessage(event, red_, "❌", "You haven't started a minigame yet!");
 
         } else {
             String guess = "";
@@ -38,42 +36,47 @@ public class MinigameCmds extends Cmds {
                 guess += args[i] + " ";
             }
 
-            if(MinigameDisplay.isGuessCorrect(event, user, guess)) {
+            if(disp.isGuessCorrect(guess)) {
                 String msg = "";
 
-                MinigameDisplay.removeMinigameDisplay(user);
+                Update.updateMinigameDisplay(event, user);
+                disp.removeMinigameDisplay();
 
                 msg += UX.formatNick(event) + " won the minigame!";
-                msg += UX.updateTokens(user, 2);
-                msg += UX.updateEnergy(user, UX.randRange(48, 60));
+                msg += user.updateTokens(2, true);
+                msg += user.updateEnergy(UX.randRange(48, 60), false);
 
-                State.updateBackpackDisplay(event, user);
+                Update.updateBackpackDisplay(event, user);
 
-                Rest.sendMessage(event, msg);
+                JDA.sendMessage(event, user.getGameColor(), "🏆", msg);
                 try { User.saveUsers(); } catch(Exception e) {}
 
             } else {
                 if(disp.getTries() < 1) {
                     String msg = "";
 
-                    MinigameDisplay.removeMinigameDisplay(user);
-
                     msg += UX.formatNick(event) + " lost the minigame... But there's always next time!";
-                    msg += UX.updateEnergy(user, UX.randRange(24, 30));
+                    msg += user.updateEnergy(UX.randRange(24, 30), true);
 
-                    Rest.sendMessage(event, msg);
+                    Update.updateBackpackDisplay(event, user);
+                    Update.updateMinigameDisplay(event, user);
+                    disp.removeMinigameDisplay();
+
+                    JDA.sendMessage(event, user.getGameColor(), "😭", msg);
                     try { User.saveUsers(); } catch(Exception e) {}
 
                 } else {
-                    String wrong = "";
+                    String msg = "";
 
-                    wrong += clefairy_ + " Whoops, that's not the one... You have **" + disp.getTries() + "** ";
+                    msg += "Whoops, that's not the one... You have **" + disp.getTries() + "** ";
                     if(disp.getTries() == 1) {
-                        wrong += "try left!";
+                        msg += "try left!";
                     } else {
-                        wrong += "tries left!";
+                        msg += "tries left!";
                     }
-                    Rest.sendMessage(event, wrong);
+                    Update.updateMinigameDisplay(event, user);
+
+                    JDA.sendMessage(event, user.getGameColor(), clefairy_, msg);
                 }
             }
         }

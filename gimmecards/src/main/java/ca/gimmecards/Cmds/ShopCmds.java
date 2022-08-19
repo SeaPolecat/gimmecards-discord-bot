@@ -9,16 +9,16 @@ public class ShopCmds extends Cmds {
 
     public static void viewShop(MessageReceivedEvent event) {
         User user = User.findUser(event);
-        ShopDisplay disp = ShopDisplay.findShopDisplay(user.getUserId());
+        ShopDisplay disp = new ShopDisplay(user.getUserId()).findDisplay();
 
-        Rest.sendDynamicEmbed(event, user, null, disp, 1);
+        JDA.sendDynamicEmbed(event, user, null, disp, 1);
     }
     
     public static void viewOldShop(MessageReceivedEvent event) {
         User user = User.findUser(event);
-        OldShopDisplay disp = OldShopDisplay.findOldShopDisplay(user.getUserId());
+        OldShopDisplay disp = new OldShopDisplay(user.getUserId()).findDisplay();
 
-        Rest.sendDynamicEmbed(event, user, null, disp, 1);
+        JDA.sendDynamicEmbed(event, user, null, disp, 1);
     }
 
     public static void viewRareShop(MessageReceivedEvent event) {
@@ -26,17 +26,17 @@ public class ShopCmds extends Cmds {
         String desc = "";
 
         desc += "┅┅\n";
-        desc += logo_ + " Gimme Cards ┇ " + star_ + "\n";
+        desc += star_ + " " + logo_ + " Gimme Cards 🚫\n";
         for(int i = 0; i < Data.rareSets.length; i++) {
             Data set = Data.rareSets[i];
 
-            desc += set.getSetEmote() + " " + set.getSetName() + " ┇ " + star_ + "\n";
+            desc += star_ + " " + set.getSetEmote() + " " + set.getSetName() + "\n";
         }
         desc += "┅┅\n";
         embed.setTitle(charmander_ + " Exclusive Packs Shop " + charmander_);
         embed.setDescription(desc);
-        embed.setColor(0xFC8035);
-        Rest.sendEmbed(event, embed);
+        embed.setColor(rareshop_);
+        JDA.sendEmbed(event, embed);
         embed.clear();
     }
 
@@ -48,13 +48,13 @@ public class ShopCmds extends Cmds {
         for(int i = 0; i < Data.promoSets.length; i++) {
             Data set = Data.promoSets[i];
 
-            desc += set.getSetEmote() + " " + set.getSetName() + " ┇ **2** " + star_ + "\n";
+            desc += star_ + " " + set.getSetEmote() + " " + set.getSetName() + "\n";
         }
         desc += "┅┅\n";
-        embed.setTitle(bulbasaur_ + " Promo Packs Shop " + bulbasaur_);
+        embed.setTitle(bulbasaur_ + " Promo Packs Shop " + bulbasaur_ + " 🚫");
         embed.setDescription(desc);
-        embed.setColor(0x63A127);
-        Rest.sendEmbed(event, embed);
+        embed.setColor(promoshop_);
+        JDA.sendEmbed(event, embed);
         embed.clear();
     }
 
@@ -69,18 +69,21 @@ public class ShopCmds extends Cmds {
             setName = setName.trim();
             Data set = Data.findSet(setName);
 
-            if(setName.equalsIgnoreCase("gimme cards") || State.isRareSet(set)) {
-                Rest.sendMessage(event, jigglypuff_ + " You don't need to unlock exclusive packs!");
+            if(setName.equalsIgnoreCase("gimme cards") || Check.isRareSet(set)) {
+                JDA.sendMessage(event, red_, "❌", "You don't need to unlock exclusive packs!");
 
-            } else if(State.isPromoSet(set)) {
-                Rest.sendMessage(event, jigglypuff_ + " You don't need to unlock promo packs!");
+            } else if(Check.isPromoSet(set)) {
+                JDA.sendMessage(event, red_, "❌", "You don't need to unlock promo packs!");
+
+            } else if(Check.isOldSet(set) && !Check.ownsShopPack(user)) {
+                JDA.sendMessage(event, red_, "❌", "You must unlock a pack from **Poké Packs Shop** first!");
 
             } else {
-                if(State.isPackUnlocked(user, set.getSetName())) {
-                    Rest.sendMessage(event, jigglypuff_ + " This pack is already unlocked!");
+                if(Check.isPackUnlocked(user, set.getSetName())) {
+                    JDA.sendMessage(event, red_, "❌", "This pack is already unlocked!");
     
                 } else if(user.getKeys() < 1) {
-                    Rest.sendMessage(event, jigglypuff_ + " Sorry, you're out of " + key_ + " **Keys**");
+                    JDA.sendMessage(event, red_, "❌", "Sorry, you're out of " + key_ + " **Keys**");
     
                 } else {
                     String msg = "";
@@ -88,18 +91,22 @@ public class ShopCmds extends Cmds {
                     user.getPacks().add(set.getSetName());
                     
                     msg += UX.formatNick(event) + " unlocked " + set.getSetEmote() + " **" + set.getSetName() + "**";
-                    msg += UX.updateKeys(user, -1);
+                    msg += user.updateKeys(-1, true);
     
-                    State.updateBackpackDisplay(event, user);
-                    State.updateShopDisplay(event, user);
-                    State.updateOldShopDisplay(event, user);
-    
-                    Rest.sendMessage(event, msg);
+                    Update.updateBackpackDisplay(event, user);
+                    Update.updateShopDisplay(event, user);
+                    Update.updateOldShopDisplay(event, user);
+
+                    if(Check.isOldSet(set)) {
+                        JDA.sendMessage(event, user.getGameColor(), squirtle_, msg);
+                    } else {
+                        JDA.sendMessage(event, user.getGameColor(), pikachu_, msg);
+                    }
                     try { User.saveUsers(); } catch(Exception e) {}
                 }
             }
         } catch(NullPointerException e) {
-            Rest.sendMessage(event, jigglypuff_ + " Whoops, I couldn't find that pack...");
+            JDA.sendMessage(event, red_, "❌", "Whoops, I couldn't find that pack...");
         }
     }
 }

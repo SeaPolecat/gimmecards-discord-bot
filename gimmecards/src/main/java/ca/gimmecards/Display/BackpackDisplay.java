@@ -2,24 +2,24 @@ package ca.gimmecards.Display;
 import ca.gimmecards.Main.*;
 import ca.gimmecards.Helpers.*;
 import net.dv8tion.jda.api.EmbedBuilder;
-import java.util.ArrayList;
 
 public class BackpackDisplay extends Display {
-    
-    public static ArrayList<BackpackDisplay> displays = new ArrayList<BackpackDisplay>();
 
     public BackpackDisplay(String ui) {
         super(ui);
     }
 
-    public static BackpackDisplay findBackpackDisplay(String authorId) {
-        for(BackpackDisplay b : displays) {
-            if(b.getUserId().equals(authorId)) {
+    @Override
+    public BackpackDisplay findDisplay() {
+        String userId = getUserId();
+        
+        for(BackpackDisplay b : backpackDisplays) {
+            if(b.getUserId().equals(userId)) {
                 return b;
             }
         }
-        displays.add(0, new BackpackDisplay(authorId));
-        return displays.get(0);
+        backpackDisplays.add(0, new BackpackDisplay(userId));
+        return backpackDisplays.get(0);
     }
 
     @Override
@@ -30,13 +30,13 @@ public class BackpackDisplay extends Display {
         desc += XP_ + " " + UX.formatNumber(user.getXP()) + "/" + UX.formatNumber(user.getMaxXP()) + " until next level\n";
         desc += "┅┅\n";
         desc += token_ + " **Tokens** ┇ " + UX.formatNumber(user.getTokens()) + "\n";
-        desc += energy_ + " **Energy** ┇ " + UX.formatNumber(user.getEnergy()) + "\n";
-        desc += key_ + " **Keys** ┇ " + UX.formatNumber(user.getKeys()) + "\n";
+        desc += energy_ + " **Credits** ┇ " + UX.formatNumber(user.getEnergy()) + "\n";
         desc += star_ + " **Stars** ┇ " + UX.formatNumber(user.getStars()) + "\n";
+        desc += key_ + " **Keys** ┇ " + UX.formatNumber(user.getKeys()) + "\n";
         desc += "┅┅\n";
 
         if(user.getBadges().size() > 0) {
-            desc += "*Badges* ┇ ";
+            desc += "**Badges** ┇ ";
             for(String badge : user.getBadges()) {
                 if(badge.equalsIgnoreCase("dev")) {
                     desc += devBadge_ + " ";
@@ -52,6 +52,12 @@ public class BackpackDisplay extends Display {
             for(String badge : user.getBadges()) {
                 if(badge.equalsIgnoreCase("community")) {
                     desc += communityBadge_ + " ";
+                    break;
+                }
+            }
+            for(String badge : user.getBadges()) {
+                if(badge.equalsIgnoreCase("patreon")) {
+                    desc += patreonBadge_ + " ";
                     break;
                 }
             }
@@ -73,16 +79,14 @@ public class BackpackDisplay extends Display {
                     break;
                 }
             }
-            desc += "\n┅┅\n";
         }
-        if(!user.getBackpackCard().equals("") && State.ownsFavCard(user)) {
-            desc += "*" + ui.getUserName() + "'s Favourite*";
-            embed.setImage(user.getBackpackCard());
+        if(!user.getPinCard().equals("") && Check.ownsFavCard(user)) {
+            embed.setImage(user.getPinCard());
         }
         embed.setTitle(ui.getUserName() + " ┇ Level " + user.getLevel());
         embed.setThumbnail(ui.getUserIcon());
         embed.setDescription(desc);
-        embed.setColor(user.getBackpackColor());
+        embed.setColor(user.getGameColor());
         return embed;
     }
 }

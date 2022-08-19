@@ -3,8 +3,9 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class TestingCmds extends Cmds {
 
-    /*public User(String id, int cc, int l, int xp, int mxp, int t, int e, int k, int s, long oe, long ve, long de, long re, long me, String sm, boolean si, ArrayList<String> b, int bc, String bcard, ArrayList<String> p, ArrayList<Card> c) {
+    /*public User(String id, int cc, int l, int xp, int mxp, int t, int e, int k, int s, long oe, long ve, long de, long re, long me, String sm, boolean si, ArrayList<String> b, ArrayList<String> p, ArrayList<Card> c) {
         userId = id;
+        gameColor = 0;
         cardCount = cc;
         level = l;
         XP = xp;
@@ -18,30 +19,18 @@ public class TestingCmds extends Cmds {
         dailyEpoch = de;
         redeemEpoch = re;
         minigameEpoch = me;
+        marketEpoch = (long)(0);
         sortMethod = sm;
         sortIncreasing = si;
         badges = b;
-        backpackColor = bc;
-        backpackCard = bcard;
+        pinCard = "";
         packs = p;
         cards = c;
+        isRare = false;
+        isRadiantRare = false;
     }*/
 
     public static void testSomething(MessageReceivedEvent event) {
-
-        /*for(Server s : Server.servers) {
-            s.setServerId(Main.encryptor.encrypt(s.getServerId()));
-            System.out.println(s.getServerId());
-        }
-        Rest.sendMessage(event, "done testing!");
-        try { Server.saveServers(); } catch(Exception e) {}
-
-        for(User u : User.users) {
-            u.setUserId(Main.encryptor.encrypt(u.getUserId()));
-            System.out.println(u.getUserId());
-        }
-        Rest.sendMessage(event, "done testing!");
-        try { User.saveUsers(); } catch(Exception e) {}*/
 
         /*for(int i = 0; i < User.users.size(); i++) {
             User u = User.users.get(i);
@@ -63,17 +52,16 @@ public class TestingCmds extends Cmds {
                 u.getSortMethod(),
                 u.getSortIncreasing(),
                 u.getBadges(),
-                u.getBackpackColor(),
-                u.getBackpackCard(),
                 u.getPacks(),
                 u.getCards()
             );
             User.users.set(i, user);
         }
         for(User u : User.users) {
-            System.out.println(u.getBadges());
+            System.out.println(u.getIsRare());
+            System.out.println(u.getIsRadiantRare());
         }
-        Rest.sendMessage(event, "done testing!");
+        JDA.sendMessage(event, blue_, "", "done testing!");
         try { User.saveUsers(); } catch(Exception e) {}*/
     }
 }

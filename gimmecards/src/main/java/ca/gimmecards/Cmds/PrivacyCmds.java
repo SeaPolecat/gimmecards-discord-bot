@@ -8,19 +8,17 @@ public class PrivacyCmds extends Cmds {
     
     public static void deleteAccount(MessageReceivedEvent event) {
         User user = User.findUser(event);
-        PrivacyDisplay disp;
-
-        PrivacyDisplay.addPrivacyDisplay(user);
-
-        disp = PrivacyDisplay.findPrivacyDisplay(user.getUserId());
-        Rest.sendDynamicEmbed(event, user, null, disp, -1);
+        Server server = Server.findServer(event);
+        PrivacyDisplay disp = new PrivacyDisplay(user.getUserId()).findDisplay();;
+        
+        JDA.sendDynamicEmbed(event, user, server, disp, -1);
     }
 
     public static void confirmDeletion(MessageReceivedEvent event) {
         User user = User.findUser(event);
-        PrivacyDisplay disp = PrivacyDisplay.findPrivacyDisplay(user.getUserId());
+        PrivacyDisplay disp = new PrivacyDisplay(user.getUserId()).findDisplay();
 
-        if(disp == null) {
+        if(disp.getMessageId().isEmpty()) {
             return;
 
         } else {
@@ -29,12 +27,13 @@ public class PrivacyCmds extends Cmds {
 
                 if(u.getUserId().equals(user.getUserId())) {
                     User.users.remove(i);
-
                     disp.setIsSure(true);
-                    State.updatePrivacyDisplay(event, user, false);
+                    
+                    Update.updatePrivacyDisplay(event, user, false);
                     PrivacyDisplay.removePrivacyDisplay(user);
 
-                    Rest.sendMessage(event, "`Your Gimme Cards account has been deleted. "
+                    JDA.sendMessage(event, blue_, "",
+                    "`Your Gimme Cards account has been deleted. "
                     + "To ensure that your user data does not get recorded again, "
                     + "do not use any commands from this point onwards.`");
                     try { User.saveUsers(); } catch(Exception e) {}
@@ -46,16 +45,16 @@ public class PrivacyCmds extends Cmds {
 
     public static void denyDeletion(MessageReceivedEvent event) {
         User user = User.findUser(event);
-        PrivacyDisplay disp = PrivacyDisplay.findPrivacyDisplay(user.getUserId());
+        PrivacyDisplay disp = new PrivacyDisplay(user.getUserId()).findDisplay();
 
-        if(disp == null) {
+        if(disp.getMessageId().isEmpty()) {
             return;
 
         } else {
-            State.updatePrivacyDisplay(event, user, true);
+            Update.updatePrivacyDisplay(event, user, true);
             PrivacyDisplay.removePrivacyDisplay(user);
 
-            Rest.sendMessage(event, "😊 We're glad you're not going away... *welcome back!*");
+            JDA.sendMessage(event, user.getGameColor(), "😊", "We're glad you're not going away... *welcome back!*");
         }
     }
 }

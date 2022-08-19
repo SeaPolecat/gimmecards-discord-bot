@@ -1,7 +1,12 @@
 fixes (ALL)
 ----------------------------------
--update website and top.gg
--rename all commands to the actual name of the command
+-daily local storage deletion
+-make market cards limited (like 5 per day)
+
+-rename energy to credits
+-encrypt the JDA ID instead of decrypting use IDs!!
+
+-multiplayer view doesn't work if user doesn't have nickname
 
 
 
@@ -10,14 +15,15 @@ features (at least 1)
 -show which cards you sold in ?sellall
 -can open with set code instead of the full name
 -surprise cards in chat
--search by rarity, set, etc.
--trading
-
--leaderboards having 15 slots and are scrollable
 -Able to open multiple packs at the same time
--able to start viewing our cards from a different page
 -Poke coins + new minigame
+-able to search your own cards
 -Shortcuts for commands
+-searching your inventory
+-people who've made more than 10 custom cards get their own set, and get a badge
+-sorting cards by rarity
+-community-run market
+-viewing cards with pics and not names (like a gallery)
 
 
 
