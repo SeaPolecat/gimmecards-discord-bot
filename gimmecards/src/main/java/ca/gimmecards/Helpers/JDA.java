@@ -11,6 +11,21 @@ import net.dv8tion.jda.api.EmbedBuilder;
 
 public class JDA implements Emotes {
 
+    public static String findMentionId(MessageReceivedEvent event, String nick) {
+        String mentionId;
+
+        try {
+            mentionId = event.getMessage().getMentions().getUsers().get(0).getId();
+        } catch(IndexOutOfBoundsException e) {
+            try {
+                mentionId = event.getGuild().getMembersByEffectiveName(nick, true).get(0).getId();
+            } catch(IndexOutOfBoundsException e2) {
+                return null;
+            }
+        }
+        return mentionId;
+    }
+
     public static void sendMessage(MessageReceivedEvent event, int color, String emote, String msg) {
         try {
             EmbedBuilder embed = new EmbedBuilder();

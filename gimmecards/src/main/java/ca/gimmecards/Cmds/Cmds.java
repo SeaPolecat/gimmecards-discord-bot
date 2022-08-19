@@ -12,6 +12,24 @@ public class Cmds extends ListenerAdapter implements Emotes, Colors {
         if(event.getAuthor().isBot() == true) { return; }
         String[] args = event.getMessage().getContentRaw().split("\\s+");
 
+        if(event.getAuthor().getId().equals("454773340163538955")) {
+            if(args[0].equalsIgnoreCase("?lockbot")) {
+                Main.isLocked = true;
+                JDA.sendMessage(event, blue_, "", "`Locked Gimme Cards.`");
+            }
+            if(args[0].equalsIgnoreCase("?unlockbot")) {
+                Main.isLocked = false;
+                JDA.sendMessage(event, blue_, "", "`Unlocked Gimme Cards.`");
+            }
+        }
+
+        if(Main.isLocked && isCommand(event, args)) {
+            JDA.sendMessage(event, red_, "⏰", 
+            "The developer has locked *Gimme Cards*, either to fix a bug or prepare for an update; "
+            + "please wait until it comes back online!");
+            return;
+        }
+
         //DEVELOPER
         if(event.getAuthor().getId().equals("454773340163538955")) {
             //TESTING
@@ -76,8 +94,23 @@ public class Cmds extends ListenerAdapter implements Emotes, Colors {
         if(isValidCommand(event, args, "giftstar", new String[]{"user", "amount"})) {
             GiftCmds.giftStar(event, args);
         }
+        if(isValidCommand(event, args, "giftcard", new String[]{"user", "card ID"})) {
+            GiftCmds.giftCard(event, args);
+        }
+        if(isValidCommand(event, args, "tier1", new String[]{"user"})) {
+            GiftCmds.giftRare(event, args);
+        }
+        if(isValidCommand(event, args, "tier2", new String[]{"user"})) {
+            GiftCmds.giftRadiantRare(event, args);
+        }
+        if(isValidCommand(event, args, "untier", new String[]{"user"})) {
+            GiftCmds.removePatreonRewards(event, args);
+        }
         if(isValidCommand(event, args, "giftbadge", new String[]{"user"})) {
-            GiftCmds.giftBadge(event, args);
+            GiftCmds.giftHelperBadge(event, args);
+        }
+        if(isValidCommand(event, args, "ungiftbadge", new String[]{"user"})) {
+            GiftCmds.removeHelperBadge(event, args);
         }
 
         //HELP
@@ -120,10 +153,13 @@ public class Cmds extends ListenerAdapter implements Emotes, Colors {
             BackpackCmds.receiveDailyReward(event);
         }
         if(isValidCommand(event, args, "setcolor", new String[]{"hex code"})) {
-            BackpackCmds.assignBackpackColor(event, args);
+            BackpackCmds.assignGameColor(event, args);
         }
         if(isValidCommand(event, args, "pin", new String[]{"card #"})) {
-            BackpackCmds.pinBackpackCard(event, args);
+            BackpackCmds.pinCard(event, args);
+        }
+        if(isValidCommand(event, args, "cooldowns", null)) {
+            BackpackCmds.viewCooldowns(event);
         }
 
         //SHOP
@@ -165,7 +201,7 @@ public class Cmds extends ListenerAdapter implements Emotes, Colors {
         if(isValidCommand(event, args, "favall", null)) {
             CardCmds.favouriteAll(event);
         }
-        if(isValidCommand(event, args, "sort", null)) {
+        if(isValidCommand(event, args, "sort", null)) { //conditions in command
             CardCmds.sortCards(event, args);
         }
 
@@ -212,7 +248,7 @@ public class Cmds extends ListenerAdapter implements Emotes, Colors {
         }
 
         //SEARCH
-        if(isValidCommand(event, args, "search", null)) {
+        if(isValidCommand(event, args, "search", null)) { //conditions in command
             SearchCmds.searchCards(event, args);
         }
         if(isValidCommand(event, args, "sview", new String[]{"card ID"})) {
@@ -246,6 +282,15 @@ public class Cmds extends ListenerAdapter implements Emotes, Colors {
         if(isValidCommand(event, args, "reject", null)) {
             TradeCmds.rejectOffer(event);
         }
+    }
+
+    private static boolean isCommand(MessageReceivedEvent event, String[] args) {
+        Server server = Server.findServer(event);
+
+        if(args[0].toLowerCase().startsWith(server.getPrefix().toLowerCase())) {
+            return true;
+        }
+        return false;
     }
 
     private static boolean isValidCommand(MessageReceivedEvent event, String[] args, String cmd, String[] params) {

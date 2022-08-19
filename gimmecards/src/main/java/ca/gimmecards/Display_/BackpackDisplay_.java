@@ -69,6 +69,12 @@ public class BackpackDisplay_ extends Display {
                 }
             }
             for(String badge : mention.getBadges()) {
+                if(badge.equalsIgnoreCase("patreon")) {
+                    desc += patreonBadge_ + " ";
+                    break;
+                }
+            }
+            for(String badge : mention.getBadges()) {
                 if(badge.equalsIgnoreCase("veteran")) {
                     desc += veteranBadge_ + " ";
                     break;

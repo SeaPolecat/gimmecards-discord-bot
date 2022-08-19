@@ -10,9 +10,12 @@ public class CardCmds_ extends Cmds {
     public static void viewCards_(MessageReceivedEvent event, String[] args) {
         User user = User.findUser(event);
         CardDisplay_ disp = new CardDisplay_(user.getUserId()).findDisplay();
+        String mentionId = JDA.findMentionId(event, args[1]);
 
-        try {
-            String mentionId = event.getMessage().getMentions().getUsers().get(0).getId();
+        if(mentionId == null) {
+            JDA.sendMessage(event, red_, "❌", "Whoops, I couldn't find that user...");
+
+        } else {
             User mention = User.findOtherUser(event, mentionId);
 
             if(mention.getCards().size() < 1) {
@@ -36,8 +39,6 @@ public class CardCmds_ extends Cmds {
                     JDA.sendDynamicEmbed(event, user, null, disp, 1);
                 }
             }
-        } catch(IndexOutOfBoundsException e) {
-            JDA.sendMessage(event, red_, "❌", "Whoops, I couldn't find that user...");
         }
     }
 }

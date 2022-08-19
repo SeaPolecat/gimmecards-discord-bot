@@ -10,9 +10,12 @@ public class BackpackCmds_ extends Cmds {
     public static void viewBackpack_(MessageReceivedEvent event, String[] args) {
         User user = User.findUser(event);
         BackpackDisplay_ disp = new BackpackDisplay_(user.getUserId()).findDisplay();
+        String mentionId = JDA.findMentionId(event, args[1]);
 
-        try {
-            String mentionId = event.getMessage().getMentions().getUsers().get(0).getId();
+        if(mentionId == null) {
+            JDA.sendMessage(event, red_, "❌", "Whoops, I couldn't find that user...");
+
+        } else {
             User mention = User.findOtherUser(event, mentionId);
             String mentionIcon = event.getJDA().getUserById(mentionId).getAvatarUrl();
 
@@ -24,9 +27,6 @@ public class BackpackCmds_ extends Cmds {
             disp.setMentionInfo(new UserInfo(mention, event));
 
             JDA.sendDynamicEmbed(event, user, null, disp, -1);
-
-        } catch(IndexOutOfBoundsException e) {
-            JDA.sendMessage(event, red_, "❌", "Whoops, I couldn't find that user...");
         }
     }
 }

@@ -69,7 +69,7 @@ public class CardDisplay_ extends Display {
         }
         desc += "┅┅\n";
         embed.setTitle(ui.getUserName() + " ➜ " + mentionInfo.getUserName() 
-        + "'s Collection ┇ " + Check.countOwnedCards(mention) + " Cards");
+        + "'s Collection ┇ " + UX.formatNumber(Check.countOwnedCards(mention)) + " Cards");
         embed.setDescription(desc);
         embed.setFooter("Page " + page + " of " + getMaxPage(), ui.getUserIcon());
         embed.setColor(mention.getGameColor());

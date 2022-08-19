@@ -53,7 +53,7 @@ public class CardDisplay extends Display {
             }
         }
         desc += "┅┅\n";
-        embed.setTitle(ui.getUserName() + "'s Collection ┇ " + Check.countOwnedCards(user) + " Cards");
+        embed.setTitle(ui.getUserName() + "'s Collection ┇ " + UX.formatNumber(Check.countOwnedCards(user)) + " Cards");
         embed.setDescription(desc);
         embed.setFooter("Page " + page + " of " + getMaxPage(), ui.getUserIcon());
         embed.setColor(user.getGameColor());

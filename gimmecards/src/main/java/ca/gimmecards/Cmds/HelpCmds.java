@@ -90,7 +90,11 @@ public class HelpCmds extends Cmds {
         desc += "Given to the staff members in our official [support server](https://discord.gg/urtHCGcE7y)\n\n";
 
         desc += communityBadge_ + " **Community Helper**\n";
-        desc += "Given to collectors who often help newer players. Only staff members can award you this badge\n\n";
+        desc += "Given to collectors who often help newer players or contribute to new ideas. "
+        + "Only staff members can award you this badge\n\n";
+
+        desc += patreonBadge_ + " **Patreon**\n";
+        desc += "Given to our Patreon supporters, AKA *Rare Collectors* or *Radiant Rare Collectors*\n\n";
 
         desc += veteranBadge_ + " **Veteran Collector**\n";
         desc += "Given to collectors who are level 50+\n\n";

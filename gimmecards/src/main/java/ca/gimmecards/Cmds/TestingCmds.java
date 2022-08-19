@@ -3,9 +3,9 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class TestingCmds extends Cmds {
 
-    /*public User(String id, int gc, int cc, int l, int xp, int mxp, int t, int e, int k, int s, long oe, long ve, long de, long re, long me, String sm, boolean si, ArrayList<String> b, String pcard, ArrayList<String> p, ArrayList<Card> c) {
+    /*public User(String id, int cc, int l, int xp, int mxp, int t, int e, int k, int s, long oe, long ve, long de, long re, long me, String sm, boolean si, ArrayList<String> b, ArrayList<String> p, ArrayList<Card> c) {
         userId = id;
-        gameColor = gc;
+        gameColor = 0;
         cardCount = cc;
         level = l;
         XP = xp;
@@ -23,9 +23,11 @@ public class TestingCmds extends Cmds {
         sortMethod = sm;
         sortIncreasing = si;
         badges = b;
-        pinCard = pcard;
+        pinCard = "";
         packs = p;
         cards = c;
+        isRare = false;
+        isRadiantRare = false;
     }*/
 
     public static void testSomething(MessageReceivedEvent event) {
@@ -34,7 +36,6 @@ public class TestingCmds extends Cmds {
             User u = User.users.get(i);
             User user = new User(
                 u.getUserId(),
-                u.getGameColor(),
                 u.getCardCount(),
                 u.getLevel(),
                 u.getXP(),
@@ -51,14 +52,14 @@ public class TestingCmds extends Cmds {
                 u.getSortMethod(),
                 u.getSortIncreasing(),
                 u.getBadges(),
-                u.getPinCard(),
                 u.getPacks(),
                 u.getCards()
             );
             User.users.set(i, user);
         }
         for(User u : User.users) {
-            System.out.println(u.getMarketEpoch());
+            System.out.println(u.getIsRare());
+            System.out.println(u.getIsRadiantRare());
         }
         JDA.sendMessage(event, blue_, "", "done testing!");
         try { User.saveUsers(); } catch(Exception e) {}*/

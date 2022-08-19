@@ -15,8 +15,9 @@ public class VoteCmds extends Cmds {
         User user = User.findUser(event);
         Server server = Server.findServer(event);
 
-        if(!Check.isCooldownDone(user.getVoteEpoch(), 720, true)) {
-            JDA.sendMessage(event, red_, "⏰", "Please wait another " + Check.findTimeLeft(user.getVoteEpoch(), 720, true));
+        if(!Check.isCooldownDone(user.getVoteEpoch(), Check.findCooldown(user, 720), true)) {
+            JDA.sendMessage(event, red_, "⏰", "Please wait another " 
+            + Check.findTimeLeft(user.getVoteEpoch(), Check.findCooldown(user, 720), true));
 
         } else {
             EmbedBuilder embed = new EmbedBuilder();
@@ -37,8 +38,9 @@ public class VoteCmds extends Cmds {
         User user = User.findUser(event);
         Server server = Server.findServer(event);
 
-        if(!Check.isCooldownDone(user.getVoteEpoch(), 720, true)) {
-            JDA.sendMessage(event, red_, "⏰", "Please wait another " + Check.findTimeLeft(user.getVoteEpoch(), 720, true));
+        if(!Check.isCooldownDone(user.getVoteEpoch(), Check.findCooldown(user, 720), true)) {
+            JDA.sendMessage(event, red_, "⏰", "Please wait another " 
+            + Check.findTimeLeft(user.getVoteEpoch(), Check.findCooldown(user, 720), true));
 
         } else {
             try {

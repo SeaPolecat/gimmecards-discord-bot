@@ -48,8 +48,8 @@ public class Display extends ListenerAdapter implements Displays, Emotes, Colors
         return null;
     }
 
-    public static void displayCard(MessageReceivedEvent event, User user, Data data, String footer) {
-        UserInfo ui = new UserInfo(event);
+    public static void displayCard(MessageReceivedEvent event, User user, UserInfo ui, Data data, String footer, boolean isFav) {
+        String cardTitle = UX.findCardTitle(data, isFav);
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
@@ -58,7 +58,7 @@ public class Display extends ListenerAdapter implements Displays, Emotes, Colors
         desc += "**XP Value** ┇ " + UX.formatXP(data, Check.isSellable(data)) + "\n\n";
         desc += "*Click on image for zoomed view*";
 
-        embed.setTitle(UX.findCardTitle(data, false));
+        embed.setTitle(cardTitle);
         embed.setDescription(desc);
         embed.setImage(data.getCardImage());
         embed.setFooter(footer, ui.getUserIcon());

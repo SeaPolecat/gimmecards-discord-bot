@@ -250,6 +250,19 @@ public interface Changelog {
         + "🔹[favs] command has been removed\n"
         + "🔸Added ***19*** more custom cards\n\n"
         + "*If your custom card wasn't added, it's likely because you "
+        + "didn't specify how much XP you'd like it to cost; Please resubmit your card*",
+
+        "**Update 8/17/2022**\n"
+        + "🔸We've released our Patreon page! 🤩 Come support us on Patreon to receive exclusive rewards; "
+        + "please use [redeem] for more info\n"
+        + "🔹Added the **Patreon** badge, given to our Patreon supporters\n"
+        + "🔹Updated the requirements for the **Community Helper** badge; please use [badges] for more info\n"
+        + "🔹Staff members can now remove the **Community Helper** badge from you if they wish to do so\n"
+        + "🔹New command [cooldowns] that lets you see all your command cooldowns\n"
+        + "🔹You can now view other people's items by using their nickname! Example: [cards Melon]\n"
+        + "🔹[selldupes] now won't sell your favorited cards\n"
+        + "🔸Added ***7*** more custom cards\n\n"
+        + "*If your custom card wasn't added, it's likely because you "
         + "didn't specify how much XP you'd like it to cost; Please resubmit your card*"
     };
 }

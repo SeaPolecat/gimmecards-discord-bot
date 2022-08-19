@@ -51,12 +51,15 @@ public class SellCmds extends Cmds {
         if(user.getCards().size() < 1) {
             JDA.sendMessage(event, red_, "❌", "You don't have any cards to sell!");
 
+        } else if(!hasDuplicates(user)) {
+            JDA.sendMessage(event, red_, "❌", "You don't have any duplicate cards!");
+
         } else {
             int profit = findDuplicatesProfit(user);
             int energyReward = (int)(profit * 0.02);
-
+            
             if(profit == -1) {
-                JDA.sendMessage(event, red_, "❌", "You don't have any duplicate cards!");
+                JDA.sendMessage(event, red_, "❌", "Sorry, all your duplicate cards are in your favourites!");
                 
             } else {
                 String msg = "";
@@ -131,12 +134,21 @@ public class SellCmds extends Cmds {
         return profit;
     }
 
+    private static boolean hasDuplicates(User user) {
+        for(Card card : user.getCards()) {
+            if(card.getCardQuantity() > 1) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private static int findDuplicatesProfit(User user) {
         int profit = 0;
         boolean exists = false;
 
         for(Card card : user.getCards()) {
-            if(card.getCardQuantity() > 1) {
+            if(!card.getIsFav() && card.getCardQuantity() > 1) {
                 exists = true;
                 while(card.getCardQuantity() > 1) {
                     card.minusCardQuantity();

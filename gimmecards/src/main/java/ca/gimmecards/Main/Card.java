@@ -100,7 +100,8 @@ public class Card implements CustomCards {
         return pickCard(cards);
     }
 
-    public static void addSingleCard(User user, Data data) {
+    public static void addSingleCard(User user, Data data, boolean isFav) {
+        boolean exists = false;
         Card newCard = null;
 
         user.addCardCount();
@@ -108,13 +109,18 @@ public class Card implements CustomCards {
             String cardId2 = c.getData().getCardId();
 
             if(data.getCardId().equals(cardId2)) {
+                exists = true;
                 newCard = c;
                 c.addCardQuantity();
-                return;
+                break;
             }
         }
-        newCard = new Card(data, user.getCardCount(), Check.isSellable(data));
-        
+        if(!exists) {
+            newCard = new Card(data, user.getCardCount(), Check.isSellable(data));
+        }
+        if(isFav) {
+            newCard.setIsFav(true);
+        }
         user.getCards().add(newCard);
         sortCards(user, user.getSortMethod(), user.getSortIncreasing());
     }
@@ -126,14 +132,20 @@ public class Card implements CustomCards {
         ArrayList<Data> shinies = set.getShinies();
         ArrayList<Data> newCards = new ArrayList<Data>();
         int chance = new Random().nextInt(100) + 1;
+        int percentage;
 
+        if(user.getIsRare() || user.getIsRadiantRare()) {
+            percentage = 20;
+        } else {
+            percentage = 10;
+        }
         for(int i = 0; i < 6; i++) {
             newCards.add(pickCard(commons));
         }
         for(int i = 0; i < 3; i++) {
             newCards.add(pickCard(uncommons));
         }
-        if(chance <= 10) {
+        if(chance <= percentage) {
             newCards.add(pickCard(shinies));
         } else {
             newCards.add(pickCard(rares));
@@ -235,85 +247,73 @@ public class Card implements CustomCards {
         }
     }
 
-    public static ArrayList<Data> searchCards(User user, String sortMethod, String key) {
-        ArrayList<Data> searchedCards = new ArrayList<Data>();
-
+    public static Data findDataById(String cardId) {
         for(Data set : Data.sets) {
-            crawlSet(searchedCards, set, sortMethod, key);
-        }
-        for(Data oldSet : Data.oldSets) {
-            crawlSet(searchedCards, oldSet, sortMethod, key);
-        }
-        crawlSpecSets(searchedCards, sortMethod, key);
+            Data data = crawlSetById(set, cardId, false);
 
-        return searchedCards;
+            if(data != null) {
+                return data;
+            }
+        }
+        for(Data set : Data.oldSets) {
+            Data data = crawlSetById(set, cardId, false);
+
+            if(data != null) {
+                return data;
+            }
+        }
+        for(Data set : Data.rareSets) {
+            Data data = crawlSetById(set, cardId, true);
+
+            if(data != null) {
+                return data;
+            }
+        }
+        for(Data set : Data.promoSets) {
+            Data data = crawlSetById(set, cardId, true);
+
+            if(data != null) {
+                return data;
+            }
+        }
+        for(Data data : CustomCards.customs) {
+            if(data.getCardId().equalsIgnoreCase(cardId)) {
+                return data;
+            }
+        }
+        return null;
     }
 
-    private static String findName(Data data, String sortMethod) {
-        if(sortMethod.equalsIgnoreCase("card")) {
-            return data.getCardName();
-        } else if(sortMethod.equalsIgnoreCase("pack")) {
-            return data.getSetName();
-        }
-        return data.getCardRarity();
-    }
-
-    private static void crawlSet(ArrayList<Data> searchedCards, Data set, String sortMethod, String key) {
-        for(Data data : set.getCommons()) {
-            String name = findName(data, sortMethod);
-
-            if(name.toLowerCase().contains(key.toLowerCase())) {
-                searchedCards.add(data);
+    private static Data crawlSetById(Data set, String cardId, boolean isSpec) {
+        if(!isSpec) {
+            for(Data data : set.getCommons()) {
+                if(data.getCardId().equalsIgnoreCase(cardId)) {
+                    return data;
+                }
             }
-        }
-        for(Data data : set.getUncommons()) {
-            String name = findName(data, sortMethod);
-
-            if(name.toLowerCase().contains(key.toLowerCase())) {
-                searchedCards.add(data);
+            for(Data data : set.getUncommons()) {
+                if(data.getCardId().equalsIgnoreCase(cardId)) {
+                    return data;
+                }
             }
-        }
-        for(Data data : set.getRares()) {
-            String name = findName(data, sortMethod);
-
-            if(name.toLowerCase().contains(key.toLowerCase())) {
-                searchedCards.add(data);
+            for(Data data : set.getRares()) {
+                if(data.getCardId().equalsIgnoreCase(cardId)) {
+                    return data;
+                }
             }
-        }
-        for(Data data : set.getShinies()) {
-            String name = findName(data, sortMethod);
-            
-            if(name.toLowerCase().contains(key.toLowerCase())) {
-                searchedCards.add(data);
+            for(Data data : set.getShinies()) {
+                if(data.getCardId().equalsIgnoreCase(cardId)) {
+                    return data;
+                }
             }
-        }
-    }
 
-    private static void crawlSpecSets(ArrayList<Data> searchedCards, String sortMethod, String key) {
-        for(Data specSet : Data.rareSets) {
-            for(Data data : specSet.getSpecs()) {
-                String name = findName(data, sortMethod);
-
-                if(name.toLowerCase().contains(key.toLowerCase())) {
-                    searchedCards.add(data);
+        } else {
+            for(Data data : set.getSpecs()) {
+                if(data.getCardId().equalsIgnoreCase(cardId)) {
+                    return data;
                 }
             }
         }
-        for(Data specSet : Data.promoSets) {
-            for(Data data : specSet.getSpecs()) {
-                String name = findName(data, sortMethod);
-
-                if(name.toLowerCase().contains(key.toLowerCase())) {
-                    searchedCards.add(data);
-                }
-            }
-        }
-        for(Data data : customs) {
-            String name = findName(data, sortMethod);
-            
-            if(name.toLowerCase().contains(key.toLowerCase())) {
-                searchedCards.add(data);
-            }
-        }
+        return null;
     }
 }

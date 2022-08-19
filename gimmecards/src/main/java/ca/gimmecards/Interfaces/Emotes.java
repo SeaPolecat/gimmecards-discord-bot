@@ -23,11 +23,13 @@ public interface Emotes {
     String key_ = "<:key:875091820156162048>";
     String promostar_ = "<:promostar:955206901552001185>";
     String logo_ = "<:logo:1002625567922856086>";
+    String patreon_ = "<:patreon:1009210826030338139>";
 
     //badges
     String devBadge_ = "<:GimmeCardsDeveloper:998749089699213362>";
     String staffBadge_ = "<:GimmeCardsStaff:998749109504720956>";
     String communityBadge_ = "<:CommunityHelper:1001971363013210202>";
+    String patreonBadge_ = "<:Patreon:1009528136670662766>";
     String veteranBadge_ = "<:VeteranCollector:998749128819495012>";
     String masterBadge_ = "<:MasterCollector:998749146435563582>";
     String bdayBadge_ = "<:1YearAnniversary:998749060448129024>";

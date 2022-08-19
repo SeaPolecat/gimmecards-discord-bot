@@ -128,6 +128,13 @@ public class Check implements Emotes {
         return count;
     }
 
+    public static int findCooldown(User user, int cooldown) {
+        if(user.getIsRadiantRare()) {
+            return (int)(cooldown * 0.75);
+        }
+        return cooldown;
+    }
+
     public static boolean isCooldownDone(Long epoch, int cooldown, boolean isMins) {
         long current = isMins ? Calendar.getInstance().getTimeInMillis() / 60000 : Calendar.getInstance().getTimeInMillis() / 1000;
 

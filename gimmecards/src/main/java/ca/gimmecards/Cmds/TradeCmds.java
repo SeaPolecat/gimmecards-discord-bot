@@ -122,8 +122,7 @@ public class TradeCmds extends Cmds {
         } else if(disp.getAccept(user.getUserId())) {
             JDA.sendMessage(event, red_, "❌", "You've already accepted the trade!");
 
-        } else if(disp.getUser1().getEnergy() < disp.getTax1() 
-        || disp.getUser2().getEnergy() < disp.getTax2()) {
+        } else if(disp.getUser(user.getUserId()).getEnergy() < disp.getTax(user.getUserId())) {
             JDA.sendMessage(event, red_, "❌", "Sorry, you don't have enough " + energy_ + " **Credits**");
 
         } else {
@@ -239,7 +238,7 @@ public class TradeCmds extends Cmds {
         }
         for(Card receive : receives) {
             for(int i = 0; i < receive.getCardQuantity(); i++) {
-                Card.addSingleCard(user, receive.getData());
+                Card.addSingleCard(user, receive.getData(), false);
             }
         }
     }

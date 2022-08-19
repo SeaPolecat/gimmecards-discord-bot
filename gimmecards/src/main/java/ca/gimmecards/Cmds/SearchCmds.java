@@ -26,13 +26,13 @@ public class SearchCmds extends Cmds {
             key = key.trim();
 
             if(args[1].equalsIgnoreCase("card")) {
-                searchedCards = Card.searchCards(user, "card", key);
+                searchedCards = searchCards(user, "card", key);
 
             } else if(args[1].equalsIgnoreCase("pack")) {
-                searchedCards = Card.searchCards(user, "pack", key);
+                searchedCards = searchCards(user, "pack", key);
 
             } else if(args[1].equalsIgnoreCase("rarity")) {
-                searchedCards = Card.searchCards(user, "rarity", key);
+                searchedCards = searchCards(user, "rarity", key);
 
             } else {
                 Integer.parseInt("$");
@@ -71,85 +71,98 @@ public class SearchCmds extends Cmds {
 
     public static void viewAnyCard(MessageReceivedEvent event, String[] args) {
         User user = User.findUser(event);
+        UserInfo ui = new UserInfo(event);
 
         try {
-            Data data = findDataById(args[1]);
+            Data data = Card.findDataById(args[1]);
             String footer = "Card ID: " + data.getCardId();
 
-            Display.displayCard(event, user, data, footer);
+            Display.displayCard(event, user, ui, data, footer, false);
 
         } catch(NullPointerException e) {
             JDA.sendMessage(event, red_, "❌", "Whoops, I couldn't find that card...");
         }
     }
 
-    private static Data findDataById(String cardId) {
+    private static ArrayList<Data> searchCards(User user, String sortMethod, String key) {
+        ArrayList<Data> searchedCards = new ArrayList<Data>();
+
         for(Data set : Data.sets) {
-            Data data = searchSet(set, cardId, false);
+            crawlSet(searchedCards, set, sortMethod, key);
+        }
+        for(Data oldSet : Data.oldSets) {
+            crawlSet(searchedCards, oldSet, sortMethod, key);
+        }
+        crawlSpecSets(searchedCards, sortMethod, key);
 
-            if(data != null) {
-                return data;
+        return searchedCards;
+    }
+
+    private static String findName(Data data, String sortMethod) {
+        if(sortMethod.equalsIgnoreCase("card")) {
+            return data.getCardName();
+        } else if(sortMethod.equalsIgnoreCase("pack")) {
+            return data.getSetName();
+        }
+        return data.getCardRarity();
+    }
+
+    private static void crawlSet(ArrayList<Data> searchedCards, Data set, String sortMethod, String key) {
+        for(Data data : set.getCommons()) {
+            String name = findName(data, sortMethod);
+
+            if(name.toLowerCase().contains(key.toLowerCase())) {
+                searchedCards.add(data);
             }
         }
-        for(Data set : Data.oldSets) {
-            Data data = searchSet(set, cardId, false);
+        for(Data data : set.getUncommons()) {
+            String name = findName(data, sortMethod);
 
-            if(data != null) {
-                return data;
+            if(name.toLowerCase().contains(key.toLowerCase())) {
+                searchedCards.add(data);
             }
         }
-        for(Data set : Data.rareSets) {
-            Data data = searchSet(set, cardId, true);
+        for(Data data : set.getRares()) {
+            String name = findName(data, sortMethod);
 
-            if(data != null) {
-                return data;
+            if(name.toLowerCase().contains(key.toLowerCase())) {
+                searchedCards.add(data);
             }
         }
-        for(Data set : Data.promoSets) {
-            Data data = searchSet(set, cardId, true);
+        for(Data data : set.getShinies()) {
+            String name = findName(data, sortMethod);
+            
+            if(name.toLowerCase().contains(key.toLowerCase())) {
+                searchedCards.add(data);
+            }
+        }
+    }
 
-            if(data != null) {
-                return data;
+    private static void crawlSpecSets(ArrayList<Data> searchedCards, String sortMethod, String key) {
+        for(Data specSet : Data.rareSets) {
+            for(Data data : specSet.getSpecs()) {
+                String name = findName(data, sortMethod);
+
+                if(name.toLowerCase().contains(key.toLowerCase())) {
+                    searchedCards.add(data);
+                }
+            }
+        }
+        for(Data specSet : Data.promoSets) {
+            for(Data data : specSet.getSpecs()) {
+                String name = findName(data, sortMethod);
+
+                if(name.toLowerCase().contains(key.toLowerCase())) {
+                    searchedCards.add(data);
+                }
             }
         }
         for(Data data : CustomCards.customs) {
-            if(data.getCardId().equalsIgnoreCase(cardId)) {
-                return data;
+            String name = findName(data, sortMethod);
+            
+            if(name.toLowerCase().contains(key.toLowerCase())) {
+                searchedCards.add(data);
             }
         }
-        return null;
-    }
-
-    private static Data searchSet(Data set, String cardId, boolean isSpec) {
-        if(!isSpec) {
-            for(Data data : set.getCommons()) {
-                if(data.getCardId().equalsIgnoreCase(cardId)) {
-                    return data;
-                }
-            }
-            for(Data data : set.getUncommons()) {
-                if(data.getCardId().equalsIgnoreCase(cardId)) {
-                    return data;
-                }
-            }
-            for(Data data : set.getRares()) {
-                if(data.getCardId().equalsIgnoreCase(cardId)) {
-                    return data;
-                }
-            }
-            for(Data data : set.getShinies()) {
-                if(data.getCardId().equalsIgnoreCase(cardId)) {
-                    return data;
-                }
-            }
-
-        } else {
-            for(Data data : set.getSpecs()) {
-                if(data.getCardId().equalsIgnoreCase(cardId)) {
-                    return data;
-                }
-            }
-        }
-        return null;
     }
 }

@@ -53,10 +53,12 @@ public class MarketCmds extends Cmds {
 
     public static void purchaseItem(MessageReceivedEvent event, String[] args) {
         User user = User.findUser(event);
+        UserInfo ui = new UserInfo(event);
         Server server = Server.findServer(event);
 
-        if(!Check.isCooldownDone(user.getMarketEpoch(), 15, true)) {
-            JDA.sendMessage(event, red_, "⏰", "Please wait another " + Check.findTimeLeft(user.getMarketEpoch(), 15, true));
+        if(!Check.isCooldownDone(user.getMarketEpoch(), Check.findCooldown(user, 15), true)) {
+            JDA.sendMessage(event, red_, "⏰", "Please wait another " 
+            + Check.findTimeLeft(user.getMarketEpoch(), Check.findCooldown(user, 15), true));
 
         } else {
             try {
@@ -68,21 +70,21 @@ public class MarketCmds extends Cmds {
     
                 } else {
                     String msg = "";
-                    String footer = event.getAuthor().getName() + "'s purchase";
+                    String footer = ui.getUserName() + "'s purchase";
 
                     user.resetMarketEpoch();
     
                     msg += UX.formatNick(event) + " bought " + UX.findCardTitle(item, false) + " from the market!";
                     msg += user.updateEnergy(-item.getCardPrice(), true);
     
-                    Card.addSingleCard(user, item);
+                    Card.addSingleCard(user, item, false);
     
                     Update.updateBackpackDisplay(event, user);
                     Update.updateCardDisplay(event, user);
                     Update.updateViewDisplay(event, user);
     
                     JDA.sendMessage(event, user.getGameColor(), mew_, msg);
-                    Display.displayCard(event, user, item, footer);
+                    Display.displayCard(event, user, ui, item, footer, false);
                     try { User.saveUsers(); } catch(Exception e) {}
                 }
             } catch(NumberFormatException | IndexOutOfBoundsException e) {

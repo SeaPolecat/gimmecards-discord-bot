@@ -9,6 +9,7 @@ public class ViewCmds extends Cmds implements CustomCards {
 
     public static void openPack(MessageReceivedEvent event, String[] args) {
         User user = User.findUser(event);
+        UserInfo ui = new UserInfo(event);
         ViewDisplay disp = new ViewDisplay(user.getUserId()).findDisplay();
 
         if(!Check.isCooldownDone(user.getOpenEpoch(), 5, false)) {
@@ -33,7 +34,7 @@ public class ViewCmds extends Cmds implements CustomCards {
                         Data item = Card.pickCard(customs);
 
                         user.resetOpenEpoch();
-                        Card.addSingleCard(user, item);
+                        Card.addSingleCard(user, item, false);
     
                         msg += UX.formatNick(event) + " drew a card from " + logo_ + " **Gimme Cards**";
                         msg += user.updateEnergy(UX.randRange(8, 10), true);
@@ -44,7 +45,7 @@ public class ViewCmds extends Cmds implements CustomCards {
                         Update.updateViewDisplay(event, user);
     
                         JDA.sendMessage(event, user.getGameColor(), charmander_, msg);
-                        Display.displayCard(event, user, item, footer);
+                        Display.displayCard(event, user, ui, item, footer, false);
                         try { User.saveUsers(); } catch(Exception e) {}
                     }
 
@@ -63,7 +64,7 @@ public class ViewCmds extends Cmds implements CustomCards {
                             footer += "'s promo card";
                         }
                         user.resetOpenEpoch();
-                        Card.addSingleCard(user, item);
+                        Card.addSingleCard(user, item, false);
     
                         msg += UX.formatNick(event) + " drew a card from " + set.getSetEmote() + " **" + set.getSetName() + "**";
                         msg += user.updateEnergy(UX.randRange(8, 10), true);
@@ -78,7 +79,7 @@ public class ViewCmds extends Cmds implements CustomCards {
                         } else {
                             JDA.sendMessage(event, user.getGameColor(), bulbasaur_, msg);
                         }
-                        Display.displayCard(event, user, item, footer);
+                        Display.displayCard(event, user, ui, item, footer, false);
                         try { User.saveUsers(); } catch(Exception e) {}
                     }
 

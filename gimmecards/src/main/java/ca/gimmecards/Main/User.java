@@ -42,6 +42,8 @@ public class User implements StoragePaths, Emotes {
     private String pinCard;
     private ArrayList<String> packs;
     private ArrayList<Card> cards;
+    private Boolean isRare;
+    private Boolean isRadiantRare;
 
     public User(String ui) {
         userId = Main.encryptor.encrypt(ui);
@@ -66,6 +68,8 @@ public class User implements StoragePaths, Emotes {
         pinCard = "";
         packs = new ArrayList<String>();
         cards = new ArrayList<Card>();
+        isRare = false;
+        isRadiantRare = false;
     }
 
     public String getUserId() { return Main.encryptor.decrypt(userId); }
@@ -90,7 +94,10 @@ public class User implements StoragePaths, Emotes {
     public String getPinCard() { return pinCard; }
     public ArrayList<String> getPacks() { return packs; }
     public ArrayList<Card> getCards() { return cards; }
+    public boolean getIsRare() { return isRare; }
+    public boolean getIsRadiantRare() { return isRadiantRare; }
     //
+    public void setUserId(String ui) { userId = ui; }
     public void setGameColor(int gc) { gameColor = gc; }
     public void addCardCount() { cardCount++; }
     public void addXP(int xp) { XP += xp; }
@@ -107,12 +114,24 @@ public class User implements StoragePaths, Emotes {
     public void setSortMethod(String sm) { sortMethod = sm; }
     public void setSortIncreasing(boolean si) { sortIncreasing = si; }
     public void setPinCard(String pc) { pinCard = pc; }
+    public void setIsRare(boolean ir) { isRare = ir; }
+    public void setIsRadiantRare(boolean irr) { isRadiantRare = irr; }
 
     public void levelUp() {
+        int extraXP = XP - maxXP;
+
         level++;
         XP = 0;
-        XP += XP - maxXP;
+        XP += extraXP;
         maxXP += 500;
+    }
+
+    public void removeBadge(String badge) {
+        for(int i = 0; i < badges.size(); i++) {
+            if(badges.get(i).equalsIgnoreCase(badge)) {
+                badges.remove(i);
+            }
+        }
     }
 
     public String updateXP(int quantity, boolean isStart) {
@@ -131,7 +150,17 @@ public class User implements StoragePaths, Emotes {
     public String updateTokens(int quantity, boolean isStart) {
         String msg = "\n";
 
-        addTokens(quantity);
+        if(getIsRadiantRare()) {
+            Main.dbl.getVotingMultiplier().whenComplete((multiplier, e) -> {
+                if(multiplier.isWeekend()) {
+                    addTokens(quantity * 2);
+                } else {
+                    addTokens(quantity);
+                }
+            });
+        } else {
+            addTokens(quantity);
+        }
         if(isStart) {
             msg += "┅┅\n";
         }
@@ -149,7 +178,17 @@ public class User implements StoragePaths, Emotes {
     public String updateEnergy(int quantity, boolean isStart) {
         String msg = "\n";
 
-        addEnergy(quantity);
+        if(getIsRare() || getIsRadiantRare()) {
+            Main.dbl.getVotingMultiplier().whenComplete((multiplier, e) -> {
+                if(multiplier.isWeekend()) {
+                    addEnergy((int)(quantity * 1.25));
+                } else {
+                    addEnergy(quantity);
+                }
+            });
+        } else {
+            addEnergy(quantity);
+        }
         if(isStart) {
             msg += "┅┅\n";
         }

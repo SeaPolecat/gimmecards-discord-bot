@@ -11,8 +11,9 @@ public class MinigameCmds extends Cmds {
         Server server = Server.findServer(event);
         MinigameDisplay disp = new MinigameDisplay(user.getUserId()).findDisplay();;
 
-        if(!Check.isCooldownDone(user.getMinigameEpoch(), 60, true)) {
-            JDA.sendMessage(event, red_, "⏰", "Please wait another " + Check.findTimeLeft(user.getMinigameEpoch(), 60, true));
+        if(!Check.isCooldownDone(user.getMinigameEpoch(), Check.findCooldown(user, 60), true)) {
+            JDA.sendMessage(event, red_, "⏰", "Please wait another " 
+            + Check.findTimeLeft(user.getMinigameEpoch(), Check.findCooldown(user, 60), true));
 
         } else {
             user.resetMinigameEpoch();

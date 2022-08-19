@@ -699,5 +699,89 @@ public interface CustomCards extends Emotes {
             new String[]{"Darkness"},
             200
         ),
+
+        new Data(
+            logo_,
+            "Gimme Cards",
+            "custom-58",
+            "Final Starman",
+            "Custom",
+            "https://media.discordapp.net/attachments/995802885487087797/1009547876671696917/unknown.png",
+            "Pokémon",
+            new String[]{"Metal"},
+            2546
+        ),
+
+        new Data(
+            logo_,
+            "Gimme Cards",
+            "custom-59",
+            "Big Man",
+            "Custom",
+            "https://media.discordapp.net/attachments/995802885487087797/1009548167852863528/unknown.png",
+            "Pokémon",
+            new String[]{"Water"},
+            49
+        ),
+
+        new Data(
+            logo_,
+            "Gimme Cards",
+            "custom-60",
+            "Porygon-Z V",
+            "Custom",
+            "https://media.discordapp.net/attachments/995802885487087797/1009548382672527370/unknown.png?width=449&height=624",
+            "Pokémon",
+            new String[]{"Colorless"},
+            500
+        ),
+
+        new Data(
+            logo_,
+            "Gimme Cards",
+            "custom-61",
+            "Karp Rotom",
+            "Custom",
+            "https://media.discordapp.net/attachments/995802885487087797/1009548669416116305/unknown.png",
+            "Pokémon",
+            new String[]{"Water"},
+            50
+        ),
+
+        new Data(
+            logo_,
+            "Gimme Cards",
+            "custom-62",
+            "Crobat",
+            "Custom",
+            "https://media.discordapp.net/attachments/995802885487087797/1009548874731499621/unknown.png",
+            "Pokémon",
+            new String[]{"Darkness"},
+            96
+        ),
+
+        new Data(
+            logo_,
+            "Gimme Cards",
+            "custom-63",
+            "Orbeetle V",
+            "Custom",
+            "https://media.discordapp.net/attachments/995802885487087797/1009549235051581560/unknown.png?width=449&height=624",
+            "Pokémon",
+            new String[]{"Psychic"},
+            200
+        ),
+
+        new Data(
+            logo_,
+            "Gimme Cards",
+            "custom-64",
+            "Orbeetle VMAX",
+            "Custom",
+            "https://media.discordapp.net/attachments/995802885487087797/1009549464647762111/unknown.png?width=449&height=624",
+            "Pokémon",
+            new String[]{"Psychic"},
+            300
+        ),
     };
 }
