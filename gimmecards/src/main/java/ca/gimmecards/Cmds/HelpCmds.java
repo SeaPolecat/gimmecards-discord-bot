@@ -112,6 +112,21 @@ public class HelpCmds extends Cmds {
         embed.clear();
     }
 
+    public static void viewPatreon(MessageReceivedEvent event) {
+        EmbedBuilder embed = new EmbedBuilder();
+        String desc = "";
+
+        desc += "[Click here](https://www.patreon.com/gimmecards) to join us on " + patreon_ + " **Patreon**\n\n";
+        desc += "*Click on image for zoomed view*";
+
+        embed.setTitle(eevee_ + " Patreon Rewards " + eevee_);
+        embed.setDescription(desc);
+        embed.setImage("https://media.discordapp.net/attachments/1012866222657896558/1012866246393471027/Screen_Shot_2022-08-26_at_4.28.35_PM.png?width=694&height=598");
+        embed.setColor(help_);
+        JDA.sendEmbed(event, embed);
+        embed.clear();
+    }
+
     public static void viewChangelog(MessageReceivedEvent event) {
         User user = User.findUser(event);
         Server server = Server.findServer(event);

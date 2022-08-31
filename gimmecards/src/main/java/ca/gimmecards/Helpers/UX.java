@@ -119,17 +119,17 @@ public class UX implements Emotes {
         return formattedXP;
     }
 
-    public static String formatEnergy(Data data) {
-        String formattedEnergy = energy_ + " **" + UX.formatNumber(data.getCardPrice()) + "**";
+    public static String formatCredits(Data data) {
+        String formattedCredits = credits_ + " **" + UX.formatNumber(data.getCardPrice()) + "**";
 
         if(!Check.isSellable(data)) {
-            return formattedEnergy + " 🚫";
+            return formattedCredits + " 🚫";
         }
-        return formattedEnergy;
+        return formattedCredits;
     }
 
-    public static String formatEnergy(int amount) {
-        return energy_ + " **" + UX.formatNumber(amount) + "**";
+    public static String formatCredits(int amount) {
+        return credits_ + " **" + UX.formatNumber(amount) + "**";
     }
 
     public static int findEmbedColour(Data data) {

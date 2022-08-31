@@ -11,31 +11,30 @@ public class TradeCmds extends Cmds {
         User user = User.findUser(event);
         Server server = Server.findServer(event);
         TradeDisplay disp = new TradeDisplay(user.getUserId()).findDisplay();
+        String mentionId = JDA.findMentionId(event, args[1]);
 
-        if(disp.tradeExists(user.getUserId())) {
+        if(mentionId == null) {
+            JDA.sendMessage(event, red_, "❌", "Whoops, I couldn't find that user...");
+
+        } else if(disp.tradeExists(user.getUserId())) {
             JDA.sendMessage(event, red_, "❌", "You're in a trade already!");
-
+            
         } else {
-            try {
-                String mentionId = event.getMessage().getMentions().getUsers().get(0).getId();
-                User mention = User.findOtherUser(event, mentionId);
+            User mention = User.findOtherUser(event, mentionId);
 
-                if(disp.tradeExists(mention.getUserId())) {
-                    JDA.sendMessage(event, red_, "❌", "That user is in a trade already!");
+            if(disp.tradeExists(mention.getUserId())) {
+                JDA.sendMessage(event, red_, "❌", "That user is in a trade already!");
 
-                } else if(mention.getUserId().equals(user.getUserId())) {
-                    JDA.sendMessage(event, red_, "❌", "You can't trade with yourself!");
-    
-                } else {
-                    disp.setUser1(user);
-                    disp.setUser2(mention);
-                    disp.setUserInfo1(new UserInfo(event));
-                    disp.setUserInfo2(new UserInfo(mention, event));
+            } else if(mention.getUserId().equals(user.getUserId())) {
+                JDA.sendMessage(event, red_, "❌", "You can't trade with yourself!");
 
-                    JDA.sendDynamicEmbed(event, user, server, disp, -1);
-                }
-            } catch(NumberFormatException | IndexOutOfBoundsException e) {
-                JDA.sendMessage(event, red_, "❌", "Whoops, I couldn't find that user...");
+            } else {
+                disp.setUser1(user);
+                disp.setUser2(mention);
+                disp.setUserInfo1(new UserInfo(event));
+                disp.setUserInfo2(new UserInfo(mention, event));
+
+                JDA.sendDynamicEmbed(event, user, server, disp, -1);
             }
         }
     }
@@ -65,7 +64,9 @@ public class TradeCmds extends Cmds {
                     JDA.sendMessage(event, red_, "❌", "You can't offer any more of that card!");
 
                 } else {
-                    disp.addTax(user.getUserId(), (int)(data.getCardPrice() * 0.25));
+                    if(Check.isSellable(data)) {
+                        disp.addTax(user.getUserId(), (int)(data.getCardPrice() * 0.25));
+                    }
 
                     Update.updateTradeDisplay(event, user);
 
@@ -100,7 +101,9 @@ public class TradeCmds extends Cmds {
                 } else {
                     offers.remove(index);
                 }
-                disp.addTax(user.getUserId(), -(int)(data.getCardPrice() * 0.25));
+                if(Check.isSellable(data)) {
+                    disp.addTax(user.getUserId(), -(int)(data.getCardPrice() * 0.25));
+                }
 
                 Update.updateTradeDisplay(event, user);
 
@@ -122,8 +125,8 @@ public class TradeCmds extends Cmds {
         } else if(disp.getAccept(user.getUserId())) {
             JDA.sendMessage(event, red_, "❌", "You've already accepted the trade!");
 
-        } else if(disp.getUser(user.getUserId()).getEnergy() < disp.getTax(user.getUserId())) {
-            JDA.sendMessage(event, red_, "❌", "Sorry, you don't have enough " + energy_ + " **Credits**");
+        } else if(disp.getUser(user.getUserId()).getCredits() < disp.getTax(user.getUserId())) {
+            JDA.sendMessage(event, red_, "❌", "Sorry, you don't have enough " + credits_ + " **Credits**");
 
         } else {
             disp.setAccept(user.getUserId(), true);
@@ -138,14 +141,14 @@ public class TradeCmds extends Cmds {
                 String msg = "";
 
                 msg += UX.formatNick(event) + " accepted and completed the trade!";
-                msg += user.updateEnergy(-disp.getTax(user.getUserId()), true) + "\n\n";
+                msg += user.updateCredits(-disp.getTax(user.getUserId()), true) + "\n\n";
 
                 if(disp.isUser1(user.getUserId())) {
                     msg += UX.formatNick(disp.getUser2(), event) + "'s Trading Fee:";
-                    msg += disp.getUser2().updateEnergy(-disp.getTax2(), true) + "\n";
+                    msg += disp.getUser2().updateCredits(-disp.getTax2(), true) + "\n";
                 } else {
                     msg += UX.formatNick(disp.getUser1(), event) + "'s Trading Fee:";
-                    msg += disp.getUser1().updateEnergy(-disp.getTax1(), true) + "\n";
+                    msg += disp.getUser1().updateCredits(-disp.getTax1(), true) + "\n";
                 }
                 tradeCards(disp.getUser1(), disp.getOffers1(), disp.getOffers2());
                 tradeCards(disp.getUser2(), disp.getOffers2(), disp.getOffers1());

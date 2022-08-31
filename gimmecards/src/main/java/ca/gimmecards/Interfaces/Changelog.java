@@ -263,6 +263,25 @@ public interface Changelog {
         + "🔹[selldupes] now won't sell your favorited cards\n"
         + "🔸Added ***7*** more custom cards\n\n"
         + "*If your custom card wasn't added, it's likely because you "
-        + "didn't specify how much XP you'd like it to cost; Please resubmit your card*"
+        + "didn't specify how much XP you'd like it to cost; Please resubmit your card*",
+
+        "**Update 8/26/2022**\n"
+        + "🔸Added ***12*** more custom cards\n"
+        + "🔹Made the bot run much faster 🏃\n"
+        + "🔹Purged all level 1, 0 XP accounts to make the bot run even faster\n"
+        + "🔹To reduce spam, opening packs (and other actions) now only send 1 message instead of 2\n"
+        + "🔹New command [patreon] that shows the patreon tier rewards\n"
+        + "🔹Trading unsellable cards now won't add a trade tax\n"
+        + "🔹Fixed a bug where using nicknames didn't work\n"
+        + "🔹Other bug fixes / small improvements\n"
+        + "🔹Added shortcuts for a few commands:\n"
+        + "```\n"
+        + "?redeem - ?rd\n"
+        + "?minigame - ?mini\n"
+        + "?backpack - ?bag\n"
+        + "?changelog - ?log\n"
+        + "?leaderboard - ?lb\n"
+        + "?cooldowns - ?cd\n"
+        + "```"
     };
 }

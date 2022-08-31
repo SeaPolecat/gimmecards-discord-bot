@@ -28,10 +28,10 @@ public class BackpackCmds extends Cmds {
 
             msg += UX.formatNick(event) + " redeemed a token!";
             msg += user.updateTokens(1, true);
-            msg += user.updateEnergy(UX.randRange(24, 30), false);
+            msg += user.updateCredits(UX.randRange(24, 30), false);
 
-            msg += "\n\nLooking to boost your TCG experience?\n"
-            + "[Click here](https://www.patreon.com/gimmecards) to support us on " + patreon_ + " **Patreon**";
+            msg += "\n\n[Click here](https://www.patreon.com/gimmecards) to join us on " 
+            + patreon_ + " **Patreon** ┇ `?patreon`";
 
             msg += "\n\n" + Main.updateMsg + "\n";
 
@@ -55,19 +55,19 @@ public class BackpackCmds extends Cmds {
             String msg = "";
             String footer = ui.getUserName() + "'s shiny card";
 
-            user.resetDailyEpoch();
-
+            msg += "🎴 ";
             msg += UX.formatNick(event) + " claimed their daily shiny card!";
-            msg += user.updateEnergy(UX.randRange(240, 300), true);
+            msg += user.updateCredits(UX.randRange(240, 300), true);
+
+            user.resetDailyEpoch();
 
             Card.addSingleCard(user, item, false);
 
             Update.updateBackpackDisplay(event, user);
             Update.updateCardDisplay(event, user);
             Update.updateViewDisplay(event, user);
-
-            JDA.sendMessage(event, user.getGameColor(), "🎴", msg);
-            Display.displayCard(event, user, ui, item, footer, false);
+            
+            Display.displayCard(event, user, ui, item, msg, footer, false);
             try { User.saveUsers(); } catch(Exception e) {}
         }
     }

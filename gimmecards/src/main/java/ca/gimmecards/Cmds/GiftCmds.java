@@ -81,12 +81,12 @@ public class GiftCmds extends Cmds {
                 String cardTitle = UX.findCardTitle(item, true);
                 String footer = mi.getUserName() + "'s gift";
 
+                msg += "🎴 ";
                 msg += UX.formatNick(mention, event) + " has received the gift of **" + cardTitle + "**";
 
                 Card.addSingleCard(mention, item, true);
-    
-                JDA.sendMessage(event, mention.getGameColor(), "🎴", msg);
-                Display.displayCard(event, mention, mi, item, footer, true);
+                
+                Display.displayCard(event, mention, mi, item, msg, footer, true);
                 try { User.saveUsers(); } catch(Exception e) {}
     
             } catch(NullPointerException e) {

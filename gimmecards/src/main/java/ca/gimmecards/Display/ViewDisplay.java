@@ -8,17 +8,21 @@ public class ViewDisplay extends Display {
 
     private String dispType;
     private ArrayList<Data> newCards;
+    private String message;
 
     public ViewDisplay(String ui) {
         super(ui);
         newCards = new ArrayList<Data>();
+        message = "";
     }
     
     public String getDispType() { return dispType; }
     public ArrayList<Data> getNewCards() { return newCards; }
+    public String getMessage() { return message; }
     //
     public void setDispType(String dt) { dispType = dt; }
     public void setNewCards(ArrayList<Data> nc) { newCards = nc; }
+    public void setMessage(String m) { message = m; }
 
     @Override
     public ViewDisplay findDisplay() {
@@ -42,25 +46,29 @@ public class ViewDisplay extends Display {
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
-        if(dispType.equals("old")) {
+        if(dispType.equalsIgnoreCase("old")) {
             setMaxPage(user.getCards().size());
-        } else if(dispType.equals("new")) {
+        } else if(dispType.equalsIgnoreCase("new")) {
             setMaxPage(newCards.size());
         }
-        if(dispType.equals("old")) {
+        if(dispType.equalsIgnoreCase("old")) {
             Card card = user.getCards().get(startIndex);
 
             data = user.getCards().get(startIndex).getData();
             cardTitle = UX.findCardTitle(data, card.getIsFav());
             sellable = card.getSellable();
 
-        } else if(dispType.equals("new")) {
+        } else if(dispType.equalsIgnoreCase("new")) {
             data = newCards.get(startIndex);
             cardTitle = UX.findCardTitle(data, false);
 
             if(!Check.ownsCard(user, data)) {
                 cardTitle += " 🆕";
             }
+        }
+        if(dispType.equalsIgnoreCase("new")) {
+            desc += message;
+            desc += "\n┅┅\n";
         }
         desc += "**Rarity** ┇ " + UX.findRarityEmote(data) + " " + data.getCardRarity() + "\n";
         desc += "**Card Set** ┇ " + data.getSetEmote() + " " + data.getSetName() + "\n";

@@ -26,17 +26,25 @@ public class Server implements StoragePaths {
     private Long marketEpoch;
 
     public Server(String si) {
-        serverId = Main.encryptor.encrypt(si);
+        serverId = si;
         prefix = "?";
         market = new ArrayList<Data>();
         marketEpoch = (long)(0);
     }
 
-    public String getServerId() { return Main.encryptor.decrypt(serverId); }
+    public Server(Server server) {
+        serverId = Main.encryptor.encrypt(server.getServerId());
+        prefix = server.getPrefix();
+        market = server.getMarket();
+        marketEpoch = server.getMarketEpoch();
+    }
+
+    public String getServerId() { return serverId; }
     public String getPrefix() { return prefix; }
     public ArrayList<Data> getMarket() { return market; }
     public long getMarketEpoch() { return marketEpoch; }
     //
+    public void setServerId(String si) { serverId = si; }
     public void setPrefix(String p) { prefix = p; }
     public void resetMarketEpoch() { marketEpoch = Calendar.getInstance().getTimeInMillis() / 60000; }
 
@@ -62,13 +70,21 @@ public class Server implements StoragePaths {
         Reader reader = new InputStreamReader(new FileInputStream(determinePath()), "UTF-8");
         servers = new Gson().fromJson(reader, new TypeToken<ArrayList<Server>>() {}.getType());
 
+        for(Server s : servers) {
+            s.setServerId(Main.encryptor.decrypt(s.getServerId()));
+        }
         reader.close();
     }
 
     public static void saveServers() throws Exception {
         Gson gson = new GsonBuilder().create();
         Writer writer = new OutputStreamWriter(new FileOutputStream(determinePath()), "UTF-8");
-        gson.toJson(servers, writer);
+        ArrayList<Server> encServers = new ArrayList<Server>();
+        
+        for(Server s : servers) {
+            encServers.add(new Server(s));
+        }
+        gson.toJson(encServers, writer);
         writer.close();
     }
 

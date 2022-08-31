@@ -13,10 +13,6 @@ public class Cmds extends ListenerAdapter implements Emotes, Colors {
         String[] args = event.getMessage().getContentRaw().split("\\s+");
 
         if(event.getAuthor().getId().equals("454773340163538955")) {
-            if(args[0].equalsIgnoreCase("?lockbot")) {
-                Main.isLocked = true;
-                JDA.sendMessage(event, blue_, "", "`Locked Gimme Cards.`");
-            }
             if(args[0].equalsIgnoreCase("?unlockbot")) {
                 Main.isLocked = false;
                 JDA.sendMessage(event, blue_, "", "`Unlocked Gimme Cards.`");
@@ -32,155 +28,163 @@ public class Cmds extends ListenerAdapter implements Emotes, Colors {
 
         //DEVELOPER
         if(event.getAuthor().getId().equals("454773340163538955")) {
+            if(args[0].equalsIgnoreCase("?lockbot")) {
+                Main.isLocked = true;
+                JDA.sendMessage(event, blue_, "", "`Locked Gimme Cards.`");
+            }
+
             //TESTING
-            if(isValidCommand(event, args, "test", null)) {
+            if(isValidCommand(event, args, new String[]{"test"}, null)) {
                 TestingCmds.testSomething(event);
             }
-            if(isValidCommand(event, args, "stats", null)) {
+            if(isValidCommand(event, args, new String[]{"stats"}, null)) {
                 DataCmds.viewStats(event);
             }
 
             //DATA
-            if(isValidCommand(event, args, "data", null)) {
+            if(isValidCommand(event, args, new String[]{"data"}, null)) {
                 DataCmds.viewData(event, "new");
             }
-            if(isValidCommand(event, args, "olddata", null)) {
+            if(isValidCommand(event, args, new String[]{"olddata"}, null)) {
                 DataCmds.viewData(event, "old");
             }
-            if(isValidCommand(event, args, "raredata", null)) {
+            if(isValidCommand(event, args, new String[]{"raredata"}, null)) {
                 DataCmds.viewData(event, "rare");
             }
-            if(isValidCommand(event, args, "promodata", null)) {
+            if(isValidCommand(event, args, new String[]{"promodata"}, null)) {
                 DataCmds.viewData(event, "promo");
             }
-            if(isValidCommand(event, args, "wipe", null)) {
+            if(isValidCommand(event, args, new String[]{"wipe"}, null)) {
                 DataCmds.wipeData(event);
             }
-            if(isValidCommand(event, args, "refresh", new String[]{"length change"})) {
+            if(isValidCommand(event, args, new String[]{"refresh"}, new String[]{"length change"})) {
                 DataCmds.refreshData(event, args);
             }
-            if(isValidCommand(event, args, "count", new String[]{"set code"})) {
+            if(isValidCommand(event, args, new String[]{"count"}, new String[]{"set code"})) {
                 DataCmds.countSetContent(event, args);
             }
-            if(isValidCommand(event, args, "add", new String[]{"set #"})) {
+            if(isValidCommand(event, args, new String[]{"add"}, new String[]{"set #"})) {
                 DataCmds.addContents(event, args, true);
             }
-            if(isValidCommand(event, args, "addold", new String[]{"set #"})) {
+            if(isValidCommand(event, args, new String[]{"addold"}, new String[]{"set #"})) {
                 DataCmds.addContents(event, args, false);
             }
-            if(isValidCommand(event, args, "addrare", new String[]{"set #"})) {
+            if(isValidCommand(event, args, new String[]{"addrare"}, new String[]{"set #"})) {
                 DataCmds.addSpecContents(event, args, true);
             }
-            if(isValidCommand(event, args, "addpromo", new String[]{"set #"})) {
+            if(isValidCommand(event, args, new String[]{"addpromo"}, new String[]{"set #"})) {
                 DataCmds.addSpecContents(event, args, false);
             }
         }
 
         //PRIVACY
-        if(isValidCommand(event, args, "accdelete", null)) {
+        if(isValidCommand(event, args, new String[]{"accdelete"}, null)) {
             PrivacyCmds.deleteAccount(event);
         }
-        if(isValidCommand(event, args, "confirm", null)) {
+        if(isValidCommand(event, args, new String[]{"confirm"}, null)) {
             PrivacyCmds.confirmDeletion(event);
         }
-        if(isValidCommand(event, args, "deny", null)) {
+        if(isValidCommand(event, args, new String[]{"deny"}, null)) {
             PrivacyCmds.denyDeletion(event);
         }
 
         //GIFT
-        if(isValidCommand(event, args, "gifttoken", new String[]{"user", "amount"})) {
+        if(isValidCommand(event, args, new String[]{"gifttoken"}, new String[]{"@user", "amount"})) {
             GiftCmds.giftToken(event, args);
         }
-        if(isValidCommand(event, args, "giftstar", new String[]{"user", "amount"})) {
+        if(isValidCommand(event, args, new String[]{"giftstar"}, new String[]{"@user", "amount"})) {
             GiftCmds.giftStar(event, args);
         }
-        if(isValidCommand(event, args, "giftcard", new String[]{"user", "card ID"})) {
+        if(isValidCommand(event, args, new String[]{"giftcard"}, new String[]{"@user", "card ID"})) {
             GiftCmds.giftCard(event, args);
         }
-        if(isValidCommand(event, args, "tier1", new String[]{"user"})) {
+        if(isValidCommand(event, args, new String[]{"tier1"}, new String[]{"@user"})) {
             GiftCmds.giftRare(event, args);
         }
-        if(isValidCommand(event, args, "tier2", new String[]{"user"})) {
+        if(isValidCommand(event, args, new String[]{"tier2"}, new String[]{"@user"})) {
             GiftCmds.giftRadiantRare(event, args);
         }
-        if(isValidCommand(event, args, "untier", new String[]{"user"})) {
+        if(isValidCommand(event, args, new String[]{"untier"}, new String[]{"@user"})) {
             GiftCmds.removePatreonRewards(event, args);
         }
-        if(isValidCommand(event, args, "giftbadge", new String[]{"user"})) {
+        if(isValidCommand(event, args, new String[]{"giftbadge"}, new String[]{"@user"})) {
             GiftCmds.giftHelperBadge(event, args);
         }
-        if(isValidCommand(event, args, "ungiftbadge", new String[]{"user"})) {
+        if(isValidCommand(event, args, new String[]{"ungiftbadge"}, new String[]{"@user"})) {
             GiftCmds.removeHelperBadge(event, args);
         }
 
         //HELP
-        if(isValidCommand(event, args, "setprefix", new String[]{"prefix"})) {
+        if(isValidCommand(event, args, new String[]{"setprefix"}, new String[]{"prefix"})) {
             HelpCmds.changePrefix(event, args);
         }
-        if(isValidCommand(event, args, "help", null) || args[0].equalsIgnoreCase("?help")) {
+        if(isValidCommand(event, args, new String[]{"help"}, null) || args[0].equalsIgnoreCase("?help")) {
             HelpCmds.viewHelp(event);
         }
-        if(isValidCommand(event, args, "rarities", null)) {
+        if(isValidCommand(event, args, new String[]{"rarities"}, null)) {
             HelpCmds.viewRarities(event);
         }
-        if(isValidCommand(event, args, "badges", null)) {
+        if(isValidCommand(event, args, new String[]{"badges"}, null)) {
             HelpCmds.viewBadges(event);
         }
-        if(isValidCommand(event, args, "changelog", null)) {
+        if(isValidCommand(event, args, new String[]{"patreon"}, null)) {
+            HelpCmds.viewPatreon(event);
+        }
+        if(isValidCommand(event, args, new String[]{"changelog", "log"}, null)) {
             HelpCmds.viewChangelog(event);
         }
 
         //LEADERBOARD
-        if(isValidCommand(event, args, "ranks", null)) {
+        if(isValidCommand(event, args, new String[]{"ranks"}, null)) {
             LeaderboardCmds.viewRanks(event);
         }
-        if(isValidCommand(event, args, "leaderboard", null)) {
+        if(isValidCommand(event, args, new String[]{"leaderboard", "lb"}, null)) {
             LeaderboardCmds.viewLeaderboard(event);
         }
 
         //BACKPACK
-        if(isValidCommand(event, args, "backpack", null)) {
+        if(isValidCommand(event, args, new String[]{"backpack", "bag"}, null)) {
             if(args.length < 2) {
                 BackpackCmds.viewBackpack(event);
             } else {
                 BackpackCmds_.viewBackpack_(event, args);
             }
         }
-        if(isValidCommand(event, args, "redeem", null)) {
+        if(isValidCommand(event, args, new String[]{"redeem", "rd"}, null)) {
             BackpackCmds.redeemToken(event);
         }
-        if(isValidCommand(event, args, "daily", null)) {
+        if(isValidCommand(event, args, new String[]{"daily"}, null)) {
             BackpackCmds.receiveDailyReward(event);
         }
-        if(isValidCommand(event, args, "setcolor", new String[]{"hex code"})) {
+        if(isValidCommand(event, args, new String[]{"setcolor"}, new String[]{"hex code"})) {
             BackpackCmds.assignGameColor(event, args);
         }
-        if(isValidCommand(event, args, "pin", new String[]{"card #"})) {
+        if(isValidCommand(event, args, new String[]{"pin"}, new String[]{"card #"})) {
             BackpackCmds.pinCard(event, args);
         }
-        if(isValidCommand(event, args, "cooldowns", null)) {
+        if(isValidCommand(event, args, new String[]{"cooldowns", "cd"}, null)) {
             BackpackCmds.viewCooldowns(event);
         }
 
         //SHOP
-        if(isValidCommand(event, args, "shop", null)) {
+        if(isValidCommand(event, args, new String[]{"shop"}, null)) {
             ShopCmds.viewShop(event);
         }
-        if(isValidCommand(event, args, "oldshop", null)) {
+        if(isValidCommand(event, args, new String[]{"oldshop"}, null)) {
             ShopCmds.viewOldShop(event);
         }
-        if(isValidCommand(event, args, "rareshop", null)) {
+        if(isValidCommand(event, args, new String[]{"rareshop"}, null)) {
             ShopCmds.viewRareShop(event);
         }
-        if(isValidCommand(event, args, "promoshop", null)) {
+        if(isValidCommand(event, args, new String[]{"promoshop"}, null)) {
             ShopCmds.viewPromoShop(event);
         }
-        if(isValidCommand(event, args, "unlock", new String[]{"pack name"})) {
+        if(isValidCommand(event, args, new String[]{"unlock"}, new String[]{"pack name"})) {
             ShopCmds.unlockPack(event, args);
         }
 
         //CARD
-        if(isValidCommand(event, args, "cards", null)) {
+        if(isValidCommand(event, args, new String[]{"cards"}, null)) {
             if(args.length < 2) {
                 CardCmds.viewCards(event, args);
             } else {
@@ -192,24 +196,24 @@ public class Cmds extends ListenerAdapter implements Emotes, Colors {
                 }
             }
         }
-        if(isValidCommand(event, args, "fav", new String[]{"card #"})) {
+        if(isValidCommand(event, args, new String[]{"fav"}, new String[]{"card #"})) {
             CardCmds.favouriteCard(event, args);
         }
-        if(isValidCommand(event, args, "unfav", new String[]{"card #"})) {
+        if(isValidCommand(event, args, new String[]{"unfav"}, new String[]{"card #"})) {
             CardCmds.unfavouriteCard(event, args);
         }
-        if(isValidCommand(event, args, "favall", null)) {
+        if(isValidCommand(event, args, new String[]{"favall"}, null)) {
             CardCmds.favouriteAll(event);
         }
-        if(isValidCommand(event, args, "sort", null)) { //conditions in command
+        if(isValidCommand(event, args, new String[]{"sort"}, null)) { //conditions in command
             CardCmds.sortCards(event, args);
         }
 
         //VIEW
-        if(isValidCommand(event, args, "open", new String[]{"pack name"})) {
+        if(isValidCommand(event, args, new String[]{"open"}, new String[]{"pack name"})) {
             ViewCmds.openPack(event, args);
         }
-        if(isValidCommand(event, args, "view", new String[]{"card #"})) {
+        if(isValidCommand(event, args, new String[]{"view"}, new String[]{"card #"})) {
             if(args.length < 3) {
                 ViewCmds.viewCard(event, args);
             } else {
@@ -218,68 +222,68 @@ public class Cmds extends ListenerAdapter implements Emotes, Colors {
         }
 
         //SELL
-        if(isValidCommand(event, args, "sell", new String[]{"card #"})) {
+        if(isValidCommand(event, args, new String[]{"sell"}, new String[]{"card #"})) {
             SellCmds.sellSingle(event, args);
         }
-        if(isValidCommand(event, args, "selldupes", null)) {
+        if(isValidCommand(event, args, new String[]{"selldupes"}, null)) {
             SellCmds.sellDuplicates(event);
         }
-        if(isValidCommand(event, args, "sellall", null)) {
+        if(isValidCommand(event, args, new String[]{"sellall"}, null)) {
             SellCmds.sellAll(event);
         }
 
         //MINIGAME
-        if(isValidCommand(event, args, "minigame", null)) {
+        if(isValidCommand(event, args, new String[]{"minigame", "mini"}, null)) {
             MinigameCmds.startMinigame(event);
         }
-        if(isValidCommand(event, args, "guess", new String[]{"rarity"})) {
+        if(isValidCommand(event, args, new String[]{"guess"}, new String[]{"rarity"})) {
             MinigameCmds.makeGuess(event, args);
         }
 
         //MARKET
-        if(isValidCommand(event, args, "market", null)) {
+        if(isValidCommand(event, args, new String[]{"market"}, null)) {
             MarketCmds.viewMarket(event);
         }
-        if(isValidCommand(event, args, "mview", new String[]{"card #"})) {
+        if(isValidCommand(event, args, new String[]{"mview"}, new String[]{"card #"})) {
             MarketCmds.viewItem(event, args);
         }
-        if(isValidCommand(event, args, "buy", new String[]{"card #"})) {
+        if(isValidCommand(event, args, new String[]{"buy"}, new String[]{"card #"})) {
             MarketCmds.purchaseItem(event, args);
         }
 
         //SEARCH
-        if(isValidCommand(event, args, "search", null)) { //conditions in command
+        if(isValidCommand(event, args, new String[]{"search"}, null)) { //conditions in command
             SearchCmds.searchCards(event, args);
         }
-        if(isValidCommand(event, args, "sview", new String[]{"card ID"})) {
+        if(isValidCommand(event, args, new String[]{"sview"}, new String[]{"card ID"})) {
             SearchCmds.viewAnyCard(event, args);
         }
 
         //VOTE
-        if(isValidCommand(event, args, "vote", null)) {
+        if(isValidCommand(event, args, new String[]{"vote"}, null)) {
             VoteCmds.voteBot(event);
         }
-        if(isValidCommand(event, args, "claim", null)) {
+        if(isValidCommand(event, args, new String[]{"claim"}, null)) {
             VoteCmds.claimReward(event);
         }
 
         //TRADE
-        if(isValidCommand(event, args, "trade", new String[]{"user"})) {
+        if(isValidCommand(event, args, new String[]{"trade"}, new String[]{"@user"})) {
             TradeCmds.sendTrade(event, args);
         }
-        if(isValidCommand(event, args, "offer", new String[]{"card #"})) {
+        if(isValidCommand(event, args, new String[]{"offer"}, new String[]{"card #"})) {
             TradeCmds.offerCard(event, args);
         }
-        if(isValidCommand(event, args, "unoffer", new String[]{"trade #"})) {
+        if(isValidCommand(event, args, new String[]{"unoffer"}, new String[]{"trade #"})) {
             TradeCmds.unofferCard(event, args);
         }
-        if(isValidCommand(event, args, "accept", null)) {
+        if(isValidCommand(event, args, new String[]{"accept"}, null)) {
             TradeCmds.acceptOffer(event);
         }
-        if(isValidCommand(event, args, "unaccept", null)) {
+        if(isValidCommand(event, args, new String[]{"unaccept"}, null)) {
             TradeCmds.unacceptOffer(event);
         }
-        if(isValidCommand(event, args, "reject", null)) {
+        if(isValidCommand(event, args, new String[]{"reject"}, null)) {
             TradeCmds.rejectOffer(event);
         }
     }
@@ -293,24 +297,26 @@ public class Cmds extends ListenerAdapter implements Emotes, Colors {
         return false;
     }
 
-    private static boolean isValidCommand(MessageReceivedEvent event, String[] args, String cmd, String[] params) {
+    private static boolean isValidCommand(MessageReceivedEvent event, String[] args, String[] cmds, String[] params) {
         Server server = Server.findServer(event);
 
-        if(args[0].equalsIgnoreCase(server.getPrefix() + cmd)) {
-            if(params == null) {
-                return true;
-
-            } else if(args.length >= params.length + 1) {
-                return true;
-
-            } else {
-                String guidance = "";
-                for(int i = 0; i < params.length; i++) {
-                    guidance += "(" + params[i] + ") ";
+        for(String cmd : cmds) {
+            if(args[0].equalsIgnoreCase(server.getPrefix() + cmd)) {
+                if(params == null) {
+                    return true;
+    
+                } else if(args.length >= params.length + 1) {
+                    return true;
+    
+                } else {
+                    String guidance = "";
+                    for(int i = 0; i < params.length; i++) {
+                        guidance += "(" + params[i] + ") ";
+                    }
+                    guidance = guidance.trim();
+    
+                    JDA.sendMessage(event, red_, "❌", "Please follow the format: `" + args[0] + " " + guidance + "`");
                 }
-                guidance = guidance.trim();
-
-                JDA.sendMessage(event, red_, "❌", "Please follow the format: `" + args[0] + " " + guidance + "`");
             }
         }
         return false;

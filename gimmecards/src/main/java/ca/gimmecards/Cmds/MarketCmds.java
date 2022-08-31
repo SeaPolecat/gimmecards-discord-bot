@@ -24,7 +24,7 @@ public class MarketCmds extends Cmds {
             desc += "`#" + count + "` " + UX.findCardTitle(item, false)
             + " ┇ " + UX.findRarityEmote(item) 
             + " ┇ " + item.getSetEmote()
-            + " ┇ " + UX.formatEnergy(item) + "\n";
+            + " ┇ " + UX.formatCredits(item) + "\n";
             count++;
         }
         desc += "┅┅\n";
@@ -65,26 +65,26 @@ public class MarketCmds extends Cmds {
                 int index = Integer.parseInt(args[1]) - 1;
                 Data item = server.getMarket().get(index);
     
-                if(user.getEnergy() < item.getCardPrice()) {
-                    JDA.sendMessage(event, red_, "❌", "Sorry, you don't have enough " + energy_ + " **Energy**");
+                if(user.getCredits() < item.getCardPrice()) {
+                    JDA.sendMessage(event, red_, "❌", "Sorry, you don't have enough " + credits_ + " **Credits**");
     
                 } else {
                     String msg = "";
                     String footer = ui.getUserName() + "'s purchase";
+    
+                    msg += mew_ + " ";
+                    msg += UX.formatNick(event) + " bought " + UX.findCardTitle(item, false) + " from the market!";
+                    msg += user.updateCredits(-item.getCardPrice(), true);
 
                     user.resetMarketEpoch();
-    
-                    msg += UX.formatNick(event) + " bought " + UX.findCardTitle(item, false) + " from the market!";
-                    msg += user.updateEnergy(-item.getCardPrice(), true);
     
                     Card.addSingleCard(user, item, false);
     
                     Update.updateBackpackDisplay(event, user);
                     Update.updateCardDisplay(event, user);
                     Update.updateViewDisplay(event, user);
-    
-                    JDA.sendMessage(event, user.getGameColor(), mew_, msg);
-                    Display.displayCard(event, user, ui, item, footer, false);
+                    
+                    Display.displayCard(event, user, ui, item, msg, footer, false);
                     try { User.saveUsers(); } catch(Exception e) {}
                 }
             } catch(NumberFormatException | IndexOutOfBoundsException e) {

@@ -17,7 +17,7 @@ public class SellCmds extends Cmds {
                 Card card = user.getCards().get(index);
                 String cardTitle = UX.findCardTitle(card.getData(), card.getIsFav());
                 int profit = findSingleProfit(user, index);
-                int energyReward = (int)(profit * 0.02);
+                int creditsReward = (int)(profit * 0.02);
                 
                 if(profit == -1) {
                     JDA.sendMessage(event, red_, "❌", "Sorry, that card is in your favourites!");
@@ -27,8 +27,8 @@ public class SellCmds extends Cmds {
 
                     msg += UX.formatNick(event) + " sold **" + cardTitle + "**";
                     msg += user.updateXP(profit, true);
-                    if(energyReward > 0) {
-                        msg += user.updateEnergy(energyReward, false);
+                    if(creditsReward > 0) {
+                        msg += user.updateCredits(creditsReward, false);
                     }
                     
                     Update.updateBackpackDisplay(event, user);
@@ -56,7 +56,7 @@ public class SellCmds extends Cmds {
 
         } else {
             int profit = findDuplicatesProfit(user);
-            int energyReward = (int)(profit * 0.02);
+            int creditsReward = (int)(profit * 0.02);
             
             if(profit == -1) {
                 JDA.sendMessage(event, red_, "❌", "Sorry, all your duplicate cards are in your favourites!");
@@ -66,8 +66,8 @@ public class SellCmds extends Cmds {
 
                 msg += UX.formatNick(event) + " sold all duplicates!";
                 msg += user.updateXP(profit, true);
-                if(energyReward > 0) {
-                    msg += user.updateEnergy(energyReward, false);
+                if(creditsReward > 0) {
+                    msg += user.updateCredits(creditsReward, false);
                 }
     
                 Update.updateBackpackDisplay(event, user);
@@ -89,7 +89,7 @@ public class SellCmds extends Cmds {
 
         } else {
             int profit = findAllProfit(user);
-            int energyReward = (int)(profit * 0.02);
+            int creditsReward = (int)(profit * 0.02);
 
             if(profit == -1) {
                 JDA.sendMessage(event, red_, "❌", "Sorry, all your cards are in your favourites!");
@@ -99,8 +99,8 @@ public class SellCmds extends Cmds {
 
                 msg += UX.formatNick(event) + " sold all their cards! (except favourites)";
                 msg += user.updateXP(profit, true);
-                if(energyReward > 0) {
-                    msg += user.updateEnergy(energyReward, false);
+                if(creditsReward > 0) {
+                    msg += user.updateCredits(creditsReward, false);
                 }
 
                 Update.updateBackpackDisplay(event, user);
