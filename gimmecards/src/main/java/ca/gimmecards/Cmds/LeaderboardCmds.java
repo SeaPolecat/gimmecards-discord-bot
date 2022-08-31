@@ -35,10 +35,10 @@ public class LeaderboardCmds extends Cmds implements Comparator<User> {
         ArrayList<User> players = new ArrayList<User>();
         ArrayList<UserInfo> playerInfos = new ArrayList<UserInfo>();
 
-        for(Member member : members) {
-            for(User player : User.users) {
-                if(member.getUser().getId().equals(player.getUserId())) {
-                    players.add(player);
+        for(User u : User.users) {
+            for(Member member : members) {
+                if(u.getUserId().equals(member.getUser().getId())) {
+                    players.add(u);
                     break;
                 }
             }

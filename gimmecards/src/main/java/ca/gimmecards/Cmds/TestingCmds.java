@@ -3,15 +3,15 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class TestingCmds extends Cmds {
 
-    /*public User(String id, int cc, int l, int xp, int mxp, int t, int e, int k, int s, long oe, long ve, long de, long re, long me, String sm, boolean si, ArrayList<String> b, ArrayList<String> p, ArrayList<Card> c) {
+    /*public User(String id, int gc, int cc, int l, int xp, int mxp, int t, int creds, int k, int s, long oe, long ve, long de, long re, long me, long marketE, String sm, boolean si, ArrayList<String> b, String pc, ArrayList<String> p, ArrayList<Card> c, boolean ir, boolean irr) {
         userId = id;
-        gameColor = 0;
+        gameColor = gc;
         cardCount = cc;
         level = l;
         XP = xp;
         maxXP = mxp;
         tokens = t;
-        energy = e;
+        credits = creds;
         keys = k;
         stars = s;
         openEpoch = oe;
@@ -19,15 +19,15 @@ public class TestingCmds extends Cmds {
         dailyEpoch = de;
         redeemEpoch = re;
         minigameEpoch = me;
-        marketEpoch = (long)(0);
+        marketEpoch = marketE;
         sortMethod = sm;
         sortIncreasing = si;
         badges = b;
-        pinCard = "";
+        pinCard = pc;
         packs = p;
         cards = c;
-        isRare = false;
-        isRadiantRare = false;
+        isRare = ir;
+        isRadiantRare = irr;
     }*/
 
     public static void testSomething(MessageReceivedEvent event) {
@@ -36,12 +36,13 @@ public class TestingCmds extends Cmds {
             User u = User.users.get(i);
             User user = new User(
                 u.getUserId(),
+                u.getGameColor(),
                 u.getCardCount(),
                 u.getLevel(),
                 u.getXP(),
                 u.getMaxXP(),
                 u.getTokens(),
-                u.getEnergy(),
+                u.getCredits(),
                 u.getKeys(),
                 u.getStars(),
                 u.getOpenEpoch(),
@@ -49,17 +50,20 @@ public class TestingCmds extends Cmds {
                 u.getDailyEpoch(),
                 u.getRedeemEpoch(),
                 u.getMinigameEpoch(),
+                u.getMarketEpoch(),
                 u.getSortMethod(),
                 u.getSortIncreasing(),
                 u.getBadges(),
+                u.getPinCard(),
                 u.getPacks(),
-                u.getCards()
+                u.getCards(),
+                u.getIsRare(),
+                u.getIsRadiantRare()
             );
             User.users.set(i, user);
         }
         for(User u : User.users) {
-            System.out.println(u.getIsRare());
-            System.out.println(u.getIsRadiantRare());
+            System.out.println(u.getCredits());
         }
         JDA.sendMessage(event, blue_, "", "done testing!");
         try { User.saveUsers(); } catch(Exception e) {}*/

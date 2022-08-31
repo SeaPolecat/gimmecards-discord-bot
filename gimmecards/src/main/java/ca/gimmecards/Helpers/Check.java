@@ -185,7 +185,7 @@ public class Check implements Emotes {
         UserInfo ui = new UserInfo(event);
 
         while(user.getXP() >= user.getMaxXP()) {
-            int energyReward = ((user.getLevel() + 9) / 10) * 100;
+            int creditsReward = ((user.getLevel() + 9) / 10) * 100;
             EmbedBuilder embed = new EmbedBuilder();
             String msg = "";
 
@@ -193,7 +193,7 @@ public class Check implements Emotes {
 
             msg += UX.formatNick(event) + " is now level **" + user.getLevel() + "** :tada:";
             msg += user.updateTokens(2, true);
-            msg += user.updateEnergy(energyReward, false);
+            msg += user.updateCredits(creditsReward, false);
             msg += user.updateKeys(1, false);
             msg += user.updateStars(1, false);
 

@@ -783,5 +783,149 @@ public interface CustomCards extends Emotes {
             new String[]{"Psychic"},
             300
         ),
+
+        new Data(
+            logo_,
+            "Gimme Cards",
+            "custom-65",
+            "Persian",
+            "Custom",
+            "https://media.discordapp.net/attachments/995802885487087797/1012939740686860328/unknown.png?width=443&height=616",
+            "Pokémon",
+            new String[]{"Colorless"},
+            500
+        ),
+
+        new Data(
+            logo_,
+            "Gimme Cards",
+            "custom-66",
+            "Breloom",
+            "Custom",
+            "https://media.discordapp.net/attachments/995802885487087797/1012939987047677952/unknown.png",
+            "Pokémon",
+            new String[]{"Grass"},
+            40
+        ),
+
+        new Data(
+            logo_,
+            "Gimme Cards",
+            "custom-67",
+            "The World V",
+            "Custom",
+            "https://media.discordapp.net/attachments/995802885487087797/1012940248659017798/unknown.png?width=444&height=617",
+            "Pokémon",
+            new String[]{"Fighting"},
+            400
+        ),
+
+        new Data(
+            logo_,
+            "Gimme Cards",
+            "custom-68",
+            "Star Platinum",
+            "Custom",
+            "https://media.discordapp.net/attachments/995802885487087797/1012940420008923246/unknown.png?width=444&height=617",
+            "Pokémon",
+            new String[]{"Fighting"},
+            350
+        ),
+
+        new Data(
+            logo_,
+            "Gimme Cards",
+            "custom-69",
+            "Star Platinum, The World! VMAX",
+            "Custom",
+            "https://media.discordapp.net/attachments/995802885487087797/1012940630416162916/unknown.png?width=444&height=617",
+            "Pokémon",
+            new String[]{"Fighting"},
+            700
+        ),
+
+        new Data(
+            logo_,
+            "Gimme Cards",
+            "custom-70",
+            "Tusk act 1",
+            "Custom",
+            "https://media.discordapp.net/attachments/995802885487087797/1012941201344823397/unknown.png?width=444&height=617",
+            "Pokémon",
+            new String[]{"Psychic"},
+            200
+        ),
+
+        new Data(
+            logo_,
+            "Gimme Cards",
+            "custom-71",
+            "Tusk act 2",
+            "Custom",
+            "https://media.discordapp.net/attachments/995802885487087797/1012941456144617472/unknown.png?width=444&height=617",
+            "Pokémon",
+            new String[]{"Psychic"},
+            450
+        ),
+
+        new Data(
+            logo_,
+            "Gimme Cards",
+            "custom-72",
+            "Tusk act 3",
+            "Custom",
+            "https://media.discordapp.net/attachments/995802885487087797/1012941614123057162/unknown.png?width=444&height=617",
+            "Pokémon",
+            new String[]{"Psychic"},
+            700
+        ),
+
+        new Data(
+            logo_,
+            "Gimme Cards",
+            "custom-73",
+            "Tusk act 4 VMAX",
+            "Custom",
+            "https://media.discordapp.net/attachments/995802885487087797/1012941795572863066/unknown.png?width=444&height=617",
+            "Pokémon",
+            new String[]{"Psychic"},
+            1150
+        ),
+
+        new Data(
+            logo_,
+            "Gimme Cards",
+            "custom-74",
+            "Golden Experience",
+            "Custom",
+            "https://media.discordapp.net/attachments/995802885487087797/1012941930960797817/unknown.png?width=444&height=617",
+            "Pokémon",
+            new String[]{"Fighting"},
+            250
+        ),
+
+        new Data(
+            logo_,
+            "Gimme Cards",
+            "custom-75",
+            "Requiem Arrow",
+            "Custom",
+            "https://media.discordapp.net/attachments/995802885487087797/1012942149320441916/unknown.png?width=444&height=617",
+            "Trainer",
+            null,
+            600
+        ),
+
+        new Data(
+            logo_,
+            "Gimme Cards",
+            "custom-76",
+            "G.E.R VMAX",
+            "Custom",
+            "https://media.discordapp.net/attachments/995802885487087797/1012942320959766598/unknown.png?width=444&height=617",
+            "Pokémon",
+            new String[]{"Colorless"},
+            1150
+        ),
     };
 }

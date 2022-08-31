@@ -77,7 +77,7 @@ public class SearchCmds extends Cmds {
             Data data = Card.findDataById(args[1]);
             String footer = "Card ID: " + data.getCardId();
 
-            Display.displayCard(event, user, ui, data, footer, false);
+            Display.displayCard(event, user, ui, data, "", footer, false);
 
         } catch(NullPointerException e) {
             JDA.sendMessage(event, red_, "❌", "Whoops, I couldn't find that card...");

@@ -48,11 +48,15 @@ public class Display extends ListenerAdapter implements Displays, Emotes, Colors
         return null;
     }
 
-    public static void displayCard(MessageReceivedEvent event, User user, UserInfo ui, Data data, String footer, boolean isFav) {
+    public static void displayCard(MessageReceivedEvent event, User user, UserInfo ui, Data data, String message, String footer, boolean isFav) {
         String cardTitle = UX.findCardTitle(data, isFav);
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
+        if(!message.isEmpty()) {
+            desc += message;
+            desc += "\n┅┅\n";
+        }
         desc += "**Rarity** ┇ " + UX.findRarityEmote(data) + " " + data.getCardRarity() + "\n";
         desc += "**Card Set** ┇ " + data.getSetEmote() + " " + data.getSetName() + "\n";
         desc += "**XP Value** ┇ " + UX.formatXP(data, Check.isSellable(data)) + "\n\n";

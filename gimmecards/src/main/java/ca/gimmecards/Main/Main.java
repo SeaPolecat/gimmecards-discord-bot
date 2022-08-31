@@ -24,7 +24,7 @@ public class Main {
     public static final String testToken = dotenv.get("TEST_TOKEN");
     public static final String dblToken = dotenv.get("DBL_TOKEN");
     public static final String encryptorPass = dotenv.get("ENCRYPTOR_PASS");
-    public static final String updateMsg = "🟠 New update on 8/17/2022 ┇ `?changelog`";
+    public static final String updateMsg = "🟡 New update on 8/26/2022 ┇ `?changelog`";
     public static boolean isLocked = false;
 
     public static void main(String[] args) throws LoginException {
@@ -37,7 +37,7 @@ public class Main {
         .build();
 
         jda = JDABuilder
-        .createDefault(botToken,
+        .createDefault(testToken,
         GatewayIntent.GUILD_MESSAGES,
         GatewayIntent.GUILD_MESSAGE_REACTIONS,
         GatewayIntent.GUILD_EMOJIS_AND_STICKERS,
@@ -49,7 +49,7 @@ public class Main {
         .build();
 
         jda.getPresence().setStatus(OnlineStatus.ONLINE);
-        jda.getPresence().setActivity(Activity.playing("?help"));
+        jda.getPresence().setActivity(Activity.playing("type ?help"));
 
         jda.addEventListener(new Ready());
         jda.addEventListener(new Cmds());

@@ -27,7 +27,7 @@ public class User implements StoragePaths, Emotes {
     private Integer XP;
     private Integer maxXP;
     private Integer tokens;
-    private Integer energy;
+    private Integer credits;
     private Integer keys;
     private Integer stars;
     private Long openEpoch;
@@ -46,14 +46,14 @@ public class User implements StoragePaths, Emotes {
     private Boolean isRadiantRare;
 
     public User(String ui) {
-        userId = Main.encryptor.encrypt(ui);
+        userId = ui;
         gameColor = 0;
         cardCount = 0;
         level = 1;
         XP = 0;
         maxXP = 500;
         tokens = 1;
-        energy = 0;
+        credits = 0;
         keys = 1;
         stars = 0;
         openEpoch = (long)(0);
@@ -72,14 +72,41 @@ public class User implements StoragePaths, Emotes {
         isRadiantRare = false;
     }
 
-    public String getUserId() { return Main.encryptor.decrypt(userId); }
+    public User(User user) {
+        userId = Main.encryptor.encrypt(user.getUserId());
+        gameColor = user.getGameColor();
+        cardCount = user.getCardCount();
+        level = user.getLevel();
+        XP = user.getXP();
+        maxXP = user.getMaxXP();
+        tokens = user.getTokens();
+        credits = user.getCredits();
+        keys = user.getKeys();
+        stars = user.getStars();
+        openEpoch = user.getOpenEpoch();
+        voteEpoch = user.getVoteEpoch();
+        dailyEpoch = user.getDailyEpoch();
+        redeemEpoch = user.getRedeemEpoch();
+        minigameEpoch = user.getMinigameEpoch();
+        marketEpoch = user.getMarketEpoch();
+        sortMethod = user.getSortMethod();
+        sortIncreasing = user.getSortIncreasing();
+        badges = user.getBadges();
+        pinCard = user.getPinCard();
+        packs = user.getPacks();
+        cards = user.getCards();
+        isRare = user.getIsRare();
+        isRadiantRare = user.getIsRadiantRare();
+    }
+
+    public String getUserId() { return userId; }
     public int getGameColor() { return gameColor; }
     public int getCardCount() { return cardCount; }
     public int getLevel() { return level; }
     public int getXP() { return XP; }
     public int getMaxXP() { return maxXP; }
     public int getTokens() { return tokens; }
-    public int getEnergy() { return energy; }
+    public int getCredits() { return credits; }
     public int getKeys() { return keys; }
     public int getStars() { return stars; }
     public long getOpenEpoch() { return openEpoch; }
@@ -102,7 +129,7 @@ public class User implements StoragePaths, Emotes {
     public void addCardCount() { cardCount++; }
     public void addXP(int xp) { XP += xp; }
     public void addTokens(int t) { tokens += t; }
-    public void addEnergy(int e) { energy += e; }
+    public void addCredits(int c) { credits += c; }
     public void addKeys(int k) { keys += k; }
     public void addStars(int s) { stars += s; }
     public void resetOpenEpoch() { openEpoch = Calendar.getInstance().getTimeInMillis() / 1000; }
@@ -134,6 +161,16 @@ public class User implements StoragePaths, Emotes {
         }
     }
 
+    private boolean isWeekend() {
+        Calendar cal = Calendar.getInstance();
+        int day = cal.get(Calendar.DAY_OF_WEEK);
+
+        if(day == 7 || day == 1) {
+            return true;
+        }
+        return false;
+    }
+
     public String updateXP(int quantity, boolean isStart) {
         String msg = "\n";
 
@@ -150,17 +187,11 @@ public class User implements StoragePaths, Emotes {
     public String updateTokens(int quantity, boolean isStart) {
         String msg = "\n";
 
-        if(getIsRadiantRare()) {
-            Main.dbl.getVotingMultiplier().whenComplete((multiplier, e) -> {
-                if(multiplier.isWeekend()) {
-                    addTokens(quantity * 2);
-                } else {
-                    addTokens(quantity);
-                }
-            });
-        } else {
-            addTokens(quantity);
+        if(getIsRadiantRare() && isWeekend() && quantity > 0) {
+            quantity = quantity * 2;
         }
+
+        addTokens(quantity);
         if(isStart) {
             msg += "┅┅\n";
         }
@@ -175,26 +206,20 @@ public class User implements StoragePaths, Emotes {
         return msg;
     }
 
-    public String updateEnergy(int quantity, boolean isStart) {
+    public String updateCredits(int quantity, boolean isStart) {
         String msg = "\n";
 
-        if(getIsRare() || getIsRadiantRare()) {
-            Main.dbl.getVotingMultiplier().whenComplete((multiplier, e) -> {
-                if(multiplier.isWeekend()) {
-                    addEnergy((int)(quantity * 1.25));
-                } else {
-                    addEnergy(quantity);
-                }
-            });
-        } else {
-            addEnergy(quantity);
+        if(getIsRare() || getIsRadiantRare() && isWeekend() && quantity > 0) {
+            quantity = (int)(quantity * 1.25);
         }
+
+        addCredits(quantity);
         if(isStart) {
             msg += "┅┅\n";
         }
         msg += (quantity > 0) ? "+ " : "- ";
         msg += UX.formatNumber(Math.abs(quantity));
-        msg += " " + energy_ + " **Credits**";
+        msg += " " + credits_ + " **Credits**";
 
         return msg;
     }
@@ -243,13 +268,21 @@ public class User implements StoragePaths, Emotes {
         Reader reader = new InputStreamReader(new FileInputStream(determinePath()), "UTF-8");
         users = new Gson().fromJson(reader, new TypeToken<ArrayList<User>>() {}.getType());
 
+        for(User u : users) {
+            u.setUserId(Main.encryptor.decrypt(u.getUserId()));
+        }
         reader.close();
     }
 
     public static void saveUsers() throws Exception {
         Gson gson = new GsonBuilder().create();
         Writer writer = new OutputStreamWriter(new FileOutputStream(determinePath()), "UTF-8");
-        gson.toJson(users, writer);
+        ArrayList<User> encUsers = new ArrayList<User>();
+
+        for(User u : users) {
+            encUsers.add(new User(u));
+        }
+        gson.toJson(encUsers, writer);
         writer.close();
     }
 

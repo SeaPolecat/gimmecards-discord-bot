@@ -101,23 +101,19 @@ public class Card implements CustomCards {
     }
 
     public static void addSingleCard(User user, Data data, boolean isFav) {
-        boolean exists = false;
         Card newCard = null;
 
         user.addCardCount();
         for(Card c : user.getCards()) {
-            String cardId2 = c.getData().getCardId();
+            String cardId = c.getData().getCardId();
 
-            if(data.getCardId().equals(cardId2)) {
-                exists = true;
-                newCard = c;
+            if(data.getCardId().equals(cardId)) {
                 c.addCardQuantity();
-                break;
+                return;
             }
         }
-        if(!exists) {
-            newCard = new Card(data, user.getCardCount(), Check.isSellable(data));
-        }
+        newCard = new Card(data, user.getCardCount(), Check.isSellable(data));
+
         if(isFav) {
             newCard.setIsFav(true);
         }

@@ -64,7 +64,7 @@ public class VoteCmds extends Cmds {
 
                     msg += UX.formatNick(event) + " claimed their gift! Thank you for voting 😊";
                     msg += user.updateTokens(5, true);
-                    msg += user.updateEnergy(UX.randRange(120, 150), false);
+                    msg += user.updateCredits(UX.randRange(120, 150), false);
                     msg += user.updateStars(1, false);
     
                     Update.updateBackpackDisplay(event, user);

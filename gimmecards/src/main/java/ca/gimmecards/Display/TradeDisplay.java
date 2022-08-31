@@ -181,7 +181,7 @@ public class TradeDisplay extends Display {
         } else {
             desc += "⏳ Deciding\n";
         }
-        desc += "**Trading Fee** ┇ " + UX.formatEnergy(tax1) + "\n";
+        desc += "**Trading Fee** ┇ " + UX.formatCredits(tax1) + "\n";
         desc += "┅┅\n";
 
         for(int i = 0; i < 5; i++) {
@@ -211,7 +211,7 @@ public class TradeDisplay extends Display {
         } else {
             desc += "⏳ Deciding\n";
         }
-        desc += "**Trading Fee** ┇ " + UX.formatEnergy(tax2) + "\n";
+        desc += "**Trading Fee** ┇ " + UX.formatCredits(tax2) + "\n";
         desc += "┅┅\n";
 
         for(int i = 0; i < 5; i++) {

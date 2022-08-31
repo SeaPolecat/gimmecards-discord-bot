@@ -53,6 +53,7 @@ public class Data implements StoragePaths {
         cardPrice = cp;
     }
 
+    //for the custom cards
     public Data(String se, String sn, String cId, String cn, String cr, String ci, String cSuper, String[] cSub, int cp) {
         setEmote = se;
         setName = sn;

@@ -164,7 +164,6 @@ public class CardCmds extends Cmds {
             Card.sortCards(user, user.getSortMethod(), user.getSortIncreasing());
 
             Update.updateCardDisplay(event, user);
-            Update.updateViewDisplay(event, user);
 
             JDA.sendMessage(event, user.getGameColor(), "🎴", "Your cards have been sorted!");
             try { User.saveUsers(); } catch(Exception e) {}

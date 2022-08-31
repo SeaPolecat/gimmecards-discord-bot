@@ -30,7 +30,7 @@ public class BackpackDisplay extends Display {
         desc += XP_ + " " + UX.formatNumber(user.getXP()) + "/" + UX.formatNumber(user.getMaxXP()) + " until next level\n";
         desc += "┅┅\n";
         desc += token_ + " **Tokens** ┇ " + UX.formatNumber(user.getTokens()) + "\n";
-        desc += energy_ + " **Credits** ┇ " + UX.formatNumber(user.getEnergy()) + "\n";
+        desc += credits_ + " **Credits** ┇ " + UX.formatNumber(user.getCredits()) + "\n";
         desc += star_ + " **Stars** ┇ " + UX.formatNumber(user.getStars()) + "\n";
         desc += key_ + " **Keys** ┇ " + UX.formatNumber(user.getKeys()) + "\n";
         desc += "┅┅\n";

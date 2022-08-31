@@ -18,7 +18,7 @@ public interface Emotes {
     //non-animated
     String XP_ = "<:xp:864621773735329803>";
     String token_ = "<:token:864598045517414411>";
-    String energy_ = "<:credits:1007747540206223510>";
+    String credits_ = "<:credits:1007747540206223510>";
     String star_ = "<:star:954519273831800862>";
     String key_ = "<:key:875091820156162048>";
     String promostar_ = "<:promostar:955206901552001185>";

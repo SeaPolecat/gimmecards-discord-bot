@@ -44,7 +44,7 @@ public class MinigameCmds extends Cmds {
 
                 msg += UX.formatNick(event) + " won the minigame!";
                 msg += user.updateTokens(2, true);
-                msg += user.updateEnergy(UX.randRange(48, 60), false);
+                msg += user.updateCredits(UX.randRange(48, 60), false);
 
                 Update.updateBackpackDisplay(event, user);
 
@@ -56,7 +56,7 @@ public class MinigameCmds extends Cmds {
                     String msg = "";
 
                     msg += UX.formatNick(event) + " lost the minigame... But there's always next time!";
-                    msg += user.updateEnergy(UX.randRange(24, 30), true);
+                    msg += user.updateCredits(UX.randRange(24, 30), true);
 
                     Update.updateBackpackDisplay(event, user);
                     Update.updateMinigameDisplay(event, user);
