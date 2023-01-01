@@ -1,0 +1,29 @@
+fixes (ALL)
+----------------------------------
+-daily local storage deletion
+-make market cards limited (like 5 per day)
+-separate viewing and opening packs (have different Displays for each)
+
+
+
+features (at least 1)
+-----------------------------------
+-show which cards you sold in ?sellall
+-surprise cards in chat
+-Poke coins + new minigame
+-able to search your own cards
+-searching your inventory
+-people who've made more than 10 custom cards get their own set, and get a badge
+-sorting cards by rarity
+-community-run market
+-viewing cards with pics and not names (like a gallery)
+-Able to open multiple packs at the same time
+-can open with set code instead of the full name
+
+
+
+research (optional)
+-----------------------------------
+-users' card counts are potentially too big
+-find a way to generate true random in Java
+-reduce cpu load, try a binary search method and clearing all embeds
