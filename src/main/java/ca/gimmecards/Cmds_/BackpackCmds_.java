@@ -1,0 +1,31 @@
+package ca.gimmecards.Cmds_;
+import ca.gimmecards.Main.*;
+import ca.gimmecards.Cmds.*;
+import ca.gimmecards.Display_.*;
+import ca.gimmecards.Helpers.*;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
+
+public class BackpackCmds_ extends Cmds {
+    
+    public static void viewBackpack_(SlashCommandInteractionEvent event) {
+        User user = User.findUser(event);
+        BackpackDisplay_ disp = new BackpackDisplay_(user.getUserId()).findDisplay();
+        //
+        OptionMapping user_ = event.getOption("user");
+
+        if(user_ == null) { return; }
+
+        User mention = User.findOtherUser(event, user_.getAsUser().getId());
+        String mentionIcon = user_.getAsUser().getAvatarUrl();
+
+        if(mentionIcon == null) {
+            mentionIcon = user_.getAsUser().getDefaultAvatarUrl();
+        }
+        disp.setUser(user);
+        disp.setMention(mention);
+        disp.setMentionInfo(new UserInfo(mention, event));
+
+        JDA.sendDynamicEmbed(event, user, null, disp, -1);
+    }
+}
