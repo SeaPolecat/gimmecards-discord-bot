@@ -13,7 +13,6 @@ public interface Displays {
     public ArrayList<MarketDisplay> marketDisplays = new ArrayList<MarketDisplay>();
     public ArrayList<MinigameDisplay> minigameDisplays = new ArrayList<MinigameDisplay>();
     public ArrayList<OldShopDisplay> oldShopDisplays = new ArrayList<OldShopDisplay>();
-    public ArrayList<PrivacyDisplay> privacyDisplays = new ArrayList<PrivacyDisplay>();
     public ArrayList<SearchDisplay> searchDisplays = new ArrayList<SearchDisplay>();
     public ArrayList<ShopDisplay> shopDisplays = new ArrayList<ShopDisplay>();
     public ArrayList<TradeDisplay> tradeDisplays = new ArrayList<TradeDisplay>();

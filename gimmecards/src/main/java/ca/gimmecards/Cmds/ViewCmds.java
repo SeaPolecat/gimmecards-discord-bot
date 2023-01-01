@@ -3,34 +3,34 @@ import ca.gimmecards.Interfaces.*;
 import ca.gimmecards.Main.*;
 import ca.gimmecards.Display.*;
 import ca.gimmecards.Helpers.*;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
 public class ViewCmds extends Cmds implements CustomCards {
 
-    public static void openPack(MessageReceivedEvent event, String[] args) {
+    public static void openPack(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
         UserInfo ui = new UserInfo(event);
         ViewDisplay disp = new ViewDisplay(user.getUserId()).findDisplay();
+        //
+        OptionMapping packName = event.getOption("pack-name");
+
+        if(packName == null) { return; }
 
         if(!Check.isCooldownDone(user.getOpenEpoch(), 5, false)) {
             JDA.sendMessage(event, red_, "⏰", "Please wait another " + Check.findTimeLeft(user.getOpenEpoch(), 5, false));
 
         } else {
             try {
-                String setName = "";
-                for(int i = 1; i < args.length; i++) {
-                    setName += args[i] + " ";
-                }
-                setName = setName.trim();
-                Data set = Data.findSet(setName);
+                Data set = Data.findSet(packName.getAsString());
 
-                if(setName.equalsIgnoreCase("gimme cards")) {
+                if(packName.getAsString().equalsIgnoreCase("gimme cards")) {
                     if(user.getStars() < 1) {
                         JDA.sendMessage(event, red_, "❌", "Sorry, you're out of " + star_ + " **Stars**");
 
                     } else {
                         String msg = "";
-                        String footer = event.getAuthor().getName() + "'s exclusive card";
+                        String footer = event.getUser().getName() + "'s exclusive card";
                         Data item = Card.pickCard(customs);
 
                         msg += charmander_ + " ";
@@ -40,10 +40,6 @@ public class ViewCmds extends Cmds implements CustomCards {
 
                         user.resetOpenEpoch();
                         Card.addSingleCard(user, item, false);
-    
-                        Update.updateBackpackDisplay(event, user);
-                        Update.updateCardDisplay(event, user);
-                        Update.updateViewDisplay(event, user);
                         
                         Display.displayCard(event, user, ui, item, msg, footer, false);
                         try { User.saveUsers(); } catch(Exception e) {}
@@ -55,7 +51,7 @@ public class ViewCmds extends Cmds implements CustomCards {
 
                     } else {
                         String msg = "";
-                        String footer = event.getAuthor().getName();
+                        String footer = event.getUser().getName();
                         Data item = Card.pickCard(set.getSpecs());
 
                         if(Check.isRareSet(set)) {
@@ -71,10 +67,6 @@ public class ViewCmds extends Cmds implements CustomCards {
 
                         user.resetOpenEpoch();
                         Card.addSingleCard(user, item, false);
-    
-                        Update.updateBackpackDisplay(event, user);
-                        Update.updateCardDisplay(event, user);
-                        Update.updateViewDisplay(event, user);
 
                         Display.displayCard(event, user, ui, item, msg, footer, false);
                         try { User.saveUsers(); } catch(Exception e) {}
@@ -104,10 +96,6 @@ public class ViewCmds extends Cmds implements CustomCards {
                         disp.setMessage(msg);
 
                         user.resetOpenEpoch();
-    
-                        Update.updateBackpackDisplay(event, user);
-                        Update.updateCardDisplay(event, user);
-                        Update.updateViewDisplay(event, user);
 
                         JDA.sendDynamicEmbed(event, user, null, disp, 1);
                         try { User.saveUsers(); } catch(Exception e) {}
@@ -119,16 +107,20 @@ public class ViewCmds extends Cmds implements CustomCards {
         }
     }
 
-    public static void viewCard(MessageReceivedEvent event, String[] args) {
+    public static void viewCard(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
         ViewDisplay disp = new ViewDisplay(user.getUserId()).findDisplay();
+        //
+        OptionMapping cardNum = event.getOption("card-number");
+
+        if(cardNum == null) { return; }
 
         try {
             if(user.getCards().size() < 1) {
                 JDA.sendMessage(event, red_, "❌", "You don't have any cards yet!");
 
             } else {
-                int page = Integer.parseInt(args[1]);
+                int page = cardNum.getAsInt();
 
                 disp.setDispType("old");
 

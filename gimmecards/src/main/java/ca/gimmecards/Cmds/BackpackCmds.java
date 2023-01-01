@@ -2,19 +2,20 @@ package ca.gimmecards.Cmds;
 import ca.gimmecards.Main.*;
 import ca.gimmecards.Display.*;
 import ca.gimmecards.Helpers.*;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 public class BackpackCmds extends Cmds {
 
-    public static void viewBackpack(MessageReceivedEvent event) {
+    public static void viewBackpack(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
         BackpackDisplay disp = new BackpackDisplay(user.getUserId()).findDisplay();
 
         JDA.sendDynamicEmbed(event, user, null, disp, -1);
     }
 
-    public static void redeemToken(MessageReceivedEvent event) {
+    public static void redeemToken(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
 
         if(!Check.isCooldownDone(user.getRedeemEpoch(), Check.findCooldown(user, 30), true)) {
@@ -35,14 +36,12 @@ public class BackpackCmds extends Cmds {
 
             msg += "\n\n" + Main.updateMsg + "\n";
 
-            Update.updateBackpackDisplay(event, user);
-
             JDA.sendMessage(event, user.getGameColor(), "🎒", msg);
             try { User.saveUsers(); } catch(Exception e) {}
         }
     }
 
-    public static void receiveDailyReward(MessageReceivedEvent event) {
+    public static void receiveDailyReward(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
         UserInfo ui = new UserInfo(event);
 
@@ -62,47 +61,48 @@ public class BackpackCmds extends Cmds {
             user.resetDailyEpoch();
 
             Card.addSingleCard(user, item, false);
-
-            Update.updateBackpackDisplay(event, user);
-            Update.updateCardDisplay(event, user);
-            Update.updateViewDisplay(event, user);
             
             Display.displayCard(event, user, ui, item, msg, footer, false);
             try { User.saveUsers(); } catch(Exception e) {}
         }
     }
 
-    public static void assignGameColor(MessageReceivedEvent event, String[] args) {
+    public static void assignGameColor(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
+        //
+        OptionMapping hexCode = event.getOption("hex-code");
+
+        if(hexCode == null) { return; }
 
         try {
-            int color = Integer.parseInt(args[1], 16);
+            int color = Integer.parseInt(hexCode.getAsString(), 16);
 
             user.setGameColor(color);
 
-            Update.updateBackpackDisplay(event, user);
-            Update.updateCardDisplay(event, user);
-
-            JDA.sendMessage(event, user.getGameColor(), eevee_, "Set your game's theme color to **" + args[1].toUpperCase() + "**");
+            JDA.sendMessage(event, user.getGameColor(), eevee_, 
+            "Set your game's theme color to **" + hexCode.getAsString().toUpperCase() + "**");
             try { User.saveUsers(); } catch(Exception e) {}
 
         } catch(NumberFormatException e) {
+            e.printStackTrace();
             JDA.sendMessage(event, red_, "❌", "That's not a valid hex code!");
         }
     }
 
-    public static void pinCard(MessageReceivedEvent event, String[] args) {
+    public static void pinCard(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
+        //
+        OptionMapping cardNum = event.getOption("card-number");
+
+        if(cardNum == null) { return; }
 
         try {
-            int index = Integer.parseInt(args[1]) - 1;
+            int index = cardNum.getAsInt() - 1;
             Card card = user.getCards().get(index);
             String cardTitle = UX.findCardTitle(card.getData(), false);
             String cardImage = card.getData().getCardImage();
 
             user.setPinCard(cardImage);
-            
-            Update.updateBackpackDisplay(event, user);
 
             JDA.sendMessage(event, user.getGameColor(), "🎒", "**" + cardTitle + "** has been pinned to your backpack!");
             try { User.saveUsers(); } catch(Exception e) {}
@@ -112,7 +112,7 @@ public class BackpackCmds extends Cmds {
         }
     }
 
-    public static void viewCooldowns(MessageReceivedEvent event) {
+    public static void viewCooldowns(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
         Server server = Server.findServer(event);
         UserInfo ui = new UserInfo(event);

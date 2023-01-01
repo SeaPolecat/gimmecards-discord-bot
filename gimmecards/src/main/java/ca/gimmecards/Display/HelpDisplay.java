@@ -29,7 +29,7 @@ public class HelpDisplay extends Display {
         String desc = "";
 
         setMaxPage(Changelog.changelog.length);
-        desc = Changelog.changelog[startIndex].replace("[", "`" + server.getPrefix()).replace("]", "`");
+        desc = Changelog.changelog[startIndex].replace("[", "`/").replace("]", "`");
         
         embed.setTitle(eevee_ + " Le Changelog " + eevee_);
         embed.setDescription(desc);

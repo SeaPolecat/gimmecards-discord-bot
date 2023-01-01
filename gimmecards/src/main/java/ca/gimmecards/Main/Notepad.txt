@@ -3,6 +3,8 @@ fixes (ALL)
 -daily local storage deletion
 -make market cards limited (like 5 per day)
 
+-separate viewing and opening packs (have different Displays for each)
+
 
 
 features (at least 1)

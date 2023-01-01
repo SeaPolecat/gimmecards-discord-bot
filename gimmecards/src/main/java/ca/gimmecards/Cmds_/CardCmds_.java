@@ -3,41 +3,39 @@ import ca.gimmecards.Main.*;
 import ca.gimmecards.Cmds.*;
 import ca.gimmecards.Display_.*;
 import ca.gimmecards.Helpers.*;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
 public class CardCmds_ extends Cmds {
     
-    public static void viewCards_(MessageReceivedEvent event, String[] args) {
+    public static void viewCards_(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
         CardDisplay_ disp = new CardDisplay_(user.getUserId()).findDisplay();
-        String mentionId = JDA.findMentionId(event, args[1]);
+        //
+        OptionMapping page = event.getOption("page");
+        OptionMapping user_ = event.getOption("user");
 
-        if(mentionId == null) {
-            JDA.sendMessage(event, red_, "❌", "Whoops, I couldn't find that user...");
+        if(user_ == null) { return; }
+
+        User mention = User.findOtherUser(event, user_.getAsUser().getId());
+
+        if(mention.getCards().size() < 1) {
+            JDA.sendMessage(event, red_, "❌", "That user doesn't have any cards yet!");
 
         } else {
-            User mention = User.findOtherUser(event, mentionId);
+            disp.setUser(user);
+            disp.setMention(mention);
+            disp.setMentionInfo(new UserInfo(mention, event));
 
-            if(mention.getCards().size() < 1) {
-                JDA.sendMessage(event, red_, "❌", "That user doesn't have any cards yet!");
+            if(page != null) {
+                try {
+                    JDA.sendDynamicEmbed(event, user, null, disp, page.getAsInt());
 
-            } else {
-                disp.setUser(user);
-                disp.setMention(mention);
-                disp.setMentionInfo(new UserInfo(mention, event));
-
-                if(args.length > 2) {
-                    try {
-                        int page = Integer.parseInt(args[2]);
-
-                        JDA.sendDynamicEmbed(event, user, null, disp, page);
-
-                    } catch(NumberFormatException | IndexOutOfBoundsException e) {
-                        JDA.sendMessage(event, red_, "❌", "Whoops, I couldn't find that page...");
-                    }
-                } else {
-                    JDA.sendDynamicEmbed(event, user, null, disp, 1);
+                } catch(NumberFormatException | IndexOutOfBoundsException e) {
+                    JDA.sendMessage(event, red_, "❌", "Whoops, I couldn't find that page...");
                 }
+            } else {
+                JDA.sendDynamicEmbed(event, user, null, disp, 1);
             }
         }
     }

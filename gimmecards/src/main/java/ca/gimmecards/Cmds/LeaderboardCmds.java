@@ -2,7 +2,8 @@ package ca.gimmecards.Cmds;
 import ca.gimmecards.Main.*;
 import ca.gimmecards.Display.LeaderboardDisplay;
 import ca.gimmecards.Helpers.*;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import java.util.Collections;
 import java.util.Comparator;
@@ -28,34 +29,38 @@ public class LeaderboardCmds extends Cmds implements Comparator<User> {
         }
     }
     
-    public static void viewRanks(MessageReceivedEvent event) {
+    public static void viewRanks(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
         LeaderboardDisplay disp = new LeaderboardDisplay(user.getUserId()).findDisplay();
-        List<Member> members = event.getGuild().getMembers();
-        ArrayList<User> players = new ArrayList<User>();
-        ArrayList<UserInfo> playerInfos = new ArrayList<UserInfo>();
+        Guild guild = event.getGuild();
 
-        for(User u : User.users) {
-            for(Member member : members) {
-                if(u.getUserId().equals(member.getUser().getId())) {
-                    players.add(u);
-                    break;
+        if(guild != null) {
+            List<Member> members = guild.getMembers();
+            ArrayList<User> players = new ArrayList<User>();
+            ArrayList<UserInfo> playerInfos = new ArrayList<UserInfo>();
+    
+            for(User u : User.users) {
+                for(Member member : members) {
+                    if(u.getUserId().equals(member.getUser().getId())) {
+                        players.add(u);
+                        break;
+                    }
                 }
             }
+            Collections.sort(players, new LeaderboardCmds());
+    
+            for(User player : players) {
+                playerInfos.add(new UserInfo(player, event));
+            }
+            disp.setDispType("ranks");
+            disp.setPlayers(players);
+            disp.setPlayerInfos(playerInfos);
+    
+            JDA.sendDynamicEmbed(event, user, null, disp, 1);
         }
-        Collections.sort(players, new LeaderboardCmds());
-
-        for(User player : players) {
-            playerInfos.add(new UserInfo(player, event));
-        }
-        disp.setDispType("ranks");
-        disp.setPlayers(players);
-        disp.setPlayerInfos(playerInfos);
-
-        JDA.sendDynamicEmbed(event, user, null, disp, 1);
     }
 
-    public static void viewLeaderboard(MessageReceivedEvent event) {
+    public static void viewLeaderboard(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
         LeaderboardDisplay disp = new LeaderboardDisplay(user.getUserId()).findDisplay();
         ArrayList<User> players = new ArrayList<User>();

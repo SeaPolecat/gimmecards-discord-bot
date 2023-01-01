@@ -1,7 +1,7 @@
 package ca.gimmecards.Cmds;
 import ca.gimmecards.Main.*;
 import ca.gimmecards.Helpers.*;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
 import java.io.IOException;
 import java.net.http.HttpClient;
@@ -11,7 +11,7 @@ import java.net.URI;
 
 public class VoteCmds extends Cmds {
 
-    public static void voteBot(MessageReceivedEvent event) {
+    public static void voteBot(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
         Server server = Server.findServer(event);
 
@@ -34,7 +34,7 @@ public class VoteCmds extends Cmds {
         }
     }
     
-    public static void claimReward(MessageReceivedEvent event) {
+    public static void claimReward(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
         Server server = Server.findServer(event);
 
@@ -66,8 +66,6 @@ public class VoteCmds extends Cmds {
                     msg += user.updateTokens(5, true);
                     msg += user.updateCredits(UX.randRange(120, 150), false);
                     msg += user.updateStars(1, false);
-    
-                    Update.updateBackpackDisplay(event, user);
 
                     JDA.sendMessage(event, user.getGameColor(), lootbox_, msg);
                     try { User.saveUsers(); } catch(Exception e) {}

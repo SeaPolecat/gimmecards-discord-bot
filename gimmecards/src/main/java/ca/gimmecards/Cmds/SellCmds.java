@@ -1,19 +1,24 @@
 package ca.gimmecards.Cmds;
 import ca.gimmecards.Main.*;
 import ca.gimmecards.Helpers.*;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
 public class SellCmds extends Cmds {
 
-    public static void sellSingle(MessageReceivedEvent event, String[] args) {
+    public static void sellSingle(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
+        //
+        OptionMapping cardNum = event.getOption("card-number");
+
+        if(cardNum == null) { return; }
         
         if(user.getCards().size() < 1) {
             JDA.sendMessage(event, red_, "❌", "You don't have any cards to sell!");
 
         } else {
             try {
-                int index = Integer.parseInt(args[1]) - 1;
+                int index = cardNum.getAsInt() - 1;
                 Card card = user.getCards().get(index);
                 String cardTitle = UX.findCardTitle(card.getData(), card.getIsFav());
                 int profit = findSingleProfit(user, index);
@@ -30,13 +35,9 @@ public class SellCmds extends Cmds {
                     if(creditsReward > 0) {
                         msg += user.updateCredits(creditsReward, false);
                     }
-                    
-                    Update.updateBackpackDisplay(event, user);
-                    Update.updateCardDisplay(event, user);
-                    Update.updateViewDisplay(event, user);
+                    msg += Check.checkLevelUp(event, user);
                     
                     JDA.sendMessage(event, user.getGameColor(), "🎴", msg);
-                    Check.checkLevelUp(event, user);
                     try { User.saveUsers(); } catch(Exception e) {}
                 }
             } catch(NumberFormatException | IndexOutOfBoundsException e) {
@@ -45,7 +46,7 @@ public class SellCmds extends Cmds {
         }
     }
 
-    public static void sellDuplicates(MessageReceivedEvent event) {
+    public static void sellDuplicates(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
 
         if(user.getCards().size() < 1) {
@@ -69,19 +70,15 @@ public class SellCmds extends Cmds {
                 if(creditsReward > 0) {
                     msg += user.updateCredits(creditsReward, false);
                 }
-    
-                Update.updateBackpackDisplay(event, user);
-                Update.updateCardDisplay(event, user);
-                Update.updateViewDisplay(event, user);
+                msg += Check.checkLevelUp(event, user);
     
                 JDA.sendMessage(event, user.getGameColor(), "🎴", msg);
-                Check.checkLevelUp(event, user);
                 try { User.saveUsers(); } catch(Exception e) {}
             }
         }
     }
 
-    public static void sellAll(MessageReceivedEvent event) {
+    public static void sellAll(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
         
         if(user.getCards().size() < 1) {
@@ -102,13 +99,9 @@ public class SellCmds extends Cmds {
                 if(creditsReward > 0) {
                     msg += user.updateCredits(creditsReward, false);
                 }
-
-                Update.updateBackpackDisplay(event, user);
-                Update.updateCardDisplay(event, user);
-                Update.updateViewDisplay(event, user);
+                msg += Check.checkLevelUp(event, user);
         
                 JDA.sendMessage(event, user.getGameColor(), "🎴", msg);
-                Check.checkLevelUp(event, user);
                 try { User.saveUsers(); } catch(Exception e) {}
             }
         }

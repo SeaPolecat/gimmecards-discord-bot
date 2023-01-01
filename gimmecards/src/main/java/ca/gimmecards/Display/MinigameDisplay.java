@@ -6,22 +6,39 @@ import net.dv8tion.jda.api.EmbedBuilder;
 public class MinigameDisplay extends Display {
 
     private int tries;
+    private boolean isOver;
     private boolean hasWon;
     private Data data;
 
     public MinigameDisplay(String ui) {
         super(ui);
         tries = 3;
+        isOver = false;
         hasWon = false;
         data = Card.pickRandomCard();
     }
 
     public int getTries() { return tries; }
+    public boolean getIsOver() { return isOver; }
     public boolean getHasWon() { return hasWon; }
     public Data getData() { return data; }
     //
     public void minusTries() { tries--; }
-    public void winGame() { hasWon = true; }
+
+    public void resetGame() {
+        tries = 3;
+        isOver = false;
+        hasWon = false;
+        data = Card.pickRandomCard();
+    }
+
+    public void endGame(boolean win) { 
+        isOver = true;
+
+        if(win) {
+            hasWon = true;
+        }
+    }
 
     @Override
     public MinigameDisplay findDisplay() {
@@ -36,21 +53,11 @@ public class MinigameDisplay extends Display {
         return minigameDisplays.get(0);
     }
 
-    public void removeMinigameDisplay() {
-        for(int i = 0; i < minigameDisplays.size(); i++) {
-            if(minigameDisplays.get(i).getUserId().equals(this.getUserId())) {
-                minigameDisplays.remove(i);
-                break;
-            }
-        }
-    }
-
     public boolean isGuessCorrect(String guess) {
         String cardRarity = data.getCardRarity();
 
         minusTries();
         if(cardRarity.replaceAll("\\s+", "").equalsIgnoreCase(guess.replaceAll("\\s+", ""))) {
-            winGame();
             return true;
 
         } else {

@@ -2,82 +2,74 @@ package ca.gimmecards.Cmds;
 import ca.gimmecards.Main.*;
 import ca.gimmecards.Display.*;
 import ca.gimmecards.Helpers.*;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
 public class GiftCmds extends Cmds {
     
-    public static void giftToken(MessageReceivedEvent event, String[] args) {
+    public static void giftToken(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
-        String mentionId = JDA.findMentionId(event, args[1]);
+        //
+        OptionMapping user_ = event.getOption("user");
+        OptionMapping amount = event.getOption("amount");
+
+        if(user_ == null || amount == null) { return; }
 
         if(!user.getUserId().equals("454773340163538955")) {
-            return;
-
-        } else if(mentionId == null) {
-            JDA.sendMessage(event, red_, "❌", "Whoops, I couldn't find that user...");
+            JDA.sendMessage(event, red_, "❌", "Only the owner of Gimme Cards can use this command!");
 
         } else {
-            try {
-                String msg = "";
-                User mention = User.findOtherUser(event, mentionId);
-                int amount = Integer.parseInt(args[2]);
+            String msg = "";
+            User mention = User.findOtherUser(event, user_.getAsUser().getId());
 
-                msg += UX.formatNick(mention, event) + " has received a gift of tokens!";
-                msg += mention.updateTokens(amount, true);
-    
-                JDA.sendMessage(event, mention.getGameColor(), "🎒", msg);
-                try { User.saveUsers(); } catch(Exception e) {}
-    
-            } catch(NumberFormatException e) {
-                JDA.sendMessage(event, red_, "❌", "Please enter a valid amount!");
-            }
+            msg += UX.formatNick(mention, event) + " has received a gift of tokens!";
+            msg += mention.updateTokens(amount.getAsInt(), true);
+
+            JDA.sendMessage(event, mention.getGameColor(), "🎒", msg);
+            try { User.saveUsers(); } catch(Exception e) {}
         }
     }
 
-    public static void giftStar(MessageReceivedEvent event, String[] args) {
+    public static void giftStar(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
-        String mentionId = JDA.findMentionId(event, args[1]);
+        //
+        OptionMapping user_ = event.getOption("user");
+        OptionMapping amount = event.getOption("amount");
+
+        if(user_ == null || amount == null) { return; }
 
         if(!user.getUserId().equals("454773340163538955")) {
-            return;
-
-        } else if(mentionId == null) {
-            JDA.sendMessage(event, red_, "❌", "Whoops, I couldn't find that user...");
+            JDA.sendMessage(event, red_, "❌", "Only the owner of Gimme Cards can use this command!");
 
         } else {
-            try {
-                String msg = "";
-                User mention = User.findOtherUser(event, mentionId);
-                int amount = Integer.parseInt(args[2]);
+            String msg = "";
+            User mention = User.findOtherUser(event, user_.getAsUser().getId());
 
-                msg += UX.formatNick(mention, event) + " has received a gift of stars!";
-                msg += mention.updateStars(amount, true);
-    
-                JDA.sendMessage(event, mention.getGameColor(), "🎒", msg);
-                try { User.saveUsers(); } catch(Exception e) {}
-    
-            } catch(NumberFormatException e) {
-                JDA.sendMessage(event, red_, "❌", "Please enter a valid amount!");
-            }
+            msg += UX.formatNick(mention, event) + " has received a gift of stars!";
+            msg += mention.updateStars(amount.getAsInt(), true);
+
+            JDA.sendMessage(event, mention.getGameColor(), "🎒", msg);
+            try { User.saveUsers(); } catch(Exception e) {}
         }
     }
 
-    public static void giftCard(MessageReceivedEvent event, String[] args) {
+    public static void giftCard(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
-        String mentionId = JDA.findMentionId(event, args[1]);
+        //
+        OptionMapping user_ = event.getOption("user");
+        OptionMapping cardId = event.getOption("card-id");
+
+        if(user_ == null || cardId == null) { return; }
 
         if(!user.getUserId().equals("454773340163538955")) {
-            return;
-
-        } else if(mentionId == null) {
-            JDA.sendMessage(event, red_, "❌", "Whoops, I couldn't find that user...");
+            JDA.sendMessage(event, red_, "❌", "Only the owner of Gimme Cards can use this command!");
 
         } else {
             try {
                 String msg = "";
-                User mention = User.findOtherUser(event, mentionId);
+                User mention = User.findOtherUser(event, user_.getAsUser().getId());
                 UserInfo mi = new UserInfo(mention, event);
-                Data item = Card.findDataById(args[2]);
+                Data item = Card.findDataById(cardId.getAsString());
                 String cardTitle = UX.findCardTitle(item, true);
                 String footer = mi.getUserName() + "'s gift";
 
@@ -95,19 +87,19 @@ public class GiftCmds extends Cmds {
         }
     }
 
-    public static void giftRare(MessageReceivedEvent event, String[] args) {
+    public static void giftRare(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
-        String mentionId = JDA.findMentionId(event, args[1]);
+        //
+        OptionMapping user_ = event.getOption("user");
+
+        if(user_ == null) { return; }
 
         if(!user.getUserId().equals("454773340163538955")) {
-            return;
-
-        } else if(mentionId == null) {
-            JDA.sendMessage(event, red_, "❌", "Whoops, I couldn't find that user...");
+            JDA.sendMessage(event, red_, "❌", "Only the owner of Gimme Cards can use this command!");
 
         } else {
             String msg = "";
-            User mention = User.findOtherUser(event, mentionId);
+            User mention = User.findOtherUser(event, user_.getAsUser().getId());
 
             mention.setIsRare(true);
             if(!Check.ownsBadge(mention, "patreon")) {
@@ -127,19 +119,19 @@ public class GiftCmds extends Cmds {
         }
     }
 
-    public static void giftRadiantRare(MessageReceivedEvent event, String[] args) {
+    public static void giftRadiantRare(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
-        String mentionId = JDA.findMentionId(event, args[1]);
+        //
+        OptionMapping user_ = event.getOption("user");
+
+        if(user_ == null) { return; }
 
         if(!user.getUserId().equals("454773340163538955")) {
-            return;
-
-        } else if(mentionId == null) {
-            JDA.sendMessage(event, red_, "❌", "Whoops, I couldn't find that user...");
+            JDA.sendMessage(event, red_, "❌", "Only the owner of Gimme Cards can use this command!");
 
         } else {
             String msg = "";
-            User mention = User.findOtherUser(event, mentionId);
+            User mention = User.findOtherUser(event, user_.getAsUser().getId());
 
             mention.setIsRadiantRare(true);
             if(!Check.ownsBadge(mention, "patreon")) {
@@ -158,18 +150,18 @@ public class GiftCmds extends Cmds {
         }
     }
 
-    public static void removePatreonRewards(MessageReceivedEvent event, String[] args) {
+    public static void removePatreonRewards(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
-        String mentionId = JDA.findMentionId(event, args[1]);
+        //
+        OptionMapping user_ = event.getOption("user");
+
+        if(user_ == null) { return; }
 
         if(!user.getUserId().equals("454773340163538955")) {
-            return;
-
-        } else if(mentionId == null) {
-            JDA.sendMessage(event, red_, "❌", "Whoops, I couldn't find that user...");
+            JDA.sendMessage(event, red_, "❌", "Only the owner of Gimme Cards can use this command!");
 
         } else {
-            User mention = User.findOtherUser(event, mentionId);
+            User mention = User.findOtherUser(event, user_.getAsUser().getId());
 
             mention.setIsRare(false);
             mention.setIsRadiantRare(false);
@@ -181,18 +173,18 @@ public class GiftCmds extends Cmds {
         }
     }
 
-    public static void giftHelperBadge(MessageReceivedEvent event, String[] args) {
+    public static void giftHelperBadge(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
-        String mentionId = JDA.findMentionId(event, args[1]);
+        //
+        OptionMapping user_ = event.getOption("user");
+
+        if(user_ == null) { return; }
 
         if(!Check.ownsBadge(user, "staff")) {
-            return;
-
-        } else if(mentionId == null) {
-            JDA.sendMessage(event, red_, "❌", "Whoops, I couldn't find that user...");
+            JDA.sendMessage(event, red_, "❌", "Only staff members in the official Gimme Cards server can use this command!");
 
         } else {
-            User mention = User.findOtherUser(event, mentionId);
+            User mention = User.findOtherUser(event, user_.getAsUser().getId());
     
             if(Check.ownsBadge(mention, "community")) {
                 JDA.sendMessage(event, red_, "❌", "This user owns that badge already!");
@@ -207,18 +199,18 @@ public class GiftCmds extends Cmds {
         }
     }
 
-    public static void removeHelperBadge(MessageReceivedEvent event, String[] args) {
+    public static void removeHelperBadge(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
-        String mentionId = JDA.findMentionId(event, args[1]);
+        //
+        OptionMapping user_ = event.getOption("user");
+
+        if(user_ == null) { return; }
 
         if(!Check.ownsBadge(user, "staff")) {
-            return;
-
-        } else if(mentionId == null) {
-            JDA.sendMessage(event, red_, "❌", "Whoops, I couldn't find that user...");
+            JDA.sendMessage(event, red_, "❌", "Only staff members in the official Gimme Cards server can use this command!");
 
         } else {
-            User mention = User.findOtherUser(event, mentionId);
+            User mention = User.findOtherUser(event, user_.getAsUser().getId());
     
             if(!Check.ownsBadge(mention, "community")) {
                 JDA.sendMessage(event, red_, "❌", "This user doesn't own that badge!");

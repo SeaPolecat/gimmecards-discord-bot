@@ -2,47 +2,55 @@ package ca.gimmecards.Cmds;
 import ca.gimmecards.Main.*;
 import ca.gimmecards.Display.*;
 import ca.gimmecards.Helpers.*;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 public class MarketCmds extends Cmds {
     
-    public static void viewMarket(MessageReceivedEvent event) {
+    public static void viewMarket(SlashCommandInteractionEvent event) {
         Server server = Server.findServer(event);
         EmbedBuilder embed = new EmbedBuilder();
+        Guild guild = event.getGuild();
         String desc = "";
         int count = 1;
 
-        if(Check.isCooldownDone(server.getMarketEpoch(), 1440, true)) {
-            server.refreshMarket();
-            JDA.sendMessage(event, market_, mew_, "The market has been refreshed!");
+        if(guild != null) {
+            if(Check.isCooldownDone(server.getMarketEpoch(), 1440, true)) {
+                server.refreshMarket();
+            }
+            desc += "Next refresh in " + Check.findTimeLeft(server.getMarketEpoch(), 1440, true) + "\n";
+            desc += "┅┅\n";
+            for(Data item : server.getMarket()) {
+                
+                desc += "`#" + count + "` " + UX.findCardTitle(item, false)
+                + " ┇ " + UX.findRarityEmote(item) 
+                + " ┇ " + item.getSetEmote()
+                + " ┇ " + UX.formatCredits(item) + "\n";
+                count++;
+            }
+            desc += "┅┅\n";
+            embed.setTitle(mew_ + " Daily Market " + mew_);
+            embed.setDescription(desc);
+            embed.setFooter(guild.getName(), guild.getIconUrl());
+            embed.setColor(market_);
+            JDA.sendEmbed(event, embed);
+            embed.clear();
         }
-        desc += "Next refresh in " + Check.findTimeLeft(server.getMarketEpoch(), 1440, true) + "\n";
-        desc += "┅┅\n";
-        for(Data item : server.getMarket()) {
-            
-            desc += "`#" + count + "` " + UX.findCardTitle(item, false)
-            + " ┇ " + UX.findRarityEmote(item) 
-            + " ┇ " + item.getSetEmote()
-            + " ┇ " + UX.formatCredits(item) + "\n";
-            count++;
-        }
-        desc += "┅┅\n";
-        embed.setTitle(mew_ + " Daily Market " + mew_);
-        embed.setDescription(desc);
-        embed.setFooter(event.getGuild().getName(), event.getGuild().getIconUrl());
-        embed.setColor(market_);
-        JDA.sendEmbed(event, embed);
-        embed.clear();
     }
 
-    public static void viewItem(MessageReceivedEvent event, String[] args) {
+    public static void viewItem(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
         Server server = Server.findServer(event);
         MarketDisplay disp = new MarketDisplay(user.getUserId()).findDisplay();
+        //
+        OptionMapping cardNum = event.getOption("card-number");
+
+        if(cardNum == null) { return; }
 
         try {
-            int page = Integer.parseInt(args[1]);
+            int page = cardNum.getAsInt();
 
             JDA.sendDynamicEmbed(event, user, server, disp, page);
 
@@ -51,10 +59,14 @@ public class MarketCmds extends Cmds {
         }
     }
 
-    public static void purchaseItem(MessageReceivedEvent event, String[] args) {
+    public static void purchaseItem(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
         UserInfo ui = new UserInfo(event);
         Server server = Server.findServer(event);
+        //
+        OptionMapping cardNum = event.getOption("card-number");
+
+        if(cardNum == null) { return; }
 
         if(!Check.isCooldownDone(user.getMarketEpoch(), Check.findCooldown(user, 15), true)) {
             JDA.sendMessage(event, red_, "⏰", "Please wait another " 
@@ -62,7 +74,7 @@ public class MarketCmds extends Cmds {
 
         } else {
             try {
-                int index = Integer.parseInt(args[1]) - 1;
+                int index = cardNum.getAsInt() - 1;
                 Data item = server.getMarket().get(index);
     
                 if(user.getCredits() < item.getCardPrice()) {
@@ -79,10 +91,6 @@ public class MarketCmds extends Cmds {
                     user.resetMarketEpoch();
     
                     Card.addSingleCard(user, item, false);
-    
-                    Update.updateBackpackDisplay(event, user);
-                    Update.updateCardDisplay(event, user);
-                    Update.updateViewDisplay(event, user);
                     
                     Display.displayCard(event, user, ui, item, msg, footer, false);
                     try { User.saveUsers(); } catch(Exception e) {}

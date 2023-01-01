@@ -1,96 +1,19 @@
 package ca.gimmecards.Main;
-import ca.gimmecards.Interfaces.*;
-import ca.gimmecards.Helpers.*;
-/*import java.nio.file.Paths;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.io.Writer;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;*/
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-//import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.guild.GuildLeaveEvent;
 import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
-import net.dv8tion.jda.api.EmbedBuilder;
-//import java.util.Calendar;
+//import net.dv8tion.jda.api.interactions.commands.OptionType;
+//import net.dv8tion.jda.api.interactions.commands.build.Commands;
+//import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import javax.annotation.Nonnull;
 
-public class Ready extends ListenerAdapter implements StoragePaths, Displays, Colors {
+public class Ready extends ListenerAdapter {
 
-    /*private static long purgeEpoch;
-    private static int day;
-
-    private static void resetPurgeEpoch() { purgeEpoch = Calendar.getInstance().getTimeInMillis() / 60000; }
-
-    private static String determinePath() {
-        if(Paths.get(trackerPath).toFile().length() > 0) {
-            return trackerPath;
-        } else {
-            return header + trackerPath;
-        }
-    }
-
-    private static void loadTracker() throws Exception {
-        Reader reader = new InputStreamReader(new FileInputStream(determinePath()), "UTF-8");
-        purgeEpoch = new Gson().fromJson(reader, long.class);
-
-        reader.close();
-    }
-
-    private static void saveTracker() throws Exception {
-        Gson gson = new GsonBuilder().create();
-        Writer writer = new OutputStreamWriter(new FileOutputStream(determinePath()), "UTF-8");
-        gson.toJson(purgeEpoch, writer);
-        writer.close();
-    }
-
-    public void onMessageReceived(MessageReceivedEvent event) {
-        if(Check.isCooldownDone(purgeEpoch, 1440, true)) {
-            String log = "";
-
-            resetPurgeEpoch();
-
-            backpackDisplays.clear();
-            cardDisplays.clear();
-            helpDisplays.clear();
-            marketDisplays.clear();
-            minigameDisplays.clear();
-            oldShopDisplays.clear();
-            privacyDisplays.clear();
-            searchDisplays.clear();
-            shopDisplays.clear();
-            tradeDisplays.clear();
-            viewDisplays.clear();
-            //
-            backpackDisplays_.clear();
-            cardDisplays_.clear();
-            viewDisplays_.clear();
-
-            day++;
-            log += "Displays purged on " + Calendar.getInstance().getTime();
-            log += " - Day " + day;
-
-            System.out.println(log);
-            try { saveTracker(); } catch(Exception e) {}
-        }
-    }*/
-
-    public void onGuildJoin(GuildJoinEvent event) {
-        EmbedBuilder embed = new EmbedBuilder();
-
-        embed.setTitle("✨ Thanks for inviting me!");
-        embed.setThumbnail("https://i.ibb.co/GcC31Sr/logo-rounded.png");
-        embed.setDescription("Please use `?help` to get started");
-        embed.setColor(blue_);
-        
-        JDA.sendEmbed(event, embed);
-        embed.clear();
-    }
-
-    public void onGuildLeave(GuildLeaveEvent event) {
+    /**
+     * deletes the Server data whenever the bot leaves that server
+     * @param event a leave event
+     */
+    public void onGuildLeave(@Nonnull GuildLeaveEvent event) {
         for(int i = 0; i < Server.servers.size(); i++) {
             Server s = Server.servers.get(i);
 
@@ -102,15 +25,194 @@ public class Ready extends ListenerAdapter implements StoragePaths, Displays, Co
         }
     }
     
-    public void onGuildReady(GuildReadyEvent event) {
+    /**
+     * loads all data into their respective lists,
+     * and updates global slash commands when the bot is ready
+     * @param event a ready event
+     */
+    public void onGuildReady(@Nonnull GuildReadyEvent event) {
 
-        //try { loadTracker(); } catch(Exception e) {}
         try { Data.loadData(); } catch(Exception e) {}
         try { Data.loadOldData(); } catch(Exception e) {}
         try { Data.loadRareData(); } catch(Exception e) {}
         try { Data.loadPromoData(); } catch(Exception e) {}
         try { User.loadUsers(); } catch(Exception e) {}
         try { Server.loadServers(); } catch(Exception e) {}
+
+        /*Main.jda.updateCommands().addCommands(
+
+            //LOCK
+            Commands.slash("qazxsw", "[REDACTED]"),
+            
+            Commands.slash("plmnko", "[REDACTED]"),
+
+            //PRIVACY
+            Commands.slash("deleteaccount", "Delete your Gimme Cards account (this action is irreversible!)"),
+
+            //GIFT
+            Commands.slash("gifttoken", "Gift someone tokens")
+            .addOption(OptionType.USER, "user", "mention a user", true)
+            .addOption(OptionType.INTEGER, "amount", "enter an amount", true),
+
+            Commands.slash("giftstar", "Gift someone stars")
+            .addOption(OptionType.USER, "user", "mention a user", true)
+            .addOption(OptionType.INTEGER, "amount", "enter an amount", true),
+
+            Commands.slash("giftcard", "Gift someone any card")
+            .addOption(OptionType.USER, "user", "mention a user", true)
+            .addOption(OptionType.STRING, "card-id", "enter a card ID", true),
+
+            Commands.slash("tier1", "Gift someone the Rare Patreon perk")
+            .addOption(OptionType.USER, "user", "mention a user", true),
+
+            Commands.slash("tier2", "Gift someone the Radiant Rare Patreon perk")
+            .addOption(OptionType.USER, "user", "mention a user", true),
+
+            Commands.slash("untier", "Remove all Patreon perks from someone")
+            .addOption(OptionType.USER, "user", "mention a user", true),
+
+            Commands.slash("giftbadge", "Reward someone with the Helper Badge")
+            .addOption(OptionType.USER, "user", "mention a user", true),
+
+            Commands.slash("ungiftbadge", "Remove the Helper Badge from someone")
+            .addOption(OptionType.USER, "user", "mention a user", true),
+
+            //HELP
+            Commands.slash("help", "Get access to the website and other resources"),
+
+            Commands.slash("rarities", "Show every possible card rarity in the game"),
+
+            Commands.slash("badges", "Show every possible badge in the game"),
+
+            Commands.slash("patreon", "Show the Gimme Cards premium rewards"),
+
+            Commands.slash("changelog", "See the latest updates to the game"),
+
+            //LEADERBOARD
+            Commands.slash("ranks", "See the top collectors in your current server"),
+
+            Commands.slash("leaderboard", "See the top collectors in the world"),
+
+            //BACKPACK
+            Commands.slash("backpack", "See your current level, items, and badges")
+            .addOption(OptionType.USER, "user", "mention a user", false),
+
+            Commands.slash("redeem", "Redeem a single token (30 min cooldown)"),
+
+            Commands.slash("daily", "Get a free shiny card (24 hr cooldown)"),
+
+            Commands.slash("setcolor", "Change your game's theme color")
+            .addOption(OptionType.STRING, "hex-code", "enter a hex code", true),
+
+            Commands.slash("pin", "Display one of your cards on your backpack")
+            .addOption(OptionType.INTEGER, "card-number", "enter a card number", true),
+
+            Commands.slash("cooldowns", "See all your command cooldowns"),
+
+            //SHOP
+            Commands.slash("shop", "Visit the Pokémon packs shop"),
+
+            Commands.slash("oldshop", "Visit the legacy Pokémon packs shop"),
+
+            Commands.slash("rareshop", "Visit the exclusive Pokémon packs shop"),
+
+            Commands.slash("promoshop", "Visit the promo Pokémon packs shop"),
+
+            Commands.slash("unlock", "Use a key to unlock a pack")
+            .addOption(OptionType.STRING, "pack-name", "enter a pack name", true),
+
+            //CARD
+            Commands.slash("cards", "See your current card collection")
+            .addOption(OptionType.INTEGER, "page", "enter a page", false)
+            .addOption(OptionType.USER, "user", "mention a user", false),
+
+            Commands.slash("fav", "Add a card to your favorites")
+            .addOption(OptionType.INTEGER, "card-number", "enter a card number", true),
+
+            Commands.slash("unfav", "Remove a card from your favorites")
+            .addOption(OptionType.INTEGER, "card-number", "enter a card number", true),
+
+            Commands.slash("favall", "Automatically favorite all your shiny cards"),
+
+            Commands.slash("sort", "Sort your cards a certain way")
+            .addOptions(
+                new OptionData(OptionType.STRING, "option", "select an option", true)
+                .addChoice("alphabetical", "alphabetical")
+                .addChoice("xp", "xp")
+                .addChoice("quantity", "quantity")
+                .addChoice("newest", "newest"),
+
+                new OptionData(OptionType.STRING, "order", "select an order", true)
+                .addChoice("increasing", "increasing")
+                .addChoice("decreasing", "decreasing")
+            ),
+
+            //VIEW
+            Commands.slash("open", "Use a token to open a pack")
+            .addOption(OptionType.STRING, "pack-name", "enter a pack name", true),
+
+            Commands.slash("view", "Show the details of a card you own")
+            .addOption(OptionType.INTEGER, "card-number", "enter a card number", true)
+            .addOption(OptionType.USER, "user", "mention a user", false),
+
+            //SELL
+            Commands.slash("sell", "Sell one of your cards for XP")
+            .addOption(OptionType.INTEGER, "card-number", "enter a card number", true),
+
+            Commands.slash("selldupes", "Sell your duplicate cards for XP"),
+
+            Commands.slash("sellall", "Sell all your non-favorite cards for XP"),
+
+            //MINIGAME
+            Commands.slash("minigame", "Play a guessing game (1 hr cooldown)"),
+
+            Commands.slash("guess", "Make a guess during the minigame")
+            .addOption(OptionType.STRING, "rarity", "enter a rarity", true),
+
+            //MARKET
+            Commands.slash("market", "View the daily card market"),
+
+            Commands.slash("mview", "Show the details of a market card")
+            .addOption(OptionType.INTEGER, "card-number", "enter a card number", true),
+
+            Commands.slash("buy", "Buy a card from the market")
+            .addOption(OptionType.INTEGER, "card-number", "enter a card number", true),
+
+            //SEARCH
+            Commands.slash("search", "Search for cards from the Pokémon card database")
+            .addOptions(
+                new OptionData(OptionType.STRING, "option", "select an option", true)
+                .addChoice("card", "card")
+                .addChoice("pack", "pack")
+                .addChoice("rarity", "rarity"),
+
+                new OptionData(OptionType.STRING, "keywords", "enter some keywords", true)
+            ),
+
+            Commands.slash("sview", "View any card from the TCG database")
+            .addOption(OptionType.STRING, "card-id", "enter a card ID", true),
+
+            //VOTE
+            Commands.slash("vote", "Vote for Gimme Cards on Top.gg (12 hr cooldown)"),
+
+            Commands.slash("claim", "Claim a special gift for voting"),
+
+            //TRADE
+            Commands.slash("trade", "Request a trade to another user")
+            .addOption(OptionType.USER, "user", "mention a user", true),
+
+            Commands.slash("offer", "Offer a card from your collection to the trade")
+            .addOption(OptionType.INTEGER, "card-number", "enter a card number", true),
+
+            Commands.slash("unoffer", "Unoffer a card from your trade")
+            .addOption(OptionType.INTEGER, "trade-number", "enter a trade number", true),
+
+            Commands.slash("accept", "Confirm your trade"),
+
+            Commands.slash("unaccept", "Cancel your trade offer to add more cards or reconsider"),
+
+            Commands.slash("reject", "End a trade instantly")
+        ).queue();*/
 
         //sets
         /*
@@ -161,7 +263,7 @@ public class Ready extends ListenerAdapter implements StoragePaths, Displays, Co
         Data.setCodes.put(45, "ASR");
         */
 
-        //oldSets (FL gone)
+        //oldSets (FL doesn't exist)
         /*
         Data.oldSetCodes.put(1, "BS");
         Data.oldSetCodes.put(2, "JU");
@@ -224,7 +326,7 @@ public class Ready extends ListenerAdapter implements StoragePaths, Displays, Co
         Data.rareSetCodes.put(9, "CEL");
         */
 
-        //promSets
+        //promoSets
         /*
         Data.promoSetCodes.put(1, "NP");
         Data.promoSetCodes.put(2, "DPP");

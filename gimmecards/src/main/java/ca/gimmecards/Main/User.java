@@ -1,6 +1,6 @@
 package ca.gimmecards.Main;
-import ca.gimmecards.Interfaces.*;
 import ca.gimmecards.Helpers.*;
+import ca.gimmecards.Interfaces.*;
 import java.nio.file.Paths;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -11,16 +11,18 @@ import java.io.Writer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import java.util.ArrayList;
 import java.util.Calendar;
 
 public class User implements StoragePaths, Emotes {
 
+    // list of Users
     public static ArrayList<User> users = new ArrayList<User>();
-    //
-    private String userId; //ENCRYPTED
+    
+    // instance variables
+    private String userId;
     private Integer gameColor;
     private Integer cardCount;
     private Integer level;
@@ -45,6 +47,10 @@ public class User implements StoragePaths, Emotes {
     private Boolean isRare;
     private Boolean isRadiantRare;
 
+    /**
+     * constructor for User
+     * @param ui userId
+     */
     public User(String ui) {
         userId = ui;
         gameColor = 0;
@@ -72,6 +78,10 @@ public class User implements StoragePaths, Emotes {
         isRadiantRare = false;
     }
 
+    /**
+     * constructor that duplicates a User, and encrypts userId
+     * @param user the User to duplicate
+     */
     public User(User user) {
         userId = Main.encryptor.encrypt(user.getUserId());
         gameColor = user.getGameColor();
@@ -99,6 +109,7 @@ public class User implements StoragePaths, Emotes {
         isRadiantRare = user.getIsRadiantRare();
     }
 
+    // getters
     public String getUserId() { return userId; }
     public int getGameColor() { return gameColor; }
     public int getCardCount() { return cardCount; }
@@ -123,7 +134,8 @@ public class User implements StoragePaths, Emotes {
     public ArrayList<Card> getCards() { return cards; }
     public boolean getIsRare() { return isRare; }
     public boolean getIsRadiantRare() { return isRadiantRare; }
-    //
+    
+    // setters
     public void setUserId(String ui) { userId = ui; }
     public void setGameColor(int gc) { gameColor = gc; }
     public void addCardCount() { cardCount++; }
@@ -144,6 +156,9 @@ public class User implements StoragePaths, Emotes {
     public void setIsRare(boolean ir) { isRare = ir; }
     public void setIsRadiantRare(boolean irr) { isRadiantRare = irr; }
 
+    /**
+     * setter that handles a player levelling up
+     */
     public void levelUp() {
         int extraXP = XP - maxXP;
 
@@ -153,14 +168,10 @@ public class User implements StoragePaths, Emotes {
         maxXP += 500;
     }
 
-    public void removeBadge(String badge) {
-        for(int i = 0; i < badges.size(); i++) {
-            if(badges.get(i).equalsIgnoreCase(badge)) {
-                badges.remove(i);
-            }
-        }
-    }
-
+    /**
+     * checks whether or not it's the weekend
+     * @return true if it's the weekend, false otherwise
+     */
     private boolean isWeekend() {
         Calendar cal = Calendar.getInstance();
         int day = cal.get(Calendar.DAY_OF_WEEK);
@@ -171,6 +182,24 @@ public class User implements StoragePaths, Emotes {
         return false;
     }
 
+    /**
+     * handles a badge being removed
+     * @param badge the badge name
+     */
+    public void removeBadge(String badge) {
+        for(int i = 0; i < badges.size(); i++) {
+            if(badges.get(i).equalsIgnoreCase(badge)) {
+                badges.remove(i);
+            }
+        }
+    }
+
+    /**
+     * handles XP
+     * @param quantity the amount of XP to give
+     * @param isStart whether or not it's shown at the start of the embed
+     * @return a string that goes into the embed
+     */
     public String updateXP(int quantity, boolean isStart) {
         String msg = "\n";
 
@@ -184,6 +213,12 @@ public class User implements StoragePaths, Emotes {
         return msg;
     }
 
+    /**
+     * handles tokens
+     * @param quantity the amount of tokens to give (or remove)
+     * @param isStart whether or not it's shown at the start of the embed
+     * @return a string that goes into the embed
+     */
     public String updateTokens(int quantity, boolean isStart) {
         String msg = "\n";
 
@@ -206,6 +241,12 @@ public class User implements StoragePaths, Emotes {
         return msg;
     }
 
+    /**
+     * handles credits
+     * @param quantity the amount of credits to give (or remove)
+     * @param isStart whether or not it's shown at the start of the embed
+     * @return a string that goes into the embed
+     */
     public String updateCredits(int quantity, boolean isStart) {
         String msg = "\n";
 
@@ -224,6 +265,12 @@ public class User implements StoragePaths, Emotes {
         return msg;
     }
 
+    /**
+     * handles stars
+     * @param quantity the amount of stars to give (or remove)
+     * @param isStart whether or not it's shown at the start of the embed
+     * @return a string that goes into the embed
+     */
     public String updateStars(int quantity, boolean isStart) {
         String msg = "\n";
 
@@ -242,6 +289,12 @@ public class User implements StoragePaths, Emotes {
         return msg;
     }
 
+    /**
+     * handles keys
+     * @param quantity the amount of keys to give (or remove)
+     * @param isStart whether or not it's shown at the start of the embed
+     * @return a string that goes into the embed
+     */
     public String updateKeys(int quantity, boolean isStart) {
         String msg = "\n";
 
@@ -256,6 +309,10 @@ public class User implements StoragePaths, Emotes {
         return msg;
     }
 
+    /**
+     * determines the path that User data will be saved to
+     * @return the path with header if the file is in an external location, and no header if it's local
+     */
     private static String determinePath() {
         if(Paths.get(userPath).toFile().length() > 0) {
             return userPath;
@@ -264,6 +321,10 @@ public class User implements StoragePaths, Emotes {
         }
     }
 
+    /**
+     * loads player data from Users.json into the User list
+     * @throws Exception just needs it
+     */
     public static void loadUsers() throws Exception {
         Reader reader = new InputStreamReader(new FileInputStream(determinePath()), "UTF-8");
         users = new Gson().fromJson(reader, new TypeToken<ArrayList<User>>() {}.getType());
@@ -274,6 +335,10 @@ public class User implements StoragePaths, Emotes {
         reader.close();
     }
 
+    /**
+     * saves player data into the file Users.json
+     * @throws Exception just needs it
+     */
     public static void saveUsers() throws Exception {
         Gson gson = new GsonBuilder().create();
         Writer writer = new OutputStreamWriter(new FileOutputStream(determinePath()), "UTF-8");
@@ -286,22 +351,43 @@ public class User implements StoragePaths, Emotes {
         writer.close();
     }
 
-    public static User findUser(MessageReceivedEvent event) {
-        String authorId = event.getAuthor().getId();
+    /**
+     * finds the author User based on a slash event
+     * @param event the slash event
+     * @return the author User
+     */
+    public static User findUser(SlashCommandInteractionEvent event) {
+        String authorId = event.getUser().getId();
         
         return searchForUser(authorId);
     }
 
-    public static User findUser(MessageReactionAddEvent event) {
+    /**
+     * finds the author User based on a button event
+     * @param event the button event
+     * @return the author User
+     */
+    public static User findUser(ButtonInteractionEvent event) {
         String authorId = event.getUser().getId();
 
         return searchForUser(authorId);
     }
 
-    public static User findOtherUser(MessageReceivedEvent event, String userId) {
+    /**
+     * finds a mentioned User based on a slash event
+     * @param event the slash event
+     * @param userId the ID of the mentioned User
+     * @return the mentioned User
+     */
+    public static User findOtherUser(SlashCommandInteractionEvent event, String userId) {
         return searchForUser(userId);
     }
 
+    /**
+     * searches through the User list for a specific User
+     * @param userId the ID of the User to search for
+     * @return the User to be searched
+     */
     private static User searchForUser(String userId) {
         for(User u : users) {
             if(u.getUserId().equals(userId)) {

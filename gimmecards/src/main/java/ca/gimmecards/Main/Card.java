@@ -60,7 +60,7 @@ public class Card implements CustomCards {
             set = Data.rareSets[rand.nextInt(Data.rareSets.length)];
             return pickCard(set.getSpecs());
 
-        } else if(setsChance == 3) {
+        } else { // setsChance == 3
             set = Data.promoSets[rand.nextInt(Data.promoSets.length)];
             return pickCard(set.getSpecs());
         }
@@ -183,7 +183,7 @@ public class Card implements CustomCards {
                 Data d1 = cards.get(i).getData();
                 Data d2 = cards.get(k).getData();
 
-                if(sortMethod.equalsIgnoreCase("alphabet")) {
+                if(sortMethod.equalsIgnoreCase("alphabetical")) {
                     String cardName1 = d1.getCardName();
                     String cardName2 = d2.getCardName();
     
