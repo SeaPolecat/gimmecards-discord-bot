@@ -58,7 +58,7 @@ public class ViewDisplay extends Display {
             cardTitle = UX.findCardTitle(data, card.getIsFav());
             sellable = card.getSellable();
 
-        } else if(dispType.equalsIgnoreCase("new")) {
+        } else { // dispType.equalsIgnoreCase("new")
             data = newCards.get(startIndex);
             cardTitle = UX.findCardTitle(data, false);
 

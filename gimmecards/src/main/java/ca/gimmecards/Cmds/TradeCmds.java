@@ -2,25 +2,26 @@ package ca.gimmecards.Cmds;
 import ca.gimmecards.Main.*;
 import ca.gimmecards.Display.*;
 import ca.gimmecards.Helpers.*;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import java.util.ArrayList;
 
 public class TradeCmds extends Cmds {
     
-    public static void sendTrade(MessageReceivedEvent event, String[] args) {
+    public static void sendTrade(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
         Server server = Server.findServer(event);
         TradeDisplay disp = new TradeDisplay(user.getUserId()).findDisplay();
-        String mentionId = JDA.findMentionId(event, args[1]);
+        //
+        OptionMapping user_ = event.getOption("user");
 
-        if(mentionId == null) {
-            JDA.sendMessage(event, red_, "❌", "Whoops, I couldn't find that user...");
+        if(user_ == null) { return; }
 
-        } else if(disp.tradeExists(user.getUserId())) {
+        if(disp.tradeExists(user.getUserId())) {
             JDA.sendMessage(event, red_, "❌", "You're in a trade already!");
             
         } else {
-            User mention = User.findOtherUser(event, mentionId);
+            User mention = User.findOtherUser(event, user_.getAsUser().getId());
 
             if(disp.tradeExists(mention.getUserId())) {
                 JDA.sendMessage(event, red_, "❌", "That user is in a trade already!");
@@ -39,11 +40,15 @@ public class TradeCmds extends Cmds {
         }
     }
 
-    public static void offerCard(MessageReceivedEvent event, String[] args) {
+    public static void offerCard(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
         TradeDisplay disp = new TradeDisplay(user.getUserId()).findDisplay();
+        //
+        OptionMapping cardNum = event.getOption("card-number");
 
-        if(disp.getMessageId().isEmpty()) {
+        if(cardNum == null) { return; }
+
+        if(disp.getUserId().isEmpty()) {
             JDA.sendMessage(event, red_, "❌", "You haven't started a trade yet!");
 
         } else if(disp.oneAccepted()) {
@@ -51,7 +56,7 @@ public class TradeCmds extends Cmds {
 
         } else {
             try {
-                int index = Integer.parseInt(args[1]) - 1;
+                int index = cardNum.getAsInt() - 1;
                 ArrayList<Card> offers = disp.getOffers(user.getUserId());
                 Card card = user.getCards().get(index);
                 Data data = card.getData();
@@ -68,8 +73,6 @@ public class TradeCmds extends Cmds {
                         disp.addTax(user.getUserId(), (int)(data.getCardPrice() * 0.25));
                     }
 
-                    Update.updateTradeDisplay(event, user);
-
                     JDA.sendMessage(event, user.getGameColor(), ditto_, UX.formatNick(event) + " offers **" + cardTitle + "**");
                 }
             } catch(NumberFormatException | IndexOutOfBoundsException e) {
@@ -78,11 +81,15 @@ public class TradeCmds extends Cmds {
         }
     }
 
-    public static void unofferCard(MessageReceivedEvent event, String[] args) {
+    public static void unofferCard(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
         TradeDisplay disp = new TradeDisplay(user.getUserId()).findDisplay();
+        //
+        OptionMapping tradeNum = event.getOption("trade-number");
 
-        if(disp.getMessageId().isEmpty()) {
+        if(tradeNum == null) { return; }
+
+        if(disp.getUserId().isEmpty()) {
             JDA.sendMessage(event, red_, "❌", "You haven't started a trade yet!");
 
         } else if(disp.oneAccepted()) {
@@ -90,7 +97,7 @@ public class TradeCmds extends Cmds {
 
         } else {
             try {
-                int index = Integer.parseInt(args[1]) - 1;
+                int index = tradeNum.getAsInt() - 1;
                 ArrayList<Card> offers = disp.getOffers(user.getUserId());
                 Card offer = offers.get(index);
                 Data data = offer.getData();
@@ -105,8 +112,6 @@ public class TradeCmds extends Cmds {
                     disp.addTax(user.getUserId(), -(int)(data.getCardPrice() * 0.25));
                 }
 
-                Update.updateTradeDisplay(event, user);
-
                 JDA.sendMessage(event, user.getGameColor(), ditto_, UX.formatNick(event) + " took back **" + cardTitle + "**");
 
             } catch(NumberFormatException | IndexOutOfBoundsException e) {
@@ -115,11 +120,11 @@ public class TradeCmds extends Cmds {
         }
     }
 
-    public static void acceptOffer(MessageReceivedEvent event) {
+    public static void acceptOffer(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
         TradeDisplay disp = new TradeDisplay(user.getUserId()).findDisplay();
 
-        if(disp.getMessageId().isEmpty()) {
+        if(disp.getUserId().isEmpty()) {
             JDA.sendMessage(event, red_, "❌", "You haven't started a trade yet!");
 
         } else if(disp.getAccept(user.getUserId())) {
@@ -134,8 +139,6 @@ public class TradeCmds extends Cmds {
             if(!disp.bothAccepted()) {
                 JDA.sendMessage(event, user.getGameColor(), "✅", UX.formatNick(event) 
                 + " accepted the trade! Waiting for the other player...");
-
-                Update.updateTradeDisplay(event, user);
 
             } else {
                 String msg = "";
@@ -153,15 +156,6 @@ public class TradeCmds extends Cmds {
                 tradeCards(disp.getUser1(), disp.getOffers1(), disp.getOffers2());
                 tradeCards(disp.getUser2(), disp.getOffers2(), disp.getOffers1());
 
-                Update.updateBackpackDisplay(event, disp.getUser1());
-                Update.updateCardDisplay(event, disp.getUser1());
-                Update.updateViewDisplay(event, disp.getUser1());
-                //
-                Update.updateBackpackDisplay(event, disp.getUser2());
-                Update.updateCardDisplay(event, disp.getUser2());
-                Update.updateViewDisplay(event, disp.getUser2());
-                //
-                Update.updateTradeDisplay(event, user);
                 disp.removeTradeDisplay();
 
                 JDA.sendMessage(event, user.getGameColor(), "✅", msg);
@@ -170,11 +164,11 @@ public class TradeCmds extends Cmds {
         }
     }
 
-    public static void unacceptOffer(MessageReceivedEvent event) {
+    public static void unacceptOffer(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
         TradeDisplay disp = new TradeDisplay(user.getUserId()).findDisplay();
 
-        if(disp.getMessageId().isEmpty()) {
+        if(disp.getUserId().isEmpty()) {
             JDA.sendMessage(event, red_, "❌", "You haven't started a trade yet!");
 
         } else if(!disp.getAccept(user.getUserId())) {
@@ -183,24 +177,21 @@ public class TradeCmds extends Cmds {
         } else {
             disp.setAccept(user.getUserId(), false);
 
-            Update.updateTradeDisplay(event, user);
-
             JDA.sendMessage(event, user.getGameColor(), "⏳", UX.formatNick(event) 
             + " needs more time to decide!");
         }
     }
 
-    public static void rejectOffer(MessageReceivedEvent event) {
+    public static void rejectOffer(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
         TradeDisplay disp = new TradeDisplay(user.getUserId()).findDisplay();
 
-        if(disp.getMessageId().isEmpty()) {
+        if(disp.getUserId().isEmpty()) {
             JDA.sendMessage(event, red_, "❌", "You haven't started a trade yet!");
 
         } else {
             disp.setReject(user.getUserId(), true);
-
-            Update.updateTradeDisplay(event, user);
+            
             disp.removeTradeDisplay();
 
             JDA.sendMessage(event, user.getGameColor(), "🛑", UX.formatNick(event) 

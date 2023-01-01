@@ -32,6 +32,21 @@ public class TestingCmds extends Cmds {
 
     public static void testSomething(MessageReceivedEvent event) {
 
+        /*for(int i = 0; i < Server.servers.size(); i++) {
+            Server s = Server.servers.get(i);
+            Server server = new Server(
+                s.getServerId(),
+                s.getMarket(),
+                s.getMarketEpoch()
+            );
+            Server.servers.set(i, server);
+        }
+        for(Server s : Server.servers) {
+            System.out.println(s.getServerId());
+        }
+        JDA.sendMessage(event, blue_, "", "done testing!");
+        try { Server.saveServers(); } catch(Exception e) {}*/
+        
         /*for(int i = 0; i < User.users.size(); i++) {
             User u = User.users.get(i);
             User user = new User(

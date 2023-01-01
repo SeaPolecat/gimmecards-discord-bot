@@ -1,18 +1,20 @@
 package ca.gimmecards.Display;
-import ca.gimmecards.Interfaces.*;
-import ca.gimmecards.Main.*;
+import ca.gimmecards.Cmds.*;
 import ca.gimmecards.Display_.*;
 import ca.gimmecards.Helpers.*;
+import ca.gimmecards.Interfaces.*;
+import ca.gimmecards.Main.*;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
+import java.util.ArrayList;
+import javax.annotation.Nonnull;
 
 public class Display extends ListenerAdapter implements Displays, Emotes, Colors {
 
     private String userId;
-    private String channelId;
-    private String messageId;
+    private String slashId;
     private Integer page;
     private Integer maxPage;
 
@@ -20,20 +22,17 @@ public class Display extends ListenerAdapter implements Displays, Emotes, Colors
 
     public Display(String ui) {
         userId = ui;
-        channelId = "";
-        messageId = "";
+        slashId = "";
         page = 1;
-        maxPage = 0;
+        maxPage = 1;
     }
 
     public String getUserId() { return userId; }
-    public String getChannelId() { return channelId; }
-    public String getMessageId() { return messageId; }
+    public String getSlashId() { return slashId; }
     public int getPage() { return page; }
     public int getMaxPage() { return maxPage; }
     //
-    public void setChannelId(String ci) { channelId = ci; }
-    public void setMessageId(String mi) { messageId = mi; }
+    public void setSlashId(String sId) { slashId = sId; }
     public void setPage(int p) { page = p; }
     public void nextPage() { page++; }
     public void prevPage() { page--; }
@@ -48,7 +47,7 @@ public class Display extends ListenerAdapter implements Displays, Emotes, Colors
         return null;
     }
 
-    public static void displayCard(MessageReceivedEvent event, User user, UserInfo ui, Data data, String message, String footer, boolean isFav) {
+    public static void displayCard(SlashCommandInteractionEvent event, User user, UserInfo ui, Data data, String message, String footer, boolean isFav) {
         String cardTitle = UX.findCardTitle(data, isFav);
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
@@ -71,72 +70,136 @@ public class Display extends ListenerAdapter implements Displays, Emotes, Colors
         embed.clear();
     }
 
-    private void flipPage(MessageReactionAddEvent event, User user, Server server, Display disp) {
-        if(event.getUser().getId().equals(disp.getUserId()) && event.getMessageId().equals(disp.getMessageId())) {
-            if(event.getEmoji().getName().equals("◀")) {
-                if(disp.getPage() <= 1) {
-                    disp.setPage(disp.getMaxPage());
-                } else {
+    private void flipPage(ButtonInteractionEvent event, User user, Server server, Display disp) {
+        String buttonId = event.getComponentId();
+        int underscoreIndex = buttonId.indexOf("_");
+        String choice = buttonId.substring(underscoreIndex + 1);
+
+        if(disp instanceof CardDisplay) {
+            if(user.getCards().size() < 1) {
+                disp.setPage(1);
+                event.getMessage().delete().queue();
+                return;
+
+            } else if(user.getCards().size() <= (disp.getPage() * 15) - 15) {
+                while(user.getCards().size() <= (disp.getPage() * 15) - 15) {
                     disp.prevPage();
                 }
-
-            } else if(event.getEmoji().getName().equals("▶")) {
-                if(disp.getPage() >= disp.getMaxPage()) {
-                    disp.setPage(1);
-                } else {
-                    disp.nextPage();
-                }
+                JDA.editEmbed(event, user, server, disp, disp.getPage());
+                return;
             }
-            JDA.editEmbed(event, user, server, disp, disp.getPage());
-            JDA.removeReaction(event);
+
+        } else if(disp instanceof CardDisplay_) {
+            CardDisplay_ disp_ = new CardDisplay_(user.getUserId()).findDisplay();
+            User mention = disp_.getMention();
+
+            if(mention.getCards().size() < 1) {
+                disp.setPage(1);
+                event.getMessage().delete().queue();
+                return;
+
+            } else if(mention.getCards().size() <= (disp.getPage() * 15) - 15) {
+                while(mention.getCards().size() <= (disp.getPage() * 15) - 15) {
+                    disp.prevPage();
+                }
+                JDA.editEmbed(event, user, server, disp, disp.getPage());
+                return; 
+            }
+
+        } else if(disp instanceof ViewDisplay) {
+            if(user.getCards().size() < 1) {
+                disp.setPage(1);
+                event.getMessage().delete().queue();
+                return;
+
+            } else if(user.getCards().size() < disp.getPage()) {
+                while(user.getCards().size() < disp.getPage()) {
+                    disp.prevPage();
+                }
+                JDA.editEmbed(event, user, server, disp, disp.getPage());
+                return;
+            }
+
+        } else if(disp instanceof ViewDisplay_) {
+            ViewDisplay_ disp_ = new ViewDisplay_(user.getUserId()).findDisplay();
+            User mention = disp_.getMention();
+
+            if(mention.getCards().size() < 1) {
+                disp.setPage(1);
+                event.getMessage().delete().queue();
+                return;
+
+            } else if(mention.getCards().size() < disp.getPage()) {
+                while(mention.getCards().size() < disp.getPage()) {
+                    disp.prevPage();
+                }
+                JDA.editEmbed(event, user, server, disp, disp.getPage());
+                return;
+            }
         }
+
+        if(choice.equals("left")) {
+            if(disp.getPage() <= 1) {
+                disp.setPage(disp.getMaxPage());
+            } else {
+                disp.prevPage();
+            }
+
+        } else if(choice.equals("right")) {
+            if(disp.getPage() >= disp.getMaxPage()) {
+                disp.setPage(1);
+            } else {
+                disp.nextPage();
+            }
+        }
+        JDA.editEmbed(event, user, server, disp, disp.getPage());
     }
 
-    public void onMessageReactionAdd(MessageReactionAddEvent event) {
-        if(event.getUser().isBot() == true) { return; }
-        User user = User.findUser(event);
-        Server server = Server.findServer(event);
-        //
-        CardDisplay cardDisp = new CardDisplay(user.getUserId()).findDisplay();
-        CardDisplay_ cardDisp_ = new CardDisplay_(user.getUserId()).findDisplay();
-        HelpDisplay helpDisp = new HelpDisplay(user.getUserId()).findDisplay();
-        LeaderboardDisplay leaderboardDisp = new LeaderboardDisplay(user.getUserId()).findDisplay();
-        MarketDisplay marketDisp = new MarketDisplay(user.getUserId()).findDisplay();
-        OldShopDisplay oldShopDisp = new OldShopDisplay(user.getUserId()).findDisplay();
-        SearchDisplay searchDisp = new SearchDisplay(user.getUserId()).findDisplay();
-        ShopDisplay shopDisp = new ShopDisplay(user.getUserId()).findDisplay();
-        ViewDisplay viewDisp = new ViewDisplay(user.getUserId()).findDisplay();
-        ViewDisplay_ viewDisp_ = new ViewDisplay_(user.getUserId()).findDisplay();
+    public void onButtonInteraction(@Nonnull ButtonInteractionEvent event) {
+        if(event.getComponentId().equalsIgnoreCase("deleteaccount_yes")) {
+            PrivacyCmds.confirmDeletion(event);
 
-        if(event.getMessageId().equals(cardDisp.getMessageId())) {
-            flipPage(event, user, server, cardDisp);
-        }
-        if(event.getMessageId().equals(cardDisp_.getMessageId())) {
-            flipPage(event, user, server, cardDisp_);
-        }
-        if(event.getMessageId().equals(helpDisp.getMessageId())) {
-            flipPage(event, user, server, helpDisp);
-        }
-        if(event.getMessageId().equals(leaderboardDisp.getMessageId())) {
-            flipPage(event, user, server, leaderboardDisp);
-        }
-        if(event.getMessageId().equals(marketDisp.getMessageId())) {
-            flipPage(event, user, server, marketDisp);
-        }
-        if(event.getMessageId().equals(oldShopDisp.getMessageId())) {
-            flipPage(event, user, server, oldShopDisp);
-        }
-        if(event.getMessageId().equals(searchDisp.getMessageId())) {
-            flipPage(event, user, server, searchDisp);
-        }
-        if(event.getMessageId().equals(shopDisp.getMessageId())) {
-            flipPage(event, user, server, shopDisp);
-        }
-        if(event.getMessageId().equals(viewDisp.getMessageId())) {
-            flipPage(event, user, server, viewDisp);
-        }
-        if(event.getMessageId().equals(viewDisp_.getMessageId())) {
-            flipPage(event, user, server, viewDisp_);
+        } else if(event.getComponentId().equalsIgnoreCase("deleteaccount_no")) {
+            PrivacyCmds.denyDeletion(event);
+
+        } else {
+            User user = User.findUser(event);
+            Server server = Server.findServer(event);
+            ArrayList<Display> displays = new ArrayList<Display>();
+
+            displays.add(new BackpackDisplay(user.getUserId()).findDisplay());
+            displays.add(new CardDisplay(user.getUserId()).findDisplay());
+            displays.add(new HelpDisplay(user.getUserId()).findDisplay());
+            displays.add(new LeaderboardDisplay(user.getUserId()).findDisplay());
+            displays.add(new MarketDisplay(user.getUserId()).findDisplay());
+            displays.add(new MinigameDisplay(user.getUserId()).findDisplay());
+            displays.add(new OldShopDisplay(user.getUserId()).findDisplay());
+            displays.add(new SearchDisplay(user.getUserId()).findDisplay());
+            displays.add(new ShopDisplay(user.getUserId()).findDisplay());
+            displays.add(new TradeDisplay(user.getUserId()).findDisplay());
+            displays.add(new ViewDisplay(user.getUserId()).findDisplay());
+            //
+            displays.add(new BackpackDisplay_(user.getUserId()).findDisplay());
+            displays.add(new CardDisplay_(user.getUserId()).findDisplay());
+            displays.add(new ViewDisplay_(user.getUserId()).findDisplay());
+            //
+            String buttonId = event.getComponentId();
+            int semiColIndex = buttonId.indexOf(";");
+            int underscoreIndex = buttonId.indexOf("_");
+            String userId = buttonId.substring(0, semiColIndex);
+            String slashId = buttonId.substring(semiColIndex + 1, underscoreIndex);
+
+            for(Display disp : displays) {
+                if(slashId.equals(disp.getSlashId())) {
+                    flipPage(event, user, server, disp);
+                    return;
+                }
+            }
+            if(!user.getUserId().equals(userId)) {
+                event.reply("This is not your button!").setEphemeral(true).queue();
+            } else {
+                event.reply("This button is outdated. Please send a new command!").setEphemeral(true).queue();
+            }
         }
     }
 }

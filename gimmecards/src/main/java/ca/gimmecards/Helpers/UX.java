@@ -1,7 +1,7 @@
 package ca.gimmecards.Helpers;
 import ca.gimmecards.Interfaces.*;
 import ca.gimmecards.Main.*;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import java.text.NumberFormat;
 import java.util.Random;
 
@@ -12,22 +12,26 @@ public class UX implements Emotes {
     }
 
     public static String formatCmd(Server server, String cmd) {
-        return "`" + server.getPrefix() + cmd + "`";
+        return "`/" + cmd + "`";
     }
 
-    public static String formatNick(MessageReceivedEvent event) {
-        return event.getAuthor().getAsMention();
+    public static String formatNick(SlashCommandInteractionEvent event) {
+        return event.getUser().getAsMention();
     }
 
-    public static String formatNick(User mention, MessageReceivedEvent event) {
-        return event.getJDA().getUserById(mention.getUserId()).getAsMention();
+    public static String formatNick(User mention, SlashCommandInteractionEvent event) {
+        net.dv8tion.jda.api.entities.User user = event.getJDA().getUserById(mention.getUserId()+"");
+
+        if(user == null) { return ""; }
+
+        return user.getAsMention();
     }
 
-    public static String formatBadge(MessageReceivedEvent event, String badgeEmote, String badgeName) {
+    public static String formatBadge(SlashCommandInteractionEvent event, String badgeEmote, String badgeName) {
         return UX.formatNick(event) + " has been awarded the " + badgeEmote + " **" + badgeName + "** badge!";
     }
 
-    public static String formatBadge(User user, MessageReceivedEvent event, String badgeEmote, String badgeName) {
+    public static String formatBadge(User user, SlashCommandInteractionEvent event, String badgeEmote, String badgeName) {
         return UX.formatNick(user, event) + " has been awarded the " + badgeEmote + " **" + badgeName + "** badge!";
     }
 

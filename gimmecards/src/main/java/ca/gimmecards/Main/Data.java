@@ -21,16 +21,19 @@ import java.net.URL;
 
 public class Data implements StoragePaths {
 
+    // hashtables of all the set codes
     public static Hashtable<Integer, String> setCodes = new Hashtable<>();
     public static Hashtable<Integer, String> oldSetCodes = new Hashtable<>();
     public static Hashtable<Integer, String> rareSetCodes = new Hashtable<>();
     public static Hashtable<Integer, String> promoSetCodes = new Hashtable<>();
-    //
+    
+    // lists of card Data
     public static Data[] sets = new Data[45];
     public static Data[] oldSets = new Data[46];
     public static Data[] rareSets = new Data[9];
     public static Data[] promoSets = new Data[6];
-    //
+    
+    // instance variables for card Data
     private String setEmote;
     private String setName;
     private String cardId;
@@ -41,6 +44,12 @@ public class Data implements StoragePaths {
     private String[] cardSubtypes;
     private Integer cardPrice;
 
+    /**
+     * constructor for card Data
+     * @param se setEmote
+     * @param cp cardPrice
+     * @param j JsonElement representation of a card
+     */
     public Data(String se, int cp, JsonElement j) {
         setEmote = se;
         setName = j.getAsJsonObject().get("set").getAsJsonObject().get("name").getAsString().replace("—", " ");
@@ -53,7 +62,18 @@ public class Data implements StoragePaths {
         cardPrice = cp;
     }
 
-    //for the custom cards
+    /**
+     * constructor for custom card Data
+     * @param se setEmote
+     * @param sn setName
+     * @param cId cardId
+     * @param cn cardName
+     * @param cr cardRarity
+     * @param ci cardImage
+     * @param cSuper cardSupertype
+     * @param cSub cardSubtypes
+     * @param cp cardPrice
+     */
     public Data(String se, String sn, String cId, String cn, String cr, String ci, String cSuper, String[] cSub, int cp) {
         setEmote = se;
         setName = sn;
@@ -66,6 +86,7 @@ public class Data implements StoragePaths {
         cardPrice = cp;
     }
 
+    // getters for card Data
     public String getSetEmote() { return setEmote; }
     public String getSetName() { return setName; }
     public String getCardId() { return cardId; }
@@ -76,11 +97,21 @@ public class Data implements StoragePaths {
     public String[] getCardSubtypes() { return cardSubtypes; }
     public int getCardPrice() { return cardPrice; }
 
+    // instance variables for Data lists
     private ArrayList<Data> commons;
     private ArrayList<Data> uncommons;
     private ArrayList<Data> rares;
     private ArrayList<Data> shinies;
 
+    /**
+     * constructor for Data lists
+     * @param se setEmote
+     * @param sn setName
+     * @param c commons
+     * @param u uncommons
+     * @param r rares
+     * @param s shinies
+     */
     public Data(String se, String sn, ArrayList<Data> c, ArrayList<Data> u, ArrayList<Data> r, ArrayList<Data> s) {
         setEmote = se;
         setName = sn;
@@ -90,21 +121,35 @@ public class Data implements StoragePaths {
         shinies = s;
     }
 
+    // getters for Data lists
     public ArrayList<Data> getCommons() { return commons; }
     public ArrayList<Data> getUncommons() { return uncommons; }
     public ArrayList<Data> getRares() { return rares; }
     public ArrayList<Data> getShinies() { return shinies; }
 
+    // instance variable for special Data lists
     private ArrayList<Data> specs;
 
+    /**
+     * constructor for special Data lists
+     * @param se setEmote
+     * @param sn setName
+     * @param s specs
+     */
     public Data(String se, String sn, ArrayList<Data> s) {
         setEmote = se;
         setName = sn;
         specs = s;
     }
 
+    // getter for special Data lists
     public ArrayList<Data> getSpecs() { return specs; }
 
+    /**
+     * determines the path that card Data will be saved to
+     * @param dataType whether the Data category is new, old, rare, or promo
+     * @return the path with header if the file is in an external location, and no header if it's local
+     */
     private static String determinePath(String dataType) {
         String path = "";
 
@@ -125,6 +170,10 @@ public class Data implements StoragePaths {
         }
     }
 
+    /**
+     * loads new card Data from Data.json into 'sets'
+     * @throws Exception just needs it
+     */
     public static void loadData() throws Exception {
         Reader reader = new InputStreamReader(new FileInputStream(determinePath("new")), "UTF-8");
         sets = new Gson().fromJson(reader, Data[].class);
@@ -132,6 +181,10 @@ public class Data implements StoragePaths {
         reader.close();
     }
 
+    /**
+     * loads old card Data from Data.json into 'oldSets'
+     * @throws Exception just needs it
+     */
     public static void loadOldData() throws Exception {
         Reader reader = new InputStreamReader(new FileInputStream(determinePath("old")), "UTF-8");
         oldSets = new Gson().fromJson(reader, Data[].class);
@@ -139,6 +192,10 @@ public class Data implements StoragePaths {
         reader.close();
     }
 
+    /**
+     * loads rare card Data from Data.json into 'rareSets'
+     * @throws Exception just needs it
+     */
     public static void loadRareData() throws Exception {
         Reader reader = new InputStreamReader(new FileInputStream(determinePath("rare")), "UTF-8");
         rareSets = new Gson().fromJson(reader, Data[].class);
@@ -146,6 +203,10 @@ public class Data implements StoragePaths {
         reader.close();
     }
 
+    /**
+     * loads promo card Data from Data.json into 'promoSets'
+     * @throws Exception just needs it
+     */
     public static void loadPromoData() throws Exception {
         Reader reader = new InputStreamReader(new FileInputStream(determinePath("promo")), "UTF-8");
         promoSets = new Gson().fromJson(reader, Data[].class);
@@ -153,6 +214,10 @@ public class Data implements StoragePaths {
         reader.close();
     }
 
+    /**
+     * saves new card Data into the file Data.json
+     * @throws Exception just needs it
+     */
     public static void saveData() throws Exception {
         Gson gson = new GsonBuilder().create();
         Writer writer = new OutputStreamWriter(new FileOutputStream(determinePath("new")), "UTF-8");
@@ -160,6 +225,10 @@ public class Data implements StoragePaths {
         writer.close();
     }
 
+    /**
+     * saves old card Data into the file OldData.json
+     * @throws Exception just needs it
+     */
     public static void saveOldData() throws Exception {
         Gson gson = new GsonBuilder().create();
         Writer writer = new OutputStreamWriter(new FileOutputStream(determinePath("old")), "UTF-8");
@@ -167,6 +236,10 @@ public class Data implements StoragePaths {
         writer.close();
     }
 
+    /**
+     * saves rare card Data into the file RareData.json
+     * @throws Exception just needs it
+     */
     public static void saveRareData() throws Exception {
         Gson gson = new GsonBuilder().create();
         Writer writer = new OutputStreamWriter(new FileOutputStream(determinePath("rare")), "UTF-8");
@@ -174,6 +247,10 @@ public class Data implements StoragePaths {
         writer.close();
     }
 
+    /**
+     * saves promo card Data into the file PromoData.json
+     * @throws Exception just needs it
+     */
     public static void savePromoData() throws Exception {
         Gson gson = new GsonBuilder().create();
         Writer writer = new OutputStreamWriter(new FileOutputStream(determinePath("promo")), "UTF-8");
@@ -181,6 +258,11 @@ public class Data implements StoragePaths {
         writer.close();
     }
 
+    /**
+     * find a specific card set
+     * @param setName the name of the card set
+     * @return the card set to find
+     */
     public static Data findSet(String setName) {
         Data set = null;
 
@@ -211,6 +293,11 @@ public class Data implements StoragePaths {
         return set;
     }
 
+    /**
+     * find a card Data's subtypes
+     * @param j JsonElement representation of a card
+     * @return a string list of each of the card Data's subtypes
+     */
     private static String[] findCardSubtypes(JsonElement j) {
         String[] cardSubtypes;
 
@@ -227,6 +314,11 @@ public class Data implements StoragePaths {
         }
     }
 
+    /**
+     * find a card Data's price
+     * @param j JsonElement representation of a card
+     * @return the card Data's price
+     */
     private static int findCardPrice(JsonElement j) {
         JsonObject prices = null;
 
@@ -246,6 +338,11 @@ public class Data implements StoragePaths {
         }
     }
 
+    /**
+     * find the 
+     * @param prices
+     * @return
+     */
     private static int findTcgplayerPrice(JsonObject prices) {
         JsonObject rawPrice = null;
         double finalPrice = 0;

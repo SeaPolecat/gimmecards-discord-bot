@@ -2,26 +2,27 @@ package ca.gimmecards.Cmds;
 import ca.gimmecards.Main.*;
 import ca.gimmecards.Display.*;
 import ca.gimmecards.Helpers.*;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 public class ShopCmds extends Cmds {
 
-    public static void viewShop(MessageReceivedEvent event) {
+    public static void viewShop(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
         ShopDisplay disp = new ShopDisplay(user.getUserId()).findDisplay();
 
         JDA.sendDynamicEmbed(event, user, null, disp, 1);
     }
     
-    public static void viewOldShop(MessageReceivedEvent event) {
+    public static void viewOldShop(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
         OldShopDisplay disp = new OldShopDisplay(user.getUserId()).findDisplay();
 
         JDA.sendDynamicEmbed(event, user, null, disp, 1);
     }
 
-    public static void viewRareShop(MessageReceivedEvent event) {
+    public static void viewRareShop(SlashCommandInteractionEvent event) {
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
@@ -40,7 +41,7 @@ public class ShopCmds extends Cmds {
         embed.clear();
     }
 
-    public static void viewPromoShop(MessageReceivedEvent event) {
+    public static void viewPromoShop(SlashCommandInteractionEvent event) {
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
@@ -58,18 +59,17 @@ public class ShopCmds extends Cmds {
         embed.clear();
     }
 
-    public static void unlockPack(MessageReceivedEvent event, String[] args) {
+    public static void unlockPack(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
+        //
+        OptionMapping packName = event.getOption("pack-name");
+
+        if(packName == null) { return; }
 
         try {
-            String setName = "";
-            for(int i = 1; i < args.length; i++) {
-                setName += args[i] + " ";
-            }
-            setName = setName.trim();
-            Data set = Data.findSet(setName);
+            Data set = Data.findSet(packName.getAsString());
 
-            if(setName.equalsIgnoreCase("gimme cards") || Check.isRareSet(set)) {
+            if(packName.getAsString().equalsIgnoreCase("gimme cards") || Check.isRareSet(set)) {
                 JDA.sendMessage(event, red_, "❌", "You don't need to unlock exclusive packs!");
 
             } else if(Check.isPromoSet(set)) {
@@ -92,10 +92,6 @@ public class ShopCmds extends Cmds {
                     
                     msg += UX.formatNick(event) + " unlocked " + set.getSetEmote() + " **" + set.getSetName() + "**";
                     msg += user.updateKeys(-1, true);
-    
-                    Update.updateBackpackDisplay(event, user);
-                    Update.updateShopDisplay(event, user);
-                    Update.updateOldShopDisplay(event, user);
 
                     if(Check.isOldSet(set)) {
                         JDA.sendMessage(event, user.getGameColor(), squirtle_, msg);

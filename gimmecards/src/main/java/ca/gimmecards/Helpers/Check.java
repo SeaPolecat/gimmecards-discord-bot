@@ -1,8 +1,7 @@
 package ca.gimmecards.Helpers;
 import ca.gimmecards.Interfaces.*;
 import ca.gimmecards.Main.*;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import java.util.Calendar;
 
 public class Check implements Emotes {
@@ -181,36 +180,38 @@ public class Check implements Emotes {
         }
     }
 
-    public static void checkLevelUp(MessageReceivedEvent event, User user) {
-        UserInfo ui = new UserInfo(event);
+    public static String checkLevelUp(SlashCommandInteractionEvent event, User user) {
+        int prevLvl = user.getLevel();
+        int tokenReward = 0;
+        int creditsReward = 0;
+        int keyReward = 0;
+        int starReward = 0;
+        String msg = "";
 
-        while(user.getXP() >= user.getMaxXP()) {
-            int creditsReward = ((user.getLevel() + 9) / 10) * 100;
-            EmbedBuilder embed = new EmbedBuilder();
-            String msg = "";
+        if(user.getXP() >= user.getMaxXP()) {
+            msg += "\n┅┅";
+            msg += "\n" + UX.formatNick(event) + "** LEVELED UP :tada:**";
 
-            user.levelUp();
-
-            msg += UX.formatNick(event) + " is now level **" + user.getLevel() + "** :tada:";
-            msg += user.updateTokens(2, true);
-            msg += user.updateCredits(creditsReward, false);
-            msg += user.updateKeys(1, false);
-            msg += user.updateStars(1, false);
-
-            if(user.getLevel() == 50) {
-                user.getBadges().add("veteran");
-                JDA.sendMessage(event, user.getGameColor(), "🎒", UX.formatBadge(event, veteranBadge_, "Veteran Collector"));
-            } else if(user.getLevel() == 100) {
-                user.getBadges().add("master");
-                JDA.sendMessage(event, user.getGameColor(), "🎒", UX.formatBadge(event, masterBadge_, "Master Collector"));
+            while(user.getXP() >= user.getMaxXP()) {
+                user.levelUp();
+    
+                tokenReward += 2;
+                creditsReward += ((user.getLevel() + 9) / 10) * 100;
+                keyReward++;
+                starReward++;
+    
+                if(user.getLevel() == 50) {
+                    user.getBadges().add("veteran");
+                } else if(user.getLevel() == 100) {
+                    user.getBadges().add("master");
+                }
             }
-            Update.updateBackpackDisplay(event, user);
-
-            embed.setThumbnail(ui.getUserIcon());
-            embed.setDescription(msg);
-            embed.setColor(user.getGameColor());
-            JDA.sendEmbed(event, embed);
-            embed.clear();
+            msg += "\nLevel **" + prevLvl + "** ➜ **" + user.getLevel() + "**";
+            msg += user.updateTokens(tokenReward, true);
+            msg += user.updateCredits(creditsReward, false);
+            msg += user.updateKeys(keyReward, false);
+            msg += user.updateStars(starReward, false);
         }
+        return msg;
     }
 }

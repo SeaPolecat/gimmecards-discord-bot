@@ -3,78 +3,53 @@ import ca.gimmecards.Interfaces.*;
 import ca.gimmecards.Main.*;
 import ca.gimmecards.Display.*;
 import ca.gimmecards.Helpers.*;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import java.util.ArrayList;
 
 public class SearchCmds extends Cmds {
 
-    public static void searchCards(MessageReceivedEvent event, String[] args) {
+    public static void searchCards(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
         SearchDisplay disp = new SearchDisplay(user.getUserId()).findDisplay();
+        //
+        ArrayList<Data> searchedCards = new ArrayList<Data>();
+        OptionMapping option = event.getOption("option");
+        OptionMapping keywords = event.getOption("keywords");
 
-        try {
-            String key = "";
-            ArrayList<Data> searchedCards = new ArrayList<Data>();
+        if(option == null || keywords == null) { return; }
 
-            if(args.length < 3) {
-                Integer.parseInt("$");
-            }
-            for(int i = 2; i < args.length; i++) {
-                key += args[i] + " ";
-            }
-            key = key.trim();
+        if(option.getAsString().equalsIgnoreCase("card")) {
+            searchedCards = searchCards(user, "card", keywords.getAsString());
 
-            if(args[1].equalsIgnoreCase("card")) {
-                searchedCards = searchCards(user, "card", key);
+        } else if(option.getAsString().equalsIgnoreCase("pack")) {
+            searchedCards = searchCards(user, "pack", keywords.getAsString());
 
-            } else if(args[1].equalsIgnoreCase("pack")) {
-                searchedCards = searchCards(user, "pack", key);
+        } else if(option.getAsString().equalsIgnoreCase("rarity")) {
+            searchedCards = searchCards(user, "rarity", keywords.getAsString());
+        }
 
-            } else if(args[1].equalsIgnoreCase("rarity")) {
-                searchedCards = searchCards(user, "rarity", key);
+        if(searchedCards.size() < 1) {
+            JDA.sendMessage(event, red_, "❌", "Sorry, your search had no results!");
 
-            } else {
-                Integer.parseInt("$");
-            }
-
-            if(searchedCards.size() < 1) {
-                JDA.sendMessage(event, red_, "❌", "Sorry, your search had no results!");
-    
-            } else {
-                disp.setKey(key);
-                disp.setSearchedCards(searchedCards);
-                
-                JDA.sendDynamicEmbed(event, user, null, disp, 1);
-            }
-        } catch(NumberFormatException e) {
-            Server server = Server.findServer(event);
-            EmbedBuilder embed = new EmbedBuilder();
-            String desc = "";
-
-            desc += "**Format**\n";
-            desc += UX.formatCmd(server, "search (option) (keyword)") + "\n\n";
-
-            desc += "**Option**\n";
-            desc += "`card/pack/rarity`\n\n";
-
-            desc += "**Keyword**\n";
-            desc += "Can be anything you want!";
-
-            embed.setTitle(eevee_ + " Searching Help " + eevee_);
-            embed.setDescription(desc);
-            embed.setColor(help_);
-            JDA.sendEmbed(event, embed);
-            embed.clear();
+        } else {
+            disp.setKey(keywords.getAsString());
+            disp.setSearchedCards(searchedCards);
+            
+            JDA.sendDynamicEmbed(event, user, null, disp, 1);
         }
     }
 
-    public static void viewAnyCard(MessageReceivedEvent event, String[] args) {
+    public static void viewAnyCard(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
         UserInfo ui = new UserInfo(event);
+        //
+        OptionMapping cardId = event.getOption("card-id");
+
+        if(cardId == null) { return; }
 
         try {
-            Data data = Card.findDataById(args[1]);
+            Data data = Card.findDataById(cardId.getAsString());
             String footer = "Card ID: " + data.getCardId();
 
             Display.displayCard(event, user, ui, data, "", footer, false);
