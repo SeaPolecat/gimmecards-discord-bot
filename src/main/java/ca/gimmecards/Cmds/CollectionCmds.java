@@ -1,7 +1,6 @@
 package ca.gimmecards.Cmds;
 import ca.gimmecards.Main.*;
 import ca.gimmecards.Display.*;
-import ca.gimmecards.Helpers.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
@@ -14,17 +13,17 @@ public class CollectionCmds extends Cmds {
         OptionMapping page = event.getOption("page");
 
         if(user.getCardContainers().size() < 1) {
-            JDA.sendMessage(event, red_, "❌", "You don't have any cards yet!");
+            GameObject.sendMessage(event, red_, "❌", "You don't have any cards yet!");
 
         } else {
             if(page != null) {
                 try {
-                    JDA.sendDynamicEmbed(event, user, null, disp, page.getAsInt());
+                    GameObject.sendDynamicEmbed(event, user, null, disp, page.getAsInt());
                 } catch(IndexOutOfBoundsException e) {
-                    JDA.sendMessage(event, red_, "❌", "Whoops, I couldn't find that page...");
+                    GameObject.sendMessage(event, red_, "❌", "Whoops, I couldn't find that page...");
                 }
             } else {
-                JDA.sendDynamicEmbed(event, user, null, disp, 1);
+                GameObject.sendDynamicEmbed(event, user, null, disp, 1);
             }
         }
     }
@@ -39,19 +38,19 @@ public class CollectionCmds extends Cmds {
         try {
             int index = cardNum.getAsInt() - 1;
             CardContainer cc = user.getCardContainers().get(index);
-            String cardTitle = UX.findCardTitle(cc.getData(), false);
+            String cardTitle = cc.getCard().findCardTitle(false);
 
             if(cc.getIsFav()) {
-                JDA.sendMessage(event, red_, "❌", "That card is already in your favorites!");
+                GameObject.sendMessage(event, red_, "❌", "That card is already in your favorites!");
 
             } else {
                 cc.setIsFav(true);
     
-                JDA.sendMessage(event, user.getGameColor(), "❤", "Added **" + cardTitle + "** to your favorites!");
+                GameObject.sendMessage(event, user.getGameColor(), "❤", "Added **" + cardTitle + "** to your favorites!");
                 try { User.saveUsers(); } catch(Exception e) {}
             }
         } catch(NumberFormatException | IndexOutOfBoundsException e) {
-            JDA.sendMessage(event, red_, "❌", "Whoops, I couldn't find that card...");
+            GameObject.sendMessage(event, red_, "❌", "Whoops, I couldn't find that card...");
         }
     }
 
@@ -65,19 +64,19 @@ public class CollectionCmds extends Cmds {
         try {
             int index = cardNum.getAsInt() - 1;
             CardContainer cc = user.getCardContainers().get(index);
-            String cardTitle = UX.findCardTitle(cc.getData(), false);
+            String cardTitle = cc.getCard().findCardTitle(false);
 
             if(!cc.getIsFav()) {
-                JDA.sendMessage(event, red_, "❌", "That card is already non-favorited!");
+                GameObject.sendMessage(event, red_, "❌", "That card is already non-favorited!");
                 
             } else {
                 cc.setIsFav(false);
     
-                JDA.sendMessage(event, user.getGameColor(), "💔", "Removed **" + cardTitle + "** from your favorites!");
+                GameObject.sendMessage(event, user.getGameColor(), "💔", "Removed **" + cardTitle + "** from your favorites!");
                 try { User.saveUsers(); } catch(Exception e) {}
             }
         } catch(NumberFormatException | IndexOutOfBoundsException e) {
-            JDA.sendMessage(event, red_, "❌", "Whoops, I couldn't find that card...");
+            GameObject.sendMessage(event, red_, "❌", "Whoops, I couldn't find that card...");
         }
     }
 
@@ -86,16 +85,16 @@ public class CollectionCmds extends Cmds {
         boolean exists = false;
 
         for(CardContainer cc : user.getCardContainers()) {
-            if(!cc.getIsFav() && Check.isShinyCard(cc.getData())) {
+            if(!cc.getIsFav() && cc.getCard().isShinyCard()) {
                 exists = true;
                 cc.setIsFav(true);
             }
         }
         if(!exists) {
-            JDA.sendMessage(event, red_, "❌", "Sorry, you have no shiny cards left to favorite!");
+            GameObject.sendMessage(event, red_, "❌", "Sorry, you have no shiny cards left to favorite!");
 
         } else {
-            JDA.sendMessage(event, user.getGameColor(), "💞", "Added all your shiny cards to your favorites!");
+            GameObject.sendMessage(event, user.getGameColor(), "💞", "Added all your shiny cards to your favorites!");
             try { User.saveUsers(); } catch(Exception e) {}
         }
     }
@@ -149,9 +148,9 @@ public class CollectionCmds extends Cmds {
             }
 
         }
-        Card.sortCards(user, user.getSortMethod(), user.getIsSortIncreasing());
+        user.sortCards(user.getSortMethod(), user.getIsSortIncreasing());
 
-        JDA.sendMessage(event, user.getGameColor(), "🎴", "Your cards have been sorted!");
+        GameObject.sendMessage(event, user.getGameColor(), "🎴", "Your cards have been sorted!");
         try { User.saveUsers(); } catch(Exception e) {}
     }
 }

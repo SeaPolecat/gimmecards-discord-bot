@@ -1,7 +1,6 @@
 package ca.gimmecards.Display_;
 import ca.gimmecards.Main.*;
 import ca.gimmecards.Display.*;
-import ca.gimmecards.Helpers.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 public class BackpackDisplay_ extends Display {
@@ -40,12 +39,12 @@ public class BackpackDisplay_ extends Display {
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
-        desc += XP_ + " " + UX.formatNumber(mention.getXP()) + "/" + UX.formatNumber(mention.getMaxXP()) + " until next level\n";
+        desc += XP_ + " " + GameObject.formatNumber(mention.getXP()) + "/" + GameObject.formatNumber(mention.getMaxXP()) + " until next level\n";
         desc += "┅┅\n";
-        desc += token_ + " **Tokens** ┇ " + UX.formatNumber(mention.getTokens()) + "\n";
-        desc += credits_ + " **Credits** ┇ " + UX.formatNumber(mention.getCredits()) + "\n";
-        desc += star_ + " **Stars** ┇ " + UX.formatNumber(mention.getStars()) + "\n";
-        desc += key_ + " **Keys** ┇ " + UX.formatNumber(mention.getKeys()) + "\n";
+        desc += token_ + " **Tokens** ┇ " + GameObject.formatNumber(mention.getTokens()) + "\n";
+        desc += credits_ + " **Credits** ┇ " + GameObject.formatNumber(mention.getCredits()) + "\n";
+        desc += star_ + " **Stars** ┇ " + GameObject.formatNumber(mention.getStars()) + "\n";
+        desc += key_ + " **Keys** ┇ " + GameObject.formatNumber(mention.getKeys()) + "\n";
         desc += "┅┅\n";
 
         if(mention.getBadges().size() > 0) {
@@ -99,7 +98,7 @@ public class BackpackDisplay_ extends Display {
                 }
             }
         }
-        if(!mention.getPinnedCard().equals("") && Check.ownsFavCard(mention)) {
+        if(!mention.getPinnedCard().equals("") && mention.ownsFavCard()) {
             embed.setImage(mention.getPinnedCard());
         }
         embed.setTitle(ui.getUserName() + " ➜ " + mentionInfo.getUserName()

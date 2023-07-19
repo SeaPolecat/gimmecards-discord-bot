@@ -1,6 +1,5 @@
 package ca.gimmecards.Display;
 import ca.gimmecards.Main.*;
-import ca.gimmecards.Helpers.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 public class MinigameDisplay extends Display {
@@ -8,20 +7,20 @@ public class MinigameDisplay extends Display {
     private int tries;
     private boolean isOver;
     private boolean hasWon;
-    private Data data;
+    private Card card;
 
     public MinigameDisplay(String ui) {
         super(ui);
         tries = 3;
         isOver = false;
         hasWon = false;
-        data = Card.pickRandomCard();
+        card = Card.pickRandomCard();
     }
 
     public int getTries() { return tries; }
     public boolean getIsOver() { return isOver; }
     public boolean getHasWon() { return hasWon; }
-    public Data getData() { return data; }
+    public Card getCard() { return card; }
     //
     public void minusTries() { tries--; }
 
@@ -29,7 +28,7 @@ public class MinigameDisplay extends Display {
         tries = 3;
         isOver = false;
         hasWon = false;
-        data = Card.pickRandomCard();
+        card = Card.pickRandomCard();
     }
 
     public void endGame(boolean win) { 
@@ -54,7 +53,7 @@ public class MinigameDisplay extends Display {
     }
 
     public boolean isGuessCorrect(String guess) {
-        String cardRarity = data.getCardRarity();
+        String cardRarity = card.getCardRarity();
 
         minusTries();
         if(cardRarity.replaceAll("\\s+", "").equalsIgnoreCase(guess.replaceAll("\\s+", ""))) {
@@ -67,14 +66,14 @@ public class MinigameDisplay extends Display {
 
     @Override
     public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, int page) {
-        String cardRarity = data.getCardRarity();
-        String rarityEmote = UX.findRarityEmote(data);
-        String cardImage = data.getCardImage();
+        String cardRarity = card.getCardRarity();
+        String rarityEmote = card.findRarityEmote();
+        String cardImage = card.getCardImage();
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
-        desc += UX.formatCmd(server, "guess (rarity)") + " to play\n";
-        desc += UX.formatCmd(server, "rarities") + " for hints\n\n";
+        desc += server.formatCmd("guess (rarity)") + " to play\n";
+        desc += server.formatCmd("rarities") + " for hints\n\n";
 
         desc += "**Rarity** ┇ ";
         if(!hasWon && tries > 0) {

@@ -1,6 +1,5 @@
 package ca.gimmecards.Display;
 import ca.gimmecards.Main.*;
-import ca.gimmecards.Helpers.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 public class OldShopDisplay extends Display {
@@ -28,23 +27,23 @@ public class OldShopDisplay extends Display {
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
-        setMaxPage(Data.oldSets.length / 8);
+        setMaxPage(CardSet.oldSets.length / 8);
 
-        if(Data.oldSets.length % 8 != 0) {
+        if(CardSet.oldSets.length % 8 != 0) {
             addMaxPage();
         }
-        desc += "`" + Check.countOwnedPacks(user, true) + "/" + Data.oldSets.length + "` packs unlocked\n";
+        desc += "`" + user.countOwnedPacks(true) + "/" + CardSet.oldSets.length + "` packs unlocked\n";
         desc += "┅┅\n";
         for(int i = startIndex; i < startIndex + 8; i++) {
-            Data set = Data.oldSets[i];
+            CardSet set = CardSet.oldSets[i];
 
             desc += token_ + " " + set.getSetEmote() + " " + set.getSetName() + " ┇ ";
-            if(Check.isPackUnlocked(user, set.getSetName())) {
+            if(user.isPackUnlocked(set.getSetName())) {
                 desc += "✅\n";
             } else {
                 desc += "🔒\n";
             }
-            if(i >= Data.oldSets.length - 1) {
+            if(i >= CardSet.oldSets.length - 1) {
                 break;
             }
         }

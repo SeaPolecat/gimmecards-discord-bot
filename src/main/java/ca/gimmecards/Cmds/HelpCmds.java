@@ -1,8 +1,7 @@
 package ca.gimmecards.Cmds;
-import ca.gimmecards.Interfaces.*;
 import ca.gimmecards.Main.*;
+import ca.gimmecards.OtherInterfaces.Changelog;
 import ca.gimmecards.Display.*;
-import ca.gimmecards.Helpers.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
 
@@ -31,7 +30,7 @@ public class HelpCmds extends Cmds {
         embed.setTitle(eevee_ + " Getting Started " + eevee_);
         embed.setDescription(desc);
         embed.setColor(help_);
-        JDA.sendEmbed(event, embed);
+        GameObject.sendEmbed(event, embed);
         embed.clear();
     }
 
@@ -60,7 +59,7 @@ public class HelpCmds extends Cmds {
         embed.setTitle(eevee_ + " All Rarities " + eevee_);
         embed.setDescription(desc);
         embed.setColor(help_);
-        JDA.sendEmbed(event, embed);
+        GameObject.sendEmbed(event, embed);
         embed.clear();
     }
 
@@ -96,7 +95,7 @@ public class HelpCmds extends Cmds {
         embed.setTitle(eevee_ + " All Badges " + eevee_);
         embed.setDescription(desc);
         embed.setColor(help_);
-        JDA.sendEmbed(event, embed);
+        GameObject.sendEmbed(event, embed);
         embed.clear();
     }
 
@@ -111,7 +110,7 @@ public class HelpCmds extends Cmds {
         embed.setDescription(desc);
         embed.setImage("https://media.discordapp.net/attachments/1012866222657896558/1012866246393471027/Screen_Shot_2022-08-26_at_4.28.35_PM.png?width=694&height=598");
         embed.setColor(help_);
-        JDA.sendEmbed(event, embed);
+        GameObject.sendEmbed(event, embed);
         embed.clear();
     }
 
@@ -120,6 +119,6 @@ public class HelpCmds extends Cmds {
         Server server = Server.findServer(event);
         HelpDisplay disp = new HelpDisplay(user.getUserId()).findDisplay();
 
-        JDA.sendDynamicEmbed(event, user, server, disp, Changelog.changelog.length);
+        GameObject.sendDynamicEmbed(event, user, server, disp, Changelog.changelog.length);
     }
 }

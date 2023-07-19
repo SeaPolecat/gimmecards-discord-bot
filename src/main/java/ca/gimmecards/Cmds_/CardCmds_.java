@@ -2,7 +2,6 @@ package ca.gimmecards.Cmds_;
 import ca.gimmecards.Main.*;
 import ca.gimmecards.Cmds.*;
 import ca.gimmecards.Display_.*;
-import ca.gimmecards.Helpers.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
@@ -20,7 +19,7 @@ public class CardCmds_ extends Cmds {
         User mention = User.findOtherUser(event, user_.getAsUser().getId());
 
         if(mention.getCardContainers().size() < 1) {
-            JDA.sendMessage(event, red_, "❌", "That user doesn't have any cards yet!");
+            GameObject.sendMessage(event, red_, "❌", "That user doesn't have any cards yet!");
 
         } else {
             disp.setUser(user);
@@ -29,13 +28,13 @@ public class CardCmds_ extends Cmds {
 
             if(page != null) {
                 try {
-                    JDA.sendDynamicEmbed(event, user, null, disp, page.getAsInt());
+                    GameObject.sendDynamicEmbed(event, user, null, disp, page.getAsInt());
 
                 } catch(NumberFormatException | IndexOutOfBoundsException e) {
-                    JDA.sendMessage(event, red_, "❌", "Whoops, I couldn't find that page...");
+                    GameObject.sendMessage(event, red_, "❌", "Whoops, I couldn't find that page...");
                 }
             } else {
-                JDA.sendDynamicEmbed(event, user, null, disp, 1);
+                GameObject.sendDynamicEmbed(event, user, null, disp, 1);
             }
         }
     }

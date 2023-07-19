@@ -1,7 +1,6 @@
 package ca.gimmecards.Cmds;
 import ca.gimmecards.Main.*;
 import ca.gimmecards.Display.*;
-import ca.gimmecards.Helpers.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -12,31 +11,31 @@ public class BackpackCmds extends Cmds {
         User user = User.findUser(event);
         BackpackDisplay disp = new BackpackDisplay(user.getUserId()).findDisplay();
 
-        JDA.sendDynamicEmbed(event, user, null, disp, -1);
+        GameObject.sendDynamicEmbed(event, user, null, disp, -1);
     }
 
     public static void redeemToken(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
 
-        if(!Check.isCooldownDone(user.getRedeemEpoch(), 30, true)) {
-            JDA.sendMessage(event, red_, "⏰", "Please wait another " 
-            + Check.findTimeLeft(user.getRedeemEpoch(), 30, true));
+        if(!GameObject.isCooldownDone(user.getRedeemEpoch(), 30, true)) {
+            GameObject.sendMessage(event, red_, "⏰", "Please wait another " 
+            + GameObject.findTimeLeft(user.getRedeemEpoch(), 30, true));
 
         } else {
             String msg = "";
 
             user.resetRedeemEpoch();
 
-            msg += UX.formatNick(event) + " redeemed a token!";
+            msg += GameObject.formatNick(event) + " redeemed a token!";
             msg += user.updateTokens(1, true);
-            msg += user.updateCredits(UX.randRange(24, 30), false);
+            msg += user.updateCredits(GameObject.randRange(24, 30), false);
 
             msg += "\n\n[Click here](https://www.patreon.com/gimmecards) to join us on " 
             + patreon_ + " **Patreon** ┇ `/patreon`";
 
             msg += "\n\n" + Main.updateMsg + "\n";
 
-            JDA.sendMessage(event, user.getGameColor(), "🎒", msg);
+            GameObject.sendMessage(event, user.getGameColor(), "🎒", msg);
             try { User.saveUsers(); } catch(Exception e) {}
         }
     }
@@ -45,22 +44,22 @@ public class BackpackCmds extends Cmds {
         User user = User.findUser(event);
         UserInfo ui = new UserInfo(event);
 
-        if(!Check.isCooldownDone(user.getDailyEpoch(), 1440, true)) {
-            JDA.sendMessage(event, red_, "⏰", "Please wait another " 
-            + Check.findTimeLeft(user.getDailyEpoch(), 1440, true));
+        if(!GameObject.isCooldownDone(user.getDailyEpoch(), 1440, true)) {
+            GameObject.sendMessage(event, red_, "⏰", "Please wait another " 
+            + GameObject.findTimeLeft(user.getDailyEpoch(), 1440, true));
 
         } else {
-            Data item = Card.pickRandomCard("shiny");
+            Card item = Card.pickRandomCard("shiny");
             String msg = "";
             String footer = ui.getUserName() + "'s shiny card";
 
             msg += "🎴 ";
-            msg += UX.formatNick(event) + " claimed their daily shiny card!";
-            msg += user.updateCredits(UX.randRange(240, 300), true);
+            msg += GameObject.formatNick(event) + " claimed their daily shiny card!";
+            msg += user.updateCredits(GameObject.randRange(240, 300), true);
 
             user.resetDailyEpoch();
 
-            Card.addSingleCard(user, item, false);
+            user.addSingleCard(item, false);
             
             Display.displayCard(event, user, ui, item, msg, footer, false);
             try { User.saveUsers(); } catch(Exception e) {}
@@ -79,13 +78,13 @@ public class BackpackCmds extends Cmds {
 
             user.setGameColor(color);
 
-            JDA.sendMessage(event, user.getGameColor(), eevee_, 
+            GameObject.sendMessage(event, user.getGameColor(), eevee_, 
             "Set your game's theme color to **" + hexCode.getAsString().toUpperCase() + "**");
             try { User.saveUsers(); } catch(Exception e) {}
 
         } catch(NumberFormatException e) {
             e.printStackTrace();
-            JDA.sendMessage(event, red_, "❌", "That's not a valid hex code!");
+            GameObject.sendMessage(event, red_, "❌", "That's not a valid hex code!");
         }
     }
 
@@ -99,16 +98,16 @@ public class BackpackCmds extends Cmds {
         try {
             int index = cardNum.getAsInt() - 1;
             CardContainer cc = user.getCardContainers().get(index);
-            String cardTitle = UX.findCardTitle(cc.getData(), false);
-            String cardImage = cc.getData().getCardImage();
+            String cardTitle = cc.getCard().findCardTitle(false);
+            String cardImage = cc.getCard().getCardImage();
 
             user.setPinnedCard(cardImage);
 
-            JDA.sendMessage(event, user.getGameColor(), "🎒", "**" + cardTitle + "** has been pinned to your backpack!");
+            GameObject.sendMessage(event, user.getGameColor(), "🎒", "**" + cardTitle + "** has been pinned to your backpack!");
             try { User.saveUsers(); } catch(Exception e) {}
             
         } catch(NumberFormatException | IndexOutOfBoundsException e) {
-            JDA.sendMessage(event, red_, "❌", "Whoops, I couldn't find that card...");
+            GameObject.sendMessage(event, red_, "❌", "Whoops, I couldn't find that card...");
         }
     }
 
@@ -119,41 +118,41 @@ public class BackpackCmds extends Cmds {
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
-        desc += UX.formatCmd(server, "redeem") + " ┇ ";
-        if(Check.isCooldownDone(user.getRedeemEpoch(), 30, true)) {
+        desc += server.formatCmd("redeem") + " ┇ ";
+        if(GameObject.isCooldownDone(user.getRedeemEpoch(), 30, true)) {
             desc += "✅\n\n";
         } else {
-            desc += "⏰ " + Check.findTimeLeft(user.getRedeemEpoch(), 30, true) + "\n\n";
+            desc += "⏰ " + GameObject.findTimeLeft(user.getRedeemEpoch(), 30, true) + "\n\n";
         }
-        desc += UX.formatCmd(server, "minigame") + " ┇ ";
-        if(Check.isCooldownDone(user.getMinigameEpoch(), 60, true)) {
+        desc += server.formatCmd("minigame") + " ┇ ";
+        if(GameObject.isCooldownDone(user.getMinigameEpoch(), 60, true)) {
             desc += "✅\n\n";
         } else {
-            desc += "⏰ " + Check.findTimeLeft(user.getMinigameEpoch(), 60, true) + "\n\n";
+            desc += "⏰ " + GameObject.findTimeLeft(user.getMinigameEpoch(), 60, true) + "\n\n";
         }
-        desc += UX.formatCmd(server, "vote") + " ┇ ";
-        if(Check.isCooldownDone(user.getVoteEpoch(), 720, true)) {
+        desc += server.formatCmd("vote") + " ┇ ";
+        if(GameObject.isCooldownDone(user.getVoteEpoch(), 720, true)) {
             desc += "✅\n\n";
         } else {
-            desc += "⏰ " + Check.findTimeLeft(user.getVoteEpoch(), 720, true) + "\n\n";
+            desc += "⏰ " + GameObject.findTimeLeft(user.getVoteEpoch(), 720, true) + "\n\n";
         }
-        desc += UX.formatCmd(server, "daily") + " ┇ ";
-        if(Check.isCooldownDone(user.getDailyEpoch(), 1440, true)) {
+        desc += server.formatCmd("daily") + " ┇ ";
+        if(GameObject.isCooldownDone(user.getDailyEpoch(), 1440, true)) {
             desc += "✅\n\n";
         } else {
-            desc += "⏰ " + Check.findTimeLeft(user.getDailyEpoch(), 1440, true) + "\n\n";
+            desc += "⏰ " + GameObject.findTimeLeft(user.getDailyEpoch(), 1440, true) + "\n\n";
         }
-        desc += UX.formatCmd(server, "buy") + " ┇ ";
-        if(Check.isCooldownDone(user.getMarketEpoch(), 15, true)) {
+        desc += server.formatCmd("buy") + " ┇ ";
+        if(GameObject.isCooldownDone(user.getMarketEpoch(), 15, true)) {
             desc += "✅";
         } else {
-            desc += "⏰ " + Check.findTimeLeft(user.getMarketEpoch(), 15, true);
+            desc += "⏰ " + GameObject.findTimeLeft(user.getMarketEpoch(), 15, true);
         }
         embed.setTitle(ui.getUserName() + "'s Cooldowns");
         embed.setThumbnail(ui.getUserIcon());
         embed.setDescription(desc);
         embed.setColor(user.getGameColor());
-        JDA.sendEmbed(event, embed);
+        GameObject.sendEmbed(event, embed);
         embed.clear();
     }
 }

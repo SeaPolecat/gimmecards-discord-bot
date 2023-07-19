@@ -1,8 +1,7 @@
 package ca.gimmecards.Cmds;
-import ca.gimmecards.Interfaces.*;
 import ca.gimmecards.Main.*;
+import ca.gimmecards.OtherInterfaces.CustomCards;
 import ca.gimmecards.Display.*;
-import ca.gimmecards.Helpers.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import java.util.ArrayList;
@@ -13,7 +12,7 @@ public class SearchCmds extends Cmds {
         User user = User.findUser(event);
         SearchDisplay disp = new SearchDisplay(user.getUserId()).findDisplay();
         //
-        ArrayList<Data> searchedCards = new ArrayList<Data>();
+        ArrayList<Card> searchedCards = new ArrayList<Card>();
         OptionMapping option = event.getOption("option");
         OptionMapping keywords = event.getOption("keywords");
 
@@ -30,13 +29,13 @@ public class SearchCmds extends Cmds {
         }
 
         if(searchedCards.size() < 1) {
-            JDA.sendMessage(event, red_, "❌", "Sorry, your search had no results!");
+            GameObject.sendMessage(event, red_, "❌", "Sorry, your search had no results!");
 
         } else {
             disp.setKey(keywords.getAsString());
             disp.setSearchedCards(searchedCards);
             
-            JDA.sendDynamicEmbed(event, user, null, disp, 1);
+            GameObject.sendDynamicEmbed(event, user, null, disp, 1);
         }
     }
 
@@ -49,23 +48,23 @@ public class SearchCmds extends Cmds {
         if(cardId == null) { return; }
 
         try {
-            Data data = Card.findDataById(cardId.getAsString());
-            String footer = "Card ID: " + data.getCardId();
+            Card card = Card.findCardById(cardId.getAsString());
+            String footer = "Card ID: " + card.getCardId();
 
-            Display.displayCard(event, user, ui, data, "", footer, false);
+            Display.displayCard(event, user, ui, card, "", footer, false);
 
         } catch(NullPointerException e) {
-            JDA.sendMessage(event, red_, "❌", "Whoops, I couldn't find that card...");
+            GameObject.sendMessage(event, red_, "❌", "Whoops, I couldn't find that card...");
         }
     }
 
-    private static ArrayList<Data> searchCards(User user, String sortMethod, String key) {
-        ArrayList<Data> searchedCards = new ArrayList<Data>();
+    private static ArrayList<Card> searchCards(User user, String sortMethod, String key) {
+        ArrayList<Card> searchedCards = new ArrayList<Card>();
 
-        for(Data set : Data.sets) {
+        for(CardSet set : CardSet.sets) {
             crawlSet(searchedCards, set, sortMethod, key);
         }
-        for(Data oldSet : Data.oldSets) {
+        for(CardSet oldSet : CardSet.oldSets) {
             crawlSet(searchedCards, oldSet, sortMethod, key);
         }
         crawlSpecSets(searchedCards, sortMethod, key);
@@ -73,70 +72,70 @@ public class SearchCmds extends Cmds {
         return searchedCards;
     }
 
-    private static String findName(Data data, String sortMethod) {
+    private static String findName(Card card, String sortMethod) {
         if(sortMethod.equalsIgnoreCase("card")) {
-            return data.getCardName();
+            return card.getCardName();
         } else if(sortMethod.equalsIgnoreCase("pack")) {
-            return data.getSetName();
+            return card.getSetName();
         }
-        return data.getCardRarity();
+        return card.getCardRarity();
     }
 
-    private static void crawlSet(ArrayList<Data> searchedCards, Data set, String sortMethod, String key) {
-        for(Data data : set.getCommons()) {
-            String name = findName(data, sortMethod);
+    private static void crawlSet(ArrayList<Card> searchedCards, CardSet set, String sortMethod, String key) {
+        for(Card card : set.getCommons()) {
+            String name = findName(card, sortMethod);
 
             if(name.toLowerCase().contains(key.toLowerCase())) {
-                searchedCards.add(data);
+                searchedCards.add(card);
             }
         }
-        for(Data data : set.getUncommons()) {
-            String name = findName(data, sortMethod);
+        for(Card card : set.getUncommons()) {
+            String name = findName(card, sortMethod);
 
             if(name.toLowerCase().contains(key.toLowerCase())) {
-                searchedCards.add(data);
+                searchedCards.add(card);
             }
         }
-        for(Data data : set.getRares()) {
-            String name = findName(data, sortMethod);
+        for(Card card : set.getRares()) {
+            String name = findName(card, sortMethod);
 
             if(name.toLowerCase().contains(key.toLowerCase())) {
-                searchedCards.add(data);
+                searchedCards.add(card);
             }
         }
-        for(Data data : set.getShinies()) {
-            String name = findName(data, sortMethod);
+        for(Card card : set.getShinies()) {
+            String name = findName(card, sortMethod);
             
             if(name.toLowerCase().contains(key.toLowerCase())) {
-                searchedCards.add(data);
+                searchedCards.add(card);
             }
         }
     }
 
-    private static void crawlSpecSets(ArrayList<Data> searchedCards, String sortMethod, String key) {
-        for(Data specSet : Data.rareSets) {
-            for(Data data : specSet.getSpecs()) {
-                String name = findName(data, sortMethod);
+    private static void crawlSpecSets(ArrayList<Card> searchedCards, String sortMethod, String key) {
+        for(CardSet specSet : CardSet.rareSets) {
+            for(Card card : specSet.getSpecials()) {
+                String name = findName(card, sortMethod);
 
                 if(name.toLowerCase().contains(key.toLowerCase())) {
-                    searchedCards.add(data);
+                    searchedCards.add(card);
                 }
             }
         }
-        for(Data specSet : Data.promoSets) {
-            for(Data data : specSet.getSpecs()) {
-                String name = findName(data, sortMethod);
+        for(CardSet specSet : CardSet.promoSets) {
+            for(Card card : specSet.getSpecials()) {
+                String name = findName(card, sortMethod);
 
                 if(name.toLowerCase().contains(key.toLowerCase())) {
-                    searchedCards.add(data);
+                    searchedCards.add(card);
                 }
             }
         }
-        for(Data data : CustomCards.customs) {
-            String name = findName(data, sortMethod);
+        for(Card card : CustomCards.customs) {
+            String name = findName(card, sortMethod);
             
             if(name.toLowerCase().contains(key.toLowerCase())) {
-                searchedCards.add(data);
+                searchedCards.add(card);
             }
         }
     }

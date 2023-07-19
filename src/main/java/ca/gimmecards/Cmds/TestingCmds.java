@@ -1,5 +1,4 @@
 package ca.gimmecards.Cmds;
-import ca.gimmecards.Helpers.*;
 import ca.gimmecards.Main.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import java.util.ArrayList;
@@ -53,14 +52,14 @@ public class TestingCmds extends Cmds {
             );
             Card.addSingleCard(u, merch, true);
         }
-        JDA.sendMessage(event, blue_, "", "done testing!");
+        GameObject.sendMessage(event, blue_, "", "done testing!");
         try { User.saveUsers(); } catch(Exception e) {}*/
 
         /*for(User u : User.users) {
             for(int i = 0; i < u.getCardContainers().size(); i++) {
                 CardContainer cc = u.getCardContainers().get(i);
                 CardContainer container = new CardContainer(
-                    cc.getData(),
+                    cc.getCard(),
                     cc.getCardNum(),
                     cc.getCardQuantity(),
                     cc.getIsSellable(),
@@ -71,11 +70,11 @@ public class TestingCmds extends Cmds {
         }
         for(User u : User.users) {
             for(CardContainer cc : u.getCardContainers()) {
-                System.out.println(cc.getIsSellable());
+                System.out.println(cc.getCard().getCardName());
             }
         }
-        JDA.sendMessage(event, blue_, "", "done testing!");
-        try { User.saveUsers(); } catch(Exception e) {}*/
+        GameObject.sendMessage(event, blue_, "", "done testing!");
+        //try { User.saveUsers(); } catch(Exception e) {}
         
         /*for(int i = 0; i < User.users.size(); i++) {
             User u = User.users.get(i);
@@ -110,7 +109,7 @@ public class TestingCmds extends Cmds {
                 System.out.println(cc.getIsFav());
             }
         }
-        JDA.sendMessage(event, blue_, "", "done testing!");
+        GameObject.sendMessage(event, blue_, "", "done testing!");
         try { User.saveUsers(); } catch(Exception e) {}*/
     }
 }

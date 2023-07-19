@@ -1,6 +1,5 @@
 package ca.gimmecards.Display;
 import ca.gimmecards.Main.*;
-import ca.gimmecards.Helpers.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 public class CardDisplay extends Display {
@@ -39,12 +38,12 @@ public class CardDisplay extends Display {
         desc += "┅┅\n";
         for(int i = startIndex; i < startIndex + 15; i++) {
             CardContainer cc = user.getCardContainers().get(i);
-            Data data = cc.getData();
+            Card card = cc.getCard();
 
-            desc += "`#" + count + "` " + UX.findCardTitle(data, cc.getIsFav())
-            + " ┇ " + UX.findRarityEmote(data) 
-            + " ┇ " + data.getSetEmote()
-            + " ┇ " + UX.formatXP(data, cc.getIsSellable())
+            desc += "`#" + count + "` " + card.findCardTitle(cc.getIsFav())
+            + " ┇ " + card.findRarityEmote() 
+            + " ┇ " + card.getSetEmote()
+            + " ┇ " + card.formatXP(cc.getIsSellable())
             + " ┇ *x" + cc.getCardQuantity() + "*\n";
             count++;
             
@@ -53,7 +52,7 @@ public class CardDisplay extends Display {
             }
         }
         desc += "┅┅\n";
-        embed.setTitle(ui.getUserName() + "'s Collection ┇ " + UX.formatNumber(Check.countOwnedCards(user)) + " Cards");
+        embed.setTitle(ui.getUserName() + "'s Collection ┇ " + GameObject.formatNumber(user.countOwnedCards()) + " Cards");
         embed.setDescription(desc);
         embed.setFooter("Page " + page + " of " + getMaxPage(), ui.getUserIcon());
         embed.setColor(user.getGameColor());

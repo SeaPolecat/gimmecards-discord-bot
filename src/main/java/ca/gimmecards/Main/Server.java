@@ -1,5 +1,4 @@
 package ca.gimmecards.Main;
-import ca.gimmecards.Interfaces.*;
 import ca.gimmecards.MainInterfaces.*;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -17,14 +16,14 @@ import net.dv8tion.jda.api.entities.Guild;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class Server implements IServer, StoragePaths {
+public class Server implements IServer {
     
     // list of Servers
     public static ArrayList<Server> servers = new ArrayList<Server>();
     
     // instance variables
     private String serverId;
-    private ArrayList<Data> market;
+    private ArrayList<Card> market;
     private Long marketEpoch;
 
     /**
@@ -33,7 +32,7 @@ public class Server implements IServer, StoragePaths {
      */
     public Server(String si) {
         serverId = si;
-        market = new ArrayList<Data>();
+        market = new ArrayList<Card>();
         marketEpoch = (long)(0);
     }
 
@@ -49,7 +48,7 @@ public class Server implements IServer, StoragePaths {
 
     // getters
     public String getServerId() { return serverId; }
-    public ArrayList<Data> getMarket() { return market; }
+    public ArrayList<Card> getMarket() { return market; }
     public long getMarketEpoch() { return marketEpoch; }
     
     // setters

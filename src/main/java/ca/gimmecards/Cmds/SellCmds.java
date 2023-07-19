@@ -1,6 +1,5 @@
 package ca.gimmecards.Cmds;
 import ca.gimmecards.Main.*;
-import ca.gimmecards.Helpers.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
@@ -14,34 +13,34 @@ public class SellCmds extends Cmds {
         if(cardNum == null) { return; }
         
         if(user.getCardContainers().size() < 1) {
-            JDA.sendMessage(event, red_, "❌", "You don't have any cards to sell!");
+            GameObject.sendMessage(event, red_, "❌", "You don't have any cards to sell!");
 
         } else {
             try {
                 int index = cardNum.getAsInt() - 1;
                 CardContainer cc = user.getCardContainers().get(index);
-                String cardTitle = UX.findCardTitle(cc.getData(), cc.getIsFav());
+                String cardTitle = cc.getCard().findCardTitle(cc.getIsFav());
                 int profit = findSingleProfit(user, index);
                 int creditsReward = (int)(profit * 0.02);
                 
                 if(profit == -1) {
-                    JDA.sendMessage(event, red_, "❌", "Sorry, that card is in your favourites!");
+                    GameObject.sendMessage(event, red_, "❌", "Sorry, that card is in your favourites!");
 
                 } else {
                     String msg = "";
 
-                    msg += UX.formatNick(event) + " sold **" + cardTitle + "**";
+                    msg += GameObject.formatNick(event) + " sold **" + cardTitle + "**";
                     msg += user.updateXP(profit, true);
                     if(creditsReward > 0) {
                         msg += user.updateCredits(creditsReward, false);
                     }
-                    msg += Check.checkLevelUp(event, user);
+                    msg += user.checkLevelUp(event);
                     
-                    JDA.sendMessage(event, user.getGameColor(), "🎴", msg);
+                    GameObject.sendMessage(event, user.getGameColor(), "🎴", msg);
                     try { User.saveUsers(); } catch(Exception e) {}
                 }
             } catch(NumberFormatException | IndexOutOfBoundsException e) {
-                JDA.sendMessage(event, red_, "❌", "Whoops, I couldn't find that card...");
+                GameObject.sendMessage(event, red_, "❌", "Whoops, I couldn't find that card...");
             }
         }
     }
@@ -50,29 +49,29 @@ public class SellCmds extends Cmds {
         User user = User.findUser(event);
 
         if(user.getCardContainers().size() < 1) {
-            JDA.sendMessage(event, red_, "❌", "You don't have any cards to sell!");
+            GameObject.sendMessage(event, red_, "❌", "You don't have any cards to sell!");
 
         } else if(!hasDuplicates(user)) {
-            JDA.sendMessage(event, red_, "❌", "You don't have any duplicate cards!");
+            GameObject.sendMessage(event, red_, "❌", "You don't have any duplicate cards!");
 
         } else {
             int profit = findDuplicatesProfit(user);
             int creditsReward = (int)(profit * 0.02);
             
             if(profit == -1) {
-                JDA.sendMessage(event, red_, "❌", "Sorry, all your duplicate cards are in your favourites!");
+                GameObject.sendMessage(event, red_, "❌", "Sorry, all your duplicate cards are in your favourites!");
                 
             } else {
                 String msg = "";
 
-                msg += UX.formatNick(event) + " sold all duplicates!";
+                msg += GameObject.formatNick(event) + " sold all duplicates!";
                 msg += user.updateXP(profit, true);
                 if(creditsReward > 0) {
                     msg += user.updateCredits(creditsReward, false);
                 }
-                msg += Check.checkLevelUp(event, user);
+                msg += user.checkLevelUp(event);
     
-                JDA.sendMessage(event, user.getGameColor(), "🎴", msg);
+                GameObject.sendMessage(event, user.getGameColor(), "🎴", msg);
                 try { User.saveUsers(); } catch(Exception e) {}
             }
         }
@@ -82,26 +81,26 @@ public class SellCmds extends Cmds {
         User user = User.findUser(event);
         
         if(user.getCardContainers().size() < 1) {
-            JDA.sendMessage(event, red_, "❌", "You don't have any cards to sell!");
+            GameObject.sendMessage(event, red_, "❌", "You don't have any cards to sell!");
 
         } else {
             int profit = findAllProfit(user);
             int creditsReward = (int)(profit * 0.02);
 
             if(profit == -1) {
-                JDA.sendMessage(event, red_, "❌", "Sorry, all your cards are in your favourites!");
+                GameObject.sendMessage(event, red_, "❌", "Sorry, all your cards are in your favourites!");
 
             } else {
                 String msg = "";
 
-                msg += UX.formatNick(event) + " sold all their cards! (except favourites)";
+                msg += GameObject.formatNick(event) + " sold all their cards! (except favourites)";
                 msg += user.updateXP(profit, true);
                 if(creditsReward > 0) {
                     msg += user.updateCredits(creditsReward, false);
                 }
-                msg += Check.checkLevelUp(event, user);
+                msg += user.checkLevelUp(event);
         
-                JDA.sendMessage(event, user.getGameColor(), "🎴", msg);
+                GameObject.sendMessage(event, user.getGameColor(), "🎴", msg);
                 try { User.saveUsers(); } catch(Exception e) {}
             }
         }
@@ -121,7 +120,7 @@ public class SellCmds extends Cmds {
                 cc.minusCardQuantity();
             }
             if(cc.getIsSellable()) {
-                profit += cc.getData().getCardPrice();
+                profit += cc.getCard().getCardPrice();
             }
         }
         return profit;
@@ -146,7 +145,7 @@ public class SellCmds extends Cmds {
                 while(cc.getCardQuantity() > 1) {
                     cc.minusCardQuantity();
                     if(cc.getIsSellable()) {
-                        profit += cc.getData().getCardPrice();
+                        profit += cc.getCard().getCardPrice();
                     }
                 }
             }
@@ -169,7 +168,7 @@ public class SellCmds extends Cmds {
                 while(cc.getCardQuantity() > 0) {
                     cc.minusCardQuantity();
                     if(cc.getIsSellable()) {
-                        profit += cc.getData().getCardPrice();
+                        profit += cc.getCard().getCardPrice();
                     }
                     if(cc.getCardQuantity() < 1) {
                         user.getCardContainers().remove(i);

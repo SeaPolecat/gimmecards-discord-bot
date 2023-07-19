@@ -2,7 +2,6 @@ package ca.gimmecards.Cmds_;
 import ca.gimmecards.Main.*;
 import ca.gimmecards.Cmds.*;
 import ca.gimmecards.Display_.*;
-import ca.gimmecards.Helpers.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
@@ -26,6 +25,6 @@ public class BackpackCmds_ extends Cmds {
         disp.setMention(mention);
         disp.setMentionInfo(new UserInfo(mention, event));
 
-        JDA.sendDynamicEmbed(event, user, null, disp, -1);
+        GameObject.sendDynamicEmbed(event, user, null, disp, -1);
     }
 }

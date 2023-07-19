@@ -1,27 +1,26 @@
 package ca.gimmecards.Display;
 import ca.gimmecards.Main.*;
-import ca.gimmecards.Helpers.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 import java.util.ArrayList;
 
 public class ViewDisplay extends Display {
 
     private String dispType;
-    private ArrayList<Data> newCards;
+    private ArrayList<Card> newCards;
     private String message;
 
     public ViewDisplay(String ui) {
         super(ui);
-        newCards = new ArrayList<Data>();
+        newCards = new ArrayList<Card>();
         message = "";
     }
     
     public String getDispType() { return dispType; }
-    public ArrayList<Data> getNewCards() { return newCards; }
+    public ArrayList<Card> getNewCards() { return newCards; }
     public String getMessage() { return message; }
     //
     public void setDispType(String dt) { dispType = dt; }
-    public void setNewCards(ArrayList<Data> nc) { newCards = nc; }
+    public void setNewCards(ArrayList<Card> nc) { newCards = nc; }
     public void setMessage(String m) { message = m; }
 
     @Override
@@ -40,7 +39,7 @@ public class ViewDisplay extends Display {
     @Override
     public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, int page) {
         int startIndex = page - 1;
-        Data data = null;
+        Card card = null;
         String cardTitle = "";
         Boolean sellable = null;
         EmbedBuilder embed = new EmbedBuilder();
@@ -54,15 +53,15 @@ public class ViewDisplay extends Display {
         if(dispType.equalsIgnoreCase("old")) {
             CardContainer cc = user.getCardContainers().get(startIndex);
 
-            data = user.getCardContainers().get(startIndex).getData();
-            cardTitle = UX.findCardTitle(data, cc.getIsFav());
+            card = user.getCardContainers().get(startIndex).getCard();
+            cardTitle = card.findCardTitle(cc.getIsFav());
             sellable = cc.getIsSellable();
 
         } else { // dispType.equalsIgnoreCase("new")
-            data = newCards.get(startIndex);
-            cardTitle = UX.findCardTitle(data, false);
+            card = newCards.get(startIndex);
+            cardTitle = card.findCardTitle(false);
 
-            if(!Check.ownsCard(user, data)) {
+            if(!user.ownsCard(card)) {
                 cardTitle += " 🆕";
             }
         }
@@ -70,16 +69,16 @@ public class ViewDisplay extends Display {
             desc += message;
             desc += "\n┅┅\n";
         }
-        desc += "**Rarity** ┇ " + UX.findRarityEmote(data) + " " + data.getCardRarity() + "\n";
-        desc += "**Card Set** ┇ " + data.getSetEmote() + " " + data.getSetName() + "\n";
-        desc += "**XP Value** ┇ " + UX.formatXP(data, sellable) + "\n\n";
+        desc += "**Rarity** ┇ " + card.findRarityEmote() + " " + card.getCardRarity() + "\n";
+        desc += "**Card Set** ┇ " + card.getSetEmote() + " " + card.getSetName() + "\n";
+        desc += "**XP Value** ┇ " + card.formatXP(sellable) + "\n\n";
         desc += "*Click on image for zoomed view*";
         
         embed.setTitle(cardTitle);
         embed.setDescription(desc);
-        embed.setImage(data.getCardImage());
+        embed.setImage(card.getCardImage());
         embed.setFooter("Page " + page + " of " + getMaxPage(), ui.getUserIcon());
-        embed.setColor(UX.findEmbedColour(data));
+        embed.setColor(card.findEmbedColour());
         return embed;
     }
 }

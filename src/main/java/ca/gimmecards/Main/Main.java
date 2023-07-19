@@ -48,7 +48,7 @@ public class Main {
         jda.getPresence().setStatus(OnlineStatus.ONLINE);
         jda.getPresence().setActivity(Activity.playing("type /help"));
 
-        jda.addEventListener(new Ready());
+        jda.addEventListener(new GameObject());
         jda.addEventListener(new Cmds());
         jda.addEventListener(new Display());
     }

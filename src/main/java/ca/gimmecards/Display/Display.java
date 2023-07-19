@@ -1,9 +1,10 @@
 package ca.gimmecards.Display;
 import ca.gimmecards.Cmds.*;
 import ca.gimmecards.Display_.*;
-import ca.gimmecards.Helpers.*;
-import ca.gimmecards.Interfaces.*;
 import ca.gimmecards.Main.*;
+import ca.gimmecards.OtherInterfaces.Colors;
+import ca.gimmecards.OtherInterfaces.Displays;
+import ca.gimmecards.OtherInterfaces.Emotes;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
@@ -47,8 +48,8 @@ public class Display extends ListenerAdapter implements Displays, Emotes, Colors
         return null;
     }
 
-    public static void displayCard(SlashCommandInteractionEvent event, User user, UserInfo ui, Data data, String message, String footer, boolean isFav) {
-        String cardTitle = UX.findCardTitle(data, isFav);
+    public static void displayCard(SlashCommandInteractionEvent event, User user, UserInfo ui, Card card, String message, String footer, boolean isFav) {
+        String cardTitle = card.findCardTitle(isFav);
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
@@ -56,17 +57,17 @@ public class Display extends ListenerAdapter implements Displays, Emotes, Colors
             desc += message;
             desc += "\n┅┅\n";
         }
-        desc += "**Rarity** ┇ " + UX.findRarityEmote(data) + " " + data.getCardRarity() + "\n";
-        desc += "**Card Set** ┇ " + data.getSetEmote() + " " + data.getSetName() + "\n";
-        desc += "**XP Value** ┇ " + UX.formatXP(data, Check.isSellable(data)) + "\n\n";
+        desc += "**Rarity** ┇ " + card.findRarityEmote() + " " + card.getCardRarity() + "\n";
+        desc += "**Card Set** ┇ " + card.getSetEmote() + " " + card.getSetName() + "\n";
+        desc += "**XP Value** ┇ " + card.formatXP(card.isCardSellable()) + "\n\n";
         desc += "*Click on image for zoomed view*";
 
         embed.setTitle(cardTitle);
         embed.setDescription(desc);
-        embed.setImage(data.getCardImage());
+        embed.setImage(card.getCardImage());
         embed.setFooter(footer, ui.getUserIcon());
-        embed.setColor(UX.findEmbedColour(data));
-        JDA.sendEmbed(event, embed);
+        embed.setColor(card.findEmbedColour());
+        GameObject.sendEmbed(event, embed);
         embed.clear();
     }
 
@@ -85,7 +86,7 @@ public class Display extends ListenerAdapter implements Displays, Emotes, Colors
                 while(user.getCardContainers().size() <= (disp.getPage() * 15) - 15) {
                     disp.prevPage();
                 }
-                JDA.editEmbed(event, user, server, disp, disp.getPage());
+                GameObject.editEmbed(event, user, server, disp, disp.getPage());
                 return;
             }
 
@@ -102,7 +103,7 @@ public class Display extends ListenerAdapter implements Displays, Emotes, Colors
                 while(mention.getCardContainers().size() <= (disp.getPage() * 15) - 15) {
                     disp.prevPage();
                 }
-                JDA.editEmbed(event, user, server, disp, disp.getPage());
+                GameObject.editEmbed(event, user, server, disp, disp.getPage());
                 return; 
             }
 
@@ -116,7 +117,7 @@ public class Display extends ListenerAdapter implements Displays, Emotes, Colors
                 while(user.getCardContainers().size() < disp.getPage()) {
                     disp.prevPage();
                 }
-                JDA.editEmbed(event, user, server, disp, disp.getPage());
+                GameObject.editEmbed(event, user, server, disp, disp.getPage());
                 return;
             }
 
@@ -133,7 +134,7 @@ public class Display extends ListenerAdapter implements Displays, Emotes, Colors
                 while(mention.getCardContainers().size() < disp.getPage()) {
                     disp.prevPage();
                 }
-                JDA.editEmbed(event, user, server, disp, disp.getPage());
+                GameObject.editEmbed(event, user, server, disp, disp.getPage());
                 return;
             }
         }
@@ -152,7 +153,7 @@ public class Display extends ListenerAdapter implements Displays, Emotes, Colors
                 disp.nextPage();
             }
         }
-        JDA.editEmbed(event, user, server, disp, disp.getPage());
+        GameObject.editEmbed(event, user, server, disp, disp.getPage());
     }
 
     public void onButtonInteraction(@Nonnull ButtonInteractionEvent event) {

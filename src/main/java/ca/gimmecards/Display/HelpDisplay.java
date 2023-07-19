@@ -1,6 +1,6 @@
 package ca.gimmecards.Display;
-import ca.gimmecards.Interfaces.*;
 import ca.gimmecards.Main.*;
+import ca.gimmecards.OtherInterfaces.Changelog;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 public class HelpDisplay extends Display {

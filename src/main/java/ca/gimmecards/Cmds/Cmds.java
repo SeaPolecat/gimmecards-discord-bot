@@ -1,8 +1,8 @@
 package ca.gimmecards.Cmds;
 import ca.gimmecards.Cmds_.*;
-import ca.gimmecards.Helpers.*;
-import ca.gimmecards.Interfaces.*;
 import ca.gimmecards.Main.*;
+import ca.gimmecards.OtherInterfaces.Colors;
+import ca.gimmecards.OtherInterfaces.Emotes;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -25,42 +25,42 @@ public class Cmds extends ListenerAdapter implements Emotes, Colors {
                 TestingCmds.testSomething(event);
             }
             if(isValidCommand(event, args, new String[]{"stats"}, null)) {
-                DataCmds.viewStats(event);
+                CardCmds.viewBotStats(event);
             }
 
-            //DATA
-            if(isValidCommand(event, args, new String[]{"data"}, null)) {
-                DataCmds.viewData(event, "new");
+            //CARD
+            if(isValidCommand(event, args, new String[]{"sets"}, null)) {
+                CardCmds.viewCardSets(event, "new");
             }
-            if(isValidCommand(event, args, new String[]{"olddata"}, null)) {
-                DataCmds.viewData(event, "old");
+            if(isValidCommand(event, args, new String[]{"oldsets"}, null)) {
+                CardCmds.viewCardSets(event, "old");
             }
-            if(isValidCommand(event, args, new String[]{"raredata"}, null)) {
-                DataCmds.viewData(event, "rare");
+            if(isValidCommand(event, args, new String[]{"raresets"}, null)) {
+                CardCmds.viewCardSets(event, "rare");
             }
-            if(isValidCommand(event, args, new String[]{"promodata"}, null)) {
-                DataCmds.viewData(event, "promo");
+            if(isValidCommand(event, args, new String[]{"promosets"}, null)) {
+                CardCmds.viewCardSets(event, "promo");
             }
             if(isValidCommand(event, args, new String[]{"wipe"}, null)) {
-                DataCmds.wipeData(event);
+                CardCmds.wipeCardSets(event);
             }
             if(isValidCommand(event, args, new String[]{"refresh"}, new String[]{"length change"})) {
-                DataCmds.refreshData(event, args);
+                CardCmds.refreshCardSets(event, args);
             }
             if(isValidCommand(event, args, new String[]{"count"}, new String[]{"set code"})) {
-                DataCmds.countSetContent(event, args);
+                CardCmds.countCardSet(event, args);
             }
             if(isValidCommand(event, args, new String[]{"add"}, new String[]{"set #"})) {
-                DataCmds.addContents(event, args, true);
+                CardCmds.addContents(event, args, true);
             }
             if(isValidCommand(event, args, new String[]{"addold"}, new String[]{"set #"})) {
-                DataCmds.addContents(event, args, false);
+                CardCmds.addContents(event, args, false);
             }
             if(isValidCommand(event, args, new String[]{"addrare"}, new String[]{"set #"})) {
-                DataCmds.addSpecContents(event, args, true);
+                CardCmds.addSpecialContents(event, args, true);
             }
             if(isValidCommand(event, args, new String[]{"addpromo"}, new String[]{"set #"})) {
-                DataCmds.addSpecContents(event, args, false);
+                CardCmds.addSpecialContents(event, args, false);
             }
 
             //SLASH
@@ -227,7 +227,7 @@ public class Cmds extends ListenerAdapter implements Emotes, Colors {
                     Commands.slash("reject", "End a trade instantly")
                 ).queue();
 
-                JDA.sendMessage(event, blue_, "", "`Successfully updated this guild's slash commands.`");
+                GameObject.sendMessage(event, blue_, "", "`Successfully updated this guild's slash commands.`");
             }
         }
     }
@@ -237,11 +237,11 @@ public class Cmds extends ListenerAdapter implements Emotes, Colors {
         //LOCK
         if(event.getUser().getId().equals("454773340163538955") && event.getName().equals("plmnko")) {
             Main.isLocked = false;
-            JDA.sendMessage(event, blue_, "", "`Unlocked Gimme Cards.`");
+            GameObject.sendMessage(event, blue_, "", "`Unlocked Gimme Cards.`");
         }
 
         if(Main.isLocked) {
-            JDA.sendMessage(event, red_, "⏰", 
+            GameObject.sendMessage(event, red_, "⏰", 
             "The developer has locked *Gimme Cards*, either to fix a bug or prepare for an update; "
             + "please wait until it comes back online!");
             return;
@@ -249,7 +249,7 @@ public class Cmds extends ListenerAdapter implements Emotes, Colors {
 
         if(event.getUser().getId().equals("454773340163538955") && event.getName().equals("qazxsw")) {
             Main.isLocked = true;
-            JDA.sendMessage(event, blue_, "", "`Locked Gimme Cards.`");
+            GameObject.sendMessage(event, blue_, "", "`Locked Gimme Cards.`");
         }
         
         //PRIVACY
@@ -450,7 +450,7 @@ public class Cmds extends ListenerAdapter implements Emotes, Colors {
                     }
                     guidance = guidance.trim();
     
-                    JDA.sendMessage(event, red_, "❌", "Please follow the format: `" + args[0] + " " + guidance + "`");
+                    GameObject.sendMessage(event, red_, "❌", "Please follow the format: `" + args[0] + " " + guidance + "`");
                 }
             }
         }

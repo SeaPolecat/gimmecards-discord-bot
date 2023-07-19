@@ -71,10 +71,4 @@ public interface IUser {
     public int countOwnedPacks(boolean isOld);
 
     public int countOwnedCards();
-
-    public String formatNick(SlashCommandInteractionEvent event);
-
-    public String formatNick(User mentionedUser, SlashCommandInteractionEvent event);
-
-    public String formatBadge(SlashCommandInteractionEvent event, String badgeEmote, String badgeName);
 }

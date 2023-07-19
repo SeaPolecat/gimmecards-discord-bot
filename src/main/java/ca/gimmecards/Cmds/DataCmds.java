@@ -1,6 +1,5 @@
 package ca.gimmecards.Cmds;
 import ca.gimmecards.Main.*;
-import ca.gimmecards.Helpers.*;
 import java.io.IOException;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonArray;
@@ -8,7 +7,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
 import java.util.ArrayList;
 
-public class DataCmds extends Cmds {
+/*public class DataCmds extends Cmds {
 
     public static void viewStats(MessageReceivedEvent event) {
         EmbedBuilder embed = new EmbedBuilder();
@@ -22,7 +21,7 @@ public class DataCmds extends Cmds {
         embed.setTitle(logo_ + " Current Stats " + logo_);
         embed.setDescription(desc);
         embed.setColor(blue_);
-        JDA.sendEmbed(event, embed);
+        GameObject.sendEmbed(event, embed);
         embed.clear();
     }
 
@@ -61,7 +60,7 @@ public class DataCmds extends Cmds {
         embed.setTitle(title);
         embed.setDescription(desc);
         embed.setColor(blue_);
-        JDA.sendEmbed(event, embed);
+        GameObject.sendEmbed(event, embed);
         embed.clear();
     }
 
@@ -78,7 +77,7 @@ public class DataCmds extends Cmds {
         for(int i = 0; i < Data.promoSets.length; i++) {
             Data.promoSets[i] = null;
         }
-        JDA.sendMessage(event, blue_, "", "`Successfully wiped all card data.`");
+        GameObject.sendMessage(event, blue_, "", "`Successfully wiped all card data.`");
         try { Data.saveData(); } catch(Exception e) {}
         try { Data.saveOldData(); } catch(Exception e) {}
         try { Data.saveRareData(); } catch(Exception e) {}
@@ -99,10 +98,10 @@ public class DataCmds extends Cmds {
             }
             Data.sets = newSets;
     
-            JDA.sendMessage(event, blue_, "", "`Data length changed by " + lengthChange + " unit(s).`");
+            GameObject.sendMessage(event, blue_, "", "`Data length changed by " + lengthChange + " unit(s).`");
             try { Data.saveData(); } catch(Exception e) {}
         } catch(NumberFormatException e) {
-            JDA.sendMessage(event, red_, "", "`Invalid length. Please use any integer.`");
+            GameObject.sendMessage(event, red_, "", "`Invalid length. Please use any integer.`");
         }
     }
 
@@ -113,7 +112,7 @@ public class DataCmds extends Cmds {
             JsonArray rawContents;
             String msg = "";
     
-            JDA.sendMessage(event, blue_, "", "`Counting the specified card set...`");
+            GameObject.sendMessage(event, blue_, "", "`Counting the specified card set...`");
 
             rawContents = Data.crawlDatabase(setCode);
             for(JsonElement j : rawContents) {
@@ -144,9 +143,9 @@ public class DataCmds extends Cmds {
             + "Total: " + rawContents.size() + "\n"
             + "```";
 
-            JDA.sendMessage(event, blue_, "", msg);
+            GameObject.sendMessage(event, blue_, "", msg);
         } catch(IOException e) {
-            JDA.sendMessage(event, red_, "", "`Rate limit reached. Please wait for a bit.`");
+            GameObject.sendMessage(event, red_, "", "`Rate limit reached. Please wait for a bit.`");
         }
     }
 
@@ -164,7 +163,7 @@ public class DataCmds extends Cmds {
                 Integer.parseInt("$");
 
             } else {
-                JDA.sendMessage(event, blue_, "", "`Adding card data for set " + setNum + "...`");
+                GameObject.sendMessage(event, blue_, "", "`Adding card data for set " + setNum + "...`");
 
                 String setEmote = event.getJDA().getEmojisByName(setCode, true).get(0).getAsMention();
                 Data contents = Data.findContents(setEmote, setCode);
@@ -178,7 +177,7 @@ public class DataCmds extends Cmds {
                 } else {
                     Data.oldSets[setNum - 1] = contents;
                 }
-                JDA.sendMessage(event, blue_, "", "`...and successful!`\n"
+                GameObject.sendMessage(event, blue_, "", "`...and successful!`\n"
                 + "```\n"
                 + contents.getSetName() + "\n"
                 + "-----\n"
@@ -198,10 +197,10 @@ public class DataCmds extends Cmds {
             }
         } catch(NumberFormatException | IOException e) {
             if(e.toString().startsWith("java.lang.NumberFormatException:")) {
-                JDA.sendMessage(event, red_, "", "`The specified card set does not exist.`");
+                GameObject.sendMessage(event, red_, "", "`The specified card set does not exist.`");
 
             } else if(e.toString().startsWith("java.io.IOException:")) {
-                JDA.sendMessage(event, red_, "", "`Rate limit reached. Please wait for a bit.`");
+                GameObject.sendMessage(event, red_, "", "`Rate limit reached. Please wait for a bit.`");
             }
         }
     }
@@ -220,7 +219,7 @@ public class DataCmds extends Cmds {
                 Integer.parseInt("$");
 
             } else {
-                JDA.sendMessage(event, blue_, "", "`Adding card data for set " + setNum + "...`");
+                GameObject.sendMessage(event, blue_, "", "`Adding card data for set " + setNum + "...`");
 
                 String setEmote;
                 Data contents;
@@ -238,7 +237,7 @@ public class DataCmds extends Cmds {
                 } else {
                     Data.promoSets[setNum - 1] = contents;
                 }
-                JDA.sendMessage(event, blue_, "", "`...and successful!`\n"
+                GameObject.sendMessage(event, blue_, "", "`...and successful!`\n"
                 + "```\n"
                 + contents.getSetName() + "\n"
                 + "-----\n"
@@ -253,11 +252,11 @@ public class DataCmds extends Cmds {
             }
         }  catch(NumberFormatException | IOException e) {
             if(e.toString().startsWith("java.lang.NumberFormatException:")) {
-                JDA.sendMessage(event, red_, "", "`The specified card set does not exist.`");
+                GameObject.sendMessage(event, red_, "", "`The specified card set does not exist.`");
                 
             } else if(e.toString().startsWith("java.io.IOException:")) {
-                JDA.sendMessage(event, red_, "", "`Rate limit reached. Please wait for a bit.`");
+                GameObject.sendMessage(event, red_, "", "`Rate limit reached. Please wait for a bit.`");
             }
         }
     }
-}
+}*/

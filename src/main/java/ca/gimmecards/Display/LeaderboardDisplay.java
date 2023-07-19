@@ -1,6 +1,5 @@
 package ca.gimmecards.Display;
 import ca.gimmecards.Main.*;
-import ca.gimmecards.Helpers.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 import java.util.ArrayList;
 
@@ -82,8 +81,8 @@ public class LeaderboardDisplay extends Display {
             }
             desc += " ┇ **" + pi.getUserName() + "**"
             + " ┇ *" + "Lvl. " + player.getLevel() + "*"
-            + " ┇ " + XP_ + " `" + UX.formatNumber(player.getXP()) 
-            + " / " + UX.formatNumber(player.getMaxXP()) + "`\n";
+            + " ┇ " + XP_ + " `" + GameObject.formatNumber(player.getXP()) 
+            + " / " + GameObject.formatNumber(player.getMaxXP()) + "`\n";
 
             if(i >= players.size() - 1) {
                 break;

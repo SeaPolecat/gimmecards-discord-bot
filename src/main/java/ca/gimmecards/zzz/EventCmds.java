@@ -44,7 +44,7 @@ public class EventCmds extends Cmds {
             user.getBadges().add("bday");
             c = Card.addSingleCard(user, gift, true);
 
-            msg += UX.formatNick(event) + " received their event gift!\n";
+            msg += GameObject.formatNick(event) + " received their event gift!\n";
             msg += "+ " + bdayBadge_ + " **1 Year Anniversary Badge**";
 
             State.updateBackpackDisplay(event, user);

@@ -1,7 +1,6 @@
 package ca.gimmecards.Cmds;
 import ca.gimmecards.Main.*;
 import ca.gimmecards.Display.*;
-import ca.gimmecards.Helpers.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
@@ -16,16 +15,16 @@ public class GiftCmds extends Cmds {
         if(user_ == null || amount == null) { return; }
 
         if(!user.getUserId().equals("454773340163538955")) {
-            JDA.sendMessage(event, red_, "❌", "Only the owner of Gimme Cards can use this command!");
+            GameObject.sendMessage(event, red_, "❌", "Only the owner of Gimme Cards can use this command!");
 
         } else {
             String msg = "";
             User mention = User.findOtherUser(event, user_.getAsUser().getId());
 
-            msg += UX.formatNick(mention, event) + " has received a gift of tokens!";
+            msg += GameObject.formatNick(mention, event) + " has received a gift of tokens!";
             msg += mention.updateTokens(amount.getAsInt(), true);
 
-            JDA.sendMessage(event, mention.getGameColor(), "🎒", msg);
+            GameObject.sendMessage(event, mention.getGameColor(), "🎒", msg);
             try { User.saveUsers(); } catch(Exception e) {}
         }
     }
@@ -39,16 +38,16 @@ public class GiftCmds extends Cmds {
         if(user_ == null || amount == null) { return; }
 
         if(!user.getUserId().equals("454773340163538955")) {
-            JDA.sendMessage(event, red_, "❌", "Only the owner of Gimme Cards can use this command!");
+            GameObject.sendMessage(event, red_, "❌", "Only the owner of Gimme Cards can use this command!");
 
         } else {
             String msg = "";
             User mention = User.findOtherUser(event, user_.getAsUser().getId());
 
-            msg += UX.formatNick(mention, event) + " has received a gift of stars!";
+            msg += GameObject.formatNick(mention, event) + " has received a gift of stars!";
             msg += mention.updateStars(amount.getAsInt(), true);
 
-            JDA.sendMessage(event, mention.getGameColor(), "🎒", msg);
+            GameObject.sendMessage(event, mention.getGameColor(), "🎒", msg);
             try { User.saveUsers(); } catch(Exception e) {}
         }
     }
@@ -62,27 +61,27 @@ public class GiftCmds extends Cmds {
         if(user_ == null || cardId == null) { return; }
 
         if(!user.getUserId().equals("454773340163538955")) {
-            JDA.sendMessage(event, red_, "❌", "Only the owner of Gimme Cards can use this command!");
+            GameObject.sendMessage(event, red_, "❌", "Only the owner of Gimme Cards can use this command!");
 
         } else {
             try {
                 String msg = "";
                 User mention = User.findOtherUser(event, user_.getAsUser().getId());
                 UserInfo mi = new UserInfo(mention, event);
-                Data item = Card.findDataById(cardId.getAsString());
-                String cardTitle = UX.findCardTitle(item, true);
+                Card item = Card.findCardById(cardId.getAsString());
+                String cardTitle = item.findCardTitle(true);
                 String footer = mi.getUserName() + "'s gift";
 
                 msg += "🎴 ";
-                msg += UX.formatNick(mention, event) + " has received the gift of **" + cardTitle + "**";
+                msg += GameObject.formatNick(mention, event) + " has received the gift of **" + cardTitle + "**";
 
-                Card.addSingleCard(mention, item, true);
+                mention.addSingleCard(item, true);
                 
                 Display.displayCard(event, mention, mi, item, msg, footer, true);
                 try { User.saveUsers(); } catch(Exception e) {}
     
             } catch(NullPointerException e) {
-                JDA.sendMessage(event, red_, "❌", "Whoops, I couldn't find that card...");
+                GameObject.sendMessage(event, red_, "❌", "Whoops, I couldn't find that card...");
             }
         }
     }

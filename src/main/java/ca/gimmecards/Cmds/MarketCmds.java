@@ -1,7 +1,6 @@
 package ca.gimmecards.Cmds;
 import ca.gimmecards.Main.*;
 import ca.gimmecards.Display.*;
-import ca.gimmecards.Helpers.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.entities.Guild;
@@ -17,17 +16,17 @@ public class MarketCmds extends Cmds {
         int count = 1;
 
         if(guild != null) {
-            if(Check.isCooldownDone(server.getMarketEpoch(), 1440, true)) {
+            if(GameObject.isCooldownDone(server.getMarketEpoch(), 1440, true)) {
                 server.refreshMarket();
             }
-            desc += "Next refresh in " + Check.findTimeLeft(server.getMarketEpoch(), 1440, true) + "\n";
+            desc += "Next refresh in " + GameObject.findTimeLeft(server.getMarketEpoch(), 1440, true) + "\n";
             desc += "┅┅\n";
-            for(Data item : server.getMarket()) {
+            for(Card item : server.getMarket()) {
                 
-                desc += "`#" + count + "` " + UX.findCardTitle(item, false)
-                + " ┇ " + UX.findRarityEmote(item) 
+                desc += "`#" + count + "` " + item.findCardTitle(false)
+                + " ┇ " + item.findRarityEmote() 
                 + " ┇ " + item.getSetEmote()
-                + " ┇ " + UX.formatCredits(item) + "\n";
+                + " ┇ " + item.formatCredits() + "\n";
                 count++;
             }
             desc += "┅┅\n";
@@ -35,7 +34,7 @@ public class MarketCmds extends Cmds {
             embed.setDescription(desc);
             embed.setFooter(guild.getName(), guild.getIconUrl());
             embed.setColor(market_);
-            JDA.sendEmbed(event, embed);
+            GameObject.sendEmbed(event, embed);
             embed.clear();
         }
     }
@@ -52,10 +51,10 @@ public class MarketCmds extends Cmds {
         try {
             int page = cardNum.getAsInt();
 
-            JDA.sendDynamicEmbed(event, user, server, disp, page);
+            GameObject.sendDynamicEmbed(event, user, server, disp, page);
 
         } catch(NumberFormatException | IndexOutOfBoundsException e) {
-            JDA.sendMessage(event, red_, "❌", "Whoops, I couldn't find that card...");
+            GameObject.sendMessage(event, red_, "❌", "Whoops, I couldn't find that card...");
         }
     }
 
@@ -68,35 +67,35 @@ public class MarketCmds extends Cmds {
 
         if(cardNum == null) { return; }
 
-        if(!Check.isCooldownDone(user.getMarketEpoch(), 15, true)) {
-            JDA.sendMessage(event, red_, "⏰", "Please wait another " 
-            + Check.findTimeLeft(user.getMarketEpoch(), 15, true));
+        if(!GameObject.isCooldownDone(user.getMarketEpoch(), 15, true)) {
+            GameObject.sendMessage(event, red_, "⏰", "Please wait another " 
+            + GameObject.findTimeLeft(user.getMarketEpoch(), 15, true));
 
         } else {
             try {
                 int index = cardNum.getAsInt() - 1;
-                Data item = server.getMarket().get(index);
+                Card item = server.getMarket().get(index);
     
                 if(user.getCredits() < item.getCardPrice()) {
-                    JDA.sendMessage(event, red_, "❌", "Sorry, you don't have enough " + credits_ + " **Credits**");
+                    GameObject.sendMessage(event, red_, "❌", "Sorry, you don't have enough " + credits_ + " **Credits**");
     
                 } else {
                     String msg = "";
                     String footer = ui.getUserName() + "'s purchase";
     
                     msg += mew_ + " ";
-                    msg += UX.formatNick(event) + " bought " + UX.findCardTitle(item, false) + " from the market!";
+                    msg += GameObject.formatNick(event) + " bought " + item.findCardTitle(false) + " from the market!";
                     msg += user.updateCredits(-item.getCardPrice(), true);
 
                     user.resetMarketEpoch();
     
-                    Card.addSingleCard(user, item, false);
+                    user.addSingleCard(item, false);
                     
                     Display.displayCard(event, user, ui, item, msg, footer, false);
                     try { User.saveUsers(); } catch(Exception e) {}
                 }
             } catch(NumberFormatException | IndexOutOfBoundsException e) {
-                JDA.sendMessage(event, red_, "❌", "Whoops, I couldn't find that card...");
+                GameObject.sendMessage(event, red_, "❌", "Whoops, I couldn't find that card...");
             }
         }
     }

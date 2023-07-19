@@ -1,8 +1,6 @@
 package ca.gimmecards.Main;
-import ca.gimmecards.Helpers.*;
-import ca.gimmecards.Interfaces.*;
 import ca.gimmecards.MainInterfaces.*;
-import java.nio.file.Paths;
+import ca.gimmecards.OtherInterfaces.Emotes;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
@@ -16,8 +14,11 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Random;
 
-public class User implements IUser, StoragePaths, Emotes {
+// make formatUserName public static?
+
+public class User implements IUser, Emotes {
 
     // list of Users
     public static ArrayList<User> users = new ArrayList<User>();
@@ -248,7 +249,7 @@ public class User implements IUser, StoragePaths, Emotes {
 
         if(this.XP >= this.maxXP) {
             msg += "\n┅┅";
-            msg += "\n" + formatNick(event) + "** LEVELED UP :tada:**";
+            msg += "\n" + GameObject.formatNick(event) + "** LEVELED UP :tada:**";
 
             while(this.XP >= this.maxXP) {
                 levelUp();
@@ -575,24 +576,5 @@ public class User implements IUser, StoragePaths, Emotes {
             count += card.getCardQuantity();
         }
         return count;
-    }
-
-    @Override
-    public String formatNick(SlashCommandInteractionEvent event) {
-        return event.getUser().getAsMention();
-    }
-
-    @Override
-    public String formatNick(User mention, SlashCommandInteractionEvent event) {
-        net.dv8tion.jda.api.entities.User user = event.getJDA().getUserById(mention.getUserId()+"");
-
-        if(user == null) { return ""; }
-
-        return user.getAsMention();
-    }
-
-    @Override
-    public String formatBadge(SlashCommandInteractionEvent event, String badgeEmote, String badgeName) {
-        return formatNick(event) + " has been awarded the " + badgeEmote + " **" + badgeName + "** badge!";
     }
 }

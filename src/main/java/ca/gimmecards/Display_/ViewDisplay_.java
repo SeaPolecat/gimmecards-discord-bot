@@ -1,7 +1,6 @@
 package ca.gimmecards.Display_;
 import ca.gimmecards.Main.*;
 import ca.gimmecards.Display.*;
-import ca.gimmecards.Helpers.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 public class ViewDisplay_ extends Display {
@@ -39,24 +38,24 @@ public class ViewDisplay_ extends Display {
     public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, int page) {
         int startIndex = page - 1;
         CardContainer cc = mention.getCardContainers().get(startIndex);
-        Data data = cc.getData();
-        String cardTitle = UX.findCardTitle(data, cc.getIsFav());
+        Card card = cc.getCard();
+        String cardTitle = card.findCardTitle(cc.getIsFav());
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
         setMaxPage(mention.getCardContainers().size());
 
-        desc += "**Rarity** ┇ " + UX.findRarityEmote(data) + " " + data.getCardRarity() + "\n";
-        desc += "**Card Set** ┇ " + data.getSetEmote() + " " + data.getSetName() + "\n";
-        desc += "**XP Value** ┇ " + UX.formatXP(data, cc.getIsSellable()) + "\n\n";
+        desc += "**Rarity** ┇ " + card.findRarityEmote() + " " + card.getCardRarity() + "\n";
+        desc += "**Card Set** ┇ " + card.getSetEmote() + " " + card.getSetName() + "\n";
+        desc += "**XP Value** ┇ " + card.formatXP(cc.getIsSellable()) + "\n\n";
         desc += "*Click on image for zoomed view*";
         
         embed.setTitle(ui.getUserName() + " ➜ " + mentionInfo.getUserName()
         + "'s " + cardTitle);
         embed.setDescription(desc);
-        embed.setImage(data.getCardImage());
+        embed.setImage(card.getCardImage());
         embed.setFooter("Page " + page + " of " + getMaxPage(), ui.getUserIcon());
-        embed.setColor(UX.findEmbedColour(data));
+        embed.setColor(card.findEmbedColour());
         return embed;
     }
 }

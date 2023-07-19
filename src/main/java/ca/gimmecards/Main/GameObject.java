@@ -45,6 +45,22 @@ public class GameObject extends ListenerAdapter {
         return NumberFormat.getInstance().format(number);
     }
 
+    public static String formatNick(SlashCommandInteractionEvent event) {
+        return event.getUser().getAsMention();
+    }
+
+    public static String formatNick(User mention, SlashCommandInteractionEvent event) {
+        net.dv8tion.jda.api.entities.User user = event.getJDA().getUserById(mention.getUserId()+"");
+
+        if(user == null) { return ""; }
+
+        return user.getAsMention();
+    }
+
+    public static String formatBadge(SlashCommandInteractionEvent event, String badgeEmote, String badgeName) {
+        return formatNick(event) + " has been awarded the " + badgeEmote + " **" + badgeName + "** badge!";
+    }
+
     public static int randRange(int min, int max) {
         int diff = max - min;
 
