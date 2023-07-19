@@ -18,9 +18,9 @@ public class BackpackCmds extends Cmds {
     public static void redeemToken(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
 
-        if(!Check.isCooldownDone(user.getRedeemEpoch(), Check.findCooldown(user, 30), true)) {
+        if(!Check.isCooldownDone(user.getRedeemEpoch(), 30, true)) {
             JDA.sendMessage(event, red_, "⏰", "Please wait another " 
-            + Check.findTimeLeft(user.getRedeemEpoch(), Check.findCooldown(user, 30), true));
+            + Check.findTimeLeft(user.getRedeemEpoch(), 30, true));
 
         } else {
             String msg = "";
@@ -45,9 +45,9 @@ public class BackpackCmds extends Cmds {
         User user = User.findUser(event);
         UserInfo ui = new UserInfo(event);
 
-        if(!Check.isCooldownDone(user.getDailyEpoch(), Check.findCooldown(user, 1440), true)) {
+        if(!Check.isCooldownDone(user.getDailyEpoch(), 1440, true)) {
             JDA.sendMessage(event, red_, "⏰", "Please wait another " 
-            + Check.findTimeLeft(user.getDailyEpoch(), Check.findCooldown(user, 1440), true));
+            + Check.findTimeLeft(user.getDailyEpoch(), 1440, true));
 
         } else {
             Data item = Card.pickRandomCard("shiny");
@@ -98,11 +98,11 @@ public class BackpackCmds extends Cmds {
 
         try {
             int index = cardNum.getAsInt() - 1;
-            Card card = user.getCards().get(index);
-            String cardTitle = UX.findCardTitle(card.getData(), false);
-            String cardImage = card.getData().getCardImage();
+            CardContainer cc = user.getCardContainers().get(index);
+            String cardTitle = UX.findCardTitle(cc.getData(), false);
+            String cardImage = cc.getData().getCardImage();
 
-            user.setPinCard(cardImage);
+            user.setPinnedCard(cardImage);
 
             JDA.sendMessage(event, user.getGameColor(), "🎒", "**" + cardTitle + "** has been pinned to your backpack!");
             try { User.saveUsers(); } catch(Exception e) {}
@@ -120,39 +120,34 @@ public class BackpackCmds extends Cmds {
         String desc = "";
 
         desc += UX.formatCmd(server, "redeem") + " ┇ ";
-        if(Check.isCooldownDone(user.getRedeemEpoch(), Check.findCooldown(user, 30), true)) {
+        if(Check.isCooldownDone(user.getRedeemEpoch(), 30, true)) {
             desc += "✅\n\n";
         } else {
-            desc += "⏰ " + Check.findTimeLeft(user.getRedeemEpoch(), 
-            Check.findCooldown(user, 30), true) + "\n\n";
+            desc += "⏰ " + Check.findTimeLeft(user.getRedeemEpoch(), 30, true) + "\n\n";
         }
         desc += UX.formatCmd(server, "minigame") + " ┇ ";
-        if(Check.isCooldownDone(user.getMinigameEpoch(), Check.findCooldown(user, 60), true)) {
+        if(Check.isCooldownDone(user.getMinigameEpoch(), 60, true)) {
             desc += "✅\n\n";
         } else {
-            desc += "⏰ " + Check.findTimeLeft(user.getMinigameEpoch(), 
-            Check.findCooldown(user, 60), true) + "\n\n";
+            desc += "⏰ " + Check.findTimeLeft(user.getMinigameEpoch(), 60, true) + "\n\n";
         }
         desc += UX.formatCmd(server, "vote") + " ┇ ";
-        if(Check.isCooldownDone(user.getVoteEpoch(), Check.findCooldown(user, 720), true)) {
+        if(Check.isCooldownDone(user.getVoteEpoch(), 720, true)) {
             desc += "✅\n\n";
         } else {
-            desc += "⏰ " + Check.findTimeLeft(user.getVoteEpoch(), 
-            Check.findCooldown(user, 720), true) + "\n\n";
+            desc += "⏰ " + Check.findTimeLeft(user.getVoteEpoch(), 720, true) + "\n\n";
         }
         desc += UX.formatCmd(server, "daily") + " ┇ ";
-        if(Check.isCooldownDone(user.getDailyEpoch(), Check.findCooldown(user, 1440), true)) {
+        if(Check.isCooldownDone(user.getDailyEpoch(), 1440, true)) {
             desc += "✅\n\n";
         } else {
-            desc += "⏰ " + Check.findTimeLeft(user.getDailyEpoch(), 
-            Check.findCooldown(user, 1440), true) + "\n\n";
+            desc += "⏰ " + Check.findTimeLeft(user.getDailyEpoch(), 1440, true) + "\n\n";
         }
         desc += UX.formatCmd(server, "buy") + " ┇ ";
-        if(Check.isCooldownDone(user.getMarketEpoch(), Check.findCooldown(user, 15), true)) {
+        if(Check.isCooldownDone(user.getMarketEpoch(), 15, true)) {
             desc += "✅";
         } else {
-            desc += "⏰ " + Check.findTimeLeft(user.getMarketEpoch(), 
-            Check.findCooldown(user, 15), true);
+            desc += "⏰ " + Check.findTimeLeft(user.getMarketEpoch(), 15, true);
         }
         embed.setTitle(ui.getUserName() + "'s Cooldowns");
         embed.setThumbnail(ui.getUserIcon());

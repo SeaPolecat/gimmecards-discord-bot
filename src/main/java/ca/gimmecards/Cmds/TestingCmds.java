@@ -1,5 +1,8 @@
 package ca.gimmecards.Cmds;
+import ca.gimmecards.Helpers.*;
+import ca.gimmecards.Main.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import java.util.ArrayList;
 
 public class TestingCmds extends Cmds {
 
@@ -52,6 +55,27 @@ public class TestingCmds extends Cmds {
         }
         JDA.sendMessage(event, blue_, "", "done testing!");
         try { User.saveUsers(); } catch(Exception e) {}*/
+
+        /*for(User u : User.users) {
+            for(int i = 0; i < u.getCardContainers().size(); i++) {
+                CardContainer cc = u.getCardContainers().get(i);
+                CardContainer container = new CardContainer(
+                    cc.getData(),
+                    cc.getCardNum(),
+                    cc.getCardQuantity(),
+                    cc.getIsSellable(),
+                    cc.getIsFav()
+                );
+                u.getCardContainers().set(i, container);
+            }
+        }
+        for(User u : User.users) {
+            for(CardContainer cc : u.getCardContainers()) {
+                System.out.println(cc.getIsSellable());
+            }
+        }
+        JDA.sendMessage(event, blue_, "", "done testing!");
+        try { User.saveUsers(); } catch(Exception e) {}*/
         
         /*for(int i = 0; i < User.users.size(); i++) {
             User u = User.users.get(i);
@@ -64,8 +88,8 @@ public class TestingCmds extends Cmds {
                 u.getMaxXP(),
                 u.getTokens(),
                 u.getCredits(),
-                u.getKeys(),
                 u.getStars(),
+                u.getKeys(),
                 u.getOpenEpoch(),
                 u.getVoteEpoch(),
                 u.getDailyEpoch(),
@@ -73,18 +97,18 @@ public class TestingCmds extends Cmds {
                 u.getMinigameEpoch(),
                 u.getMarketEpoch(),
                 u.getSortMethod(),
-                u.getSortIncreasing(),
+                u.getIsSortIncreasing(),
+                u.getPinnedCard(),
                 u.getBadges(),
-                u.getPinCard(),
                 u.getPacks(),
-                u.getCards(),
-                u.getIsRare(),
-                u.getIsRadiantRare()
+                u.getCardContainers()
             );
             User.users.set(i, user);
         }
         for(User u : User.users) {
-            System.out.println(u.getCredits());
+            for(CardContainer cc : u.getCardContainers()) {
+                System.out.println(cc.getIsFav());
+            }
         }
         JDA.sendMessage(event, blue_, "", "done testing!");
         try { User.saveUsers(); } catch(Exception e) {}*/

@@ -76,13 +76,13 @@ public class Display extends ListenerAdapter implements Displays, Emotes, Colors
         String choice = buttonId.substring(underscoreIndex + 1);
 
         if(disp instanceof CardDisplay) {
-            if(user.getCards().size() < 1) {
+            if(user.getCardContainers().size() < 1) {
                 disp.setPage(1);
                 event.getMessage().delete().queue();
                 return;
 
-            } else if(user.getCards().size() <= (disp.getPage() * 15) - 15) {
-                while(user.getCards().size() <= (disp.getPage() * 15) - 15) {
+            } else if(user.getCardContainers().size() <= (disp.getPage() * 15) - 15) {
+                while(user.getCardContainers().size() <= (disp.getPage() * 15) - 15) {
                     disp.prevPage();
                 }
                 JDA.editEmbed(event, user, server, disp, disp.getPage());
@@ -93,13 +93,13 @@ public class Display extends ListenerAdapter implements Displays, Emotes, Colors
             CardDisplay_ disp_ = new CardDisplay_(user.getUserId()).findDisplay();
             User mention = disp_.getMention();
 
-            if(mention.getCards().size() < 1) {
+            if(mention.getCardContainers().size() < 1) {
                 disp.setPage(1);
                 event.getMessage().delete().queue();
                 return;
 
-            } else if(mention.getCards().size() <= (disp.getPage() * 15) - 15) {
-                while(mention.getCards().size() <= (disp.getPage() * 15) - 15) {
+            } else if(mention.getCardContainers().size() <= (disp.getPage() * 15) - 15) {
+                while(mention.getCardContainers().size() <= (disp.getPage() * 15) - 15) {
                     disp.prevPage();
                 }
                 JDA.editEmbed(event, user, server, disp, disp.getPage());
@@ -107,13 +107,13 @@ public class Display extends ListenerAdapter implements Displays, Emotes, Colors
             }
 
         } else if(disp instanceof ViewDisplay) {
-            if(user.getCards().size() < 1) {
+            if(user.getCardContainers().size() < 1) {
                 disp.setPage(1);
                 event.getMessage().delete().queue();
                 return;
 
-            } else if(user.getCards().size() < disp.getPage()) {
-                while(user.getCards().size() < disp.getPage()) {
+            } else if(user.getCardContainers().size() < disp.getPage()) {
+                while(user.getCardContainers().size() < disp.getPage()) {
                     disp.prevPage();
                 }
                 JDA.editEmbed(event, user, server, disp, disp.getPage());
@@ -124,13 +124,13 @@ public class Display extends ListenerAdapter implements Displays, Emotes, Colors
             ViewDisplay_ disp_ = new ViewDisplay_(user.getUserId()).findDisplay();
             User mention = disp_.getMention();
 
-            if(mention.getCards().size() < 1) {
+            if(mention.getCardContainers().size() < 1) {
                 disp.setPage(1);
                 event.getMessage().delete().queue();
                 return;
 
-            } else if(mention.getCards().size() < disp.getPage()) {
-                while(mention.getCards().size() < disp.getPage()) {
+            } else if(mention.getCardContainers().size() < disp.getPage()) {
+                while(mention.getCardContainers().size() < disp.getPage()) {
                     disp.prevPage();
                 }
                 JDA.editEmbed(event, user, server, disp, disp.getPage());

@@ -38,17 +38,17 @@ public class ViewDisplay_ extends Display {
     @Override
     public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, int page) {
         int startIndex = page - 1;
-        Card card = mention.getCards().get(startIndex);
-        Data data = card.getData();
-        String cardTitle = UX.findCardTitle(data, card.getIsFav());
+        CardContainer cc = mention.getCardContainers().get(startIndex);
+        Data data = cc.getData();
+        String cardTitle = UX.findCardTitle(data, cc.getIsFav());
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
-        setMaxPage(mention.getCards().size());
+        setMaxPage(mention.getCardContainers().size());
 
         desc += "**Rarity** ┇ " + UX.findRarityEmote(data) + " " + data.getCardRarity() + "\n";
         desc += "**Card Set** ┇ " + data.getSetEmote() + " " + data.getSetName() + "\n";
-        desc += "**XP Value** ┇ " + UX.formatXP(data, card.getSellable()) + "\n\n";
+        desc += "**XP Value** ┇ " + UX.formatXP(data, cc.getIsSellable()) + "\n\n";
         desc += "*Click on image for zoomed view*";
         
         embed.setTitle(ui.getUserName() + " ➜ " + mentionInfo.getUserName()

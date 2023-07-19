@@ -13,14 +13,14 @@ public class SellCmds extends Cmds {
 
         if(cardNum == null) { return; }
         
-        if(user.getCards().size() < 1) {
+        if(user.getCardContainers().size() < 1) {
             JDA.sendMessage(event, red_, "❌", "You don't have any cards to sell!");
 
         } else {
             try {
                 int index = cardNum.getAsInt() - 1;
-                Card card = user.getCards().get(index);
-                String cardTitle = UX.findCardTitle(card.getData(), card.getIsFav());
+                CardContainer cc = user.getCardContainers().get(index);
+                String cardTitle = UX.findCardTitle(cc.getData(), cc.getIsFav());
                 int profit = findSingleProfit(user, index);
                 int creditsReward = (int)(profit * 0.02);
                 
@@ -49,7 +49,7 @@ public class SellCmds extends Cmds {
     public static void sellDuplicates(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
 
-        if(user.getCards().size() < 1) {
+        if(user.getCardContainers().size() < 1) {
             JDA.sendMessage(event, red_, "❌", "You don't have any cards to sell!");
 
         } else if(!hasDuplicates(user)) {
@@ -81,7 +81,7 @@ public class SellCmds extends Cmds {
     public static void sellAll(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
         
-        if(user.getCards().size() < 1) {
+        if(user.getCardContainers().size() < 1) {
             JDA.sendMessage(event, red_, "❌", "You don't have any cards to sell!");
 
         } else {
@@ -109,27 +109,27 @@ public class SellCmds extends Cmds {
 
     private static int findSingleProfit(User user, int index) {
         int profit = 0;
-        Card card = user.getCards().get(index);
+        CardContainer cc = user.getCardContainers().get(index);
 
-        if(card.getIsFav()) {
+        if(cc.getIsFav()) {
             return -1;
 
         } else {
-            if(card.getCardQuantity() == 1) {
-                user.getCards().remove(index);
+            if(cc.getCardQuantity() == 1) {
+                user.getCardContainers().remove(index);
             } else {
-                card.minusCardQuantity();
+                cc.minusCardQuantity();
             }
-            if(card.getSellable()) {
-                profit += card.getData().getCardPrice();
+            if(cc.getIsSellable()) {
+                profit += cc.getData().getCardPrice();
             }
         }
         return profit;
     }
 
     private static boolean hasDuplicates(User user) {
-        for(Card card : user.getCards()) {
-            if(card.getCardQuantity() > 1) {
+        for(CardContainer cc : user.getCardContainers()) {
+            if(cc.getCardQuantity() > 1) {
                 return true;
             }
         }
@@ -140,13 +140,13 @@ public class SellCmds extends Cmds {
         int profit = 0;
         boolean exists = false;
 
-        for(Card card : user.getCards()) {
-            if(!card.getIsFav() && card.getCardQuantity() > 1) {
+        for(CardContainer cc : user.getCardContainers()) {
+            if(!cc.getIsFav() && cc.getCardQuantity() > 1) {
                 exists = true;
-                while(card.getCardQuantity() > 1) {
-                    card.minusCardQuantity();
-                    if(card.getSellable()) {
-                        profit += card.getData().getCardPrice();
+                while(cc.getCardQuantity() > 1) {
+                    cc.minusCardQuantity();
+                    if(cc.getIsSellable()) {
+                        profit += cc.getData().getCardPrice();
                     }
                 }
             }
@@ -161,18 +161,18 @@ public class SellCmds extends Cmds {
         int profit = 0;
         boolean exists = false;
 
-        for(int i = 0; i < user.getCards().size(); i++) {
-            Card card = user.getCards().get(i);
+        for(int i = 0; i < user.getCardContainers().size(); i++) {
+            CardContainer cc = user.getCardContainers().get(i);
 
-            if(!card.getIsFav()) {
+            if(!cc.getIsFav()) {
                 exists = true;
-                while(card.getCardQuantity() > 0) {
-                    card.minusCardQuantity();
-                    if(card.getSellable()) {
-                        profit += card.getData().getCardPrice();
+                while(cc.getCardQuantity() > 0) {
+                    cc.minusCardQuantity();
+                    if(cc.getIsSellable()) {
+                        profit += cc.getData().getCardPrice();
                     }
-                    if(card.getCardQuantity() < 1) {
-                        user.getCards().remove(i);
+                    if(cc.getCardQuantity() < 1) {
+                        user.getCardContainers().remove(i);
                         i--;
                     }
                 }

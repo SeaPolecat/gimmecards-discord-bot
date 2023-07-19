@@ -116,7 +116,7 @@ public class ViewCmds extends Cmds implements CustomCards {
         if(cardNum == null) { return; }
 
         try {
-            if(user.getCards().size() < 1) {
+            if(user.getCardContainers().size() < 1) {
                 JDA.sendMessage(event, red_, "❌", "You don't have any cards yet!");
 
             } else {

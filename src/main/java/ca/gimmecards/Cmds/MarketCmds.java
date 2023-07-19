@@ -68,9 +68,9 @@ public class MarketCmds extends Cmds {
 
         if(cardNum == null) { return; }
 
-        if(!Check.isCooldownDone(user.getMarketEpoch(), Check.findCooldown(user, 15), true)) {
+        if(!Check.isCooldownDone(user.getMarketEpoch(), 15, true)) {
             JDA.sendMessage(event, red_, "⏰", "Please wait another " 
-            + Check.findTimeLeft(user.getMarketEpoch(), Check.findCooldown(user, 15), true));
+            + Check.findTimeLeft(user.getMarketEpoch(), 15, true));
 
         } else {
             try {

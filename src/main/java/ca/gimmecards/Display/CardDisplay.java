@@ -27,28 +27,28 @@ public class CardDisplay extends Display {
         int startIndex = page * 15 - 15;
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
-        String sortOrder = user.getSortIncreasing() ? "increasing" : "decreasing";
+        String sortOrder = user.getIsSortIncreasing() ? "increasing" : "decreasing";
         int count = startIndex + 1;
 
-        setMaxPage(user.getCards().size() / 15);
+        setMaxPage(user.getCardContainers().size() / 15);
 
-        if(user.getCards().size() % 15 != 0) {
+        if(user.getCardContainers().size() % 15 != 0) {
             addMaxPage();
         }
         desc += "Sorted by `" + user.getSortMethod() + "` `" + sortOrder + "`\n";
         desc += "┅┅\n";
         for(int i = startIndex; i < startIndex + 15; i++) {
-            Card card = user.getCards().get(i);
-            Data data = card.getData();
+            CardContainer cc = user.getCardContainers().get(i);
+            Data data = cc.getData();
 
-            desc += "`#" + count + "` " + UX.findCardTitle(data, card.getIsFav())
+            desc += "`#" + count + "` " + UX.findCardTitle(data, cc.getIsFav())
             + " ┇ " + UX.findRarityEmote(data) 
             + " ┇ " + data.getSetEmote()
-            + " ┇ " + UX.formatXP(data, card.getSellable())
-            + " ┇ *x" + card.getCardQuantity() + "*\n";
+            + " ┇ " + UX.formatXP(data, cc.getIsSellable())
+            + " ┇ *x" + cc.getCardQuantity() + "*\n";
             count++;
             
-            if(i >= user.getCards().size() - 1) {
+            if(i >= user.getCardContainers().size() - 1) {
                 break;
             }
         }

@@ -99,8 +99,8 @@ public class BackpackDisplay_ extends Display {
                 }
             }
         }
-        if(!mention.getPinCard().equals("") && Check.ownsFavCard(mention)) {
-            embed.setImage(mention.getPinCard());
+        if(!mention.getPinnedCard().equals("") && Check.ownsFavCard(mention)) {
+            embed.setImage(mention.getPinnedCard());
         }
         embed.setTitle(ui.getUserName() + " ➜ " + mentionInfo.getUserName()
         + " ┇ Level " + mention.getLevel());

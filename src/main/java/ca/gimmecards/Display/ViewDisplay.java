@@ -47,16 +47,16 @@ public class ViewDisplay extends Display {
         String desc = "";
 
         if(dispType.equalsIgnoreCase("old")) {
-            setMaxPage(user.getCards().size());
+            setMaxPage(user.getCardContainers().size());
         } else if(dispType.equalsIgnoreCase("new")) {
             setMaxPage(newCards.size());
         }
         if(dispType.equalsIgnoreCase("old")) {
-            Card card = user.getCards().get(startIndex);
+            CardContainer cc = user.getCardContainers().get(startIndex);
 
-            data = user.getCards().get(startIndex).getData();
-            cardTitle = UX.findCardTitle(data, card.getIsFav());
-            sellable = card.getSellable();
+            data = user.getCardContainers().get(startIndex).getData();
+            cardTitle = UX.findCardTitle(data, cc.getIsFav());
+            sellable = cc.getIsSellable();
 
         } else { // dispType.equalsIgnoreCase("new")
             data = newCards.get(startIndex);

@@ -1,6 +1,7 @@
 package ca.gimmecards.Main;
 import ca.gimmecards.Helpers.*;
 import ca.gimmecards.Interfaces.*;
+import ca.gimmecards.MainInterfaces.*;
 import java.nio.file.Paths;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -16,7 +17,7 @@ import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class User implements StoragePaths, Emotes {
+public class User implements IUser, StoragePaths, Emotes {
 
     // list of Users
     public static ArrayList<User> users = new ArrayList<User>();
@@ -30,8 +31,8 @@ public class User implements StoragePaths, Emotes {
     private Integer maxXP;
     private Integer tokens;
     private Integer credits;
-    private Integer keys;
     private Integer stars;
+    private Integer keys;
     private Long openEpoch;
     private long voteEpoch;
     private Long dailyEpoch;
@@ -39,13 +40,11 @@ public class User implements StoragePaths, Emotes {
     private Long minigameEpoch;
     private Long marketEpoch;
     private String sortMethod;
-    private Boolean sortIncreasing;
+    private Boolean isSortIncreasing;
+    private String pinnedCard;
     private ArrayList<String> badges;
-    private String pinCard;
     private ArrayList<String> packs;
-    private ArrayList<Card> cards;
-    private Boolean isRare;
-    private Boolean isRadiantRare;
+    private ArrayList<CardContainer> cardContainers;
 
     /**
      * constructor for User
@@ -60,8 +59,8 @@ public class User implements StoragePaths, Emotes {
         maxXP = 500;
         tokens = 1;
         credits = 0;
-        keys = 1;
         stars = 0;
+        keys = 1;
         openEpoch = (long)(0);
         voteEpoch = (long)(0);
         dailyEpoch = (long)(0);
@@ -69,13 +68,11 @@ public class User implements StoragePaths, Emotes {
         minigameEpoch = (long)(0);
         marketEpoch = (long)(0);
         sortMethod = "newest";
-        sortIncreasing = true;
+        isSortIncreasing = true;
+        pinnedCard = "";
         badges = new ArrayList<String>();
-        pinCard = "";
         packs = new ArrayList<String>();
-        cards = new ArrayList<Card>();
-        isRare = false;
-        isRadiantRare = false;
+        cardContainers = new ArrayList<CardContainer>();
     }
 
     /**
@@ -91,8 +88,8 @@ public class User implements StoragePaths, Emotes {
         maxXP = user.getMaxXP();
         tokens = user.getTokens();
         credits = user.getCredits();
-        keys = user.getKeys();
         stars = user.getStars();
+        keys = user.getKeys();
         openEpoch = user.getOpenEpoch();
         voteEpoch = user.getVoteEpoch();
         dailyEpoch = user.getDailyEpoch();
@@ -100,13 +97,11 @@ public class User implements StoragePaths, Emotes {
         minigameEpoch = user.getMinigameEpoch();
         marketEpoch = user.getMarketEpoch();
         sortMethod = user.getSortMethod();
-        sortIncreasing = user.getSortIncreasing();
+        isSortIncreasing = user.getIsSortIncreasing();
+        pinnedCard = user.getPinnedCard();
         badges = user.getBadges();
-        pinCard = user.getPinCard();
         packs = user.getPacks();
-        cards = user.getCards();
-        isRare = user.getIsRare();
-        isRadiantRare = user.getIsRadiantRare();
+        cardContainers = user.getCardContainers();
     }
 
     // getters
@@ -118,8 +113,8 @@ public class User implements StoragePaths, Emotes {
     public int getMaxXP() { return maxXP; }
     public int getTokens() { return tokens; }
     public int getCredits() { return credits; }
-    public int getKeys() { return keys; }
     public int getStars() { return stars; }
+    public int getKeys() { return keys; }
     public long getOpenEpoch() { return openEpoch; }
     public long getVoteEpoch() { return voteEpoch; }
     public long getDailyEpoch() { return dailyEpoch; }
@@ -127,13 +122,11 @@ public class User implements StoragePaths, Emotes {
     public long getMinigameEpoch() { return minigameEpoch; }
     public Long getMarketEpoch() { return marketEpoch; }
     public String getSortMethod() { return sortMethod; }
-    public boolean getSortIncreasing() { return sortIncreasing; }
+    public boolean getIsSortIncreasing() { return isSortIncreasing; }
+    public String getPinnedCard() { return pinnedCard; }
     public ArrayList<String> getBadges() { return badges; }
-    public String getPinCard() { return pinCard; }
     public ArrayList<String> getPacks() { return packs; }
-    public ArrayList<Card> getCards() { return cards; }
-    public boolean getIsRare() { return isRare; }
-    public boolean getIsRadiantRare() { return isRadiantRare; }
+    public ArrayList<CardContainer> getCardContainers() { return cardContainers; }
     
     // setters
     public void setUserId(String ui) { userId = ui; }
@@ -142,8 +135,8 @@ public class User implements StoragePaths, Emotes {
     public void addXP(int xp) { XP += xp; }
     public void addTokens(int t) { tokens += t; }
     public void addCredits(int c) { credits += c; }
-    public void addKeys(int k) { keys += k; }
     public void addStars(int s) { stars += s; }
+    public void addKeys(int k) { keys += k; }
     public void resetOpenEpoch() { openEpoch = Calendar.getInstance().getTimeInMillis() / 1000; }
     public void resetVoteEpoch() { voteEpoch = Calendar.getInstance().getTimeInMillis() / 60000; }
     public void resetDailyEpoch() { dailyEpoch = Calendar.getInstance().getTimeInMillis() / 60000; }
@@ -151,182 +144,41 @@ public class User implements StoragePaths, Emotes {
     public void resetMinigameEpoch() { minigameEpoch = Calendar.getInstance().getTimeInMillis() / 60000; }
     public void resetMarketEpoch() { marketEpoch = Calendar.getInstance().getTimeInMillis() / 60000; }
     public void setSortMethod(String sm) { sortMethod = sm; }
-    public void setSortIncreasing(boolean si) { sortIncreasing = si; }
-    public void setPinCard(String pc) { pinCard = pc; }
-    public void setIsRare(boolean ir) { isRare = ir; }
-    public void setIsRadiantRare(boolean irr) { isRadiantRare = irr; }
+    public void setIsSortIncreasing(boolean isi) { isSortIncreasing = isi; }
+    public void setPinnedCard(String pc) { pinnedCard = pc; }
+
+    //===================================================[ PRIVATE FUNCTIONS ]==============================================================
 
     /**
-     * setter that handles a player levelling up
+     * searches through the User list for a specific User
+     * @param userId the ID of the User to search for
+     * @return the User to be searched
      */
-    public void levelUp() {
-        int extraXP = XP - maxXP;
-
-        level++;
-        XP = 0;
-        XP += extraXP;
-        maxXP += 500;
-    }
-
-    /**
-     * checks whether or not it's the weekend
-     * @return true if it's the weekend, false otherwise
-     */
-    private boolean isWeekend() {
-        Calendar cal = Calendar.getInstance();
-        int day = cal.get(Calendar.DAY_OF_WEEK);
-
-        if(day == 7 || day == 1) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * handles a badge being removed
-     * @param badge the badge name
-     */
-    public void removeBadge(String badge) {
-        for(int i = 0; i < badges.size(); i++) {
-            if(badges.get(i).equalsIgnoreCase(badge)) {
-                badges.remove(i);
+    private static User searchForUser(String userId) {
+        for(User u : users) {
+            if(u.getUserId().equals(userId)) {
+                return u;
             }
         }
+        users.add(0, new User(userId));
+        return users.get(0);
     }
 
-    /**
-     * handles XP
-     * @param quantity the amount of XP to give
-     * @param isStart whether or not it's shown at the start of the embed
-     * @return a string that goes into the embed
-     */
-    public String updateXP(int quantity, boolean isStart) {
-        String msg = "\n";
-
-        addXP(quantity);
-        if(isStart) {
-            msg += "┅┅\n";
-        }
-        msg += "+ " + UX.formatNumber(quantity);
-        msg += " " + XP_ + " **XP**";
-
-        return msg;
+    private void swapCards(int i1, int i2) {
+        CardContainer temp = this.cardContainers.get(i1);
+        
+        this.cardContainers.set(i1, this.cardContainers.get(i2));
+        this.cardContainers.set(i2, temp);
     }
 
-    /**
-     * handles tokens
-     * @param quantity the amount of tokens to give (or remove)
-     * @param isStart whether or not it's shown at the start of the embed
-     * @return a string that goes into the embed
-     */
-    public String updateTokens(int quantity, boolean isStart) {
-        String msg = "\n";
-
-        if(getIsRadiantRare() && isWeekend() && quantity > 0) {
-            quantity = quantity * 2;
-        }
-
-        addTokens(quantity);
-        if(isStart) {
-            msg += "┅┅\n";
-        }
-        msg += (quantity > 0) ? "+ " : "- ";
-        msg += UX.formatNumber(Math.abs(quantity));
-
-        if(quantity > 1 || quantity < -1) {
-            msg += " " + token_ + " **Tokens**";
-        } else {
-            msg += " " + token_ + " **Token**";
-        }
-        return msg;
-    }
-
-    /**
-     * handles credits
-     * @param quantity the amount of credits to give (or remove)
-     * @param isStart whether or not it's shown at the start of the embed
-     * @return a string that goes into the embed
-     */
-    public String updateCredits(int quantity, boolean isStart) {
-        String msg = "\n";
-
-        if(getIsRare() || getIsRadiantRare() && isWeekend() && quantity > 0) {
-            quantity = (int)(quantity * 1.25);
-        }
-
-        addCredits(quantity);
-        if(isStart) {
-            msg += "┅┅\n";
-        }
-        msg += (quantity > 0) ? "+ " : "- ";
-        msg += UX.formatNumber(Math.abs(quantity));
-        msg += " " + credits_ + " **Credits**";
-
-        return msg;
-    }
-
-    /**
-     * handles stars
-     * @param quantity the amount of stars to give (or remove)
-     * @param isStart whether or not it's shown at the start of the embed
-     * @return a string that goes into the embed
-     */
-    public String updateStars(int quantity, boolean isStart) {
-        String msg = "\n";
-
-        addStars(quantity);
-        if(isStart) {
-            msg += "┅┅\n";
-        }
-        msg += (quantity > 0) ? "+ " : "- ";
-        msg += UX.formatNumber(Math.abs(quantity));
-
-        if(quantity > 1 || quantity < -1) {
-            msg += " " + star_ + " **Stars**";
-        } else {
-            msg += " " + star_ + " **Star**";
-        }
-        return msg;
-    }
-
-    /**
-     * handles keys
-     * @param quantity the amount of keys to give (or remove)
-     * @param isStart whether or not it's shown at the start of the embed
-     * @return a string that goes into the embed
-     */
-    public String updateKeys(int quantity, boolean isStart) {
-        String msg = "\n";
-
-        addKeys(quantity);
-        if(isStart) {
-            msg += "┅┅\n";
-        }
-        msg += (quantity > 0) ? "+ " : "- ";
-        msg += UX.formatNumber(Math.abs(quantity));
-        msg += " " + key_ + " **Key**";
-
-        return msg;
-    }
-
-    /**
-     * determines the path that User data will be saved to
-     * @return the path with header if the file is in an external location, and no header if it's local
-     */
-    private static String determinePath() {
-        if(Paths.get(userPath).toFile().length() > 0) {
-            return userPath;
-        } else {
-            return header + userPath;
-        }
-    }
+    //=============================================[ PUBLIC STATIC FUNCTIONS ]==============================================================
 
     /**
      * loads player data from Users.json into the User list
      * @throws Exception just needs it
      */
     public static void loadUsers() throws Exception {
-        Reader reader = new InputStreamReader(new FileInputStream(determinePath()), "UTF-8");
+        Reader reader = new InputStreamReader(new FileInputStream(GameObject.findSavePath(GameObject.userPath)), "UTF-8");
         users = new Gson().fromJson(reader, new TypeToken<ArrayList<User>>() {}.getType());
 
         for(User u : users) {
@@ -341,7 +193,7 @@ public class User implements StoragePaths, Emotes {
      */
     public static void saveUsers() throws Exception {
         Gson gson = new GsonBuilder().create();
-        Writer writer = new OutputStreamWriter(new FileOutputStream(determinePath()), "UTF-8");
+        Writer writer = new OutputStreamWriter(new FileOutputStream(GameObject.findSavePath(GameObject.userPath)), "UTF-8");
         ArrayList<User> encUsers = new ArrayList<User>();
 
         for(User u : users) {
@@ -379,22 +231,368 @@ public class User implements StoragePaths, Emotes {
      * @param userId the ID of the mentioned User
      * @return the mentioned User
      */
-    public static User findOtherUser(SlashCommandInteractionEvent event, String userId) {
-        return searchForUser(userId);
+    public static User findOtherUser(SlashCommandInteractionEvent event, String otherUserId) {
+        return searchForUser(otherUserId);
     }
 
-    /**
-     * searches through the User list for a specific User
-     * @param userId the ID of the User to search for
-     * @return the User to be searched
-     */
-    private static User searchForUser(String userId) {
-        for(User u : users) {
-            if(u.getUserId().equals(userId)) {
-                return u;
+    //==============================================[ PUBLIC NON-STATIC FUNCTIONS ]=====================================================
+
+    @Override
+    public String checkLevelUp(SlashCommandInteractionEvent event) {
+        int prevLvl = this.level;
+        int tokenReward = 0;
+        int creditsReward = 0;
+        int keyReward = 0;
+        int starReward = 0;
+        String msg = "";
+
+        if(this.XP >= this.maxXP) {
+            msg += "\n┅┅";
+            msg += "\n" + formatNick(event) + "** LEVELED UP :tada:**";
+
+            while(this.XP >= this.maxXP) {
+                levelUp();
+    
+                tokenReward += 2;
+                creditsReward += ((this.level + 9) / 10) * 100;
+                keyReward++;
+                starReward++;
+    
+                if(this.level == 50) {
+                    this.badges.add("veteran");
+                } else if(this.level == 100) {
+                    this.badges.add("master");
+                }
+            }
+            msg += "\nLevel **" + prevLvl + "** ➜ **" + this.level + "**";
+            msg += updateTokens(tokenReward, true);
+            msg += updateCredits(creditsReward, false);
+            msg += updateKeys(keyReward, false);
+            msg += updateStars(starReward, false);
+        }
+        return msg;
+    }
+
+    @Override
+    public void levelUp() {
+        int extraXP = this.XP - this.maxXP;
+
+        this.level++;
+        this.XP = 0;
+        this.XP += extraXP;
+        this.maxXP += 500;
+    }
+
+    @Override
+    public String updateXP(int quantity, boolean isAtTop) {
+        String msg = "\n";
+
+        this.XP += quantity;
+        if(isAtTop) {
+            msg += "┅┅\n";
+        }
+        msg += "+ " + GameObject.formatNumber(quantity);
+        msg += " " + XP_ + " **XP**";
+
+        return msg;
+    }
+
+    @Override
+    public String updateTokens(int quantity, boolean isAtTop) {
+        String msg = "\n";
+
+        this.tokens += quantity;
+        if(isAtTop) {
+            msg += "┅┅\n";
+        }
+        msg += (quantity > 0) ? "+ " : "- ";
+        msg += GameObject.formatNumber(Math.abs(quantity));
+
+        if(quantity > 1 || quantity < -1) {
+            msg += " " + token_ + " **Tokens**";
+        } else {
+            msg += " " + token_ + " **Token**";
+        }
+        return msg;
+    }
+
+    @Override
+    public String updateCredits(int quantity, boolean isAtTop) {
+        String msg = "\n";
+
+        this.credits += quantity;
+        if(isAtTop) {
+            msg += "┅┅\n";
+        }
+        msg += (quantity > 0) ? "+ " : "- ";
+        msg += GameObject.formatNumber(Math.abs(quantity));
+        msg += " " + credits_ + " **Credits**";
+
+        return msg;
+    }
+
+    @Override
+    public String updateStars(int quantity, boolean isAtTop) {
+        String msg = "\n";
+
+        this.stars += quantity;
+        if(isAtTop) {
+            msg += "┅┅\n";
+        }
+        msg += (quantity > 0) ? "+ " : "- ";
+        msg += GameObject.formatNumber(Math.abs(quantity));
+
+        if(quantity > 1 || quantity < -1) {
+            msg += " " + star_ + " **Stars**";
+        } else {
+            msg += " " + star_ + " **Star**";
+        }
+        return msg;
+    }
+
+    @Override
+    public String updateKeys(int quantity, boolean isAtTop) {
+        String msg = "\n";
+
+        this.keys += quantity;
+        if(isAtTop) {
+            msg += "┅┅\n";
+        }
+        msg += (quantity > 0) ? "+ " : "- ";
+        msg += GameObject.formatNumber(Math.abs(quantity));
+        msg += " " + key_ + " **Key**";
+
+        return msg;
+    }
+
+    @Override
+    public void addSingleCard(Card card, boolean isFav) {
+        CardContainer newCard = null;
+
+        addCardCount();
+        for(CardContainer cc : this.cardContainers) {
+            String cardId = cc.getCard().getCardId();
+
+            if(card.getCardId().equals(cardId)) {
+                cc.addCardQuantity();
+                break;
             }
         }
-        users.add(0, new User(userId));
-        return users.get(0);
+        newCard = new CardContainer(card, getCardCount(), card.isCardSellable());
+
+        if(isFav) {
+            newCard.setIsFav(true);
+        }
+        this.cardContainers.add(newCard);
+        sortCards(this.sortMethod, this.isSortIncreasing);
+    }
+
+    @Override
+    public ArrayList<Card> addNewCards(CardSet set) {
+        ArrayList<Card> commons = set.getCommons();
+        ArrayList<Card> uncommons = set.getUncommons();
+        ArrayList<Card> rares = set.getRares();
+        ArrayList<Card> shinies = set.getShinies();
+        ArrayList<Card> newCards = new ArrayList<Card>();
+        int chance = new Random().nextInt(100) + 1;
+
+        for(int i = 0; i < 6; i++) {
+            newCards.add(Card.pickCard(commons));
+        }
+        for(int i = 0; i < 3; i++) {
+            newCards.add(Card.pickCard(uncommons));
+        }
+        if(chance <= 10) {
+            newCards.add(Card.pickCard(shinies));
+        } else {
+            newCards.add(Card.pickCard(rares));
+        }
+        for(Card card : newCards) {
+            boolean exists = false;
+
+            addCardCount();
+            for(CardContainer cc : this.cardContainers) {
+                String cardId = cc.getCard().getCardId();
+
+                if(card.getCardId().equals(cardId)) {
+                    exists = true;
+                    cc.addCardQuantity();
+                    break;
+                }
+            }
+            if(!exists) {
+                this.cardContainers.add(new CardContainer(card, this.cardCount, card.isCardSellable()));
+            }
+        }
+        sortCards(this.sortMethod, this.isSortIncreasing);
+        return newCards;
+    }
+
+    @Override
+    public void sortCards(String sortMethod, boolean sortIncreasing) {
+
+        for(int i = 0; i < this.cardContainers.size() - 1; i++) {
+            for(int k = i + 1; k < this.cardContainers.size(); k++) {
+                Card card1 = this.cardContainers.get(i).getCard();
+                Card card2 = this.cardContainers.get(k).getCard();
+
+                if(sortMethod.equalsIgnoreCase("alphabetical")) {
+                    String cardName1 = card1.getCardName();
+                    String cardName2 = card2.getCardName();
+    
+                    if(sortIncreasing) {
+                        if(cardName1.compareToIgnoreCase(cardName2) > 0) {
+                            swapCards(i, k);
+                        }
+                    } else {
+                        if(cardName1.compareToIgnoreCase(cardName2) < 0) {
+                            swapCards(i, k);
+                        }
+                    }
+
+                } else if(sortMethod.equalsIgnoreCase("xp")) {
+                    int xp1 = card1.getCardPrice();
+                    int xp2 = card2.getCardPrice();
+    
+                    if(sortIncreasing) {
+                        if(xp1 > xp2) {
+                            swapCards(i, k);
+                        }
+                    } else {
+                        if(xp1 < xp2) {
+                            swapCards(i, k);
+                        }
+                    }
+
+                } else if(sortMethod.equalsIgnoreCase("quantity")) {
+                    int quantity1 = this.cardContainers.get(i).getCardQuantity();
+                    int quantity2 = this.cardContainers.get(k).getCardQuantity();
+    
+                    if(sortIncreasing) {
+                        if(quantity1 > quantity2) {
+                            swapCards(i, k);
+                        }
+                    } else {
+                        if(quantity1 < quantity2) {
+                            swapCards(i, k);
+                        }
+                    }
+
+                } else if(sortMethod.equalsIgnoreCase("newest")) {
+                    int num1 = this.cardContainers.get(i).getCardNum();
+                    int num2 = this.cardContainers.get(k).getCardNum();
+
+                    if(sortIncreasing) {
+                        if(num1 > num2) {
+                            swapCards(i, k);
+                        }
+                    } else {
+                        if(num1 < num2) {
+                            swapCards(i, k);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public boolean ownsCard(Card card) {
+        for(CardContainer cc : this.cardContainers) {
+            String cardId = cc.getCard().getCardId();
+
+            if(cardId.equals(card.getCardId()) && cc.getCardQuantity() > 1) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean ownsFavCard() {
+        for(CardContainer card : this.cardContainers) {
+            String cardImage = card.getCard().getCardImage();
+
+            if(this.pinnedCard.equals(cardImage)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean ownsShopPack() {
+        for(String pack : this.packs) {
+            for(CardSet set : CardSet.sets) {
+                if(pack.equalsIgnoreCase(set.getSetName())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean ownsBadge(String badge) {
+        for(String b : this.badges) {
+            if(b.equalsIgnoreCase(badge)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    @Override
+    public boolean isPackUnlocked(String setName) {
+        for(String pack : this.packs) {
+            if(pack.equalsIgnoreCase(setName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public int countOwnedPacks(boolean isOld) {
+        int count = 0;
+        CardSet[] sets = isOld ? CardSet.oldSets : CardSet.sets;
+
+        for(String name : this.packs) {
+            for(CardSet set : sets) {
+                if(name.equalsIgnoreCase(set.getSetName())) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
+    @Override
+    public int countOwnedCards() {
+        int count = 0;
+
+        for(CardContainer card : this.cardContainers) {
+            count += card.getCardQuantity();
+        }
+        return count;
+    }
+
+    @Override
+    public String formatNick(SlashCommandInteractionEvent event) {
+        return event.getUser().getAsMention();
+    }
+
+    @Override
+    public String formatNick(User mention, SlashCommandInteractionEvent event) {
+        net.dv8tion.jda.api.entities.User user = event.getJDA().getUserById(mention.getUserId()+"");
+
+        if(user == null) { return ""; }
+
+        return user.getAsMention();
+    }
+
+    @Override
+    public String formatBadge(SlashCommandInteractionEvent event, String badgeEmote, String badgeName) {
+        return formatNick(event) + " has been awarded the " + badgeEmote + " **" + badgeName + "** badge!";
     }
 }

@@ -54,7 +54,7 @@ public class Check implements Emotes {
     }
 
     public static boolean ownsCard(User user, Data data) {
-        for(Card card : user.getCards()) {
+        for(CardContainer card : user.getCardContainers()) {
             String cardId = card.getData().getCardId();
 
             if(cardId.equals(data.getCardId()) && card.getCardQuantity() > 1) {
@@ -65,10 +65,10 @@ public class Check implements Emotes {
     }
 
     public static boolean ownsFavCard(User user) {
-        for(Card card : user.getCards()) {
+        for(CardContainer card : user.getCardContainers()) {
             String cardImage = card.getData().getCardImage();
 
-            if(user.getPinCard().equals(cardImage)) {
+            if(user.getPinnedCard().equals(cardImage)) {
                 return true;
             }
         }
@@ -121,17 +121,10 @@ public class Check implements Emotes {
     public static int countOwnedCards(User user) {
         int count = 0;
 
-        for(Card card : user.getCards()) {
+        for(CardContainer card : user.getCardContainers()) {
             count += card.getCardQuantity();
         }
         return count;
-    }
-
-    public static int findCooldown(User user, int cooldown) {
-        if(user.getIsRadiantRare()) {
-            return (int)(cooldown * 0.75);
-        }
-        return cooldown;
     }
 
     public static boolean isCooldownDone(Long epoch, int cooldown, boolean isMins) {

@@ -21,7 +21,7 @@ public class ViewCmds_ extends Cmds {
             User mention = User.findOtherUser(event, user_.getAsUser().getId());
             int page = cardNum.getAsInt();
 
-            if(mention.getCards().size() < 1) {
+            if(mention.getCardContainers().size() < 1) {
                 JDA.sendMessage(event, red_, "❌", "That user doesn't have any cards yet!");
 
             } else {

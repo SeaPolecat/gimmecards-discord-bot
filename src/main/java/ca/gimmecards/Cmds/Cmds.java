@@ -90,21 +90,6 @@ public class Cmds extends ListenerAdapter implements Emotes, Colors {
                     .addOption(OptionType.USER, "user", "mention a user", true)
                     .addOption(OptionType.STRING, "card-id", "enter a card ID", true),
     
-                    Commands.slash("tier1", "Gift someone the Rare Patreon perk")
-                    .addOption(OptionType.USER, "user", "mention a user", true),
-    
-                    Commands.slash("tier2", "Gift someone the Radiant Rare Patreon perk")
-                    .addOption(OptionType.USER, "user", "mention a user", true),
-    
-                    Commands.slash("untier", "Remove all Patreon perks from someone")
-                    .addOption(OptionType.USER, "user", "mention a user", true),
-    
-                    Commands.slash("giftbadge", "Reward someone with the Helper Badge")
-                    .addOption(OptionType.USER, "user", "mention a user", true),
-    
-                    Commands.slash("ungiftbadge", "Remove the Helper Badge from someone")
-                    .addOption(OptionType.USER, "user", "mention a user", true),
-    
                     //HELP
                     Commands.slash("help", "Get access to the website and other resources"),
     
@@ -149,8 +134,8 @@ public class Cmds extends ListenerAdapter implements Emotes, Colors {
                     Commands.slash("unlock", "Use a key to unlock a pack")
                     .addOption(OptionType.STRING, "pack-name", "enter a pack name", true),
     
-                    //CARD
-                    Commands.slash("cards", "See your current card collection")
+                    //COLLECTION
+                    Commands.slash("collection", "See your current card collection")
                     .addOption(OptionType.INTEGER, "page", "enter a page", false)
                     .addOption(OptionType.USER, "user", "mention a user", false),
     
@@ -282,21 +267,6 @@ public class Cmds extends ListenerAdapter implements Emotes, Colors {
         if(event.getName().equals("giftcard")) {
             GiftCmds.giftCard(event);
         }
-        if(event.getName().equals("tier1")) {
-            GiftCmds.giftRare(event);
-        }
-        if(event.getName().equals("tier2")) {
-            GiftCmds.giftRadiantRare(event);
-        }
-        if(event.getName().equals("untier")) {
-            GiftCmds.removePatreonRewards(event);
-        }
-        if(event.getName().equals("giftbadge")) {
-            GiftCmds.giftHelperBadge(event);
-        }
-        if(event.getName().equals("ungiftbadge")) {
-            GiftCmds.removeHelperBadge(event);
-        }
 
         //HELP
         if(event.getName().equals("help")) {
@@ -364,25 +334,25 @@ public class Cmds extends ListenerAdapter implements Emotes, Colors {
             ShopCmds.unlockPack(event);
         }
 
-        //CARD
-        if(event.getName().equals("cards")) {
+        //COLLECTION
+        if(event.getName().equals("collection")) {
             if(event.getOption("user") == null) {
-                CardCmds.viewCards(event);
+                CollectionCmds.viewCards(event);
             } else {
                 CardCmds_.viewCards_(event);
             }
         }
         if(event.getName().equals("fav")) {
-            CardCmds.favouriteCard(event);
+            CollectionCmds.favouriteCard(event);
         }
         if(event.getName().equals("unfav")) {
-            CardCmds.unfavouriteCard(event);
+            CollectionCmds.unfavouriteCard(event);
         }
         if(event.getName().equals("favall")) {
-            CardCmds.favouriteAll(event);
+            CollectionCmds.favouriteAll(event);
         }
         if(event.getName().equals("sort")) {
-            CardCmds.sortCards(event);
+            CollectionCmds.sortCards(event);
         }
 
         //VIEW

@@ -57,15 +57,15 @@ public class TradeCmds extends Cmds {
         } else {
             try {
                 int index = cardNum.getAsInt() - 1;
-                ArrayList<Card> offers = disp.getOffers(user.getUserId());
-                Card card = user.getCards().get(index);
-                Data data = card.getData();
+                ArrayList<CardContainer> offers = disp.getOffers(user.getUserId());
+                CardContainer cc = user.getCardContainers().get(index);
+                Data data = cc.getData();
                 String cardTitle = UX.findCardTitle(data, false);
 
                 if(offers.size() >= 5) {
                     JDA.sendMessage(event, red_, "❌", "Sorry, all your trade slots are full!");
 
-                } else if(!isValidOffer(offers, card)) {
+                } else if(!isValidOffer(offers, cc)) {
                     JDA.sendMessage(event, red_, "❌", "You can't offer any more of that card!");
 
                 } else {
@@ -98,8 +98,8 @@ public class TradeCmds extends Cmds {
         } else {
             try {
                 int index = tradeNum.getAsInt() - 1;
-                ArrayList<Card> offers = disp.getOffers(user.getUserId());
-                Card offer = offers.get(index);
+                ArrayList<CardContainer> offers = disp.getOffers(user.getUserId());
+                CardContainer offer = offers.get(index);
                 Data data = offer.getData();
                 String cardTitle = UX.findCardTitle(data, false);
 
@@ -199,10 +199,10 @@ public class TradeCmds extends Cmds {
         }
     }
 
-    private static boolean isValidOffer(ArrayList<Card> offers, Card card) {
-        for(Card offer : offers) {
-            if(offer.getData().getCardId().equals(card.getData().getCardId())) {
-                if(offer.getCardQuantity() >= card.getCardQuantity()) {
+    private static boolean isValidOffer(ArrayList<CardContainer> offers, CardContainer cc) {
+        for(CardContainer offer : offers) {
+            if(offer.getData().getCardId().equals(cc.getData().getCardId())) {
+                if(offer.getCardQuantity() >= cc.getCardQuantity()) {
                     return false;
 
                 } else {
@@ -211,26 +211,26 @@ public class TradeCmds extends Cmds {
                 }
             }
         }
-        offers.add(new Card(card.getData(), card.getCardNum(), card.getSellable()));
+        offers.add(new CardContainer(cc.getData(), cc.getCardNum(), cc.getIsSellable()));
         return true;
     }
 
-    private static void tradeCards(User user, ArrayList<Card> gives, ArrayList<Card> receives) {
-        for(Card give : gives) {
-            for(int i = 0; i < user.getCards().size(); i++) {
-                Card card = user.getCards().get(i);
+    private static void tradeCards(User user, ArrayList<CardContainer> gives, ArrayList<CardContainer> receives) {
+        for(CardContainer give : gives) {
+            for(int i = 0; i < user.getCardContainers().size(); i++) {
+                CardContainer cc = user.getCardContainers().get(i);
     
-                if(give.getData().getCardId().equals(card.getData().getCardId())) {
-                    if(card.getCardQuantity() > give.getCardQuantity()) {
-                        card.setCardQuantity(card.getCardQuantity() - give.getCardQuantity());
+                if(give.getData().getCardId().equals(cc.getData().getCardId())) {
+                    if(cc.getCardQuantity() > give.getCardQuantity()) {
+                        cc.setCardQuantity(cc.getCardQuantity() - give.getCardQuantity());
 
                     } else {
-                        user.getCards().remove(i);
+                        user.getCardContainers().remove(i);
                     }
                 }
             }
         }
-        for(Card receive : receives) {
+        for(CardContainer receive : receives) {
             for(int i = 0; i < receive.getCardQuantity(); i++) {
                 Card.addSingleCard(user, receive.getData(), false);
             }

@@ -42,28 +42,28 @@ public class CardDisplay_ extends Display {
         int startIndex = page * 15 - 15;
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
-        String sortOrder = mention.getSortIncreasing() ? "increasing" : "decreasing";
+        String sortOrder = mention.getIsSortIncreasing() ? "increasing" : "decreasing";
         int count = startIndex + 1;
 
-        setMaxPage(mention.getCards().size() / 15);
+        setMaxPage(mention.getCardContainers().size() / 15);
 
-        if(mention.getCards().size() % 15 != 0) {
+        if(mention.getCardContainers().size() % 15 != 0) {
             addMaxPage();
         }
         desc += "Sorted by `" + mention.getSortMethod() + "` `" + sortOrder + "`\n";
         desc += "┅┅\n";
         for(int i = startIndex; i < startIndex + 15; i++) {
-            Card card = mention.getCards().get(i);
-            Data data = card.getData();
+            CardContainer cc = mention.getCardContainers().get(i);
+            Data data = cc.getData();
 
-            desc += "`#" + count + "` " + UX.findCardTitle(data, card.getIsFav())
+            desc += "`#" + count + "` " + UX.findCardTitle(data, cc.getIsFav())
             + " ┇ " + UX.findRarityEmote(data) 
             + " ┇ " + data.getSetEmote()
-            + " ┇ " + UX.formatXP(data, card.getSellable())
-            + " ┇ *x" + card.getCardQuantity() + "*\n";
+            + " ┇ " + UX.formatXP(data, cc.getIsSellable())
+            + " ┇ *x" + cc.getCardQuantity() + "*\n";
             count++;
             
-            if(i >= mention.getCards().size() - 1) {
+            if(i >= mention.getCardContainers().size() - 1) {
                 break;
             }
         }

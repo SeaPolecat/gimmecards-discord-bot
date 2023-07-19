@@ -1,6 +1,6 @@
 package ca.gimmecards.Main;
 import ca.gimmecards.Interfaces.*;
-import java.nio.file.Paths;
+import ca.gimmecards.MainInterfaces.*;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
@@ -17,7 +17,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class Server implements StoragePaths {
+public class Server implements IServer, StoragePaths {
     
     // list of Servers
     public static ArrayList<Server> servers = new ArrayList<Server>();
@@ -56,37 +56,31 @@ public class Server implements StoragePaths {
     public void setServerId(String si) { serverId = si; }
     public void resetMarketEpoch() { marketEpoch = Calendar.getInstance().getTimeInMillis() / 60000; }
 
-    /**
-     * setter that refreshes the server-specific card market
-     */
-    public void refreshMarket() {
-        market.clear();
-        resetMarketEpoch();
-
-        for(int i = 0; i < 15; i++) {
-            market.add(Card.pickRandomCard("shiny"));
-        }
-        try { saveServers(); } catch(Exception e) {}
-    }
+    //===================================================[ PRIVATE FUNCTIONS ]==============================================================
 
     /**
-     * determines the path that Server data will be saved to
-     * @return the path with header if the file is in an external location, and no header if it's local
+     * searches through the Server list for a specific Server
+     * @param serverId the ID of the Server to search for
+     * @return the Server to be searched
      */
-    private static String determinePath() {
-        if(Paths.get(serverPath).toFile().length() > 0) {
-            return serverPath;
-        } else {
-            return header + serverPath;
+    private static Server searchForServer(String serverId) {
+        for(Server s : servers) {
+            if(s.getServerId().equals(serverId)) {
+                return s;
+            }
         }
+        servers.add(0, new Server(serverId));
+        return servers.get(0);
     }
-    
+
+    //=============================================[ PUBLIC STATIC FUNCTIONS ]==============================================================
+
     /**
      * loads server data from Servers.json into the Server list
      * @throws Exception just needs it
      */
     public static void loadServers() throws Exception {
-        Reader reader = new InputStreamReader(new FileInputStream(determinePath()), "UTF-8");
+        Reader reader = new InputStreamReader(new FileInputStream(GameObject.findSavePath(GameObject.serverPath)), "UTF-8");
         servers = new Gson().fromJson(reader, new TypeToken<ArrayList<Server>>() {}.getType());
 
         for(Server s : servers) {
@@ -101,7 +95,7 @@ public class Server implements StoragePaths {
      */
     public static void saveServers() throws Exception {
         Gson gson = new GsonBuilder().create();
-        Writer writer = new OutputStreamWriter(new FileOutputStream(determinePath()), "UTF-8");
+        Writer writer = new OutputStreamWriter(new FileOutputStream(GameObject.findSavePath(GameObject.serverPath)), "UTF-8");
         ArrayList<Server> encServers = new ArrayList<Server>();
         
         for(Server s : servers) {
@@ -152,18 +146,21 @@ public class Server implements StoragePaths {
         return searchForServer(serverId);
     }
 
-    /**
-     * searches through the Server list for a specific Server
-     * @param serverId the ID of the Server to search for
-     * @return the Server to be searched
-     */
-    private static Server searchForServer(String serverId) {
-        for(Server s : servers) {
-            if(s.getServerId().equals(serverId)) {
-                return s;
-            }
+    //==============================================[ PUBLIC NON-STATIC FUNCTIONS ]=====================================================
+
+    @Override
+    public void refreshMarket() {
+        market.clear();
+        resetMarketEpoch();
+
+        for(int i = 0; i < 15; i++) {
+            market.add(Card.pickRandomCard("shiny"));
         }
-        servers.add(0, new Server(serverId));
-        return servers.get(0);
+        try { saveServers(); } catch(Exception e) {}
+    }
+
+    @Override
+    public String formatCmd(String cmd) {
+        return "`/" + cmd + "`";
     }
 }
