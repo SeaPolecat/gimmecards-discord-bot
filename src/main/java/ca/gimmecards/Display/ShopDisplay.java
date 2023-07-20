@@ -1,5 +1,6 @@
 package ca.gimmecards.Display;
 import ca.gimmecards.Main.*;
+import ca.gimmecards.OtherInterfaces.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 public class ShopDisplay extends Display {
@@ -12,13 +13,13 @@ public class ShopDisplay extends Display {
     public ShopDisplay findDisplay() {
         String userId = getUserId();
 
-        for(ShopDisplay s : shopDisplays) {
+        for(ShopDisplay s : IDisplays.shopDisplays) {
             if(s.getUserId().equals(userId)) {
                 return s;
             }
         }
-        shopDisplays.add(0, new ShopDisplay(userId));
-        return shopDisplays.get(0);
+        IDisplays.shopDisplays.add(0, new ShopDisplay(userId));
+        return IDisplays.shopDisplays.get(0);
     }
 
     @Override
@@ -37,7 +38,7 @@ public class ShopDisplay extends Display {
         for(int i = startIndex; i < startIndex + 8; i++) {
             CardSet set = CardSet.sets[i];
 
-            desc += token_ + " " + set.getSetEmote() + " " + set.getSetName() + " ┇ ";
+            desc += IEmotes.token + " " + set.getSetEmote() + " " + set.getSetName() + " ┇ ";
             if(user.isPackUnlocked(set.getSetName())) {
                 desc += "✅\n";
             } else {
@@ -48,10 +49,10 @@ public class ShopDisplay extends Display {
             }
         }
         desc += "┅┅\n";
-        embed.setTitle(pikachu_ + " Poké Packs Shop " + pikachu_);
+        embed.setTitle(IEmotes.pikachu + " Poké Packs Shop " + IEmotes.pikachu);
         embed.setDescription(desc);
         embed.setFooter("Page " + page + " of " + getMaxPage(), ui.getUserIcon());
-        embed.setColor(shop_);
+        embed.setColor(IColors.shopColor);
         return embed;
     }
 }

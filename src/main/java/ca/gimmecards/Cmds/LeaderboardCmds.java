@@ -55,7 +55,7 @@ public class LeaderboardCmds extends Cmds implements Comparator<User> {
             disp.setPlayers(players);
             disp.setPlayerInfos(playerInfos);
     
-            GameObject.sendDynamicEmbed(event, user, null, disp, 1);
+            GameManager.sendDynamicEmbed(event, user, null, disp, 1);
         }
     }
 
@@ -81,6 +81,6 @@ public class LeaderboardCmds extends Cmds implements Comparator<User> {
         disp.setPlayers(players);
         disp.setPlayerInfos(playerInfos);
 
-        GameObject.sendDynamicEmbed(event, user, null, disp, 1);
+        GameManager.sendDynamicEmbed(event, user, null, disp, 1);
     }
 }

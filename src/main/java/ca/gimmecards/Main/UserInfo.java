@@ -14,9 +14,9 @@ public class UserInfo {
      * @param event the slash event
      */
     public UserInfo(SlashCommandInteractionEvent event) {
-        userName = event.getUser().getName();
+        userName = event.getUser().getEffectiveName();
         userPing = event.getUser().getAsMention();
-        userIcon = event.getUser().getAvatarUrl();
+        userIcon = event.getUser().getEffectiveAvatarUrl();
 
         if(userIcon == null) {
             userIcon = event.getUser().getDefaultAvatarUrl();
@@ -47,9 +47,9 @@ public class UserInfo {
      * @param event the button event
      */
     public UserInfo(ButtonInteractionEvent event) {
-        userName = event.getUser().getName();
+        userName = event.getUser().getEffectiveName();
         userPing = event.getUser().getAsMention();
-        userIcon = event.getUser().getAvatarUrl();
+        userIcon = event.getUser().getEffectiveAvatarUrl();
 
         if(userIcon == null) {
             userIcon = event.getUser().getDefaultAvatarUrl();

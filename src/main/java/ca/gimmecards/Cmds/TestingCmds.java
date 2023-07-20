@@ -40,7 +40,7 @@ public class TestingCmds extends Cmds {
             u.getBadges().add("original");
 
             Data merch = new Data(
-                logo_,
+                IEmotes.logo_,
                 "Gimme Cards",
                 "merch-0",
                 "Pikachu Cosplay Charizard X",
@@ -52,7 +52,7 @@ public class TestingCmds extends Cmds {
             );
             Card.addSingleCard(u, merch, true);
         }
-        GameObject.sendMessage(event, blue_, "", "done testing!");
+        GameObject.sendMessage(event, IColors.blue_, "", "done testing!");
         try { User.saveUsers(); } catch(Exception e) {}*/
 
         /*for(User u : User.users) {
@@ -73,7 +73,7 @@ public class TestingCmds extends Cmds {
                 System.out.println(cc.getCard().getCardName());
             }
         }
-        GameObject.sendMessage(event, blue_, "", "done testing!");
+        GameObject.sendMessage(event, IColors.blue_, "", "done testing!");
         //try { User.saveUsers(); } catch(Exception e) {}
         
         /*for(int i = 0; i < User.users.size(); i++) {
@@ -109,7 +109,7 @@ public class TestingCmds extends Cmds {
                 System.out.println(cc.getIsFav());
             }
         }
-        GameObject.sendMessage(event, blue_, "", "done testing!");
+        GameObject.sendMessage(event, IColors.blue_, "", "done testing!");
         try { User.saveUsers(); } catch(Exception e) {}*/
     }
 }

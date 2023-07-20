@@ -6,7 +6,7 @@ import ca.gimmecards.OtherInterfaces.*;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Card implements ICard, Emotes {
+public class Card implements ICard {
 
     private String setEmote;
     private String setName;
@@ -153,7 +153,7 @@ public class Card implements ICard, Emotes {
                 return card;
             }
         }
-        for(Card card : CustomCards.customs) {
+        for(Card card : ICustomCards.customs) {
             if(card.getCardId().equalsIgnoreCase(cardId)) {
                 return card;
             }
@@ -162,7 +162,7 @@ public class Card implements ICard, Emotes {
     }
 
     public static String formatCredits(int amount) {
-        return credits_ + " **" + GameObject.formatNumber(amount) + "**";
+        return IEmotes.credits + " **" + GameManager.formatNumber(amount) + "**";
     }
 
     //========================================[ PUBLIC NON-STATIC FUNCTIONS ]==========================================================
@@ -234,27 +234,27 @@ public class Card implements ICard, Emotes {
                 String cardSubType = this.cardSubtypes[i];
     
                 if(cardSubType.equalsIgnoreCase("water")) {
-                    cardTitle += water_;
+                    cardTitle += IEmotes.water;
                 } else if(cardSubType.equalsIgnoreCase("psychic")) {
-                    cardTitle += psychic_;
+                    cardTitle += IEmotes.psychic;
                 } else if(cardSubType.equalsIgnoreCase("metal")) {
-                    cardTitle += metal_;
+                    cardTitle += IEmotes.metal;
                 } else if(cardSubType.equalsIgnoreCase("lightning")) {
-                    cardTitle += lightning_;
+                    cardTitle += IEmotes.lightning;
                 } else if(cardSubType.equalsIgnoreCase("grass")) {
-                    cardTitle += grass_;
+                    cardTitle += IEmotes.grass;
                 } else if(cardSubType.equalsIgnoreCase("fire")) {
-                    cardTitle += fire_;
+                    cardTitle += IEmotes.fire;
                 } else if(cardSubType.equalsIgnoreCase("fighting")) {
-                    cardTitle += fighting_;
+                    cardTitle += IEmotes.fighting;
                 } else if(cardSubType.equalsIgnoreCase("fairy")) {
-                    cardTitle += fairy_;
+                    cardTitle += IEmotes.fairy;
                 } else if(cardSubType.equalsIgnoreCase("dragon")) {
-                    cardTitle += dragon_;
+                    cardTitle += IEmotes.dragon;
                 } else if(cardSubType.equalsIgnoreCase("darkness")) {
-                    cardTitle += darkness_;
+                    cardTitle += IEmotes.darkness;
                 } else if(cardSubType.equalsIgnoreCase("colorless")) {
-                    cardTitle += colorless_;
+                    cardTitle += IEmotes.colorless;
                 }
             }
         }
@@ -289,7 +289,7 @@ public class Card implements ICard, Emotes {
 
     @Override
     public String formatXP(Boolean sellable) {
-        String formattedXP = XP_ + " **" + GameObject.formatNumber(this.cardPrice) + "**";
+        String formattedXP = IEmotes.XP + " **" + GameManager.formatNumber(this.cardPrice) + "**";
 
         if(sellable == null) {
             if(!isCardSellable()) {
@@ -304,7 +304,7 @@ public class Card implements ICard, Emotes {
 
     @Override
     public String formatCredits() {
-        String formattedCredits = credits_ + " **" + GameObject.formatNumber(this.cardPrice) + "**";
+        String formattedCredits = IEmotes.credits + " **" + GameManager.formatNumber(this.cardPrice) + "**";
 
         if(!isCardSellable()) {
             return formattedCredits + " 🚫";

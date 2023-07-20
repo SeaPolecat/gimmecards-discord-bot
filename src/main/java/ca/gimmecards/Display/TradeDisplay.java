@@ -1,5 +1,6 @@
 package ca.gimmecards.Display;
 import ca.gimmecards.Main.*;
+import ca.gimmecards.OtherInterfaces.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 import java.util.ArrayList;
 
@@ -110,27 +111,27 @@ public class TradeDisplay extends Display {
     public TradeDisplay findDisplay() {
         String userId = getUserId();
 
-        for(TradeDisplay t : tradeDisplays) {
+        for(TradeDisplay t : IDisplays.tradeDisplays) {
             if(t.getUser1() != null 
             && t.getUser(userId).getUserId().equals(userId)) {
                 return t;
             }
         }
-        tradeDisplays.add(0, new TradeDisplay(userId));
-        return tradeDisplays.get(0);
+        IDisplays.tradeDisplays.add(0, new TradeDisplay(userId));
+        return IDisplays.tradeDisplays.get(0);
     }
 
     public void removeTradeDisplay() {
-        for(int i = 0; i < tradeDisplays.size(); i++) {
-            if(tradeDisplays.get(i).getUserId().equals(this.getUserId())) {
-                tradeDisplays.remove(i);
+        for(int i = 0; i < IDisplays.tradeDisplays.size(); i++) {
+            if(IDisplays.tradeDisplays.get(i).getUserId().equals(this.getUserId())) {
+                IDisplays.tradeDisplays.remove(i);
                 break;
             }
         }
     }
 
     public boolean tradeExists(String userId) {
-        for(TradeDisplay disp : tradeDisplays) {
+        for(TradeDisplay disp : IDisplays.tradeDisplays) {
             if(disp.getUser1() != null 
             && disp.getUser(userId).getUserId().equals(userId)) {
                 return true;
@@ -228,9 +229,9 @@ public class TradeDisplay extends Display {
                 desc += "`#" + (i+1) + "`\n";
             }
         }
-        embed.setTitle(ditto_ + " Trading Center " + ditto_);
+        embed.setTitle(IEmotes.ditto + " Trading Center " + IEmotes.ditto);
         embed.setDescription(desc);
-        embed.setColor(trade_);
+        embed.setColor(IColors.tradeColor);
         return embed;
     }
 }

@@ -1,5 +1,6 @@
 package ca.gimmecards.Cmds;
 import ca.gimmecards.Main.*;
+import ca.gimmecards.OtherInterfaces.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
@@ -17,11 +18,11 @@ public class PrivacyCmds extends Cmds {
         desc += "After confirming, your user info will disappear from *Gimme Cards*, along with any cards and items.\n\n";
         desc += "*We're sad to see you go... but all stories must come to an end.*";
 
-        embed.setTitle(logo_ + " Are You Sure? " + logo_);
+        embed.setTitle(IEmotes.logo + " Are You Sure? " + IEmotes.logo);
         embed.setDescription(desc);
         embed.setImage("https://c.tenor.com/J6lraJXFl4IAAAAC/pokemon-pikachu.gif");
         embed.setFooter("the end of " + ui.getUserName() + "'s journey", ui.getUserIcon());
-        embed.setColor(blue_);
+        embed.setColor(IColors.blue);
 
         event.replyEmbeds(embed.build())
         .addActionRow(
@@ -70,10 +71,10 @@ public class PrivacyCmds extends Cmds {
 
         desc += "We're glad you're not going away... *welcome back!*";
 
-        embed.setTitle(logo_ + " Welcome Back " + logo_);
+        embed.setTitle(IEmotes.logo + " Welcome Back " + IEmotes.logo);
         embed.setDescription(desc);
         embed.setImage("https://media.tenor.com/qObvHG4rT28AAAAC/pikachu-pokemon.gif");
-        embed.setColor(blue_);
+        embed.setColor(IColors.blue);
 
         event.editMessageEmbeds(embed.build())
         .setActionRow(

@@ -1,6 +1,6 @@
 package ca.gimmecards.Main;
 import ca.gimmecards.MainInterfaces.*;
-import ca.gimmecards.OtherInterfaces.Emotes;
+import ca.gimmecards.OtherInterfaces.IEmotes;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
@@ -18,7 +18,7 @@ import java.util.Random;
 
 // make formatUserName public static?
 
-public class User implements IUser, Emotes {
+public class User implements IUser {
 
     // list of Users
     public static ArrayList<User> users = new ArrayList<User>();
@@ -179,7 +179,7 @@ public class User implements IUser, Emotes {
      * @throws Exception just needs it
      */
     public static void loadUsers() throws Exception {
-        Reader reader = new InputStreamReader(new FileInputStream(GameObject.findSavePath(GameObject.userPath)), "UTF-8");
+        Reader reader = new InputStreamReader(new FileInputStream(GameManager.findSavePath(GameManager.userPath)), "UTF-8");
         users = new Gson().fromJson(reader, new TypeToken<ArrayList<User>>() {}.getType());
 
         for(User u : users) {
@@ -194,7 +194,7 @@ public class User implements IUser, Emotes {
      */
     public static void saveUsers() throws Exception {
         Gson gson = new GsonBuilder().create();
-        Writer writer = new OutputStreamWriter(new FileOutputStream(GameObject.findSavePath(GameObject.userPath)), "UTF-8");
+        Writer writer = new OutputStreamWriter(new FileOutputStream(GameManager.findSavePath(GameManager.userPath)), "UTF-8");
         ArrayList<User> encUsers = new ArrayList<User>();
 
         for(User u : users) {
@@ -236,6 +236,52 @@ public class User implements IUser, Emotes {
         return searchForUser(otherUserId);
     }
 
+    public static boolean isCooldownDone(Long epoch, int cooldown, boolean isMins) {
+        long current = isMins ? Calendar.getInstance().getTimeInMillis() / 60000 : Calendar.getInstance().getTimeInMillis() / 1000;
+
+        if(current - epoch >= cooldown) {
+            return true;
+        }
+        return false;
+    }
+
+    public static String findTimeLeft(Long epoch, int cooldown, boolean isMins) {
+        long current;
+
+        if(isMins) {
+            current = Calendar.getInstance().getTimeInMillis() / 60000;
+            long minutes = cooldown - (current - epoch);
+
+            if(minutes > 60) {
+                int hours = (int)(minutes / 60);
+    
+                if(hours < 2) {
+                    return "**" + hours + " hour " + (minutes % 60) + " minutes**";
+                } else {
+                    return "**" + hours + " hours " + (minutes % 60) + " minutes**";
+                }
+            } else {
+                return "**" + minutes + " minutes**";
+            }
+
+        } else {
+            current = Calendar.getInstance().getTimeInMillis() / 1000;
+            long seconds = cooldown - (current - epoch);
+
+            if(seconds > 60) {
+                int minutes = (int)(seconds / 60);
+    
+                if(minutes < 2) {
+                    return "**" + minutes + " minute " + (seconds % 60) + " seconds**";
+                } else {
+                    return "**" + minutes + " minutes " + (seconds % 60) + " seconds**";
+                }
+            } else {
+                return "**" + seconds + " seconds**";
+            }
+        }
+    }
+
     //==============================================[ PUBLIC NON-STATIC FUNCTIONS ]=====================================================
 
     @Override
@@ -249,7 +295,7 @@ public class User implements IUser, Emotes {
 
         if(this.XP >= this.maxXP) {
             msg += "\n┅┅";
-            msg += "\n" + GameObject.formatNick(event) + "** LEVELED UP :tada:**";
+            msg += "\n" + GameManager.formatName(event) + "** LEVELED UP :tada:**";
 
             while(this.XP >= this.maxXP) {
                 levelUp();
@@ -292,8 +338,8 @@ public class User implements IUser, Emotes {
         if(isAtTop) {
             msg += "┅┅\n";
         }
-        msg += "+ " + GameObject.formatNumber(quantity);
-        msg += " " + XP_ + " **XP**";
+        msg += "+ " + GameManager.formatNumber(quantity);
+        msg += " " + XP + " **XP**";
 
         return msg;
     }
@@ -306,13 +352,13 @@ public class User implements IUser, Emotes {
         if(isAtTop) {
             msg += "┅┅\n";
         }
-        msg += (quantity > 0) ? "+ " : "- ";
-        msg += GameObject.formatNumber(Math.abs(quantity));
+        msg += (quantity > 0) ? "+ " : "\\- ";
+        msg += GameManager.formatNumber(Math.abs(quantity));
 
         if(quantity > 1 || quantity < -1) {
-            msg += " " + token_ + " **Tokens**";
+            msg += " " + IEmotes.token + " **Tokens**";
         } else {
-            msg += " " + token_ + " **Token**";
+            msg += " " + IEmotes.token + " **Token**";
         }
         return msg;
     }
@@ -325,9 +371,9 @@ public class User implements IUser, Emotes {
         if(isAtTop) {
             msg += "┅┅\n";
         }
-        msg += (quantity > 0) ? "+ " : "- ";
-        msg += GameObject.formatNumber(Math.abs(quantity));
-        msg += " " + credits_ + " **Credits**";
+        msg += (quantity > 0) ? "+ " : "\\- ";
+        msg += GameManager.formatNumber(Math.abs(quantity));
+        msg += " " + IEmotes.credits + " **Credits**";
 
         return msg;
     }
@@ -340,13 +386,13 @@ public class User implements IUser, Emotes {
         if(isAtTop) {
             msg += "┅┅\n";
         }
-        msg += (quantity > 0) ? "+ " : "- ";
-        msg += GameObject.formatNumber(Math.abs(quantity));
+        msg += (quantity > 0) ? "+ " : "\\- ";
+        msg += GameManager.formatNumber(Math.abs(quantity));
 
         if(quantity > 1 || quantity < -1) {
-            msg += " " + star_ + " **Stars**";
+            msg += " " + IEmotes.star + " **Stars**";
         } else {
-            msg += " " + star_ + " **Star**";
+            msg += " " + IEmotes.star + " **Star**";
         }
         return msg;
     }
@@ -359,9 +405,9 @@ public class User implements IUser, Emotes {
         if(isAtTop) {
             msg += "┅┅\n";
         }
-        msg += (quantity > 0) ? "+ " : "- ";
-        msg += GameObject.formatNumber(Math.abs(quantity));
-        msg += " " + key_ + " **Key**";
+        msg += (quantity > 0) ? "+ " : "\\- ";
+        msg += GameManager.formatNumber(Math.abs(quantity));
+        msg += " " + IEmotes.key + " **Key**";
 
         return msg;
     }

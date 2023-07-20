@@ -1,5 +1,6 @@
 package ca.gimmecards.Cmds;
 import ca.gimmecards.Main.*;
+import ca.gimmecards.OtherInterfaces.*;
 import java.io.IOException;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonArray;
@@ -18,10 +19,10 @@ public class CardCmds extends Cmds {
         desc += "**Servers** ┇ " + event.getJDA().getGuilds().size() + "\n";
         desc += "┅┅\n";
 
-        embed.setTitle(logo_ + " Current Stats " + logo_);
+        embed.setTitle(IEmotes.logo + " Current Stats " + IEmotes.logo);
         embed.setDescription(desc);
-        embed.setColor(blue_);
-        GameObject.sendEmbed(event, embed);
+        embed.setColor(IColors.blue);
+        GameManager.sendEmbed(event, embed);
         embed.clear();
     }
 
@@ -34,16 +35,16 @@ public class CardCmds extends Cmds {
 
         if(type.equalsIgnoreCase("new")) {
             sets = CardSet.sets;
-            title = logo_ + " **Card Sets** " + logo_;
+            title = IEmotes.logo + " **Card Sets** " + IEmotes.logo;
         } else if(type.equalsIgnoreCase("old")) {
             sets = CardSet.oldSets;
-            title = logo_ + " **Old Card Sets** " + logo_;
+            title = IEmotes.logo + " **Old Card Sets** " + IEmotes.logo;
         } else if(type.equalsIgnoreCase("rare")) {
             sets = CardSet.rareSets;
-            title = logo_ + " **Rare Card Sets** " + logo_;
+            title = IEmotes.logo + " **Rare Card Sets** " + IEmotes.logo;
         } else if(type.equalsIgnoreCase("promo")) {
             sets = CardSet.promoSets;
-            title = logo_ + " **Promo Card Sets** " + logo_;
+            title = IEmotes.logo + " **Promo Card Sets** " + IEmotes.logo;
         }
         for(int i = 0; i < sets.length; i++) {
             if(sets[i] == null) {
@@ -59,8 +60,8 @@ public class CardCmds extends Cmds {
         }
         embed.setTitle(title);
         embed.setDescription(desc);
-        embed.setColor(blue_);
-        GameObject.sendEmbed(event, embed);
+        embed.setColor(IColors.blue);
+        GameManager.sendEmbed(event, embed);
         embed.clear();
     }
 
@@ -78,7 +79,7 @@ public class CardCmds extends Cmds {
         for(int i = 0; i < CardSet.promoSets.length; i++) {
             CardSet.promoSets[i] = null;
         }
-        GameObject.sendMessage(event, blue_, "", "`Successfully wiped all card sets.`");
+        GameManager.sendMessage(event, IColors.blue, "", "`Successfully wiped all card sets.`");
         try { CardSet.saveSets(); } catch(Exception e) {}
         try { CardSet.saveOldSets(); } catch(Exception e) {}
         try { CardSet.saveRareSets(); } catch(Exception e) {}
@@ -99,10 +100,10 @@ public class CardCmds extends Cmds {
             }
             CardSet.sets = newSets;
     
-            GameObject.sendMessage(event, blue_, "", "`Card set length changed by " + lengthChange + " unit(s).`");
+            GameManager.sendMessage(event, IColors.blue, "", "`Card set length changed by " + lengthChange + " unit(s).`");
             try { CardSet.saveSets(); } catch(Exception e) {}
         } catch(NumberFormatException e) {
-            GameObject.sendMessage(event, red_, "", "`Invalid length. Please use any integer.`");
+            GameManager.sendMessage(event, IColors.red, "", "`Invalid length. Please use any integer.`");
         }
     }
 
@@ -113,7 +114,7 @@ public class CardCmds extends Cmds {
             JsonArray rawContents;
             String msg = "";
     
-            GameObject.sendMessage(event, blue_, "", "`Counting the specified card set...`");
+            GameManager.sendMessage(event, IColors.blue, "", "`Counting the specified card set...`");
             rawContents = CardSet.crawlPokemonAPI(setCode);
 
             for(JsonElement j : rawContents) {
@@ -142,9 +143,9 @@ public class CardCmds extends Cmds {
             + "Total: " + rawContents.size() + "\n"
             + "```";
 
-            GameObject.sendMessage(event, blue_, "", msg);
+            GameManager.sendMessage(event, IColors.blue, "", msg);
         } catch(IOException e) {
-            GameObject.sendMessage(event, red_, "", "`Rate limit reached. Please wait for a bit.`");
+            GameManager.sendMessage(event, IColors.red, "", "`Rate limit reached. Please wait for a bit.`");
         }
     }
 
@@ -162,7 +163,7 @@ public class CardCmds extends Cmds {
                 Integer.parseInt("$");
 
             } else {
-                GameObject.sendMessage(event, blue_, "", "`Adding cards for set " + setNum + "...`");
+                GameManager.sendMessage(event, IColors.blue, "", "`Adding cards for set " + setNum + "...`");
 
                 String setEmote = event.getJDA().getEmojisByName(setCode, true).get(0).getAsMention();
                 CardSet contents = CardSet.findContents(setEmote, setCode);
@@ -176,7 +177,7 @@ public class CardCmds extends Cmds {
                 } else {
                     CardSet.oldSets[setNum - 1] = contents;
                 }
-                GameObject.sendMessage(event, blue_, "", "`...and successful!`\n"
+                GameManager.sendMessage(event, IColors.blue, "", "`...and successful!`\n"
                 + "```\n"
                 + contents.getSetName() + "\n"
                 + "-----\n"
@@ -196,10 +197,10 @@ public class CardCmds extends Cmds {
             }
         } catch(NumberFormatException | IOException e) {
             if(e.toString().startsWith("java.lang.NumberFormatException:")) {
-                GameObject.sendMessage(event, red_, "", "`The specified card set does not exist.`");
+                GameManager.sendMessage(event, IColors.red, "", "`The specified card set does not exist.`");
 
             } else if(e.toString().startsWith("java.io.IOException:")) {
-                GameObject.sendMessage(event, red_, "", "`Rate limit reached. Please wait for a bit.`");
+                GameManager.sendMessage(event, IColors.red, "", "`Rate limit reached. Please wait for a bit.`");
             }
         }
     }
@@ -218,7 +219,7 @@ public class CardCmds extends Cmds {
                 Integer.parseInt("$");
 
             } else {
-                GameObject.sendMessage(event, blue_, "", "`Adding cards for set " + setNum + "...`");
+                GameManager.sendMessage(event, IColors.blue, "", "`Adding cards for set " + setNum + "...`");
 
                 String setEmote;
                 CardSet contents;
@@ -226,7 +227,7 @@ public class CardCmds extends Cmds {
                     setEmote = event.getJDA().getEmojisByName(setCode, true).get(0).getAsMention();
                     contents = CardSet.findRareContents(setEmote, setCode);
                 } else {
-                    setEmote = promostar_;
+                    setEmote = IEmotes.promostar;
                     contents = CardSet.findPromoContents(setEmote, setCode);
                 }
                 ArrayList<Card> specs = contents.getSpecials();
@@ -236,7 +237,7 @@ public class CardCmds extends Cmds {
                 } else {
                     CardSet.promoSets[setNum - 1] = contents;
                 }
-                GameObject.sendMessage(event, blue_, "", "`...and successful!`\n"
+                GameManager.sendMessage(event, IColors.blue, "", "`...and successful!`\n"
                 + "```\n"
                 + contents.getSetName() + "\n"
                 + "-----\n"
@@ -251,10 +252,10 @@ public class CardCmds extends Cmds {
             }
         }  catch(NumberFormatException | IOException e) {
             if(e.toString().startsWith("java.lang.NumberFormatException:")) {
-                GameObject.sendMessage(event, red_, "", "`The specified card set does not exist.`");
+                GameManager.sendMessage(event, IColors.red, "", "`The specified card set does not exist.`");
                 
             } else if(e.toString().startsWith("java.io.IOException:")) {
-                GameObject.sendMessage(event, red_, "", "`Rate limit reached. Please wait for a bit.`");
+                GameManager.sendMessage(event, IColors.red, "", "`Rate limit reached. Please wait for a bit.`");
             }
         }
     }

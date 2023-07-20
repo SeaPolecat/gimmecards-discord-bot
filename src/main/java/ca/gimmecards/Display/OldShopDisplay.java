@@ -1,5 +1,6 @@
 package ca.gimmecards.Display;
 import ca.gimmecards.Main.*;
+import ca.gimmecards.OtherInterfaces.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 public class OldShopDisplay extends Display {
@@ -12,13 +13,13 @@ public class OldShopDisplay extends Display {
     public OldShopDisplay findDisplay() {
         String userId = getUserId();
 
-        for(OldShopDisplay o : oldShopDisplays) {
+        for(OldShopDisplay o : IDisplays.oldShopDisplays) {
             if(o.getUserId().equals(userId)) {
                 return o;
             }
         }
-        oldShopDisplays.add(0, new OldShopDisplay(userId));
-        return oldShopDisplays.get(0);
+        IDisplays.oldShopDisplays.add(0, new OldShopDisplay(userId));
+        return IDisplays.oldShopDisplays.get(0);
     }
 
     @Override
@@ -37,7 +38,7 @@ public class OldShopDisplay extends Display {
         for(int i = startIndex; i < startIndex + 8; i++) {
             CardSet set = CardSet.oldSets[i];
 
-            desc += token_ + " " + set.getSetEmote() + " " + set.getSetName() + " ┇ ";
+            desc += IEmotes.token + " " + set.getSetEmote() + " " + set.getSetName() + " ┇ ";
             if(user.isPackUnlocked(set.getSetName())) {
                 desc += "✅\n";
             } else {
@@ -48,10 +49,10 @@ public class OldShopDisplay extends Display {
             }
         }
         desc += "┅┅\n";
-        embed.setTitle(squirtle_ + " Legacy Packs Shop " + squirtle_ + " 🚫");
+        embed.setTitle(IEmotes.squirtle + " Legacy Packs Shop " + IEmotes.squirtle + " 🚫");
         embed.setDescription(desc);
         embed.setFooter("Page " + page + " of " + getMaxPage(), ui.getUserIcon());
-        embed.setColor(oldshop_);
+        embed.setColor(IColors.oldshopColor);
         return embed;
     }
 }

@@ -1,8 +1,7 @@
 package ca.gimmecards.Cmds;
-import ca.gimmecards.Cmds_.*;
+import ca.gimmecards.Cmds_MP.*;
 import ca.gimmecards.Main.*;
-import ca.gimmecards.OtherInterfaces.Colors;
-import ca.gimmecards.OtherInterfaces.Emotes;
+import ca.gimmecards.OtherInterfaces.*;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -10,11 +9,10 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.entities.Guild;
-import javax.annotation.Nonnull;
 
-public class Cmds extends ListenerAdapter implements Emotes, Colors {
+public class Cmds extends ListenerAdapter {
     
-    public void onMessageReceived(@Nonnull MessageReceivedEvent event) {
+    public void onMessageReceived(MessageReceivedEvent event) {
         if(event.getAuthor().isBot() == true) { return; }
         String[] args = event.getMessage().getContentRaw().split("\\s+");
 
@@ -227,21 +225,21 @@ public class Cmds extends ListenerAdapter implements Emotes, Colors {
                     Commands.slash("reject", "End a trade instantly")
                 ).queue();
 
-                GameObject.sendMessage(event, blue_, "", "`Successfully updated this guild's slash commands.`");
+                GameManager.sendMessage(event, IColors.blue, "", "`Successfully updated this guild's slash commands.`");
             }
         }
     }
 
-    public void onSlashCommandInteraction(@Nonnull SlashCommandInteractionEvent event) {
+    public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
 
         //LOCK
         if(event.getUser().getId().equals("454773340163538955") && event.getName().equals("plmnko")) {
             Main.isLocked = false;
-            GameObject.sendMessage(event, blue_, "", "`Unlocked Gimme Cards.`");
+            GameManager.sendMessage(event, IColors.blue, "", "`Unlocked Gimme Cards.`");
         }
 
         if(Main.isLocked) {
-            GameObject.sendMessage(event, red_, "⏰", 
+            GameManager.sendMessage(event, IColors.red, "⏰", 
             "The developer has locked *Gimme Cards*, either to fix a bug or prepare for an update; "
             + "please wait until it comes back online!");
             return;
@@ -249,7 +247,7 @@ public class Cmds extends ListenerAdapter implements Emotes, Colors {
 
         if(event.getUser().getId().equals("454773340163538955") && event.getName().equals("qazxsw")) {
             Main.isLocked = true;
-            GameObject.sendMessage(event, blue_, "", "`Locked Gimme Cards.`");
+            GameManager.sendMessage(event, IColors.blue, "", "`Locked Gimme Cards.`");
         }
         
         //PRIVACY
@@ -298,7 +296,7 @@ public class Cmds extends ListenerAdapter implements Emotes, Colors {
             if(event.getOption("user") == null) {
                 BackpackCmds.viewBackpack(event);
             } else {
-                BackpackCmds_.viewBackpack_(event);
+                BackpackCmds_MP.viewBackpack_(event);
             }
         }
         if(event.getName().equals("redeem")) {
@@ -339,7 +337,7 @@ public class Cmds extends ListenerAdapter implements Emotes, Colors {
             if(event.getOption("user") == null) {
                 CollectionCmds.viewCards(event);
             } else {
-                CardCmds_.viewCards_(event);
+                CardCmds_MP.viewCards_(event);
             }
         }
         if(event.getName().equals("fav")) {
@@ -363,7 +361,7 @@ public class Cmds extends ListenerAdapter implements Emotes, Colors {
             if(event.getOption("user") == null) {
                 ViewCmds.viewCard(event);
             } else {
-                ViewCmds_.viewCard_(event);
+                ViewCmds_MP.viewCard_(event);
             }
         }
 
@@ -450,7 +448,7 @@ public class Cmds extends ListenerAdapter implements Emotes, Colors {
                     }
                     guidance = guidance.trim();
     
-                    GameObject.sendMessage(event, red_, "❌", "Please follow the format: `" + args[0] + " " + guidance + "`");
+                    GameManager.sendMessage(event, IColors.red, "❌", "Please follow the format: `" + args[0] + " " + guidance + "`");
                 }
             }
         }

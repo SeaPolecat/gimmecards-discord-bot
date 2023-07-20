@@ -36,6 +36,7 @@ public class Main {
 
         jda = JDABuilder
         .createDefault(testToken,
+        GatewayIntent.MESSAGE_CONTENT,
         GatewayIntent.GUILD_MESSAGES,
         GatewayIntent.GUILD_MEMBERS,
         GatewayIntent.GUILD_EMOJIS_AND_STICKERS)
@@ -48,7 +49,7 @@ public class Main {
         jda.getPresence().setStatus(OnlineStatus.ONLINE);
         jda.getPresence().setActivity(Activity.playing("type /help"));
 
-        jda.addEventListener(new GameObject());
+        jda.addEventListener(new GameManager());
         jda.addEventListener(new Cmds());
         jda.addEventListener(new Display());
     }

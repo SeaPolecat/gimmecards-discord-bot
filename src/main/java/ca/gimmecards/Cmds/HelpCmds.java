@@ -1,6 +1,6 @@
 package ca.gimmecards.Cmds;
 import ca.gimmecards.Main.*;
-import ca.gimmecards.OtherInterfaces.Changelog;
+import ca.gimmecards.OtherInterfaces.*;
 import ca.gimmecards.Display.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -27,10 +27,10 @@ public class HelpCmds extends Cmds {
         //https://discord.com/api/oauth2/authorize?client_id=814025499381727232&permissions=354368&scope=bot
         + "to invite me to your own server!";
 
-        embed.setTitle(eevee_ + " Getting Started " + eevee_);
+        embed.setTitle(IEmotes.eevee + " Getting Started " + IEmotes.eevee);
         embed.setDescription(desc);
-        embed.setColor(help_);
-        GameObject.sendEmbed(event, embed);
+        embed.setColor(IColors.helpColor);
+        GameManager.sendEmbed(event, embed);
         embed.clear();
     }
 
@@ -56,10 +56,10 @@ public class HelpCmds extends Cmds {
         desc += "✨ Custom\n";
         desc += "🛍️ Merch\n";
 
-        embed.setTitle(eevee_ + " All Rarities " + eevee_);
+        embed.setTitle(IEmotes.eevee + " All Rarities " + IEmotes.eevee);
         embed.setDescription(desc);
-        embed.setColor(help_);
-        GameObject.sendEmbed(event, embed);
+        embed.setColor(IColors.helpColor);
+        GameManager.sendEmbed(event, embed);
         embed.clear();
     }
 
@@ -67,35 +67,35 @@ public class HelpCmds extends Cmds {
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
-        desc += devBadge_ + " **Gimme Cards Developer**\n";
+        desc += IEmotes.devBadge + " **Gimme Cards Developer**\n";
         desc += "Given to the developer of Gimme Cards, *SeaPolecat*\n\n";
 
-        desc += staffBadge_ + " **Gimme Cards Staff**\n";
+        desc += IEmotes.staffBadge + " **Gimme Cards Staff**\n";
         desc += "Given to the staff members in our official [support server](https://discord.gg/urtHCGcE7y)\n\n";
 
-        desc += communityBadge_ + " **Community Helper**\n";
+        desc += IEmotes.communityBadge + " **Community Helper**\n";
         desc += "Given to collectors who often help newer players or contribute to new ideas. "
         + "Only staff members can award you this badge\n\n";
 
-        desc += patreonBadge_ + " **Patreon**\n";
+        desc += IEmotes.patreonBadge + " **Patreon**\n";
         desc += "Given to our Patreon supporters, AKA *Rare Collectors* or *Radiant Rare Collectors*\n\n";
 
-        desc += veteranBadge_ + " **Veteran Collector**\n";
+        desc += IEmotes.veteranBadge + " **Veteran Collector**\n";
         desc += "Given to collectors who are level 50+\n\n";
 
-        desc += masterBadge_ + " **Master Collector**\n";
+        desc += IEmotes.masterBadge + " **Master Collector**\n";
         desc += "Given to collectors who are level 100+\n\n";
 
-        desc += bdayBadge_ + " **1 Year Anniversary**\n";
+        desc += IEmotes.bdayBadge + " **1 Year Anniversary**\n";
         desc += "Given to collectors who participated in the Gimme Cards 1 Year Anniversary event\n\n";
 
-        desc += originalBagde_ + " **Original Collector**\n";
+        desc += IEmotes.originalBagde + " **Original Collector**\n";
         desc += "Given to collectors who created their account before Gimme Cards was verified (e.g. before 2023)";
 
-        embed.setTitle(eevee_ + " All Badges " + eevee_);
+        embed.setTitle(IEmotes.eevee + " All Badges " + IEmotes.eevee);
         embed.setDescription(desc);
-        embed.setColor(help_);
-        GameObject.sendEmbed(event, embed);
+        embed.setColor(IColors.helpColor);
+        GameManager.sendEmbed(event, embed);
         embed.clear();
     }
 
@@ -103,14 +103,14 @@ public class HelpCmds extends Cmds {
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
-        desc += "[Click here](https://www.patreon.com/gimmecards) to join us on " + patreon_ + " **Patreon**\n\n";
+        desc += "[Click here](https://www.patreon.com/gimmecards) to join us on " + IEmotes.patreon + " **Patreon**\n\n";
         desc += "*Click on image for zoomed view*";
 
-        embed.setTitle(eevee_ + " Patreon Rewards " + eevee_);
+        embed.setTitle(IEmotes.eevee + " Patreon Rewards " + IEmotes.eevee);
         embed.setDescription(desc);
         embed.setImage("https://media.discordapp.net/attachments/1012866222657896558/1012866246393471027/Screen_Shot_2022-08-26_at_4.28.35_PM.png?width=694&height=598");
-        embed.setColor(help_);
-        GameObject.sendEmbed(event, embed);
+        embed.setColor(IColors.helpColor);
+        GameManager.sendEmbed(event, embed);
         embed.clear();
     }
 
@@ -119,6 +119,6 @@ public class HelpCmds extends Cmds {
         Server server = Server.findServer(event);
         HelpDisplay disp = new HelpDisplay(user.getUserId()).findDisplay();
 
-        GameObject.sendDynamicEmbed(event, user, server, disp, Changelog.changelog.length);
+        GameManager.sendDynamicEmbed(event, user, server, disp, IChangelog.changelog.length);
     }
 }

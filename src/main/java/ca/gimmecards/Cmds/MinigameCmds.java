@@ -1,6 +1,7 @@
 package ca.gimmecards.Cmds;
 import ca.gimmecards.Main.*;
 import ca.gimmecards.Display.*;
+import ca.gimmecards.OtherInterfaces.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
@@ -11,16 +12,16 @@ public class MinigameCmds extends Cmds {
         Server server = Server.findServer(event);
         MinigameDisplay disp = new MinigameDisplay(user.getUserId()).findDisplay();;
 
-        if(!GameObject.isCooldownDone(user.getMinigameEpoch(), 60, true)) {
-            GameObject.sendMessage(event, red_, "⏰", "Please wait another " 
-            + GameObject.findTimeLeft(user.getMinigameEpoch(), 60, true));
+        if(!User.isCooldownDone(user.getMinigameEpoch(), 60, true)) {
+            GameManager.sendMessage(event, IColors.red, "⏰", "Please wait another " 
+            + User.findTimeLeft(user.getMinigameEpoch(), 60, true));
 
         } else {
             user.resetMinigameEpoch();
 
             disp.resetGame();
             
-            GameObject.sendDynamicEmbed(event, user, server, disp, -1);
+            GameManager.sendDynamicEmbed(event, user, server, disp, -1);
             try { User.saveUsers(); } catch(Exception e) {}
         }
     }
@@ -34,7 +35,7 @@ public class MinigameCmds extends Cmds {
         if(rarity == null) { return; }
 
         if(disp.getIsOver()) {
-            GameObject.sendMessage(event, red_, "❌", "You haven't started a minigame yet!");
+            GameManager.sendMessage(event, IColors.red, "❌", "You haven't started a minigame yet!");
 
         } else {
             if(disp.isGuessCorrect(rarity.getAsString())) {
@@ -42,11 +43,11 @@ public class MinigameCmds extends Cmds {
 
                 disp.endGame(true);
 
-                msg += GameObject.formatNick(event) + " won the minigame!";
+                msg += GameManager.formatName(event) + " won the minigame!";
                 msg += user.updateTokens(2, true);
-                msg += user.updateCredits(GameObject.randRange(48, 60), false);
+                msg += user.updateCredits(GameManager.randRange(48, 60), false);
 
-                GameObject.sendMessage(event, user.getGameColor(), "🏆", msg);
+                GameManager.sendMessage(event, user.getGameColor(), "🏆", msg);
                 try { User.saveUsers(); } catch(Exception e) {}
 
             } else {
@@ -55,10 +56,10 @@ public class MinigameCmds extends Cmds {
 
                     disp.endGame(false);
 
-                    msg += GameObject.formatNick(event) + " lost the minigame... But there's always next time!";
-                    msg += user.updateCredits(GameObject.randRange(24, 30), true);
+                    msg += GameManager.formatName(event) + " lost the minigame... But there's always next time!";
+                    msg += user.updateCredits(GameManager.randRange(24, 30), true);
 
-                    GameObject.sendMessage(event, user.getGameColor(), "😭", msg);
+                    GameManager.sendMessage(event, user.getGameColor(), "😭", msg);
                     try { User.saveUsers(); } catch(Exception e) {}
 
                 } else {
@@ -70,7 +71,7 @@ public class MinigameCmds extends Cmds {
                     } else {
                         msg += "tries left!";
                     }
-                    GameObject.sendMessage(event, user.getGameColor(), clefairy_, msg);
+                    GameManager.sendMessage(event, user.getGameColor(), IEmotes.clefairy, msg);
                 }
             }
         }

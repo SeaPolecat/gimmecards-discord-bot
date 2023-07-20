@@ -1,5 +1,6 @@
 package ca.gimmecards.Cmds;
 import ca.gimmecards.Main.*;
+import ca.gimmecards.OtherInterfaces.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
@@ -13,7 +14,7 @@ public class SellCmds extends Cmds {
         if(cardNum == null) { return; }
         
         if(user.getCardContainers().size() < 1) {
-            GameObject.sendMessage(event, red_, "❌", "You don't have any cards to sell!");
+            GameManager.sendMessage(event, IColors.red, "❌", "You don't have any cards to sell!");
 
         } else {
             try {
@@ -24,23 +25,23 @@ public class SellCmds extends Cmds {
                 int creditsReward = (int)(profit * 0.02);
                 
                 if(profit == -1) {
-                    GameObject.sendMessage(event, red_, "❌", "Sorry, that card is in your favourites!");
+                    GameManager.sendMessage(event, IColors.red, "❌", "Sorry, that card is in your favourites!");
 
                 } else {
                     String msg = "";
 
-                    msg += GameObject.formatNick(event) + " sold **" + cardTitle + "**";
+                    msg += GameManager.formatName(event) + " sold **" + cardTitle + "**";
                     msg += user.updateXP(profit, true);
                     if(creditsReward > 0) {
                         msg += user.updateCredits(creditsReward, false);
                     }
                     msg += user.checkLevelUp(event);
                     
-                    GameObject.sendMessage(event, user.getGameColor(), "🎴", msg);
+                    GameManager.sendMessage(event, user.getGameColor(), "🎴", msg);
                     try { User.saveUsers(); } catch(Exception e) {}
                 }
             } catch(NumberFormatException | IndexOutOfBoundsException e) {
-                GameObject.sendMessage(event, red_, "❌", "Whoops, I couldn't find that card...");
+                GameManager.sendMessage(event, IColors.red, "❌", "Whoops, I couldn't find that card...");
             }
         }
     }
@@ -49,29 +50,29 @@ public class SellCmds extends Cmds {
         User user = User.findUser(event);
 
         if(user.getCardContainers().size() < 1) {
-            GameObject.sendMessage(event, red_, "❌", "You don't have any cards to sell!");
+            GameManager.sendMessage(event, IColors.red, "❌", "You don't have any cards to sell!");
 
         } else if(!hasDuplicates(user)) {
-            GameObject.sendMessage(event, red_, "❌", "You don't have any duplicate cards!");
+            GameManager.sendMessage(event, IColors.red, "❌", "You don't have any duplicate cards!");
 
         } else {
             int profit = findDuplicatesProfit(user);
             int creditsReward = (int)(profit * 0.02);
             
             if(profit == -1) {
-                GameObject.sendMessage(event, red_, "❌", "Sorry, all your duplicate cards are in your favourites!");
+                GameManager.sendMessage(event, IColors.red, "❌", "Sorry, all your duplicate cards are in your favourites!");
                 
             } else {
                 String msg = "";
 
-                msg += GameObject.formatNick(event) + " sold all duplicates!";
+                msg += GameManager.formatName(event) + " sold all duplicates!";
                 msg += user.updateXP(profit, true);
                 if(creditsReward > 0) {
                     msg += user.updateCredits(creditsReward, false);
                 }
                 msg += user.checkLevelUp(event);
     
-                GameObject.sendMessage(event, user.getGameColor(), "🎴", msg);
+                GameManager.sendMessage(event, user.getGameColor(), "🎴", msg);
                 try { User.saveUsers(); } catch(Exception e) {}
             }
         }
@@ -81,26 +82,26 @@ public class SellCmds extends Cmds {
         User user = User.findUser(event);
         
         if(user.getCardContainers().size() < 1) {
-            GameObject.sendMessage(event, red_, "❌", "You don't have any cards to sell!");
+            GameManager.sendMessage(event, IColors.red, "❌", "You don't have any cards to sell!");
 
         } else {
             int profit = findAllProfit(user);
             int creditsReward = (int)(profit * 0.02);
 
             if(profit == -1) {
-                GameObject.sendMessage(event, red_, "❌", "Sorry, all your cards are in your favourites!");
+                GameManager.sendMessage(event, IColors.red, "❌", "Sorry, all your cards are in your favourites!");
 
             } else {
                 String msg = "";
 
-                msg += GameObject.formatNick(event) + " sold all their cards! (except favourites)";
+                msg += GameManager.formatName(event) + " sold all their cards! (except favourites)";
                 msg += user.updateXP(profit, true);
                 if(creditsReward > 0) {
                     msg += user.updateCredits(creditsReward, false);
                 }
                 msg += user.checkLevelUp(event);
         
-                GameObject.sendMessage(event, user.getGameColor(), "🎴", msg);
+                GameManager.sendMessage(event, user.getGameColor(), "🎴", msg);
                 try { User.saveUsers(); } catch(Exception e) {}
             }
         }

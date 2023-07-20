@@ -1,18 +1,14 @@
 package ca.gimmecards.Display;
-import ca.gimmecards.Cmds.*;
-import ca.gimmecards.Display_.*;
 import ca.gimmecards.Main.*;
-import ca.gimmecards.OtherInterfaces.Colors;
-import ca.gimmecards.OtherInterfaces.Displays;
-import ca.gimmecards.OtherInterfaces.Emotes;
+import ca.gimmecards.Cmds.*;
+import ca.gimmecards.Display_MP.*;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
 import java.util.ArrayList;
-import javax.annotation.Nonnull;
 
-public class Display extends ListenerAdapter implements Displays, Emotes, Colors {
+public class Display extends ListenerAdapter {
 
     private String userId;
     private String slashId;
@@ -67,7 +63,7 @@ public class Display extends ListenerAdapter implements Displays, Emotes, Colors
         embed.setImage(card.getCardImage());
         embed.setFooter(footer, ui.getUserIcon());
         embed.setColor(card.findEmbedColour());
-        GameObject.sendEmbed(event, embed);
+        GameManager.sendEmbed(event, embed);
         embed.clear();
     }
 
@@ -76,7 +72,7 @@ public class Display extends ListenerAdapter implements Displays, Emotes, Colors
         int underscoreIndex = buttonId.indexOf("_");
         String choice = buttonId.substring(underscoreIndex + 1);
 
-        if(disp instanceof CardDisplay) {
+        if(disp instanceof CollectionDisplay) {
             if(user.getCardContainers().size() < 1) {
                 disp.setPage(1);
                 event.getMessage().delete().queue();
@@ -86,12 +82,12 @@ public class Display extends ListenerAdapter implements Displays, Emotes, Colors
                 while(user.getCardContainers().size() <= (disp.getPage() * 15) - 15) {
                     disp.prevPage();
                 }
-                GameObject.editEmbed(event, user, server, disp, disp.getPage());
+                GameManager.editEmbed(event, user, server, disp, disp.getPage());
                 return;
             }
 
-        } else if(disp instanceof CardDisplay_) {
-            CardDisplay_ disp_ = new CardDisplay_(user.getUserId()).findDisplay();
+        } else if(disp instanceof CardDisplay_MP) {
+            CardDisplay_MP disp_ = new CardDisplay_MP(user.getUserId()).findDisplay();
             User mention = disp_.getMention();
 
             if(mention.getCardContainers().size() < 1) {
@@ -103,7 +99,7 @@ public class Display extends ListenerAdapter implements Displays, Emotes, Colors
                 while(mention.getCardContainers().size() <= (disp.getPage() * 15) - 15) {
                     disp.prevPage();
                 }
-                GameObject.editEmbed(event, user, server, disp, disp.getPage());
+                GameManager.editEmbed(event, user, server, disp, disp.getPage());
                 return; 
             }
 
@@ -117,12 +113,12 @@ public class Display extends ListenerAdapter implements Displays, Emotes, Colors
                 while(user.getCardContainers().size() < disp.getPage()) {
                     disp.prevPage();
                 }
-                GameObject.editEmbed(event, user, server, disp, disp.getPage());
+                GameManager.editEmbed(event, user, server, disp, disp.getPage());
                 return;
             }
 
-        } else if(disp instanceof ViewDisplay_) {
-            ViewDisplay_ disp_ = new ViewDisplay_(user.getUserId()).findDisplay();
+        } else if(disp instanceof ViewDisplay_MP) {
+            ViewDisplay_MP disp_ = new ViewDisplay_MP(user.getUserId()).findDisplay();
             User mention = disp_.getMention();
 
             if(mention.getCardContainers().size() < 1) {
@@ -134,7 +130,7 @@ public class Display extends ListenerAdapter implements Displays, Emotes, Colors
                 while(mention.getCardContainers().size() < disp.getPage()) {
                     disp.prevPage();
                 }
-                GameObject.editEmbed(event, user, server, disp, disp.getPage());
+                GameManager.editEmbed(event, user, server, disp, disp.getPage());
                 return;
             }
         }
@@ -153,10 +149,10 @@ public class Display extends ListenerAdapter implements Displays, Emotes, Colors
                 disp.nextPage();
             }
         }
-        GameObject.editEmbed(event, user, server, disp, disp.getPage());
+        GameManager.editEmbed(event, user, server, disp, disp.getPage());
     }
 
-    public void onButtonInteraction(@Nonnull ButtonInteractionEvent event) {
+    public void onButtonInteraction(ButtonInteractionEvent event) {
         if(event.getComponentId().equalsIgnoreCase("deleteaccount_yes")) {
             PrivacyCmds.confirmDeletion(event);
 
@@ -169,7 +165,7 @@ public class Display extends ListenerAdapter implements Displays, Emotes, Colors
             ArrayList<Display> displays = new ArrayList<Display>();
 
             displays.add(new BackpackDisplay(user.getUserId()).findDisplay());
-            displays.add(new CardDisplay(user.getUserId()).findDisplay());
+            displays.add(new CollectionDisplay(user.getUserId()).findDisplay());
             displays.add(new HelpDisplay(user.getUserId()).findDisplay());
             displays.add(new LeaderboardDisplay(user.getUserId()).findDisplay());
             displays.add(new MarketDisplay(user.getUserId()).findDisplay());
@@ -180,9 +176,9 @@ public class Display extends ListenerAdapter implements Displays, Emotes, Colors
             displays.add(new TradeDisplay(user.getUserId()).findDisplay());
             displays.add(new ViewDisplay(user.getUserId()).findDisplay());
             //
-            displays.add(new BackpackDisplay_(user.getUserId()).findDisplay());
-            displays.add(new CardDisplay_(user.getUserId()).findDisplay());
-            displays.add(new ViewDisplay_(user.getUserId()).findDisplay());
+            displays.add(new BackpackDisplay_MP(user.getUserId()).findDisplay());
+            displays.add(new CardDisplay_MP(user.getUserId()).findDisplay());
+            displays.add(new ViewDisplay_MP(user.getUserId()).findDisplay());
             //
             String buttonId = event.getComponentId();
             int semiColIndex = buttonId.indexOf(";");

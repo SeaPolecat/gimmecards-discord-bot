@@ -1,6 +1,7 @@
 package ca.gimmecards.Cmds;
 import ca.gimmecards.Main.*;
 import ca.gimmecards.Display.*;
+import ca.gimmecards.OtherInterfaces.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import java.util.ArrayList;
@@ -17,16 +18,16 @@ public class TradeCmds extends Cmds {
         if(user_ == null) { return; }
 
         if(disp.tradeExists(user.getUserId())) {
-            GameObject.sendMessage(event, red_, "❌", "You're in a trade already!");
+            GameManager.sendMessage(event, IColors.red, "❌", "You're in a trade already!");
             
         } else {
             User mention = User.findOtherUser(event, user_.getAsUser().getId());
 
             if(disp.tradeExists(mention.getUserId())) {
-                GameObject.sendMessage(event, red_, "❌", "That user is in a trade already!");
+                GameManager.sendMessage(event, IColors.red, "❌", "That user is in a trade already!");
 
             } else if(mention.getUserId().equals(user.getUserId())) {
-                GameObject.sendMessage(event, red_, "❌", "You can't trade with yourself!");
+                GameManager.sendMessage(event, IColors.red, "❌", "You can't trade with yourself!");
 
             } else {
                 disp.setUser1(user);
@@ -34,7 +35,7 @@ public class TradeCmds extends Cmds {
                 disp.setUserInfo1(new UserInfo(event));
                 disp.setUserInfo2(new UserInfo(mention, event));
 
-                GameObject.sendDynamicEmbed(event, user, server, disp, -1);
+                GameManager.sendDynamicEmbed(event, user, server, disp, -1);
             }
         }
     }
@@ -48,10 +49,10 @@ public class TradeCmds extends Cmds {
         if(cardNum == null) { return; }
 
         if(disp.getUserId().isEmpty()) {
-            GameObject.sendMessage(event, red_, "❌", "You haven't started a trade yet!");
+            GameManager.sendMessage(event, IColors.red, "❌", "You haven't started a trade yet!");
 
         } else if(disp.oneAccepted()) {
-            GameObject.sendMessage(event, red_, "❌", "Both players must unaccept first!");
+            GameManager.sendMessage(event, IColors.red, "❌", "Both players must unaccept first!");
 
         } else {
             try {
@@ -62,20 +63,20 @@ public class TradeCmds extends Cmds {
                 String cardTitle = card.findCardTitle(false);
 
                 if(offers.size() >= 5) {
-                    GameObject.sendMessage(event, red_, "❌", "Sorry, all your trade slots are full!");
+                    GameManager.sendMessage(event, IColors.red, "❌", "Sorry, all your trade slots are full!");
 
                 } else if(!isValidOffer(offers, cc)) {
-                    GameObject.sendMessage(event, red_, "❌", "You can't offer any more of that card!");
+                    GameManager.sendMessage(event, IColors.red, "❌", "You can't offer any more of that card!");
 
                 } else {
                     if(card.isCardSellable()) {
                         disp.addTax(user.getUserId(), (int)(card.getCardPrice() * 0.25));
                     }
 
-                    GameObject.sendMessage(event, user.getGameColor(), ditto_, GameObject.formatNick(event) + " offers **" + cardTitle + "**");
+                    GameManager.sendMessage(event, user.getGameColor(), IEmotes.ditto, GameManager.formatName(event) + " offers **" + cardTitle + "**");
                 }
             } catch(NumberFormatException | IndexOutOfBoundsException e) {
-                GameObject.sendMessage(event, red_, "❌", "Whoops, I couldn't find that card...");
+                GameManager.sendMessage(event, IColors.red, "❌", "Whoops, I couldn't find that card...");
             }
         }
     }
@@ -89,10 +90,10 @@ public class TradeCmds extends Cmds {
         if(tradeNum == null) { return; }
 
         if(disp.getUserId().isEmpty()) {
-            GameObject.sendMessage(event, red_, "❌", "You haven't started a trade yet!");
+            GameManager.sendMessage(event, IColors.red, "❌", "You haven't started a trade yet!");
 
         } else if(disp.oneAccepted()) {
-            GameObject.sendMessage(event, red_, "❌", "Both players must unaccept first!");
+            GameManager.sendMessage(event, IColors.red, "❌", "Both players must unaccept first!");
 
         } else {
             try {
@@ -111,10 +112,10 @@ public class TradeCmds extends Cmds {
                     disp.addTax(user.getUserId(), -(int)(card.getCardPrice() * 0.25));
                 }
 
-                GameObject.sendMessage(event, user.getGameColor(), ditto_, GameObject.formatNick(event) + " took back **" + cardTitle + "**");
+                GameManager.sendMessage(event, user.getGameColor(), IEmotes.ditto, GameManager.formatName(event) + " took back **" + cardTitle + "**");
 
             } catch(NumberFormatException | IndexOutOfBoundsException e) {
-                GameObject.sendMessage(event, red_, "❌", "Whoops, I couldn't find that card...");
+                GameManager.sendMessage(event, IColors.red, "❌", "Whoops, I couldn't find that card...");
             }
         }
     }
@@ -124,32 +125,32 @@ public class TradeCmds extends Cmds {
         TradeDisplay disp = new TradeDisplay(user.getUserId()).findDisplay();
 
         if(disp.getUserId().isEmpty()) {
-            GameObject.sendMessage(event, red_, "❌", "You haven't started a trade yet!");
+            GameManager.sendMessage(event, IColors.red, "❌", "You haven't started a trade yet!");
 
         } else if(disp.getAccept(user.getUserId())) {
-            GameObject.sendMessage(event, red_, "❌", "You've already accepted the trade!");
+            GameManager.sendMessage(event, IColors.red, "❌", "You've already accepted the trade!");
 
         } else if(disp.getUser(user.getUserId()).getCredits() < disp.getTax(user.getUserId())) {
-            GameObject.sendMessage(event, red_, "❌", "Sorry, you don't have enough " + credits_ + " **Credits**");
+            GameManager.sendMessage(event, IColors.red, "❌", "Sorry, you don't have enough " + IEmotes.credits + " **Credits**");
 
         } else {
             disp.setAccept(user.getUserId(), true);
 
             if(!disp.bothAccepted()) {
-                GameObject.sendMessage(event, user.getGameColor(), "✅", GameObject.formatNick(event) 
+                GameManager.sendMessage(event, user.getGameColor(), "✅", GameManager.formatName(event) 
                 + " accepted the trade! Waiting for the other player...");
 
             } else {
                 String msg = "";
 
-                msg += GameObject.formatNick(event) + " accepted and completed the trade!";
+                msg += GameManager.formatName(event) + " accepted and completed the trade!";
                 msg += user.updateCredits(-disp.getTax(user.getUserId()), true) + "\n\n";
 
                 if(disp.isUser1(user.getUserId())) {
-                    msg += GameObject.formatNick(disp.getUser2(), event) + "'s Trading Fee:";
+                    msg += GameManager.formatName(disp.getUser2(), event) + "'s Trading Fee:";
                     msg += disp.getUser2().updateCredits(-disp.getTax2(), true) + "\n";
                 } else {
-                    msg += GameObject.formatNick(disp.getUser1(), event) + "'s Trading Fee:";
+                    msg += GameManager.formatName(disp.getUser1(), event) + "'s Trading Fee:";
                     msg += disp.getUser1().updateCredits(-disp.getTax1(), true) + "\n";
                 }
                 tradeCards(disp.getUser1(), disp.getOffers1(), disp.getOffers2());
@@ -157,7 +158,7 @@ public class TradeCmds extends Cmds {
 
                 disp.removeTradeDisplay();
 
-                GameObject.sendMessage(event, user.getGameColor(), "✅", msg);
+                GameManager.sendMessage(event, user.getGameColor(), "✅", msg);
                 try { User.saveUsers(); } catch(Exception e) {}
             }
         }
@@ -168,15 +169,15 @@ public class TradeCmds extends Cmds {
         TradeDisplay disp = new TradeDisplay(user.getUserId()).findDisplay();
 
         if(disp.getUserId().isEmpty()) {
-            GameObject.sendMessage(event, red_, "❌", "You haven't started a trade yet!");
+            GameManager.sendMessage(event, IColors.red, "❌", "You haven't started a trade yet!");
 
         } else if(!disp.getAccept(user.getUserId())) {
-            GameObject.sendMessage(event, red_, "❌", "You've already unaccepted the trade!");
+            GameManager.sendMessage(event, IColors.red, "❌", "You've already unaccepted the trade!");
 
         } else {
             disp.setAccept(user.getUserId(), false);
 
-            GameObject.sendMessage(event, user.getGameColor(), "⏳", GameObject.formatNick(event) 
+            GameManager.sendMessage(event, user.getGameColor(), "⏳", GameManager.formatName(event) 
             + " needs more time to decide!");
         }
     }
@@ -186,14 +187,14 @@ public class TradeCmds extends Cmds {
         TradeDisplay disp = new TradeDisplay(user.getUserId()).findDisplay();
 
         if(disp.getUserId().isEmpty()) {
-            GameObject.sendMessage(event, red_, "❌", "You haven't started a trade yet!");
+            GameManager.sendMessage(event, IColors.red, "❌", "You haven't started a trade yet!");
 
         } else {
             disp.setReject(user.getUserId(), true);
             
             disp.removeTradeDisplay();
 
-            GameObject.sendMessage(event, user.getGameColor(), "🛑", GameObject.formatNick(event) 
+            GameManager.sendMessage(event, user.getGameColor(), "🛑", GameManager.formatName(event) 
             + " rejected the trade! Maybe next time...");
         }
     }

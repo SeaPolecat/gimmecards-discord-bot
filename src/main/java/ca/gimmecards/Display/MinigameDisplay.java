@@ -1,5 +1,6 @@
 package ca.gimmecards.Display;
 import ca.gimmecards.Main.*;
+import ca.gimmecards.OtherInterfaces.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 public class MinigameDisplay extends Display {
@@ -43,13 +44,13 @@ public class MinigameDisplay extends Display {
     public MinigameDisplay findDisplay() {
         String userId = getUserId();
 
-        for(MinigameDisplay m : minigameDisplays) {
+        for(MinigameDisplay m : IDisplays.minigameDisplays) {
             if(m.getUserId().equals(userId)) {
                 return m;
             }
         }
-        minigameDisplays.add(0, new MinigameDisplay(userId));
-        return minigameDisplays.get(0);
+        IDisplays.minigameDisplays.add(0, new MinigameDisplay(userId));
+        return IDisplays.minigameDisplays.get(0);
     }
 
     public boolean isGuessCorrect(String guess) {
@@ -92,11 +93,11 @@ public class MinigameDisplay extends Display {
         desc += "**Tries Left** ┇ " + tries + "\n\n";
         desc += "*Click on image for zoomed view*";
 
-        embed.setTitle(clefairy_ + " Guess My Rarity " + clefairy_);
+        embed.setTitle(IEmotes.clefairy + " Guess My Rarity " + IEmotes.clefairy);
         embed.setDescription(desc);
         embed.setImage(cardImage);
         embed.setFooter(ui.getUserName() + "'s minigame", ui.getUserIcon());
-        embed.setColor(minigame_);
+        embed.setColor(IColors.minigameColor);
         return embed;
     }
 }

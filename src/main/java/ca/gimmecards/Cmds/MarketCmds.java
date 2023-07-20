@@ -1,6 +1,7 @@
 package ca.gimmecards.Cmds;
 import ca.gimmecards.Main.*;
 import ca.gimmecards.Display.*;
+import ca.gimmecards.OtherInterfaces.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.entities.Guild;
@@ -16,10 +17,10 @@ public class MarketCmds extends Cmds {
         int count = 1;
 
         if(guild != null) {
-            if(GameObject.isCooldownDone(server.getMarketEpoch(), 1440, true)) {
+            if(User.isCooldownDone(server.getMarketEpoch(), 1440, true)) {
                 server.refreshMarket();
             }
-            desc += "Next refresh in " + GameObject.findTimeLeft(server.getMarketEpoch(), 1440, true) + "\n";
+            desc += "Next refresh in " + User.findTimeLeft(server.getMarketEpoch(), 1440, true) + "\n";
             desc += "┅┅\n";
             for(Card item : server.getMarket()) {
                 
@@ -30,11 +31,11 @@ public class MarketCmds extends Cmds {
                 count++;
             }
             desc += "┅┅\n";
-            embed.setTitle(mew_ + " Daily Market " + mew_);
+            embed.setTitle(IEmotes.mew + " Daily Market " + IEmotes.mew);
             embed.setDescription(desc);
             embed.setFooter(guild.getName(), guild.getIconUrl());
-            embed.setColor(market_);
-            GameObject.sendEmbed(event, embed);
+            embed.setColor(IColors.marketColor);
+            GameManager.sendEmbed(event, embed);
             embed.clear();
         }
     }
@@ -51,10 +52,10 @@ public class MarketCmds extends Cmds {
         try {
             int page = cardNum.getAsInt();
 
-            GameObject.sendDynamicEmbed(event, user, server, disp, page);
+            GameManager.sendDynamicEmbed(event, user, server, disp, page);
 
         } catch(NumberFormatException | IndexOutOfBoundsException e) {
-            GameObject.sendMessage(event, red_, "❌", "Whoops, I couldn't find that card...");
+            GameManager.sendMessage(event, IColors.red, "❌", "Whoops, I couldn't find that card...");
         }
     }
 
@@ -67,9 +68,9 @@ public class MarketCmds extends Cmds {
 
         if(cardNum == null) { return; }
 
-        if(!GameObject.isCooldownDone(user.getMarketEpoch(), 15, true)) {
-            GameObject.sendMessage(event, red_, "⏰", "Please wait another " 
-            + GameObject.findTimeLeft(user.getMarketEpoch(), 15, true));
+        if(!User.isCooldownDone(user.getMarketEpoch(), 15, true)) {
+            GameManager.sendMessage(event, IColors.red, "⏰", "Please wait another " 
+            + User.findTimeLeft(user.getMarketEpoch(), 15, true));
 
         } else {
             try {
@@ -77,14 +78,14 @@ public class MarketCmds extends Cmds {
                 Card item = server.getMarket().get(index);
     
                 if(user.getCredits() < item.getCardPrice()) {
-                    GameObject.sendMessage(event, red_, "❌", "Sorry, you don't have enough " + credits_ + " **Credits**");
+                    GameManager.sendMessage(event, IColors.red, "❌", "Sorry, you don't have enough " + IEmotes.credits + " **Credits**");
     
                 } else {
                     String msg = "";
                     String footer = ui.getUserName() + "'s purchase";
     
-                    msg += mew_ + " ";
-                    msg += GameObject.formatNick(event) + " bought " + item.findCardTitle(false) + " from the market!";
+                    msg += IEmotes.mew + " ";
+                    msg += GameManager.formatName(event) + " bought " + item.findCardTitle(false) + " from the market!";
                     msg += user.updateCredits(-item.getCardPrice(), true);
 
                     user.resetMarketEpoch();
@@ -95,7 +96,7 @@ public class MarketCmds extends Cmds {
                     try { User.saveUsers(); } catch(Exception e) {}
                 }
             } catch(NumberFormatException | IndexOutOfBoundsException e) {
-                GameObject.sendMessage(event, red_, "❌", "Whoops, I couldn't find that card...");
+                GameManager.sendMessage(event, IColors.red, "❌", "Whoops, I couldn't find that card...");
             }
         }
     }

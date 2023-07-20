@@ -1,6 +1,7 @@
 package ca.gimmecards.Cmds;
 import ca.gimmecards.Main.*;
 import ca.gimmecards.Display.*;
+import ca.gimmecards.OtherInterfaces.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
@@ -15,16 +16,16 @@ public class GiftCmds extends Cmds {
         if(user_ == null || amount == null) { return; }
 
         if(!user.getUserId().equals("454773340163538955")) {
-            GameObject.sendMessage(event, red_, "❌", "Only the owner of Gimme Cards can use this command!");
+            GameManager.sendMessage(event, IColors.red, "❌", "Only the owner of Gimme Cards can use this command!");
 
         } else {
             String msg = "";
             User mention = User.findOtherUser(event, user_.getAsUser().getId());
 
-            msg += GameObject.formatNick(mention, event) + " has received a gift of tokens!";
+            msg += GameManager.formatName(mention, event) + " has received a gift of tokens!";
             msg += mention.updateTokens(amount.getAsInt(), true);
 
-            GameObject.sendMessage(event, mention.getGameColor(), "🎒", msg);
+            GameManager.sendMessage(event, mention.getGameColor(), "🎒", msg);
             try { User.saveUsers(); } catch(Exception e) {}
         }
     }
@@ -38,16 +39,16 @@ public class GiftCmds extends Cmds {
         if(user_ == null || amount == null) { return; }
 
         if(!user.getUserId().equals("454773340163538955")) {
-            GameObject.sendMessage(event, red_, "❌", "Only the owner of Gimme Cards can use this command!");
+            GameManager.sendMessage(event, IColors.red, "❌", "Only the owner of Gimme Cards can use this command!");
 
         } else {
             String msg = "";
             User mention = User.findOtherUser(event, user_.getAsUser().getId());
 
-            msg += GameObject.formatNick(mention, event) + " has received a gift of stars!";
+            msg += GameManager.formatName(mention, event) + " has received a gift of stars!";
             msg += mention.updateStars(amount.getAsInt(), true);
 
-            GameObject.sendMessage(event, mention.getGameColor(), "🎒", msg);
+            GameManager.sendMessage(event, mention.getGameColor(), "🎒", msg);
             try { User.saveUsers(); } catch(Exception e) {}
         }
     }
@@ -61,7 +62,7 @@ public class GiftCmds extends Cmds {
         if(user_ == null || cardId == null) { return; }
 
         if(!user.getUserId().equals("454773340163538955")) {
-            GameObject.sendMessage(event, red_, "❌", "Only the owner of Gimme Cards can use this command!");
+            GameManager.sendMessage(event, IColors.red, "❌", "Only the owner of Gimme Cards can use this command!");
 
         } else {
             try {
@@ -73,7 +74,7 @@ public class GiftCmds extends Cmds {
                 String footer = mi.getUserName() + "'s gift";
 
                 msg += "🎴 ";
-                msg += GameObject.formatNick(mention, event) + " has received the gift of **" + cardTitle + "**";
+                msg += GameManager.formatName(mention, event) + " has received the gift of **" + cardTitle + "**";
 
                 mention.addSingleCard(item, true);
                 
@@ -81,7 +82,7 @@ public class GiftCmds extends Cmds {
                 try { User.saveUsers(); } catch(Exception e) {}
     
             } catch(NullPointerException e) {
-                GameObject.sendMessage(event, red_, "❌", "Whoops, I couldn't find that card...");
+                GameManager.sendMessage(event, IColors.red, "❌", "Whoops, I couldn't find that card...");
             }
         }
     }

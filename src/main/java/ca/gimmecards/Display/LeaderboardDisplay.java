@@ -1,5 +1,6 @@
 package ca.gimmecards.Display;
 import ca.gimmecards.Main.*;
+import ca.gimmecards.OtherInterfaces.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 import java.util.ArrayList;
 
@@ -28,13 +29,13 @@ public class LeaderboardDisplay extends Display {
     public LeaderboardDisplay findDisplay() {
         String userId = getUserId();
 
-        for(LeaderboardDisplay l : leaderboardDisplays) {
+        for(LeaderboardDisplay l : IDisplays.leaderboardDisplays) {
             if(l.getUserId().equals(userId)) {
                 return l;
             }
         }
-        leaderboardDisplays.add(0, new LeaderboardDisplay(userId));
-        return leaderboardDisplays.get(0);
+        IDisplays.leaderboardDisplays.add(0, new LeaderboardDisplay(userId));
+        return IDisplays.leaderboardDisplays.get(0);
     }
 
     private int findSelfRank(String userId) {
@@ -81,8 +82,8 @@ public class LeaderboardDisplay extends Display {
             }
             desc += " ┇ **" + pi.getUserName() + "**"
             + " ┇ *" + "Lvl. " + player.getLevel() + "*"
-            + " ┇ " + XP_ + " `" + GameObject.formatNumber(player.getXP()) 
-            + " / " + GameObject.formatNumber(player.getMaxXP()) + "`\n";
+            + " ┇ " + IEmotes.XP + " `" + GameManager.formatNumber(player.getXP()) 
+            + " / " + GameManager.formatNumber(player.getMaxXP()) + "`\n";
 
             if(i >= players.size() - 1) {
                 break;
@@ -90,11 +91,11 @@ public class LeaderboardDisplay extends Display {
         }
         desc += "┅┅\n";
         if(dispType.equalsIgnoreCase("ranks")) {
-            embed.setTitle(trainer_ + " Top Collectors Here " + trainer_);
-            embed.setColor(ranks_);
+            embed.setTitle(IEmotes.trainer + " Top Collectors Here " + IEmotes.trainer);
+            embed.setColor(IColors.ranksColor);
         } else if(dispType.equalsIgnoreCase("leaderboard")) {
-            embed.setTitle(logo_ + " World's Top Collectors " + logo_);
-            embed.setColor(blue_);
+            embed.setTitle(IEmotes.logo + " World's Top Collectors " + IEmotes.logo);
+            embed.setColor(IColors.blue);
         }
         embed.setDescription(desc);
         embed.setFooter("Page " + page + " of " + getMaxPage(), ui.getUserIcon());

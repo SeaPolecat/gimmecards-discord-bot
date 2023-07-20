@@ -1,5 +1,6 @@
 package ca.gimmecards.Display;
 import ca.gimmecards.Main.*;
+import ca.gimmecards.OtherInterfaces.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 import java.util.ArrayList;
 
@@ -27,13 +28,13 @@ public class ViewDisplay extends Display {
     public ViewDisplay findDisplay() {
         String userId = getUserId();
 
-        for(ViewDisplay i : viewDisplays) {
-            if(i.getUserId().equals(userId)) {
-                return i;
+        for(ViewDisplay v : IDisplays.viewDisplays) {
+            if(v.getUserId().equals(userId)) {
+                return v;
             }
         }
-        viewDisplays.add(0, new ViewDisplay(userId));
-        return viewDisplays.get(0);
+        IDisplays.viewDisplays.add(0, new ViewDisplay(userId));
+        return IDisplays.viewDisplays.get(0);
     }
 
     @Override

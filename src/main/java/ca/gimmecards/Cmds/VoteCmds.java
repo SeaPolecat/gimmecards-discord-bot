@@ -1,5 +1,6 @@
 package ca.gimmecards.Cmds;
 import ca.gimmecards.Main.*;
+import ca.gimmecards.OtherInterfaces.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
 import java.io.IOException;
@@ -14,9 +15,9 @@ public class VoteCmds extends Cmds {
         User user = User.findUser(event);
         Server server = Server.findServer(event);
 
-        if(!GameObject.isCooldownDone(user.getVoteEpoch(), 720, true)) {
-            GameObject.sendMessage(event, red_, "⏰", "Please wait another " 
-            + GameObject.findTimeLeft(user.getVoteEpoch(), 720, true));
+        if(!User.isCooldownDone(user.getVoteEpoch(), 720, true)) {
+            GameManager.sendMessage(event, IColors.red, "⏰", "Please wait another " 
+            + User.findTimeLeft(user.getVoteEpoch(), 720, true));
 
         } else {
             EmbedBuilder embed = new EmbedBuilder();
@@ -25,10 +26,10 @@ public class VoteCmds extends Cmds {
             desc += "Use the link below to vote, then type " + server.formatCmd("claim") + " to claim your reward!\n\n";
             desc += "[Vote on Top.gg](https://top.gg/bot/814025499381727232/vote)";
     
-            embed.setTitle(lootbox_ + " Voting Reward " + lootbox_);
+            embed.setTitle(IEmotes.lootbox + " Voting Reward " + IEmotes.lootbox);
             embed.setDescription(desc);
-            embed.setColor(vote_);
-            GameObject.sendEmbed(event, embed);
+            embed.setColor(IColors.voteColor);
+            GameManager.sendEmbed(event, embed);
             embed.clear();
         }
     }
@@ -37,9 +38,9 @@ public class VoteCmds extends Cmds {
         User user = User.findUser(event);
         Server server = Server.findServer(event);
 
-        if(!GameObject.isCooldownDone(user.getVoteEpoch(), 720, true)) {
-            GameObject.sendMessage(event, red_, "⏰", "Please wait another " 
-            + GameObject.findTimeLeft(user.getVoteEpoch(), 720, true));
+        if(!User.isCooldownDone(user.getVoteEpoch(), 720, true)) {
+            GameManager.sendMessage(event, IColors.red, "⏰", "Please wait another " 
+            + User.findTimeLeft(user.getVoteEpoch(), 720, true));
 
         } else {
             try {
@@ -53,7 +54,7 @@ public class VoteCmds extends Cmds {
                 boolean hasVoted = response.contains("1");
     
                 if(!hasVoted) {
-                    GameObject.sendMessage(event, red_, "❌", "You haven't voted for *Gimme Cards* yet! "
+                    GameManager.sendMessage(event, IColors.red, "❌", "You haven't voted for *Gimme Cards* yet! "
                     + "Please use " + server.formatCmd("vote"));
 
                 } else {
@@ -61,12 +62,12 @@ public class VoteCmds extends Cmds {
 
                     user.resetVoteEpoch();
 
-                    msg += GameObject.formatNick(event) + " claimed their gift! Thank you for voting 😊";
+                    msg += GameManager.formatName(event) + " claimed their gift! Thank you for voting 😊";
                     msg += user.updateTokens(5, true);
-                    msg += user.updateCredits(GameObject.randRange(120, 150), false);
+                    msg += user.updateCredits(GameManager.randRange(120, 150), false);
                     msg += user.updateStars(1, false);
 
-                    GameObject.sendMessage(event, user.getGameColor(), lootbox_, msg);
+                    GameManager.sendMessage(event, user.getGameColor(), IEmotes.lootbox, msg);
                     try { User.saveUsers(); } catch(Exception e) {}
                 }
             } catch(IOException | InterruptedException e) {}

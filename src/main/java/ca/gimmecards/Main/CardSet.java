@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.net.URL;
 
-public class CardSet extends GameObject implements ICardSet {
+public class CardSet extends GameManager implements ICardSet {
 
     public static Hashtable<Integer, String> setCodes = new Hashtable<>();
     public static Hashtable<Integer, String> oldSetCodes = new Hashtable<>();
@@ -65,7 +65,7 @@ public class CardSet extends GameObject implements ICardSet {
     //============================================[ PUBLIC STATIC FUNCTIONS ]==========================================================
 
     public static void loadSets() throws Exception {
-        Reader reader = new InputStreamReader(new FileInputStream(GameObject.findSavePath(GameObject.setsPath)), "UTF-8");
+        Reader reader = new InputStreamReader(new FileInputStream(GameManager.findSavePath(GameManager.setsPath)), "UTF-8");
         sets = new Gson().fromJson(reader, CardSet[].class);
 
         reader.close();
@@ -73,13 +73,13 @@ public class CardSet extends GameObject implements ICardSet {
 
     public static void saveSets() throws Exception {
         Gson gson = new GsonBuilder().create();
-        Writer writer = new OutputStreamWriter(new FileOutputStream(GameObject.findSavePath(GameObject.setsPath)), "UTF-8");
+        Writer writer = new OutputStreamWriter(new FileOutputStream(GameManager.findSavePath(GameManager.setsPath)), "UTF-8");
         gson.toJson(sets, writer);
         writer.close();
     }
 
     public static void loadOldSets() throws Exception {
-        Reader reader = new InputStreamReader(new FileInputStream(GameObject.findSavePath(GameObject.oldSetsPath)), "UTF-8");
+        Reader reader = new InputStreamReader(new FileInputStream(GameManager.findSavePath(GameManager.oldSetsPath)), "UTF-8");
         oldSets = new Gson().fromJson(reader, CardSet[].class);
 
         reader.close();
@@ -87,13 +87,13 @@ public class CardSet extends GameObject implements ICardSet {
 
     public static void saveOldSets() throws Exception {
         Gson gson = new GsonBuilder().create();
-        Writer writer = new OutputStreamWriter(new FileOutputStream(GameObject.findSavePath(GameObject.oldSetsPath)), "UTF-8");
+        Writer writer = new OutputStreamWriter(new FileOutputStream(GameManager.findSavePath(GameManager.oldSetsPath)), "UTF-8");
         gson.toJson(oldSets, writer);
         writer.close();
     }
 
     public static void loadRareSets() throws Exception {
-        Reader reader = new InputStreamReader(new FileInputStream(GameObject.findSavePath(GameObject.rareSetsPath)), "UTF-8");
+        Reader reader = new InputStreamReader(new FileInputStream(GameManager.findSavePath(GameManager.rareSetsPath)), "UTF-8");
         rareSets = new Gson().fromJson(reader, CardSet[].class);
 
         reader.close();
@@ -101,13 +101,13 @@ public class CardSet extends GameObject implements ICardSet {
 
     public static void saveRareSets() throws Exception {
         Gson gson = new GsonBuilder().create();
-        Writer writer = new OutputStreamWriter(new FileOutputStream(GameObject.findSavePath(GameObject.rareSetsPath)), "UTF-8");
+        Writer writer = new OutputStreamWriter(new FileOutputStream(GameManager.findSavePath(GameManager.rareSetsPath)), "UTF-8");
         gson.toJson(rareSets, writer);
         writer.close();
     }
 
     public static void loadPromoSets() throws Exception {
-        Reader reader = new InputStreamReader(new FileInputStream(GameObject.findSavePath(GameObject.promoSetsPath)), "UTF-8");
+        Reader reader = new InputStreamReader(new FileInputStream(GameManager.findSavePath(GameManager.promoSetsPath)), "UTF-8");
         promoSets = new Gson().fromJson(reader, CardSet[].class);
 
         reader.close();
@@ -115,7 +115,7 @@ public class CardSet extends GameObject implements ICardSet {
 
     public static void savePromoSets() throws Exception {
         Gson gson = new GsonBuilder().create();
-        Writer writer = new OutputStreamWriter(new FileOutputStream(GameObject.findSavePath(GameObject.promoSetsPath)), "UTF-8");
+        Writer writer = new OutputStreamWriter(new FileOutputStream(GameManager.findSavePath(GameManager.promoSetsPath)), "UTF-8");
         gson.toJson(promoSets, writer);
         writer.close();
     }

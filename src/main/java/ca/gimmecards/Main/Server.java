@@ -79,7 +79,7 @@ public class Server implements IServer {
      * @throws Exception just needs it
      */
     public static void loadServers() throws Exception {
-        Reader reader = new InputStreamReader(new FileInputStream(GameObject.findSavePath(GameObject.serverPath)), "UTF-8");
+        Reader reader = new InputStreamReader(new FileInputStream(GameManager.findSavePath(GameManager.serverPath)), "UTF-8");
         servers = new Gson().fromJson(reader, new TypeToken<ArrayList<Server>>() {}.getType());
 
         for(Server s : servers) {
@@ -94,7 +94,7 @@ public class Server implements IServer {
      */
     public static void saveServers() throws Exception {
         Gson gson = new GsonBuilder().create();
-        Writer writer = new OutputStreamWriter(new FileOutputStream(GameObject.findSavePath(GameObject.serverPath)), "UTF-8");
+        Writer writer = new OutputStreamWriter(new FileOutputStream(GameManager.findSavePath(GameManager.serverPath)), "UTF-8");
         ArrayList<Server> encServers = new ArrayList<Server>();
         
         for(Server s : servers) {

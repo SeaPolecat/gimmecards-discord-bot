@@ -1,5 +1,6 @@
 package ca.gimmecards.Display;
 import ca.gimmecards.Main.*;
+import ca.gimmecards.OtherInterfaces.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 public class MarketDisplay extends Display {
@@ -12,13 +13,13 @@ public class MarketDisplay extends Display {
     public MarketDisplay findDisplay() {
         String userId = getUserId();
 
-        for(MarketDisplay m : marketDisplays) {
+        for(MarketDisplay m : IDisplays.marketDisplays) {
             if(m.getUserId().equals(userId)) {
                 return m;
             }
         }
-        marketDisplays.add(0, new MarketDisplay(userId));
-        return marketDisplays.get(0);
+        IDisplays.marketDisplays.add(0, new MarketDisplay(userId));
+        return IDisplays.marketDisplays.get(0);
     }
 
     @Override

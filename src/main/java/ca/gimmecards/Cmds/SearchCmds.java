@@ -1,7 +1,7 @@
 package ca.gimmecards.Cmds;
 import ca.gimmecards.Main.*;
-import ca.gimmecards.OtherInterfaces.CustomCards;
 import ca.gimmecards.Display.*;
+import ca.gimmecards.OtherInterfaces.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import java.util.ArrayList;
@@ -29,13 +29,13 @@ public class SearchCmds extends Cmds {
         }
 
         if(searchedCards.size() < 1) {
-            GameObject.sendMessage(event, red_, "❌", "Sorry, your search had no results!");
+            GameManager.sendMessage(event, IColors.red, "❌", "Sorry, your search had no results!");
 
         } else {
             disp.setKey(keywords.getAsString());
             disp.setSearchedCards(searchedCards);
             
-            GameObject.sendDynamicEmbed(event, user, null, disp, 1);
+            GameManager.sendDynamicEmbed(event, user, null, disp, 1);
         }
     }
 
@@ -54,7 +54,7 @@ public class SearchCmds extends Cmds {
             Display.displayCard(event, user, ui, card, "", footer, false);
 
         } catch(NullPointerException e) {
-            GameObject.sendMessage(event, red_, "❌", "Whoops, I couldn't find that card...");
+            GameManager.sendMessage(event, IColors.red, "❌", "Whoops, I couldn't find that card...");
         }
     }
 
@@ -131,7 +131,7 @@ public class SearchCmds extends Cmds {
                 }
             }
         }
-        for(Card card : CustomCards.customs) {
+        for(Card card : ICustomCards.customs) {
             String name = findName(card, sortMethod);
             
             if(name.toLowerCase().contains(key.toLowerCase())) {
