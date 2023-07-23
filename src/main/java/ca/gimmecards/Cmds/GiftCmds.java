@@ -1,11 +1,10 @@
 package ca.gimmecards.Cmds;
 import ca.gimmecards.Main.*;
-import ca.gimmecards.Display.*;
 import ca.gimmecards.OtherInterfaces.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
-public class GiftCmds extends Cmds {
+public class GiftCmds {
     
     public static void giftToken(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
@@ -78,7 +77,7 @@ public class GiftCmds extends Cmds {
 
                 mention.addSingleCard(item, true);
                 
-                Display.displayCard(event, mention, mi, item, msg, footer, true);
+                item.displayCard(event, mi, msg, footer, true);
                 try { User.saveUsers(); } catch(Exception e) {}
     
             } catch(NullPointerException e) {

@@ -5,7 +5,7 @@ import ca.gimmecards.Display.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
 
-public class HelpCmds extends Cmds {
+public class HelpCmds {
     
     public static void viewHelp(SlashCommandInteractionEvent event) {
         EmbedBuilder embed = new EmbedBuilder();

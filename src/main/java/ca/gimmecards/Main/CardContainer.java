@@ -2,28 +2,36 @@ package ca.gimmecards.Main;
 
 public class CardContainer {
 
-    private Card card;
-    private Integer cardNum;
-    private Integer cardQuantity;
-    private Boolean isSellable;
-    private Boolean isFav;
+    //==========================================[ INSTANCE VARIABLES ]===================================================================
 
-    public CardContainer(Card c, int cn, boolean is) {
-        card = c;
-        cardNum = cn;
-        cardQuantity = 1;
-        isSellable = is;
-        isFav = false;
+    private Card card;              // the card object that's stored within this container
+    private Integer cardNum;        // a number that's used to sort the player's cards by newest (larger the number = newer the card)
+    private Integer cardQuantity;   // how many of the card the player owns
+    private Boolean isSellable;     // whether or not the card can be sold for XP
+    private Boolean isFav;          // whether or not the player has favorited the card
+
+    //=============================================[ CONSTRUCTORS ]====================================================================
+
+    public CardContainer(Card card, int cardNum, boolean isSellable) {
+        this.card = card;
+        this.cardNum = cardNum;
+        this.cardQuantity = 1;
+        this.isSellable = isSellable;
+        this.isFav = false;
     }
 
-    public Card getCard() { return card; }
-    public int getCardNum() { return cardNum; }
-    public int getCardQuantity() { return cardQuantity; }
-    public boolean getIsSellable() { return isSellable; }
-    public boolean getIsFav() { return isFav; }
-    //
-    public void addCardQuantity() { cardQuantity++; }
-    public void minusCardQuantity() { cardQuantity--; }
-    public void setCardQuantity(int cq) { cardQuantity = cq; }
-    public void setIsFav(boolean f) { isFav = f; }
+    //===============================================[ GETTERS ] ======================================================================
+
+    public Card getCard() { return this.card; }
+    public int getCardNum() { return this.cardNum; }
+    public int getCardQuantity() { return this.cardQuantity; }
+    public boolean getIsSellable() { return this.isSellable; }
+    public boolean getIsFav() { return this.isFav; }
+    
+    //================================================[ SETTERS ]======================================================================
+
+    public void addCardQuantity() { this.cardQuantity++; }
+    public void minusCardQuantity() { this.cardQuantity--; }
+    public void setCardQuantity(int cardQuantity) { this.cardQuantity = cardQuantity; }
+    public void setIsFav(boolean isFav) { this.isFav = isFav; }
 }

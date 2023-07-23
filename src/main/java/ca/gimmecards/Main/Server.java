@@ -18,65 +18,55 @@ import java.util.Calendar;
 
 public class Server implements IServer {
     
-    // list of Servers
+    /**
+     * a list of type Server that's saved and loaded from Servers.json; edited on a regular basis
+     */
     public static ArrayList<Server> servers = new ArrayList<Server>();
     
-    // instance variables
-    private String serverId;
-    private ArrayList<Card> market;
-    private Long marketEpoch;
+    //==========================================[ INSTANCE VARIABLES ]===================================================================
+
+    private String serverId;            // the server's Discord ID
+    private ArrayList<Card> market;     // a list of cards that makes up the market; is different in each server
+    private Long marketEpoch;           // used to keep track of the market's refresh cooldown
+
+    //=============================================[ CONSTRUCTORS ]====================================================================
 
     /**
-     * constructor for Server
-     * @param si serverId
+     * creates a new Server
+     * @param serverId the server's Discord ID
      */
-    public Server(String si) {
-        serverId = si;
-        market = new ArrayList<Card>();
-        marketEpoch = (long)(0);
+    public Server(String serverId) {
+        this.serverId = serverId;
+        this.market = new ArrayList<Card>();
+        this.marketEpoch = (long)(0);
     }
 
     /**
-     * constructor that duplicates a Server, and encrypts serverId
+     * duplicates a Server, and encrypts their Discord ID to comply with Discord security guidelines
      * @param server the Server to duplicate
      */
     public Server(Server server) {
-        serverId = Main.encryptor.encrypt(server.getServerId());
-        market = server.getMarket();
-        marketEpoch = server.getMarketEpoch();
+        this.serverId = Main.encryptor.encrypt(server.getServerId());
+        this.market = server.getMarket();
+        this.marketEpoch = server.getMarketEpoch();
     }
 
-    // getters
-    public String getServerId() { return serverId; }
-    public ArrayList<Card> getMarket() { return market; }
-    public long getMarketEpoch() { return marketEpoch; }
+    //===============================================[ GETTERS ] ======================================================================
+
+    public String getServerId() { return this.serverId; }
+    public ArrayList<Card> getMarket() { return this.market; }
+    public long getMarketEpoch() { return this.marketEpoch; }
     
-    // setters
-    public void setServerId(String si) { serverId = si; }
-    public void resetMarketEpoch() { marketEpoch = Calendar.getInstance().getTimeInMillis() / 60000; }
+    //================================================[ SETTERS ]======================================================================
 
-    //===================================================[ PRIVATE FUNCTIONS ]==============================================================
-
-    /**
-     * searches through the Server list for a specific Server
-     * @param serverId the ID of the Server to search for
-     * @return the Server to be searched
-     */
-    private static Server searchForServer(String serverId) {
-        for(Server s : servers) {
-            if(s.getServerId().equals(serverId)) {
-                return s;
-            }
-        }
-        servers.add(0, new Server(serverId));
-        return servers.get(0);
-    }
+    public void setServerId(String serverId) { this.serverId = serverId; }
+    public void resetMarketEpoch() { this.marketEpoch = Calendar.getInstance().getTimeInMillis() / 60000; }
 
     //=============================================[ PUBLIC STATIC FUNCTIONS ]==============================================================
 
     /**
-     * loads server data from Servers.json into the Server list
-     * @throws Exception just needs it
+     * loads data from Servers.json into the ArrayList at the top
+     * @throws Exception ignores all possible exceptions
      */
     public static void loadServers() throws Exception {
         Reader reader = new InputStreamReader(new FileInputStream(GameManager.findSavePath(GameManager.serverPath)), "UTF-8");
@@ -89,8 +79,8 @@ public class Server implements IServer {
     }
 
     /**
-     * saves server data into the file Servers.json
-     * @throws Exception just needs it
+     * saves data from the ArrayList at the top into Servers.json
+     * @throws Exception ignores all possible exceptions
      */
     public static void saveServers() throws Exception {
         Gson gson = new GsonBuilder().create();
@@ -149,17 +139,29 @@ public class Server implements IServer {
 
     @Override
     public void refreshMarket() {
-        market.clear();
+        this.market.clear();
         resetMarketEpoch();
 
         for(int i = 0; i < 15; i++) {
-            market.add(Card.pickRandomCard("shiny"));
+            this.market.add(Card.pickRandomCard("shiny"));
         }
         try { saveServers(); } catch(Exception e) {}
     }
 
-    @Override
-    public String formatCmd(String cmd) {
-        return "`/" + cmd + "`";
+    //===============================================[ PRIVATE FUNCTIONS ]=============================================================
+
+    /**
+     * searches through the Server list for a specific server
+     * @param serverId the ID of the server to search for
+     * @return the server to be searched
+     */
+    private static Server searchForServer(String serverId) {
+        for(Server s : servers) {
+            if(s.getServerId().equals(serverId)) {
+                return s;
+            }
+        }
+        servers.add(0, new Server(serverId));
+        return servers.get(0);
     }
 }

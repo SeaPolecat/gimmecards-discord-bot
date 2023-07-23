@@ -4,7 +4,7 @@ import ca.gimmecards.OtherInterfaces.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
-public class SellCmds extends Cmds {
+public class SellCmds {
 
     public static void sellSingle(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);

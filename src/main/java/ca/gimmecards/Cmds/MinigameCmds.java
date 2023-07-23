@@ -5,7 +5,7 @@ import ca.gimmecards.OtherInterfaces.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
-public class MinigameCmds extends Cmds {
+public class MinigameCmds {
     
     public static void startMinigame(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);

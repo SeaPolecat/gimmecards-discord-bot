@@ -99,7 +99,7 @@ public class BackpackDisplay_MP extends Display {
                 }
             }
         }
-        if(!mention.getPinnedCard().equals("") && mention.ownsFavCard()) {
+        if(!mention.getPinnedCard().equals("") && mention.ownsPinnedCard()) {
             embed.setImage(mention.getPinnedCard());
         }
         embed.setTitle(ui.getUserName() + " ➜ " + mentionInfo.getUserName()

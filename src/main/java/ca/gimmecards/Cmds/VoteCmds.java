@@ -9,11 +9,10 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.URI;
 
-public class VoteCmds extends Cmds {
+public class VoteCmds {
 
     public static void voteBot(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
-        Server server = Server.findServer(event);
 
         if(!User.isCooldownDone(user.getVoteEpoch(), 720, true)) {
             GameManager.sendMessage(event, IColors.red, "⏰", "Please wait another " 
@@ -23,7 +22,7 @@ public class VoteCmds extends Cmds {
             EmbedBuilder embed = new EmbedBuilder();
             String desc = "";
     
-            desc += "Use the link below to vote, then type " + server.formatCmd("claim") + " to claim your reward!\n\n";
+            desc += "Use the link below to vote, then type " + GameManager.formatCmd("claim") + " to claim your reward!\n\n";
             desc += "[Vote on Top.gg](https://top.gg/bot/814025499381727232/vote)";
     
             embed.setTitle(IEmotes.lootbox + " Voting Reward " + IEmotes.lootbox);
@@ -36,7 +35,6 @@ public class VoteCmds extends Cmds {
     
     public static void claimReward(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
-        Server server = Server.findServer(event);
 
         if(!User.isCooldownDone(user.getVoteEpoch(), 720, true)) {
             GameManager.sendMessage(event, IColors.red, "⏰", "Please wait another " 
@@ -55,7 +53,7 @@ public class VoteCmds extends Cmds {
     
                 if(!hasVoted) {
                     GameManager.sendMessage(event, IColors.red, "❌", "You haven't voted for *Gimme Cards* yet! "
-                    + "Please use " + server.formatCmd("vote"));
+                    + "Please use " + GameManager.formatCmd("vote"));
 
                 } else {
                     String msg = "";

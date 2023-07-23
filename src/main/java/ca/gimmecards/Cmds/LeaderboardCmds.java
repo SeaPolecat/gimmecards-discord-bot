@@ -9,7 +9,7 @@ import java.util.Comparator;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LeaderboardCmds extends Cmds implements Comparator<User> {
+public class LeaderboardCmds implements Comparator<User> {
 
     public int compare(User u1, User u2) {
         if(u1.getLevel() < u2.getLevel()) {

@@ -1,35 +1,59 @@
 package ca.gimmecards.Main;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonArray;
 import ca.gimmecards.MainInterfaces.*;
 import ca.gimmecards.OtherInterfaces.*;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonArray;
 import java.util.ArrayList;
 import java.util.Random;
 
 public class Card implements ICard {
 
-    private String setEmote;
-    private String setName;
-    private String cardId;
-    private String cardName;
-    private String cardRarity;
-    private String cardImage;
-    private String cardSupertype;
-    private String[] cardSubtypes;
-    private Integer cardPrice;
+    //==========================================[ INSTANCE VARIABLES ]===================================================================
 
+    private String setEmote;            // the Discord emote of the card set this card belongs to
+    private String setName;             // the name of the card set this card belongs to
+    private String cardId;              // the Pokemon TCG Online ID of this card
+    private String cardName;            // the name of this card
+    private String cardRarity;          // the rarity of this card
+    private String cardImage;           // this card's image link
+    private String cardSupertype;       // the supertype of this card (Pokemon, Trainer, or Energy)
+    private String[] cardSubtypes;      // the subtype of this card (fire, water, lightning, etc.)
+    private Integer cardPrice;          // the in-game XP value of this card
+
+    //=============================================[ CONSTRUCTORS ]====================================================================
+
+    /**
+     * creates a new Card
+     * @param setEmote the Discord emote of the card set this card belongs to
+     * @param cardPrice the in-game XP value of this card
+     * @param j the JsonElement crawled from the Pokemon TCG API
+     */
     public Card(String setEmote, Integer cardPrice, JsonElement j) {
         this.setEmote = setEmote;
-        setName = j.getAsJsonObject().get("set").getAsJsonObject().get("name").getAsString().replace("—", " ");
-        cardId = j.getAsJsonObject().get("id").getAsString();
-        cardName = j.getAsJsonObject().get("name").getAsString();
-        cardRarity = j.getAsJsonObject().get("rarity").getAsString();
-        cardImage = j.getAsJsonObject().get("images").getAsJsonObject().get("large").getAsString();
-        cardSupertype = j.getAsJsonObject().get("supertype").getAsString();
-        cardSubtypes = findCardSubtypes(j);
+        this.setName = j.getAsJsonObject().get("set").getAsJsonObject().get("name").getAsString().replace("—", " ");
+        this.cardId = j.getAsJsonObject().get("id").getAsString();
+        this.cardName = j.getAsJsonObject().get("name").getAsString();
+        this.cardRarity = j.getAsJsonObject().get("rarity").getAsString();
+        this.cardImage = j.getAsJsonObject().get("images").getAsJsonObject().get("large").getAsString();
+        this.cardSupertype = j.getAsJsonObject().get("supertype").getAsString();
+        this.cardSubtypes = findCardSubtypes(j);
         this.cardPrice = cardPrice;
     }
 
+    /**
+     * creates a new custom Card (cards created by the community); params are literally all the instance variables
+     * @param setEmote
+     * @param setName
+     * @param cardId
+     * @param cardName
+     * @param cardRarity
+     * @param cardImage
+     * @param cardSupertype
+     * @param cardSubtypes
+     * @param cardPrice
+     */
     public Card(String setEmote, String setName, String cardId, String cardName, String cardRarity, String cardImage,
             String cardSupertype, String[] cardSubtypes, Integer cardPrice) {
         this.setEmote = setEmote;
@@ -43,30 +67,45 @@ public class Card implements ICard {
         this.cardPrice = cardPrice;
     }
 
-    public String getSetEmote() { return setEmote; }
-    public String getSetName() { return setName; }
-    public String getCardId() { return cardId; }
-    public String getCardName() { return cardName; }
-    public String getCardRarity() { return cardRarity; }
-    public String getCardImage() { return cardImage; }
-    public String getCardSupertype() { return cardSupertype; }
-    public String[] getCardSubtypes() { return cardSubtypes; }
-    public int getCardPrice() { return cardPrice; }
+    //===============================================[ GETTERS ] ======================================================================
 
-    //============================================[ PUBLIC STATIC FUNCTIONS ]==========================================================
+    public String getSetEmote() { return this.setEmote; }
+    public String getSetName() { return this.setName; }
+    public String getCardId() { return this.cardId; }
+    public String getCardName() { return this.cardName; }
+    public String getCardRarity() { return this.cardRarity; }
+    public String getCardImage() { return this.cardImage; }
+    public String getCardSupertype() { return this.cardSupertype; }
+    public String[] getCardSubtypes() { return this.cardSubtypes; }
+    public int getCardPrice() { return this.cardPrice; }
 
+    //=============================================[ PUBLIC STATIC FUNCTIONS ]==============================================================
+
+    /**
+     * picks a random card from an ArrayList of cards
+     * @param cards the ArrayList of cards
+     * @return a random card
+     */
     public static Card pickCard(ArrayList<Card> cards) {
         Random rand = new Random();
 
         return cards.get(rand.nextInt(cards.size()));
     }
 
+    /**
+     * picks a random card from an array of cards
+     * @param cards the array of cards
+     * @return a random card
+     */
     public static Card pickCard(Card[] cards) {
         Random rand = new Random();
 
         return cards[rand.nextInt(cards.length)];
     }
 
+    /**
+     * @return a random card from the game
+     */
     public static Card pickRandomCard() {
         ArrayList<Card> cards = new ArrayList<Card>();
         Random rand = new Random();
@@ -101,6 +140,11 @@ public class Card implements ICard {
         return pickCard(cards);
     }
 
+    /**
+     * picks a random card from the game
+     * @param rarity the rarity that this random card should be
+     * @return the random card
+     */
     public static Card pickRandomCard(String rarity) {
         ArrayList<Card> cards = new ArrayList<Card>();
         Random rand = new Random();
@@ -124,6 +168,11 @@ public class Card implements ICard {
         return pickCard(cards);
     }
 
+    /**
+     * finds a card from the game based on an ID
+     * @param cardId the Pokemon TCG Online ID of the card
+     * @return the card to be found; returns null if the card cannot be found
+     */
     public static Card findCardById(String cardId) {
         for(CardSet set : CardSet.sets) {
             Card card = crawlCardSet(set, cardId, false);
@@ -161,11 +210,16 @@ public class Card implements ICard {
         return null;
     }
 
+    /**
+     * formats this card's credits amount
+     * @param amount the amount of credits
+     * @return the formatted credits amount
+     */
     public static String formatCredits(int amount) {
         return IEmotes.credits + " **" + GameManager.formatNumber(amount) + "**";
     }
 
-    //========================================[ PUBLIC NON-STATIC FUNCTIONS ]==========================================================
+    //==============================================[ PUBLIC NON-STATIC FUNCTIONS ]=====================================================
 
     @Override
     public boolean isCardSellable() {
@@ -288,15 +342,10 @@ public class Card implements ICard {
     }
 
     @Override
-    public String formatXP(Boolean sellable) {
+    public String formatXP(boolean isSellable) {
         String formattedXP = IEmotes.XP + " **" + GameManager.formatNumber(this.cardPrice) + "**";
 
-        if(sellable == null) {
-            if(!isCardSellable()) {
-                return formattedXP + " 🚫";
-            }
-
-        } else if(!sellable) {
+        if(!isSellable) {
             return formattedXP + " 🚫";
         }
         return formattedXP;
@@ -353,8 +402,37 @@ public class Card implements ICard {
         return embedColour;
     }
 
-    //=================================================[ PRIVATE FUNCTIONS ]============================================================
+    @Override
+    public void displayCard(SlashCommandInteractionEvent event, UserInfo ui, String message, String footer, boolean isFav) {
+        String cardTitle = findCardTitle(isFav);
+        EmbedBuilder embed = new EmbedBuilder();
+        String desc = "";
 
+        if(!message.isEmpty()) {
+            desc += message;
+            desc += "\n┅┅\n";
+        }
+        desc += "**Rarity** ┇ " + findRarityEmote() + " " + this.cardRarity + "\n";
+        desc += "**Card Set** ┇ " + this.setEmote + " " + this.setName + "\n";
+        desc += "**XP Value** ┇ " + formatXP(isCardSellable()) + "\n\n";
+        desc += "*Click on image for zoomed view*";
+
+        embed.setTitle(cardTitle);
+        embed.setDescription(desc);
+        embed.setImage(this.cardImage);
+        embed.setFooter(footer, ui.getUserIcon());
+        embed.setColor(findEmbedColour());
+        GameManager.sendEmbed(event, embed);
+        embed.clear();
+    }
+
+    //===============================================[ PRIVATE FUNCTIONS ]=============================================================
+
+    /**
+     * finds this card's subtypes (fire, water, lightning, etc.)
+     * @param j the JsonElement crawled from the Pokemon TCG API
+     * @return this card's subtypes; returns null if they don't exist (in that case, this card isn't added to the game)
+     */
     private static String[] findCardSubtypes(JsonElement j) {
         String[] cardSubtypes;
 
@@ -371,6 +449,13 @@ public class Card implements ICard {
         }
     }
 
+    /**
+     * crawls through a card set to find a specific card, based on the card's ID
+     * @param set the card set to crawl through
+     * @param cardId the Pokemon TCG Online ID of the card
+     * @param isSpecial whether or not the card is special (either from rareshop or promoshop)
+     * @return the card to be found; returns null if the card cannot be found
+     */
     private static Card crawlCardSet(CardSet set, String cardId, boolean isSpecial) {
         if(!isSpecial) {
             for(Card card : set.getCommons()) {

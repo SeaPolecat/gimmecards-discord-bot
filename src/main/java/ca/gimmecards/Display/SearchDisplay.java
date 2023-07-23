@@ -52,7 +52,7 @@ public class SearchDisplay extends Display {
             desc += card.findCardTitle(false)
             + " ┇ " + card.findRarityEmote()
             + " ┇ " + card.getSetEmote()
-            + " ┇ " + card.formatXP(null)
+            + " ┇ " + card.formatXP(card.isCardSellable())
             + " ┇ `" + card.getCardId() + "`\n";
             if(i >= searchedCards.size() - 1) {
                 break;

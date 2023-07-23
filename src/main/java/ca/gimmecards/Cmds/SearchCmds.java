@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import java.util.ArrayList;
 
-public class SearchCmds extends Cmds {
+public class SearchCmds {
 
     public static void searchCards(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
@@ -40,7 +40,6 @@ public class SearchCmds extends Cmds {
     }
 
     public static void viewAnyCard(SlashCommandInteractionEvent event) {
-        User user = User.findUser(event);
         UserInfo ui = new UserInfo(event);
         //
         OptionMapping cardId = event.getOption("card-id");
@@ -51,7 +50,7 @@ public class SearchCmds extends Cmds {
             Card card = Card.findCardById(cardId.getAsString());
             String footer = "Card ID: " + card.getCardId();
 
-            Display.displayCard(event, user, ui, card, "", footer, false);
+            card.displayCard(event, ui, "", footer, false);
 
         } catch(NullPointerException e) {
             GameManager.sendMessage(event, IColors.red, "❌", "Whoops, I couldn't find that card...");

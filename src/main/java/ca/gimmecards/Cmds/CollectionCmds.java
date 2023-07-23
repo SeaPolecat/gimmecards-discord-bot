@@ -5,7 +5,7 @@ import ca.gimmecards.OtherInterfaces.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
-public class CollectionCmds extends Cmds {
+public class CollectionCmds {
 
     public static void viewCards(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);

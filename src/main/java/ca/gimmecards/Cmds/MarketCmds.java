@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.EmbedBuilder;
 
-public class MarketCmds extends Cmds {
+public class MarketCmds {
     
     public static void viewMarket(SlashCommandInteractionEvent event) {
         Server server = Server.findServer(event);
@@ -92,7 +92,7 @@ public class MarketCmds extends Cmds {
     
                     user.addSingleCard(item, false);
                     
-                    Display.displayCard(event, user, ui, item, msg, footer, false);
+                    item.displayCard(event, ui, msg, footer, false);
                     try { User.saveUsers(); } catch(Exception e) {}
                 }
             } catch(NumberFormatException | IndexOutOfBoundsException e) {

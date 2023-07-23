@@ -42,7 +42,7 @@ public class ViewDisplay extends Display {
         int startIndex = page - 1;
         Card card = null;
         String cardTitle = "";
-        Boolean sellable = null;
+        Boolean isSellable = null;
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
@@ -56,7 +56,7 @@ public class ViewDisplay extends Display {
 
             card = user.getCardContainers().get(startIndex).getCard();
             cardTitle = card.findCardTitle(cc.getIsFav());
-            sellable = cc.getIsSellable();
+            isSellable = cc.getIsSellable();
 
         } else { // dispType.equalsIgnoreCase("new")
             card = newCards.get(startIndex);
@@ -72,7 +72,7 @@ public class ViewDisplay extends Display {
         }
         desc += "**Rarity** ┇ " + card.findRarityEmote() + " " + card.getCardRarity() + "\n";
         desc += "**Card Set** ┇ " + card.getSetEmote() + " " + card.getSetName() + "\n";
-        desc += "**XP Value** ┇ " + card.formatXP(sellable) + "\n\n";
+        desc += "**XP Value** ┇ " + card.formatXP(isSellable) + "\n\n";
         desc += "*Click on image for zoomed view*";
         
         embed.setTitle(cardTitle);

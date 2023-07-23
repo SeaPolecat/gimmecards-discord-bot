@@ -166,10 +166,10 @@ public class TradeDisplay extends Display {
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
-        desc += server.formatCmd("offer (card #)") + " to offer a card\n";
-        desc += server.formatCmd("unoffer (trade #)") + " remove an offer\n";
-        desc += server.formatCmd("accept") + " / " + server.formatCmd("unaccept") + " to lock your offer\n";
-        desc += server.formatCmd("reject") + " to end trade\n\n";
+        desc += GameManager.formatCmd("offer (card #)") + " to offer a card\n";
+        desc += GameManager.formatCmd("unoffer (trade #)") + " remove an offer\n";
+        desc += GameManager.formatCmd("accept") + " / " + GameManager.formatCmd("unaccept") + " to lock your offer\n";
+        desc += GameManager.formatCmd("reject") + " to end trade\n\n";
 
         desc += userInfo1.getUserPing() + "\n";
         desc += "┅┅\n";

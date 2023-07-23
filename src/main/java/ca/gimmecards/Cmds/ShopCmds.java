@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.EmbedBuilder;
 
-public class ShopCmds extends Cmds {
+public class ShopCmds {
 
     public static void viewShop(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
@@ -75,7 +75,7 @@ public class ShopCmds extends Cmds {
             } else if(set.isPromoSet()) {
                 GameManager.sendMessage(event, IColors.red, "❌", "You don't need to unlock promo packs!");
 
-            } else if(set.isOldSet() && !user.ownsShopPack()) {
+            } else if(set.isOldSet() && !user.ownsAnyShopPack()) {
                 GameManager.sendMessage(event, IColors.red, "❌", "You must unlock a pack from **Poké Packs Shop** first!");
 
             } else {

@@ -3,70 +3,137 @@ import ca.gimmecards.Main.*;
 import ca.gimmecards.Cmds.*;
 import ca.gimmecards.Display_MP.*;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
 import java.util.ArrayList;
 
 public class Display extends ListenerAdapter {
 
-    private String userId;
-    private String slashId;
-    private Integer page;
-    private Integer maxPage;
+    //==========================================[ INSTANCE VARIABLES ]===================================================================
 
+    private String userId;      // the player's Discord ID
+    private String slashId;     // the slash command ID of this display
+    private Integer page;       // the page number of this display
+    private Integer maxPage;    // the maximum page of this display
+
+    //=============================================[ CONSTRUCTORS ]====================================================================
+
+    /**
+     * default constructor for Display
+     */
     public Display() {}
 
-    public Display(String ui) {
-        userId = ui;
-        slashId = "";
-        page = 1;
-        maxPage = 1;
+    /**
+     * creates a new Display
+     * @param userId the player's Discord ID
+     */
+    public Display(String userId) {
+        this.userId = userId;
+        this.slashId = "";
+        this.page = 1;
+        this.maxPage = 1;
     }
 
-    public String getUserId() { return userId; }
-    public String getSlashId() { return slashId; }
-    public int getPage() { return page; }
-    public int getMaxPage() { return maxPage; }
-    //
-    public void setSlashId(String sId) { slashId = sId; }
-    public void setPage(int p) { page = p; }
-    public void nextPage() { page++; }
-    public void prevPage() { page--; }
-    public void setMaxPage(int mp) { maxPage = mp; }
-    public void addMaxPage() { maxPage++; }
+    //===============================================[ GETTERS ] ======================================================================
 
+    public String getUserId() { return this.userId; }
+    public String getSlashId() { return this.slashId; }
+    public int getPage() { return this.page; }
+    public int getMaxPage() { return this.maxPage; }
+    
+    //================================================[ SETTERS ]======================================================================
+
+    public void setSlashId(String slashId) { this.slashId = slashId; }
+    public void setPage(int page) { this.page = page; }
+    public void nextPage() { this.page++; }
+    public void prevPage() { this.page--; }
+    public void setMaxPage(int maxPage) { this.maxPage = maxPage; }
+    public void addMaxPage() { this.maxPage++; }
+
+    //==============================================[ PUBLIC NON-STATIC FUNCTIONS ]=====================================================
+
+    /**
+     * @return the Display subclass; this function should only be used by Display's subclasses
+     */
     public Display findDisplay() {
         return null;
     }
 
+    /**
+     * builds a dynamic embed (one that can be page-flipped or refreshed); this function should only be used by Display's subclasses
+     * @param user the player
+     * @param ui a UserInfo object containing the player's basic information
+     * @param server the server
+     * @param page the page that this embed should initially show
+     * @return the completed embed
+     */
     public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, int page) {
         return null;
     }
 
-    public static void displayCard(SlashCommandInteractionEvent event, User user, UserInfo ui, Card card, String message, String footer, boolean isFav) {
-        String cardTitle = card.findCardTitle(isFav);
-        EmbedBuilder embed = new EmbedBuilder();
-        String desc = "";
+    //==============================================[ EVENT FUNCTIONS ]================================================================
 
-        if(!message.isEmpty()) {
-            desc += message;
-            desc += "\n┅┅\n";
+    /**
+     * an event function that's called whenever a user clicks a button; used to handle page-flipping
+     * @param event the button event
+     */
+    public void onButtonInteraction(ButtonInteractionEvent event) {
+        if(event.getComponentId().equalsIgnoreCase("deleteaccount_yes")) {
+            PrivacyCmds.confirmDeletion(event);
+
+        } else if(event.getComponentId().equalsIgnoreCase("deleteaccount_no")) {
+            PrivacyCmds.denyDeletion(event);
+
+        } else {
+            User user = User.findUser(event);
+            Server server = Server.findServer(event);
+            ArrayList<Display> displays = new ArrayList<Display>();
+
+            displays.add(new BackpackDisplay(user.getUserId()).findDisplay());
+            displays.add(new CollectionDisplay(user.getUserId()).findDisplay());
+            displays.add(new HelpDisplay(user.getUserId()).findDisplay());
+            displays.add(new LeaderboardDisplay(user.getUserId()).findDisplay());
+            displays.add(new MarketDisplay(user.getUserId()).findDisplay());
+            displays.add(new MinigameDisplay(user.getUserId()).findDisplay());
+            displays.add(new OldShopDisplay(user.getUserId()).findDisplay());
+            displays.add(new SearchDisplay(user.getUserId()).findDisplay());
+            displays.add(new ShopDisplay(user.getUserId()).findDisplay());
+            displays.add(new TradeDisplay(user.getUserId()).findDisplay());
+            displays.add(new ViewDisplay(user.getUserId()).findDisplay());
+            //
+            displays.add(new BackpackDisplay_MP(user.getUserId()).findDisplay());
+            displays.add(new CardDisplay_MP(user.getUserId()).findDisplay());
+            displays.add(new ViewDisplay_MP(user.getUserId()).findDisplay());
+            //
+            String buttonId = event.getComponentId();
+            int semiColIndex = buttonId.indexOf(";");
+            int underscoreIndex = buttonId.indexOf("_");
+            String userId = buttonId.substring(0, semiColIndex);
+            String slashId = buttonId.substring(semiColIndex + 1, underscoreIndex);
+
+            for(Display disp : displays) {
+                if(slashId.equals(disp.getSlashId())) {
+                    flipPage(event, user, server, disp);
+                    return;
+                }
+            }
+            if(!user.getUserId().equals(userId)) {
+                event.reply("This is not your button!").setEphemeral(true).queue();
+            } else {
+                event.reply("This button is outdated. Please send a new command!").setEphemeral(true).queue();
+            }
         }
-        desc += "**Rarity** ┇ " + card.findRarityEmote() + " " + card.getCardRarity() + "\n";
-        desc += "**Card Set** ┇ " + card.getSetEmote() + " " + card.getSetName() + "\n";
-        desc += "**XP Value** ┇ " + card.formatXP(card.isCardSellable()) + "\n\n";
-        desc += "*Click on image for zoomed view*";
-
-        embed.setTitle(cardTitle);
-        embed.setDescription(desc);
-        embed.setImage(card.getCardImage());
-        embed.setFooter(footer, ui.getUserIcon());
-        embed.setColor(card.findEmbedColour());
-        GameManager.sendEmbed(event, embed);
-        embed.clear();
     }
 
+    //===============================================[ PRIVATE FUNCTIONS ]=============================================================
+
+    /**
+     * flips the page on a dynamic embed (one that can be page-flipped or refreshed)
+     * @param event the button event
+     * @param user the player
+     * @param server the server
+     * @param disp the type of display that's being page-flipped
+     */
     private void flipPage(ButtonInteractionEvent event, User user, Server server, Display disp) {
         String buttonId = event.getComponentId();
         int underscoreIndex = buttonId.indexOf("_");
@@ -150,53 +217,5 @@ public class Display extends ListenerAdapter {
             }
         }
         GameManager.editEmbed(event, user, server, disp, disp.getPage());
-    }
-
-    public void onButtonInteraction(ButtonInteractionEvent event) {
-        if(event.getComponentId().equalsIgnoreCase("deleteaccount_yes")) {
-            PrivacyCmds.confirmDeletion(event);
-
-        } else if(event.getComponentId().equalsIgnoreCase("deleteaccount_no")) {
-            PrivacyCmds.denyDeletion(event);
-
-        } else {
-            User user = User.findUser(event);
-            Server server = Server.findServer(event);
-            ArrayList<Display> displays = new ArrayList<Display>();
-
-            displays.add(new BackpackDisplay(user.getUserId()).findDisplay());
-            displays.add(new CollectionDisplay(user.getUserId()).findDisplay());
-            displays.add(new HelpDisplay(user.getUserId()).findDisplay());
-            displays.add(new LeaderboardDisplay(user.getUserId()).findDisplay());
-            displays.add(new MarketDisplay(user.getUserId()).findDisplay());
-            displays.add(new MinigameDisplay(user.getUserId()).findDisplay());
-            displays.add(new OldShopDisplay(user.getUserId()).findDisplay());
-            displays.add(new SearchDisplay(user.getUserId()).findDisplay());
-            displays.add(new ShopDisplay(user.getUserId()).findDisplay());
-            displays.add(new TradeDisplay(user.getUserId()).findDisplay());
-            displays.add(new ViewDisplay(user.getUserId()).findDisplay());
-            //
-            displays.add(new BackpackDisplay_MP(user.getUserId()).findDisplay());
-            displays.add(new CardDisplay_MP(user.getUserId()).findDisplay());
-            displays.add(new ViewDisplay_MP(user.getUserId()).findDisplay());
-            //
-            String buttonId = event.getComponentId();
-            int semiColIndex = buttonId.indexOf(";");
-            int underscoreIndex = buttonId.indexOf("_");
-            String userId = buttonId.substring(0, semiColIndex);
-            String slashId = buttonId.substring(semiColIndex + 1, underscoreIndex);
-
-            for(Display disp : displays) {
-                if(slashId.equals(disp.getSlashId())) {
-                    flipPage(event, user, server, disp);
-                    return;
-                }
-            }
-            if(!user.getUserId().equals(userId)) {
-                event.reply("This is not your button!").setEphemeral(true).queue();
-            } else {
-                event.reply("This button is outdated. Please send a new command!").setEphemeral(true).queue();
-            }
-        }
     }
 }

@@ -1,11 +1,10 @@
 package ca.gimmecards.Cmds_MP;
 import ca.gimmecards.Main.*;
-import ca.gimmecards.Cmds.*;
 import ca.gimmecards.Display_MP.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
-public class BackpackCmds_MP extends Cmds {
+public class BackpackCmds_MP {
     
     public static void viewBackpack_(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);

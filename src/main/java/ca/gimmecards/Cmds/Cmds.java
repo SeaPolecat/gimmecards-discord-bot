@@ -1,6 +1,6 @@
 package ca.gimmecards.Cmds;
-import ca.gimmecards.Cmds_MP.*;
 import ca.gimmecards.Main.*;
+import ca.gimmecards.Cmds_MP.*;
 import ca.gimmecards.OtherInterfaces.*;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -9,24 +9,33 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.entities.Guild;
+import org.jetbrains.annotations.Nullable;
 
 public class Cmds extends ListenerAdapter {
+
+    //==============================================[ EVENT FUNCTIONS ]================================================================
     
+    /**
+     * an event function that's called whenever a user sends a regular message in a server; used to listen to admin commands
+     * @param event the MessageReceived event
+     */
     public void onMessageReceived(MessageReceivedEvent event) {
         if(event.getAuthor().isBot() == true) { return; }
         String[] args = event.getMessage().getContentRaw().split("\\s+");
 
         if(event.getAuthor().getId().equals("454773340163538955")) {
 
-            //TESTING
+            //===========================================[ TESTING ]===================================================================
+
             if(isValidCommand(event, args, new String[]{"test"}, null)) {
                 TestingCmds.testSomething(event);
             }
+
+            //=============================================[ CARD ]====================================================================
+
             if(isValidCommand(event, args, new String[]{"stats"}, null)) {
                 CardCmds.viewBotStats(event);
             }
-
-            //CARD
             if(isValidCommand(event, args, new String[]{"sets"}, null)) {
                 CardCmds.viewCardSets(event, "new");
             }
@@ -61,7 +70,10 @@ public class Cmds extends ListenerAdapter {
                 CardCmds.addSpecialContents(event, args, false);
             }
 
-            //SLASH
+            //========================================[ GUILD SLASH UPDATE ]===========================================================
+
+            // please use ?update whenever you edit the slash commands
+
             if(isValidCommand(event, args, new String[]{"update"}, null)) {
                 Guild guild = event.getGuild();
 
@@ -230,6 +242,10 @@ public class Cmds extends ListenerAdapter {
         }
     }
 
+    /**
+     * an event function that's called whenever a user sends a slash command in a server; used to listen to slash commands
+     * @param event the SlashCommandInteraction event
+     */
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
 
         //LOCK
@@ -337,7 +353,7 @@ public class Cmds extends ListenerAdapter {
             if(event.getOption("user") == null) {
                 CollectionCmds.viewCards(event);
             } else {
-                CardCmds_MP.viewCards_(event);
+                CollectionCmds_MP.viewCards_(event);
             }
         }
         if(event.getName().equals("fav")) {
@@ -432,7 +448,17 @@ public class Cmds extends ListenerAdapter {
         }
     }
 
-    private static boolean isValidCommand(MessageReceivedEvent event, String[] args, String[] cmds, String[] params) {
+    //===============================================[ PRIVATE FUNCTIONS ]=============================================================
+
+    /**
+     * checks if a player's message command is valid (is spelled correctly and has all the required arguments)
+     * @param event the message event
+     * @param args an array containing every separated string in the player's input
+     * @param cmds a list of the command's aliases; typing any of them will work
+     * @param params additional required command arguments; can be null if there aren't any additional requirements
+     * @return whether or not the player's message command is valid
+     */
+    private static boolean isValidCommand(MessageReceivedEvent event, String[] args, String[] cmds, @Nullable String[] params) {
         for(String cmd : cmds) {
             if(args[0].equalsIgnoreCase("?" + cmd)) {
                 if(params == null) {

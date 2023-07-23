@@ -73,8 +73,8 @@ public class MinigameDisplay extends Display {
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
-        desc += server.formatCmd("guess (rarity)") + " to play\n";
-        desc += server.formatCmd("rarities") + " for hints\n\n";
+        desc += GameManager.formatCmd("guess (rarity)") + " to play\n";
+        desc += GameManager.formatCmd("rarities") + " for hints\n\n";
 
         desc += "**Rarity** ┇ ";
         if(!hasWon && tries > 0) {

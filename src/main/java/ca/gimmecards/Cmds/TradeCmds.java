@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import java.util.ArrayList;
 
-public class TradeCmds extends Cmds {
+public class TradeCmds {
     
     public static void sendTrade(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);

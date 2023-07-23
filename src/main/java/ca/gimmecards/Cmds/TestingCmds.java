@@ -1,9 +1,7 @@
 package ca.gimmecards.Cmds;
-import ca.gimmecards.Main.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import java.util.ArrayList;
 
-public class TestingCmds extends Cmds {
+public class TestingCmds {
 
     /*public User(String id, int gc, int cc, int l, int xp, int mxp, int t, int creds, int k, int s, long oe, long ve, long de, long re, long me, long marketE, String sm, boolean si, ArrayList<String> b, String pc, ArrayList<String> p, ArrayList<Card> c, boolean ir, boolean irr) {
         userId = id;

@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.EmbedBuilder;
 
-public class BackpackCmds extends Cmds {
+public class BackpackCmds {
 
     public static void viewBackpack(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
@@ -62,7 +62,7 @@ public class BackpackCmds extends Cmds {
 
             user.addSingleCard(item, false);
             
-            Display.displayCard(event, user, ui, item, msg, footer, false);
+            item.displayCard(event, ui, msg, footer, false);
             try { User.saveUsers(); } catch(Exception e) {}
         }
     }
@@ -114,36 +114,35 @@ public class BackpackCmds extends Cmds {
 
     public static void viewCooldowns(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
-        Server server = Server.findServer(event);
         UserInfo ui = new UserInfo(event);
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
-        desc += server.formatCmd("redeem") + " ┇ ";
+        desc += GameManager.formatCmd("redeem") + " ┇ ";
         if(User.isCooldownDone(user.getRedeemEpoch(), 30, true)) {
             desc += "✅\n\n";
         } else {
             desc += "⏰ " + User.findTimeLeft(user.getRedeemEpoch(), 30, true) + "\n\n";
         }
-        desc += server.formatCmd("minigame") + " ┇ ";
+        desc += GameManager.formatCmd("minigame") + " ┇ ";
         if(User.isCooldownDone(user.getMinigameEpoch(), 60, true)) {
             desc += "✅\n\n";
         } else {
             desc += "⏰ " + User.findTimeLeft(user.getMinigameEpoch(), 60, true) + "\n\n";
         }
-        desc += server.formatCmd("vote") + " ┇ ";
+        desc += GameManager.formatCmd("vote") + " ┇ ";
         if(User.isCooldownDone(user.getVoteEpoch(), 720, true)) {
             desc += "✅\n\n";
         } else {
             desc += "⏰ " + User.findTimeLeft(user.getVoteEpoch(), 720, true) + "\n\n";
         }
-        desc += server.formatCmd("daily") + " ┇ ";
+        desc += GameManager.formatCmd("daily") + " ┇ ";
         if(User.isCooldownDone(user.getDailyEpoch(), 1440, true)) {
             desc += "✅\n\n";
         } else {
             desc += "⏰ " + User.findTimeLeft(user.getDailyEpoch(), 1440, true) + "\n\n";
         }
-        desc += server.formatCmd("buy") + " ┇ ";
+        desc += GameManager.formatCmd("buy") + " ┇ ";
         if(User.isCooldownDone(user.getMarketEpoch(), 15, true)) {
             desc += "✅";
         } else {

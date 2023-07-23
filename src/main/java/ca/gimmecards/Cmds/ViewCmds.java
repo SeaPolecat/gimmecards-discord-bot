@@ -5,7 +5,7 @@ import ca.gimmecards.OtherInterfaces.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
-public class ViewCmds extends Cmds {
+public class ViewCmds {
 
     public static void openPack(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
@@ -40,7 +40,7 @@ public class ViewCmds extends Cmds {
                         user.resetOpenEpoch();
                         user.addSingleCard(item, false);
                         
-                        Display.displayCard(event, user, ui, item, msg, footer, false);
+                        item.displayCard(event, ui, msg, footer, false);
                         try { User.saveUsers(); } catch(Exception e) {}
                     }
 
@@ -67,7 +67,7 @@ public class ViewCmds extends Cmds {
                         user.resetOpenEpoch();
                         user.addSingleCard(item, false);
 
-                        Display.displayCard(event, user, ui, item, msg, footer, false);
+                        item.displayCard(event, ui, msg, footer, false);
                         try { User.saveUsers(); } catch(Exception e) {}
                     }
 

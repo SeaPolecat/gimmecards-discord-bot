@@ -1,13 +1,13 @@
 package ca.gimmecards.Main;
 import ca.gimmecards.Display.*;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.guild.GuildLeaveEvent;
 import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import java.nio.file.Paths;
 import java.text.NumberFormat;
@@ -18,7 +18,12 @@ import java.util.Random;
 
 public class GameManager extends ListenerAdapter {
 
-    protected static String header = "C:\\Users\\wangw\\Documents\\GimmeCards\\src\\main\\java\\ca\\gimmecards\\Storage\\";
+    //==============================================[ SAVE/LOAD PATHS ]=================================================================
+
+    /**
+     * the address of this game's save files; please change this accordingly (remember the 2 backslashes at the end)
+     */
+    protected static String address = "C:\\Users\\wangw\\Documents\\GimmeCards\\src\\main\\java\\ca\\gimmecards\\Storage\\";
 
     protected static String setsPath = "CardSets.json";
     protected static String oldSetsPath = "OldCardSets.json";
@@ -26,27 +31,67 @@ public class GameManager extends ListenerAdapter {
     protected static String promoSetsPath = "PromoCardSets.json";
     protected static String userPath = "Users.json";
     protected static String serverPath = "Servers.json";
-    
+
     /**
-     * determines the path that User data will be saved to
-     * @return the path with header if the file is in an external location, and no header if it's local
+     * determines whether or not to prefix a path with the address
+     * @param path the path in question
+     * @return the path with an address if the file is on your local computer; no address is added if the file is being hosted on the VPS
      */
     protected static String findSavePath(String path) {
         if(Paths.get(path).toFile().length() > 0) {
             return path;
         } else {
-            return header + path;
+            return address + path;
         }
     }
 
+    //==============================================[ FORMAT FUNCTIONS ]===============================================================
+
+    /**
+     * picks a random int between 2 ints (because Java doesn't have a built-in function to do this bruh)
+     * @param min the lower range int
+     * @param max the upper range int
+     * @return a random int between the two ints
+     */
+    public static int randRange(int min, int max) {
+        int diff = max - min;
+
+        return new Random().nextInt(diff + 1) + min;
+    }
+    
+    /**
+     * inserts commas in a large number to make it more readable
+     * @param number the large number
+     * @return a formatted number with commas
+     */
     public static String formatNumber(int number) {
         return NumberFormat.getInstance().format(number);
     }
 
+    /**
+     * formats a command name by slapping a slash in front of it
+     * @param cmd the command name to format
+     * @return the formatted command name
+     */
+    public static String formatCmd(String cmd) {
+        return "`/" + cmd + "`";
+    }
+
+    /**
+     * formats the player's username by turning it into a ping
+     * @param event a slash event, used to get the username
+     * @return the formatted ping username
+     */
     public static String formatName(SlashCommandInteractionEvent event) {
         return event.getUser().getAsMention();
     }
 
+    /**
+     * formats a mentioned player's username by turning it into a ping
+     * @param mention the mentioned player
+     * @param event a slash event, used to get the username
+     * @return the formatted ping username
+     */
     public static String formatName(User mention, SlashCommandInteractionEvent event) {
         net.dv8tion.jda.api.entities.User user = event.getJDA().getUserById(mention.getUserId()+"");
 
@@ -55,16 +100,26 @@ public class GameManager extends ListenerAdapter {
         return user.getAsMention();
     }
 
+    /**
+     * creates a message notifying the player that they have earned a badge
+     * @param event a slash event, used to call formatName()
+     * @param badgeEmote the Discord emote of the badge
+     * @param badgeName the name of the badge
+     * @return a string message that notifies the player of their new badge
+     */
     public static String formatBadge(SlashCommandInteractionEvent event, String badgeEmote, String badgeName) {
         return formatName(event) + " has been awarded the " + badgeEmote + " **" + badgeName + "** badge!";
     }
 
-    public static int randRange(int min, int max) {
-        int diff = max - min;
+    //===================================[ DISCORD JDA HANDLER FUNCTIONS ]=============================================================
 
-        return new Random().nextInt(diff + 1) + min;
-    }
-
+    /**
+     * sends a formatted embed message in the server based on a message event
+     * @param event the message event
+     * @param color the color that the embed should appear in
+     * @param emote the emote that should come before the message
+     * @param msg the string message you want to send
+     */
     public static void sendMessage(MessageReceivedEvent event, int color, String emote, String msg) {
         try {
             EmbedBuilder embed = new EmbedBuilder();
@@ -76,6 +131,13 @@ public class GameManager extends ListenerAdapter {
         } catch(InsufficientPermissionException e) {}
     }
 
+    /**
+     * sends a formatted embed message in the server based on a slash event
+     * @param event the slash event
+     * @param color the color that the embed should appear in
+     * @param emote the emote that should come before the message
+     * @param msg the string message you want to send
+     */
     public static void sendMessage(SlashCommandInteractionEvent event, int color, String emote, String msg) {
         EmbedBuilder embed = new EmbedBuilder();
 
@@ -85,20 +147,45 @@ public class GameManager extends ListenerAdapter {
         embed.clear();
     }
 
+    /**
+     * sends a plain embed in the server based on a message event
+     * @param event the message event
+     * @param embed the embed to send
+     */
     public static void sendEmbed(MessageReceivedEvent event, EmbedBuilder embed) {
         try {
             event.getChannel().sendMessageEmbeds(embed.build()).queue();
         } catch(InsufficientPermissionException e) {}
     }
 
+    /**
+     * sends a plain embed in the server based on a slash event
+     * @param event the slash event
+     * @param embed the embed to send
+     */
     public static void sendEmbed(SlashCommandInteractionEvent event, EmbedBuilder embed) {
         event.replyEmbeds(embed.build()).queue();
     }
 
-    private static String createButtonId(String userId, String slashId, String choice) {
-        return userId + ";" + slashId + "_" + choice;
+    /**
+     * creates a button ID that's used to handle page-flipping
+     * @param userId the Discord ID of the player
+     * @param slashId the ID of a specific slash command
+     * @param buttonType the type of button (left arrow, right arrow, or refresh)
+     * @return a button ID
+     */
+    private static String createButtonId(String userId, String slashId, String buttonType) {
+        return userId + ";" + slashId + "_" + buttonType;
     }
 
+    /**
+     * sends an embed in the server that can be page-flipped or refreshed - based on a slash event
+     * @param event the slash event
+     * @param user the player
+     * @param server the server
+     * @param disp the type of Display that this embed should show
+     * @param page the page number that this embed should initially show
+     */
     public static void sendDynamicEmbed(SlashCommandInteractionEvent event, User user, Server server, Display disp, int page) {
         UserInfo ui = new UserInfo(event);
         EmbedBuilder embed = disp.buildEmbed(user, ui, server, page);
@@ -122,6 +209,14 @@ public class GameManager extends ListenerAdapter {
         disp.setPage(page);
     }
 
+    /**
+     * edits a dynamic embed (one that can be page-flipped or refreshed) - based on a button event
+     * @param event the button event
+     * @param user the player
+     * @param server the server
+     * @param disp the type of Display that this embed should show
+     * @param page the page number that this embed should show after being edited
+     */
     public static void editEmbed(ButtonInteractionEvent event, User user, Server server, Display disp, int page) {
         UserInfo ui = new UserInfo(event);
         EmbedBuilder embed = disp.buildEmbed(user, ui, server, page);
@@ -129,9 +224,11 @@ public class GameManager extends ListenerAdapter {
         event.editMessageEmbeds(embed.build()).queue();
     }
 
+    //==============================================[ EVENT FUNCTIONS ]================================================================
+
     /**
-     * deletes the Server data whenever the bot leaves that server
-     * @param event a leave event
+     * an event function that's called whenever the bot leaves a server; used to delete a server's data within Servers.json if the bot leaves that server
+     * @param event the GuildLeave event
      */
     public void onGuildLeave(GuildLeaveEvent event) {
         for(int i = 0; i < Server.servers.size(); i++) {
@@ -146,11 +243,12 @@ public class GameManager extends ListenerAdapter {
     }
 
     /**
-     * loads all data into their respective lists,
-     * and updates global slash commands when the bot is ready
-     * @param event a ready event
+     * an event function that's called whenever the bot joins a server; used to perform necessary actions (i.e., data loading) when the bots starts running
+     * @param event the GuildReady event
      */
     public void onGuildReady(GuildReadyEvent event) {
+
+        //============================================[ DATA LOADING ]=================================================================
 
         try { CardSet.loadSets(); } catch(Exception e) {}
         try { CardSet.loadOldSets(); } catch(Exception e) {}
@@ -158,6 +256,8 @@ public class GameManager extends ListenerAdapter {
         try { CardSet.loadPromoSets(); } catch(Exception e) {}
         try { User.loadUsers(); } catch(Exception e) {}
         try { Server.loadServers(); } catch(Exception e) {}
+
+        //==================================[ UPDATING GLOBAL SLASH COMMANDS ]=========================================================
 
         /*Main.jda.updateCommands().addCommands(
             
@@ -333,6 +433,8 @@ public class GameManager extends ListenerAdapter {
 
             Commands.slash("reject", "End a trade instantly")
         ).queue();*/
+
+        //===========================================[ ADDING SET CODES ]===============================================================
 
         //sets
         /*CardSet.setCodes.put(1, "BLW");

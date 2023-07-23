@@ -4,13 +4,16 @@ import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 
 public class UserInfo {
     
-    // instance variables
-    private String userName;
-    private String userPing;
-    private String userIcon;
+    //==========================================[ INSTANCE VARIABLES ]===================================================================
+
+    private String userName;    // the player's effective Discord username
+    private String userPing;    // the player's ping tag
+    private String userIcon;    // the player's profile picture image link
+
+    //=============================================[ CONSTRUCTORS ]====================================================================
 
     /**
-     * constructor that uses a slash event to get the author User's info
+     * creates a new UserInfo based on a slash event
      * @param event the slash event
      */
     public UserInfo(SlashCommandInteractionEvent event) {
@@ -24,8 +27,8 @@ public class UserInfo {
     }
 
     /**
-     * constructor that uses a slash event to get a mentioned User's info
-     * @param mention the mentioned User
+     * creates a new UserInfo based on a mentioned player and a slash event
+     * @param mention the mentioned player
      * @param event the slash event
      */
     public UserInfo(User mention, SlashCommandInteractionEvent event) {
@@ -43,7 +46,7 @@ public class UserInfo {
     }
 
     /**
-     * constructor that uses a button event to get the author User's info
+     * creates a new UserInfo based on a button event
      * @param event the button event
      */
     public UserInfo(ButtonInteractionEvent event) {
@@ -56,7 +59,8 @@ public class UserInfo {
         }
     }
 
-    // getters
+    //===============================================[ GETTERS ] ======================================================================
+
     public String getUserName() { return userName; }
     public String getUserPing() { return userPing; }
     public String getUserIcon() { return userIcon; }

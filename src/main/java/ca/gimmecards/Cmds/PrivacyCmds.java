@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.EmbedBuilder;
 
-public class PrivacyCmds extends Cmds {
+public class PrivacyCmds {
     
     public static void deleteAccount(SlashCommandInteractionEvent event) {
         UserInfo ui = new UserInfo(event);

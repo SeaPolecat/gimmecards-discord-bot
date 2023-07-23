@@ -3,9 +3,7 @@ package ca.gimmecards.MainInterfaces;
 public interface IServer {
 
     /**
-     * setter that refreshes the server-specific card market
+     * refreshes the card market in the server
      */
     public void refreshMarket();
-
-    public String formatCmd(String cmd);
 }

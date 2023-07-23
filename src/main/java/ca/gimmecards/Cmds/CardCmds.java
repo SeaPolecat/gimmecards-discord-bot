@@ -8,7 +8,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
 import java.util.ArrayList;
 
-public class CardCmds extends Cmds {
+public class CardCmds {
 
     public static void viewBotStats(MessageReceivedEvent event) {
         EmbedBuilder embed = new EmbedBuilder();
