@@ -73,13 +73,6 @@ public class HelpCmds {
         desc += IEmotes.staffBadge + " **Gimme Cards Staff**\n";
         desc += "Given to the staff members in our official [support server](https://discord.gg/urtHCGcE7y)\n\n";
 
-        desc += IEmotes.communityBadge + " **Community Helper**\n";
-        desc += "Given to collectors who often help newer players or contribute to new ideas. "
-        + "Only staff members can award you this badge\n\n";
-
-        desc += IEmotes.patreonBadge + " **Patreon**\n";
-        desc += "Given to our Patreon supporters, AKA *Rare Collectors* or *Radiant Rare Collectors*\n\n";
-
         desc += IEmotes.veteranBadge + " **Veteran Collector**\n";
         desc += "Given to collectors who are level 50+\n\n";
 
@@ -90,25 +83,10 @@ public class HelpCmds {
         desc += "Given to collectors who participated in the Gimme Cards 1 Year Anniversary event\n\n";
 
         desc += IEmotes.originalBagde + " **Original Collector**\n";
-        desc += "Given to collectors who created their account before Gimme Cards was verified (e.g. before 2023)";
+        desc += "Given to collectors who created their account before Gimme Cards was verified (2023)";
 
         embed.setTitle(IEmotes.eevee + " All Badges " + IEmotes.eevee);
         embed.setDescription(desc);
-        embed.setColor(IColors.helpColor);
-        GameManager.sendEmbed(event, embed);
-        embed.clear();
-    }
-
-    public static void viewPatreon(SlashCommandInteractionEvent event) {
-        EmbedBuilder embed = new EmbedBuilder();
-        String desc = "";
-
-        desc += "[Click here](https://www.patreon.com/gimmecards) to join us on " + IEmotes.patreon + " **Patreon**\n\n";
-        desc += "*Click on image for zoomed view*";
-
-        embed.setTitle(IEmotes.eevee + " Patreon Rewards " + IEmotes.eevee);
-        embed.setDescription(desc);
-        embed.setImage("https://media.discordapp.net/attachments/1012866222657896558/1012866246393471027/Screen_Shot_2022-08-26_at_4.28.35_PM.png?width=694&height=598");
         embed.setColor(IColors.helpColor);
         GameManager.sendEmbed(event, embed);
         embed.clear();

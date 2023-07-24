@@ -61,6 +61,7 @@ public class ViewDisplay extends Display {
         } else { // dispType.equalsIgnoreCase("new")
             card = newCards.get(startIndex);
             cardTitle = card.findCardTitle(false);
+            isSellable = card.isCardSellable();
 
             if(!user.ownsCard(card)) {
                 cardTitle += " 🆕";

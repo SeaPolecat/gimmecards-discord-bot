@@ -31,9 +31,6 @@ public class BackpackCmds {
             msg += user.updateTokens(1, true);
             msg += user.updateCredits(GameManager.randRange(24, 30), false);
 
-            msg += "\n\n[Click here](https://www.patreon.com/gimmecards) to join us on " 
-            + IEmotes.patreon + " **Patreon** ┇ `/patreon`";
-
             msg += "\n\n" + Main.updateMsg + "\n";
 
             GameManager.sendMessage(event, user.getGameColor(), "🎒", msg);

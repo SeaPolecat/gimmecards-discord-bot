@@ -417,7 +417,7 @@ public class User implements IUser {
 
             if(card.getCardId().equals(cardId)) {
                 cc.addCardQuantity();
-                break;
+                return;
             }
         }
         newCard = new CardContainer(card, getCardCount(), card.isCardSellable());

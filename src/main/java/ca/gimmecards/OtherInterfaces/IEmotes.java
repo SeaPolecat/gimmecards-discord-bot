@@ -23,13 +23,11 @@ public interface IEmotes {
     String key = "<:key:875091820156162048>";
     String promostar = "<:promostar:955206901552001185>";
     String logo = "<:logo:1002625567922856086>";
-    String patreon = "<:patreon:1009210826030338139>";
 
     //badges
     String devBadge = "<:GimmeCardsDeveloper:998749089699213362>";
     String staffBadge = "<:GimmeCardsStaff:998749109504720956>";
     String communityBadge = "<:CommunityHelper:1001971363013210202>";
-    String patreonBadge = "<:Patreon:1009528136670662766>";
     String veteranBadge = "<:VeteranCollector:998749128819495012>";
     String masterBadge = "<:MasterCollector:998749146435563582>";
     String bdayBadge = "<:1YearAnniversary:998749060448129024>";

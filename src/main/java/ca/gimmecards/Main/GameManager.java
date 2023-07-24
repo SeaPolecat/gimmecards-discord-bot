@@ -12,9 +12,9 @@ import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import java.nio.file.Paths;
 import java.text.NumberFormat;
 import java.util.Random;
-//import net.dv8tion.jda.api.interactions.commands.OptionType;
-//import net.dv8tion.jda.api.interactions.commands.build.Commands;
-//import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+/*import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.Commands;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;*/
 
 public class GameManager extends ListenerAdapter {
 
@@ -282,29 +282,12 @@ public class GameManager extends ListenerAdapter {
             .addOption(OptionType.USER, "user", "mention a user", true)
             .addOption(OptionType.STRING, "card-id", "enter a card ID", true),
 
-            Commands.slash("tier1", "Gift someone the Rare Patreon perk")
-            .addOption(OptionType.USER, "user", "mention a user", true),
-
-            Commands.slash("tier2", "Gift someone the Radiant Rare Patreon perk")
-            .addOption(OptionType.USER, "user", "mention a user", true),
-
-            Commands.slash("untier", "Remove all Patreon perks from someone")
-            .addOption(OptionType.USER, "user", "mention a user", true),
-
-            Commands.slash("giftbadge", "Reward someone with the Helper Badge")
-            .addOption(OptionType.USER, "user", "mention a user", true),
-
-            Commands.slash("ungiftbadge", "Remove the Helper Badge from someone")
-            .addOption(OptionType.USER, "user", "mention a user", true),
-
             //HELP
             Commands.slash("help", "Get access to the website and other resources"),
 
             Commands.slash("rarities", "Show every possible card rarity in the game"),
 
             Commands.slash("badges", "Show every possible badge in the game"),
-
-            Commands.slash("patreon", "Show the Gimme Cards premium rewards"),
 
             Commands.slash("changelog", "See the latest updates to the game"),
 
@@ -341,8 +324,8 @@ public class GameManager extends ListenerAdapter {
             Commands.slash("unlock", "Use a key to unlock a pack")
             .addOption(OptionType.STRING, "pack-name", "enter a pack name", true),
 
-            //CARD
-            Commands.slash("cards", "See your current card collection")
+            //COLLECTION
+            Commands.slash("collection", "See your current card collection")
             .addOption(OptionType.INTEGER, "page", "enter a page", false)
             .addOption(OptionType.USER, "user", "mention a user", false),
 

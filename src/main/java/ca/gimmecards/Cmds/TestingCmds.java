@@ -109,5 +109,20 @@ public class TestingCmds {
         }
         GameObject.sendMessage(event, IColors.blue_, "", "done testing!");
         try { User.saveUsers(); } catch(Exception e) {}*/
+
+        /*for(User u : User.users) {
+            if(u.getUserId().equalsIgnoreCase("454773340163538955")) {
+                ArrayList<String> ids = new ArrayList<String>();
+
+                for(CardContainer cc : u.getCardContainers()) {
+                    if(cc.getCard().getCardName().equals("Pikachu Cosplay Charizard X")) {
+                        System.out.println(cc.getCard().getCardId());
+
+                        ids.add(cc.getCard().getCardId());
+                    }
+                }
+                System.out.println(ids.get(0).equals(ids.get(1)));
+            }
+        }*/
     }
 }

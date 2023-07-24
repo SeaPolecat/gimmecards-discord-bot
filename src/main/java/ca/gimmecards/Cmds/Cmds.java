@@ -107,8 +107,6 @@ public class Cmds extends ListenerAdapter {
     
                     Commands.slash("badges", "Show every possible badge in the game"),
     
-                    Commands.slash("patreon", "Show the Gimme Cards premium rewards"),
-    
                     Commands.slash("changelog", "See the latest updates to the game"),
     
                     //LEADERBOARD
@@ -291,9 +289,6 @@ public class Cmds extends ListenerAdapter {
         }
         if(event.getName().equals("badges")) {
             HelpCmds.viewBadges(event);
-        }
-        if(event.getName().equals("patreon")) {
-            HelpCmds.viewPatreon(event);
         }
         if(event.getName().equals("changelog")) {
             HelpCmds.viewChangelog(event);
