@@ -1,8 +1,7 @@
 package ca.gimmecards.Cmds;
-import ca.gimmecards.Cmds_.*;
-import ca.gimmecards.Helpers.*;
-import ca.gimmecards.Interfaces.*;
 import ca.gimmecards.Main.*;
+import ca.gimmecards.Cmds_MP.*;
+import ca.gimmecards.OtherInterfaces.*;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -10,60 +9,71 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.entities.Guild;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.Nullable;
 
-public class Cmds extends ListenerAdapter implements Emotes, Colors {
+public class Cmds extends ListenerAdapter {
+
+    //==============================================[ EVENT FUNCTIONS ]================================================================
     
-    public void onMessageReceived(@Nonnull MessageReceivedEvent event) {
+    /**
+     * an event function that's called whenever a user sends a regular message in a server; used to listen to admin commands
+     * @param event the MessageReceived event
+     */
+    public void onMessageReceived(MessageReceivedEvent event) {
         if(event.getAuthor().isBot() == true) { return; }
         String[] args = event.getMessage().getContentRaw().split("\\s+");
 
         if(event.getAuthor().getId().equals("454773340163538955")) {
 
-            //TESTING
+            //===========================================[ TESTING ]===================================================================
+
             if(isValidCommand(event, args, new String[]{"test"}, null)) {
                 TestingCmds.testSomething(event);
             }
-            if(isValidCommand(event, args, new String[]{"stats"}, null)) {
-                DataCmds.viewStats(event);
-            }
 
-            //DATA
-            if(isValidCommand(event, args, new String[]{"data"}, null)) {
-                DataCmds.viewData(event, "new");
+            //=============================================[ CARD ]====================================================================
+
+            if(isValidCommand(event, args, new String[]{"stats"}, null)) {
+                CardCmds.viewBotStats(event);
             }
-            if(isValidCommand(event, args, new String[]{"olddata"}, null)) {
-                DataCmds.viewData(event, "old");
+            if(isValidCommand(event, args, new String[]{"sets"}, null)) {
+                CardCmds.viewCardSets(event, "new");
             }
-            if(isValidCommand(event, args, new String[]{"raredata"}, null)) {
-                DataCmds.viewData(event, "rare");
+            if(isValidCommand(event, args, new String[]{"oldsets"}, null)) {
+                CardCmds.viewCardSets(event, "old");
             }
-            if(isValidCommand(event, args, new String[]{"promodata"}, null)) {
-                DataCmds.viewData(event, "promo");
+            if(isValidCommand(event, args, new String[]{"raresets"}, null)) {
+                CardCmds.viewCardSets(event, "rare");
+            }
+            if(isValidCommand(event, args, new String[]{"promosets"}, null)) {
+                CardCmds.viewCardSets(event, "promo");
             }
             if(isValidCommand(event, args, new String[]{"wipe"}, null)) {
-                DataCmds.wipeData(event);
+                CardCmds.wipeCardSets(event);
             }
             if(isValidCommand(event, args, new String[]{"refresh"}, new String[]{"length change"})) {
-                DataCmds.refreshData(event, args);
+                CardCmds.refreshCardSets(event, args);
             }
             if(isValidCommand(event, args, new String[]{"count"}, new String[]{"set code"})) {
-                DataCmds.countSetContent(event, args);
+                CardCmds.countCardSet(event, args);
             }
             if(isValidCommand(event, args, new String[]{"add"}, new String[]{"set #"})) {
-                DataCmds.addContents(event, args, true);
+                CardCmds.addContents(event, args, true);
             }
             if(isValidCommand(event, args, new String[]{"addold"}, new String[]{"set #"})) {
-                DataCmds.addContents(event, args, false);
+                CardCmds.addContents(event, args, false);
             }
             if(isValidCommand(event, args, new String[]{"addrare"}, new String[]{"set #"})) {
-                DataCmds.addSpecContents(event, args, true);
+                CardCmds.addSpecialContents(event, args, true);
             }
             if(isValidCommand(event, args, new String[]{"addpromo"}, new String[]{"set #"})) {
-                DataCmds.addSpecContents(event, args, false);
+                CardCmds.addSpecialContents(event, args, false);
             }
 
-            //SLASH
+            //========================================[ GUILD SLASH UPDATE ]===========================================================
+
+            // please use ?update whenever you edit the slash commands
+
             if(isValidCommand(event, args, new String[]{"update"}, null)) {
                 Guild guild = event.getGuild();
 
@@ -90,29 +100,12 @@ public class Cmds extends ListenerAdapter implements Emotes, Colors {
                     .addOption(OptionType.USER, "user", "mention a user", true)
                     .addOption(OptionType.STRING, "card-id", "enter a card ID", true),
     
-                    Commands.slash("tier1", "Gift someone the Rare Patreon perk")
-                    .addOption(OptionType.USER, "user", "mention a user", true),
-    
-                    Commands.slash("tier2", "Gift someone the Radiant Rare Patreon perk")
-                    .addOption(OptionType.USER, "user", "mention a user", true),
-    
-                    Commands.slash("untier", "Remove all Patreon perks from someone")
-                    .addOption(OptionType.USER, "user", "mention a user", true),
-    
-                    Commands.slash("giftbadge", "Reward someone with the Helper Badge")
-                    .addOption(OptionType.USER, "user", "mention a user", true),
-    
-                    Commands.slash("ungiftbadge", "Remove the Helper Badge from someone")
-                    .addOption(OptionType.USER, "user", "mention a user", true),
-    
                     //HELP
                     Commands.slash("help", "Get access to the website and other resources"),
     
                     Commands.slash("rarities", "Show every possible card rarity in the game"),
     
                     Commands.slash("badges", "Show every possible badge in the game"),
-    
-                    Commands.slash("patreon", "Show the Gimme Cards premium rewards"),
     
                     Commands.slash("changelog", "See the latest updates to the game"),
     
@@ -149,8 +142,8 @@ public class Cmds extends ListenerAdapter implements Emotes, Colors {
                     Commands.slash("unlock", "Use a key to unlock a pack")
                     .addOption(OptionType.STRING, "pack-name", "enter a pack name", true),
     
-                    //CARD
-                    Commands.slash("cards", "See your current card collection")
+                    //COLLECTION
+                    Commands.slash("collection", "See your current card collection")
                     .addOption(OptionType.INTEGER, "page", "enter a page", false)
                     .addOption(OptionType.USER, "user", "mention a user", false),
     
@@ -242,21 +235,25 @@ public class Cmds extends ListenerAdapter implements Emotes, Colors {
                     Commands.slash("reject", "End a trade instantly")
                 ).queue();
 
-                JDA.sendMessage(event, blue_, "", "`Successfully updated this guild's slash commands.`");
+                GameManager.sendMessage(event, IColors.blue, "", "`Successfully updated this guild's slash commands.`");
             }
         }
     }
 
-    public void onSlashCommandInteraction(@Nonnull SlashCommandInteractionEvent event) {
+    /**
+     * an event function that's called whenever a user sends a slash command in a server; used to listen to slash commands
+     * @param event the SlashCommandInteraction event
+     */
+    public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
 
         //LOCK
         if(event.getUser().getId().equals("454773340163538955") && event.getName().equals("plmnko")) {
             Main.isLocked = false;
-            JDA.sendMessage(event, blue_, "", "`Unlocked Gimme Cards.`");
+            GameManager.sendMessage(event, IColors.blue, "", "`Unlocked Gimme Cards.`");
         }
 
         if(Main.isLocked) {
-            JDA.sendMessage(event, red_, "⏰", 
+            GameManager.sendMessage(event, IColors.red, "⏰", 
             "The developer has locked *Gimme Cards*, either to fix a bug or prepare for an update; "
             + "please wait until it comes back online!");
             return;
@@ -264,7 +261,7 @@ public class Cmds extends ListenerAdapter implements Emotes, Colors {
 
         if(event.getUser().getId().equals("454773340163538955") && event.getName().equals("qazxsw")) {
             Main.isLocked = true;
-            JDA.sendMessage(event, blue_, "", "`Locked Gimme Cards.`");
+            GameManager.sendMessage(event, IColors.blue, "", "`Locked Gimme Cards.`");
         }
         
         //PRIVACY
@@ -282,21 +279,6 @@ public class Cmds extends ListenerAdapter implements Emotes, Colors {
         if(event.getName().equals("giftcard")) {
             GiftCmds.giftCard(event);
         }
-        if(event.getName().equals("tier1")) {
-            GiftCmds.giftRare(event);
-        }
-        if(event.getName().equals("tier2")) {
-            GiftCmds.giftRadiantRare(event);
-        }
-        if(event.getName().equals("untier")) {
-            GiftCmds.removePatreonRewards(event);
-        }
-        if(event.getName().equals("giftbadge")) {
-            GiftCmds.giftHelperBadge(event);
-        }
-        if(event.getName().equals("ungiftbadge")) {
-            GiftCmds.removeHelperBadge(event);
-        }
 
         //HELP
         if(event.getName().equals("help")) {
@@ -307,9 +289,6 @@ public class Cmds extends ListenerAdapter implements Emotes, Colors {
         }
         if(event.getName().equals("badges")) {
             HelpCmds.viewBadges(event);
-        }
-        if(event.getName().equals("patreon")) {
-            HelpCmds.viewPatreon(event);
         }
         if(event.getName().equals("changelog")) {
             HelpCmds.viewChangelog(event);
@@ -328,7 +307,7 @@ public class Cmds extends ListenerAdapter implements Emotes, Colors {
             if(event.getOption("user") == null) {
                 BackpackCmds.viewBackpack(event);
             } else {
-                BackpackCmds_.viewBackpack_(event);
+                BackpackCmds_MP.viewBackpack_(event);
             }
         }
         if(event.getName().equals("redeem")) {
@@ -364,25 +343,25 @@ public class Cmds extends ListenerAdapter implements Emotes, Colors {
             ShopCmds.unlockPack(event);
         }
 
-        //CARD
-        if(event.getName().equals("cards")) {
+        //COLLECTION
+        if(event.getName().equals("collection")) {
             if(event.getOption("user") == null) {
-                CardCmds.viewCards(event);
+                CollectionCmds.viewCards(event);
             } else {
-                CardCmds_.viewCards_(event);
+                CollectionCmds_MP.viewCards_(event);
             }
         }
         if(event.getName().equals("fav")) {
-            CardCmds.favouriteCard(event);
+            CollectionCmds.favouriteCard(event);
         }
         if(event.getName().equals("unfav")) {
-            CardCmds.unfavouriteCard(event);
+            CollectionCmds.unfavouriteCard(event);
         }
         if(event.getName().equals("favall")) {
-            CardCmds.favouriteAll(event);
+            CollectionCmds.favouriteAll(event);
         }
         if(event.getName().equals("sort")) {
-            CardCmds.sortCards(event);
+            CollectionCmds.sortCards(event);
         }
 
         //VIEW
@@ -393,7 +372,7 @@ public class Cmds extends ListenerAdapter implements Emotes, Colors {
             if(event.getOption("user") == null) {
                 ViewCmds.viewCard(event);
             } else {
-                ViewCmds_.viewCard_(event);
+                ViewCmds_MP.viewCard_(event);
             }
         }
 
@@ -464,7 +443,17 @@ public class Cmds extends ListenerAdapter implements Emotes, Colors {
         }
     }
 
-    private static boolean isValidCommand(MessageReceivedEvent event, String[] args, String[] cmds, String[] params) {
+    //===============================================[ PRIVATE FUNCTIONS ]=============================================================
+
+    /**
+     * checks if a player's message command is valid (is spelled correctly and has all the required arguments)
+     * @param event the message event
+     * @param args an array containing every separated string in the player's input
+     * @param cmds a list of the command's aliases; typing any of them will work
+     * @param params additional required command arguments; can be null if there aren't any additional requirements
+     * @return whether or not the player's message command is valid
+     */
+    private static boolean isValidCommand(MessageReceivedEvent event, String[] args, String[] cmds, @Nullable String[] params) {
         for(String cmd : cmds) {
             if(args[0].equalsIgnoreCase("?" + cmd)) {
                 if(params == null) {
@@ -480,7 +469,7 @@ public class Cmds extends ListenerAdapter implements Emotes, Colors {
                     }
                     guidance = guidance.trim();
     
-                    JDA.sendMessage(event, red_, "❌", "Please follow the format: `" + args[0] + " " + guidance + "`");
+                    GameManager.sendMessage(event, IColors.red, "❌", "Please follow the format: `" + args[0] + " " + guidance + "`");
                 }
             }
         }

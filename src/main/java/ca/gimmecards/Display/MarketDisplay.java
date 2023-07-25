@@ -1,6 +1,6 @@
 package ca.gimmecards.Display;
 import ca.gimmecards.Main.*;
-import ca.gimmecards.Helpers.*;
+import ca.gimmecards.OtherInterfaces.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 public class MarketDisplay extends Display {
@@ -13,34 +13,34 @@ public class MarketDisplay extends Display {
     public MarketDisplay findDisplay() {
         String userId = getUserId();
 
-        for(MarketDisplay m : marketDisplays) {
+        for(MarketDisplay m : IDisplays.marketDisplays) {
             if(m.getUserId().equals(userId)) {
                 return m;
             }
         }
-        marketDisplays.add(0, new MarketDisplay(userId));
-        return marketDisplays.get(0);
+        IDisplays.marketDisplays.add(0, new MarketDisplay(userId));
+        return IDisplays.marketDisplays.get(0);
     }
 
     @Override
     public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, int page) {
         int startIndex = page - 1;
-        Data data = server.getMarket().get(startIndex);
+        Card card = server.getMarket().get(startIndex);
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
         setMaxPage(server.getMarket().size());
 
-        desc += "**Rarity** ┇ " + UX.findRarityEmote(data) + " " + data.getCardRarity() + "\n";
-        desc += "**Card Set** ┇ " + data.getSetEmote() + " " + data.getSetName() + "\n";
-        desc += "**Market Price** ┇ " + UX.formatCredits(data) + "\n\n";
+        desc += "**Rarity** ┇ " + card.findRarityEmote() + " " + card.getCardRarity() + "\n";
+        desc += "**Card Set** ┇ " + card.getSetEmote() + " " + card.getSetName() + "\n";
+        desc += "**Market Price** ┇ " + card.formatCredits() + "\n\n";
         desc += "*Click on image for zoomed view*";
 
-        embed.setTitle(UX.findCardTitle(data, false));
+        embed.setTitle(card.findCardTitle(false));
         embed.setDescription(desc);
-        embed.setImage(data.getCardImage());
+        embed.setImage(card.getCardImage());
         embed.setFooter("Page " + page + " of " + getMaxPage(), ui.getUserIcon());
-        embed.setColor(UX.findEmbedColour(data));
+        embed.setColor(card.findEmbedColour());
         return embed;
     }
 }

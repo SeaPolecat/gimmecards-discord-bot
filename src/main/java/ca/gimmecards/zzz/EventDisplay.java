@@ -58,7 +58,7 @@ public class EventDisplay extends Display {
         desc += "__**Note from the Developer**__\n";
         desc += letter;
 
-        embed.setTitle(pikachu_ + " 🎉 ┇ Gimme Cards 1 Year Anniversary ┇ 🎉 " + pikachu_);
+        embed.setTitle(IEmotes.pikachu_ + " 🎉 ┇ Gimme Cards 1 Year Anniversary ┇ 🎉 " + IEmotes.pikachu_);
         embed.setDescription(desc);
         embed.setImage("https://ichef.bbci.co.uk/news/976/cpsprodpb/5384/production/_117308312_c18da88c-bb36-4e2d-8ae4-c73fafaa8bf9.jpg");
         embed.setFooter("A big cake for " + ui.getUserName() + "!", ui.getUserIcon());

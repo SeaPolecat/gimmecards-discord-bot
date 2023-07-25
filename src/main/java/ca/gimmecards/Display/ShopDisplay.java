@@ -1,6 +1,6 @@
 package ca.gimmecards.Display;
 import ca.gimmecards.Main.*;
-import ca.gimmecards.Helpers.*;
+import ca.gimmecards.OtherInterfaces.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 public class ShopDisplay extends Display {
@@ -13,13 +13,13 @@ public class ShopDisplay extends Display {
     public ShopDisplay findDisplay() {
         String userId = getUserId();
 
-        for(ShopDisplay s : shopDisplays) {
+        for(ShopDisplay s : IDisplays.shopDisplays) {
             if(s.getUserId().equals(userId)) {
                 return s;
             }
         }
-        shopDisplays.add(0, new ShopDisplay(userId));
-        return shopDisplays.get(0);
+        IDisplays.shopDisplays.add(0, new ShopDisplay(userId));
+        return IDisplays.shopDisplays.get(0);
     }
 
     @Override
@@ -28,31 +28,31 @@ public class ShopDisplay extends Display {
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
-        setMaxPage(Data.sets.length / 8);
+        setMaxPage(CardSet.sets.length / 8);
 
-        if(Data.sets.length % 8 != 0) {
+        if(CardSet.sets.length % 8 != 0) {
             addMaxPage();
         }
-        desc += "`" + Check.countOwnedPacks(user, false) + "/" + Data.sets.length + "` packs unlocked\n";
+        desc += "`" + user.countOwnedPacks(false) + "/" + CardSet.sets.length + "` packs unlocked\n";
         desc += "┅┅\n";
         for(int i = startIndex; i < startIndex + 8; i++) {
-            Data set = Data.sets[i];
+            CardSet set = CardSet.sets[i];
 
-            desc += token_ + " " + set.getSetEmote() + " " + set.getSetName() + " ┇ ";
-            if(Check.isPackUnlocked(user, set.getSetName())) {
+            desc += IEmotes.token + " " + set.getSetEmote() + " " + set.getSetName() + " ┇ ";
+            if(user.isPackUnlocked(set.getSetName())) {
                 desc += "✅\n";
             } else {
                 desc += "🔒\n";
             }
-            if(i >= Data.sets.length - 1) {
+            if(i >= CardSet.sets.length - 1) {
                 break;
             }
         }
         desc += "┅┅\n";
-        embed.setTitle(pikachu_ + " Poké Packs Shop " + pikachu_);
+        embed.setTitle(IEmotes.pikachu + " Poké Packs Shop " + IEmotes.pikachu);
         embed.setDescription(desc);
         embed.setFooter("Page " + page + " of " + getMaxPage(), ui.getUserIcon());
-        embed.setColor(shop_);
+        embed.setColor(IColors.shopColor);
         return embed;
     }
 }

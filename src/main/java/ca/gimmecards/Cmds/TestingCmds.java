@@ -1,7 +1,7 @@
 package ca.gimmecards.Cmds;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
-public class TestingCmds extends Cmds {
+public class TestingCmds {
 
     /*public User(String id, int gc, int cc, int l, int xp, int mxp, int t, int creds, int k, int s, long oe, long ve, long de, long re, long me, long marketE, String sm, boolean si, ArrayList<String> b, String pc, ArrayList<String> p, ArrayList<Card> c, boolean ir, boolean irr) {
         userId = id;
@@ -38,7 +38,7 @@ public class TestingCmds extends Cmds {
             u.getBadges().add("original");
 
             Data merch = new Data(
-                logo_,
+                IEmotes.logo_,
                 "Gimme Cards",
                 "merch-0",
                 "Pikachu Cosplay Charizard X",
@@ -50,8 +50,29 @@ public class TestingCmds extends Cmds {
             );
             Card.addSingleCard(u, merch, true);
         }
-        JDA.sendMessage(event, blue_, "", "done testing!");
+        GameObject.sendMessage(event, IColors.blue_, "", "done testing!");
         try { User.saveUsers(); } catch(Exception e) {}*/
+
+        /*for(User u : User.users) {
+            for(int i = 0; i < u.getCardContainers().size(); i++) {
+                CardContainer cc = u.getCardContainers().get(i);
+                CardContainer container = new CardContainer(
+                    cc.getCard(),
+                    cc.getCardNum(),
+                    cc.getCardQuantity(),
+                    cc.getIsSellable(),
+                    cc.getIsFav()
+                );
+                u.getCardContainers().set(i, container);
+            }
+        }
+        for(User u : User.users) {
+            for(CardContainer cc : u.getCardContainers()) {
+                System.out.println(cc.getCard().getCardName());
+            }
+        }
+        GameObject.sendMessage(event, IColors.blue_, "", "done testing!");
+        //try { User.saveUsers(); } catch(Exception e) {}
         
         /*for(int i = 0; i < User.users.size(); i++) {
             User u = User.users.get(i);
@@ -64,8 +85,8 @@ public class TestingCmds extends Cmds {
                 u.getMaxXP(),
                 u.getTokens(),
                 u.getCredits(),
-                u.getKeys(),
                 u.getStars(),
+                u.getKeys(),
                 u.getOpenEpoch(),
                 u.getVoteEpoch(),
                 u.getDailyEpoch(),
@@ -73,20 +94,35 @@ public class TestingCmds extends Cmds {
                 u.getMinigameEpoch(),
                 u.getMarketEpoch(),
                 u.getSortMethod(),
-                u.getSortIncreasing(),
+                u.getIsSortIncreasing(),
+                u.getPinnedCard(),
                 u.getBadges(),
-                u.getPinCard(),
                 u.getPacks(),
-                u.getCards(),
-                u.getIsRare(),
-                u.getIsRadiantRare()
+                u.getCardContainers()
             );
             User.users.set(i, user);
         }
         for(User u : User.users) {
-            System.out.println(u.getCredits());
+            for(CardContainer cc : u.getCardContainers()) {
+                System.out.println(cc.getIsFav());
+            }
         }
-        JDA.sendMessage(event, blue_, "", "done testing!");
+        GameObject.sendMessage(event, IColors.blue_, "", "done testing!");
         try { User.saveUsers(); } catch(Exception e) {}*/
+
+        /*for(User u : User.users) {
+            if(u.getUserId().equalsIgnoreCase("454773340163538955")) {
+                ArrayList<String> ids = new ArrayList<String>();
+
+                for(CardContainer cc : u.getCardContainers()) {
+                    if(cc.getCard().getCardName().equals("Pikachu Cosplay Charizard X")) {
+                        System.out.println(cc.getCard().getCardId());
+
+                        ids.add(cc.getCard().getCardId());
+                    }
+                }
+                System.out.println(ids.get(0).equals(ids.get(1)));
+            }
+        }*/
     }
 }

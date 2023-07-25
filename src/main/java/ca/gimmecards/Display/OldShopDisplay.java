@@ -1,6 +1,6 @@
 package ca.gimmecards.Display;
 import ca.gimmecards.Main.*;
-import ca.gimmecards.Helpers.*;
+import ca.gimmecards.OtherInterfaces.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 public class OldShopDisplay extends Display {
@@ -13,13 +13,13 @@ public class OldShopDisplay extends Display {
     public OldShopDisplay findDisplay() {
         String userId = getUserId();
 
-        for(OldShopDisplay o : oldShopDisplays) {
+        for(OldShopDisplay o : IDisplays.oldShopDisplays) {
             if(o.getUserId().equals(userId)) {
                 return o;
             }
         }
-        oldShopDisplays.add(0, new OldShopDisplay(userId));
-        return oldShopDisplays.get(0);
+        IDisplays.oldShopDisplays.add(0, new OldShopDisplay(userId));
+        return IDisplays.oldShopDisplays.get(0);
     }
 
     @Override
@@ -28,31 +28,31 @@ public class OldShopDisplay extends Display {
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
-        setMaxPage(Data.oldSets.length / 8);
+        setMaxPage(CardSet.oldSets.length / 8);
 
-        if(Data.oldSets.length % 8 != 0) {
+        if(CardSet.oldSets.length % 8 != 0) {
             addMaxPage();
         }
-        desc += "`" + Check.countOwnedPacks(user, true) + "/" + Data.oldSets.length + "` packs unlocked\n";
+        desc += "`" + user.countOwnedPacks(true) + "/" + CardSet.oldSets.length + "` packs unlocked\n";
         desc += "┅┅\n";
         for(int i = startIndex; i < startIndex + 8; i++) {
-            Data set = Data.oldSets[i];
+            CardSet set = CardSet.oldSets[i];
 
-            desc += token_ + " " + set.getSetEmote() + " " + set.getSetName() + " ┇ ";
-            if(Check.isPackUnlocked(user, set.getSetName())) {
+            desc += IEmotes.token + " " + set.getSetEmote() + " " + set.getSetName() + " ┇ ";
+            if(user.isPackUnlocked(set.getSetName())) {
                 desc += "✅\n";
             } else {
                 desc += "🔒\n";
             }
-            if(i >= Data.oldSets.length - 1) {
+            if(i >= CardSet.oldSets.length - 1) {
                 break;
             }
         }
         desc += "┅┅\n";
-        embed.setTitle(squirtle_ + " Legacy Packs Shop " + squirtle_ + " 🚫");
+        embed.setTitle(IEmotes.squirtle + " Legacy Packs Shop " + IEmotes.squirtle + " 🚫");
         embed.setDescription(desc);
         embed.setFooter("Page " + page + " of " + getMaxPage(), ui.getUserIcon());
-        embed.setColor(oldshop_);
+        embed.setColor(IColors.oldshopColor);
         return embed;
     }
 }

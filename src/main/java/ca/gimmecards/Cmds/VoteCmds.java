@@ -1,6 +1,6 @@
 package ca.gimmecards.Cmds;
 import ca.gimmecards.Main.*;
-import ca.gimmecards.Helpers.*;
+import ca.gimmecards.OtherInterfaces.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
 import java.io.IOException;
@@ -9,38 +9,36 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.URI;
 
-public class VoteCmds extends Cmds {
+public class VoteCmds {
 
     public static void voteBot(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
-        Server server = Server.findServer(event);
 
-        if(!Check.isCooldownDone(user.getVoteEpoch(), Check.findCooldown(user, 720), true)) {
-            JDA.sendMessage(event, red_, "⏰", "Please wait another " 
-            + Check.findTimeLeft(user.getVoteEpoch(), Check.findCooldown(user, 720), true));
+        if(!User.isCooldownDone(user.getVoteEpoch(), 720, true)) {
+            GameManager.sendMessage(event, IColors.red, "⏰", "Please wait another " 
+            + User.findTimeLeft(user.getVoteEpoch(), 720, true));
 
         } else {
             EmbedBuilder embed = new EmbedBuilder();
             String desc = "";
     
-            desc += "Use the link below to vote, then type " + UX.formatCmd(server, "claim") + " to claim your reward!\n\n";
+            desc += "Use the link below to vote, then type " + GameManager.formatCmd("claim") + " to claim your reward!\n\n";
             desc += "[Vote on Top.gg](https://top.gg/bot/814025499381727232/vote)";
     
-            embed.setTitle(lootbox_ + " Voting Reward " + lootbox_);
+            embed.setTitle(IEmotes.lootbox + " Voting Reward " + IEmotes.lootbox);
             embed.setDescription(desc);
-            embed.setColor(vote_);
-            JDA.sendEmbed(event, embed);
+            embed.setColor(IColors.voteColor);
+            GameManager.sendEmbed(event, embed);
             embed.clear();
         }
     }
     
     public static void claimReward(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
-        Server server = Server.findServer(event);
 
-        if(!Check.isCooldownDone(user.getVoteEpoch(), Check.findCooldown(user, 720), true)) {
-            JDA.sendMessage(event, red_, "⏰", "Please wait another " 
-            + Check.findTimeLeft(user.getVoteEpoch(), Check.findCooldown(user, 720), true));
+        if(!User.isCooldownDone(user.getVoteEpoch(), 720, true)) {
+            GameManager.sendMessage(event, IColors.red, "⏰", "Please wait another " 
+            + User.findTimeLeft(user.getVoteEpoch(), 720, true));
 
         } else {
             try {
@@ -54,20 +52,20 @@ public class VoteCmds extends Cmds {
                 boolean hasVoted = response.contains("1");
     
                 if(!hasVoted) {
-                    JDA.sendMessage(event, red_, "❌", "You haven't voted for *Gimme Cards* yet! "
-                    + "Please use " + UX.formatCmd(server, "vote"));
+                    GameManager.sendMessage(event, IColors.red, "❌", "You haven't voted for *Gimme Cards* yet! "
+                    + "Please use " + GameManager.formatCmd("vote"));
 
                 } else {
                     String msg = "";
 
                     user.resetVoteEpoch();
 
-                    msg += UX.formatNick(event) + " claimed their gift! Thank you for voting 😊";
+                    msg += GameManager.formatName(event) + " claimed their gift! Thank you for voting 😊";
                     msg += user.updateTokens(5, true);
-                    msg += user.updateCredits(UX.randRange(120, 150), false);
+                    msg += user.updateCredits(GameManager.randRange(120, 150), false);
                     msg += user.updateStars(1, false);
 
-                    JDA.sendMessage(event, user.getGameColor(), lootbox_, msg);
+                    GameManager.sendMessage(event, user.getGameColor(), IEmotes.lootbox, msg);
                     try { User.saveUsers(); } catch(Exception e) {}
                 }
             } catch(IOException | InterruptedException e) {}

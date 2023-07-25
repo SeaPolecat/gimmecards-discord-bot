@@ -1,7 +1,6 @@
 package ca.gimmecards.Main;
 import ca.gimmecards.Cmds.*;
 import ca.gimmecards.Display.*;
-import javax.security.auth.login.LoginException;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.requests.GatewayIntent;
@@ -12,20 +11,31 @@ import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import org.discordbots.api.client.DiscordBotListAPI;
 import org.jasypt.util.text.BasicTextEncryptor;
-import io.github.cdimascio.dotenv.Dotenv;
+import javax.security.auth.login.LoginException;
 
 public class Main {
 
-    public static Dotenv dotenv = Dotenv.load();
+    //=========================================[ API INSTANCES ]=======================================================================
+
     public static JDA jda;
     public static DiscordBotListAPI dbl;
     public static BasicTextEncryptor encryptor = new BasicTextEncryptor();
-    public static final String botToken = dotenv.get("BOT_TOKEN");
-    public static final String testToken = dotenv.get("TEST_TOKEN");
-    public static final String dblToken = dotenv.get("DBL_TOKEN");
-    public static final String encryptorPass = dotenv.get("ENCRYPTOR_PASS");;
+
+    //========================================[ TOKENS & PASSWORDS ]===================================================================
+
+    // PLEASE REDACT THESE BEFORE UPLOADING TO GITHUB!!!!!!
+    
+    public static final String botToken = "REDACTED";
+    public static final String testToken = "REDACTED";
+    public static final String dblToken = "REDACTED";
+    public static final String encryptorPass = "REDACTED";
+
+    //========================================[ UNIVERSAL VARIABLES ]==================================================================
+
     public static final String updateMsg = "🟢 New update on 1/1/2023 ┇ `/changelog`";
     public static boolean isLocked = false;
+
+    //============================================[ MAIN METHOD ]======================================================================
 
     public static void main(String[] args) throws LoginException {
 
@@ -37,7 +47,8 @@ public class Main {
         .build();
 
         jda = JDABuilder
-        .createDefault(testToken,
+        .createDefault(testToken, // change this token accordingly
+        GatewayIntent.MESSAGE_CONTENT, // comment this line out before releasing an update (the actual bot isn't allowed to have this)
         GatewayIntent.GUILD_MESSAGES,
         GatewayIntent.GUILD_MEMBERS,
         GatewayIntent.GUILD_EMOJIS_AND_STICKERS)
@@ -50,7 +61,7 @@ public class Main {
         jda.getPresence().setStatus(OnlineStatus.ONLINE);
         jda.getPresence().setActivity(Activity.playing("type /help"));
 
-        jda.addEventListener(new Ready());
+        jda.addEventListener(new GameManager());
         jda.addEventListener(new Cmds());
         jda.addEventListener(new Display());
     }

@@ -1,7 +1,6 @@
 package ca.gimmecards.Cmds;
 import ca.gimmecards.Main.*;
 import ca.gimmecards.Display.LeaderboardDisplay;
-import ca.gimmecards.Helpers.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -10,7 +9,7 @@ import java.util.Comparator;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LeaderboardCmds extends Cmds implements Comparator<User> {
+public class LeaderboardCmds implements Comparator<User> {
 
     public int compare(User u1, User u2) {
         if(u1.getLevel() < u2.getLevel()) {
@@ -56,7 +55,7 @@ public class LeaderboardCmds extends Cmds implements Comparator<User> {
             disp.setPlayers(players);
             disp.setPlayerInfos(playerInfos);
     
-            JDA.sendDynamicEmbed(event, user, null, disp, 1);
+            GameManager.sendDynamicEmbed(event, user, null, disp, 1);
         }
     }
 
@@ -82,6 +81,6 @@ public class LeaderboardCmds extends Cmds implements Comparator<User> {
         disp.setPlayers(players);
         disp.setPlayerInfos(playerInfos);
 
-        JDA.sendDynamicEmbed(event, user, null, disp, 1);
+        GameManager.sendDynamicEmbed(event, user, null, disp, 1);
     }
 }

@@ -1,6 +1,6 @@
 package ca.gimmecards.Display;
 import ca.gimmecards.Main.*;
-import ca.gimmecards.Helpers.*;
+import ca.gimmecards.OtherInterfaces.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 import java.util.ArrayList;
 
@@ -10,8 +10,8 @@ public class TradeDisplay extends Display {
     private User user2;
     private UserInfo userInfo1;
     private UserInfo userInfo2;
-    private ArrayList<Card> offers1;
-    private ArrayList<Card> offers2;
+    private ArrayList<CardContainer> offers1;
+    private ArrayList<CardContainer> offers2;
     private boolean accept1;
     private boolean accept2;
     private boolean reject1;
@@ -25,8 +25,8 @@ public class TradeDisplay extends Display {
         user2 = null;
         userInfo1 = null;
         userInfo2 = null;
-        offers1 = new ArrayList<Card>();
-        offers2 = new ArrayList<Card>();
+        offers1 = new ArrayList<CardContainer>();
+        offers2 = new ArrayList<CardContainer>();
         accept1 = false;
         accept2 = false;
         reject1 = false;
@@ -37,8 +37,8 @@ public class TradeDisplay extends Display {
 
     public User getUser1() { return user1; }
     public User getUser2() { return user2; }
-    public ArrayList<Card> getOffers1() { return offers1; }
-    public ArrayList<Card> getOffers2() { return offers2; }
+    public ArrayList<CardContainer> getOffers1() { return offers1; }
+    public ArrayList<CardContainer> getOffers2() { return offers2; }
     public int getTax1() { return tax1; }
     public int getTax2() { return tax2; }
     //
@@ -54,7 +54,7 @@ public class TradeDisplay extends Display {
         }
         return userInfo2;
     }
-    public ArrayList<Card> getOffers(String userId) {
+    public ArrayList<CardContainer> getOffers(String userId) {
         if(isUser1(userId)) {
             return offers1;
         }
@@ -111,27 +111,27 @@ public class TradeDisplay extends Display {
     public TradeDisplay findDisplay() {
         String userId = getUserId();
 
-        for(TradeDisplay t : tradeDisplays) {
+        for(TradeDisplay t : IDisplays.tradeDisplays) {
             if(t.getUser1() != null 
             && t.getUser(userId).getUserId().equals(userId)) {
                 return t;
             }
         }
-        tradeDisplays.add(0, new TradeDisplay(userId));
-        return tradeDisplays.get(0);
+        IDisplays.tradeDisplays.add(0, new TradeDisplay(userId));
+        return IDisplays.tradeDisplays.get(0);
     }
 
     public void removeTradeDisplay() {
-        for(int i = 0; i < tradeDisplays.size(); i++) {
-            if(tradeDisplays.get(i).getUserId().equals(this.getUserId())) {
-                tradeDisplays.remove(i);
+        for(int i = 0; i < IDisplays.tradeDisplays.size(); i++) {
+            if(IDisplays.tradeDisplays.get(i).getUserId().equals(this.getUserId())) {
+                IDisplays.tradeDisplays.remove(i);
                 break;
             }
         }
     }
 
     public boolean tradeExists(String userId) {
-        for(TradeDisplay disp : tradeDisplays) {
+        for(TradeDisplay disp : IDisplays.tradeDisplays) {
             if(disp.getUser1() != null 
             && disp.getUser(userId).getUserId().equals(userId)) {
                 return true;
@@ -166,10 +166,10 @@ public class TradeDisplay extends Display {
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
-        desc += UX.formatCmd(server, "offer (card #)") + " to offer a card\n";
-        desc += UX.formatCmd(server, "unoffer (trade #)") + " remove an offer\n";
-        desc += UX.formatCmd(server, "accept") + " / " + UX.formatCmd(server, "unaccept") + " to lock your offer\n";
-        desc += UX.formatCmd(server, "reject") + " to end trade\n\n";
+        desc += GameManager.formatCmd("offer (card #)") + " to offer a card\n";
+        desc += GameManager.formatCmd("unoffer (trade #)") + " remove an offer\n";
+        desc += GameManager.formatCmd("accept") + " / " + GameManager.formatCmd("unaccept") + " to lock your offer\n";
+        desc += GameManager.formatCmd("reject") + " to end trade\n\n";
 
         desc += userInfo1.getUserPing() + "\n";
         desc += "┅┅\n";
@@ -181,19 +181,19 @@ public class TradeDisplay extends Display {
         } else {
             desc += "⏳ Deciding\n";
         }
-        desc += "**Trading Fee** ┇ " + UX.formatCredits(tax1) + "\n";
+        desc += "**Trading Fee** ┇ " + Card.formatCredits(tax1) + "\n";
         desc += "┅┅\n";
 
         for(int i = 0; i < 5; i++) {
             try {
-                Card card = offers1.get(i);
-                Data data = card.getData();
+                CardContainer cc = offers1.get(i);
+                Card card = cc.getCard();
 
-                desc += "`#" + (i+1) + "` "  + UX.findCardTitle(data, false)
-                + " ┇ " + UX.findRarityEmote(data) 
-                + " ┇ " + data.getSetEmote()
-                + " ┇ " + UX.formatXP(data, card.getSellable())
-                + " ┇ *x" + card.getCardQuantity() + "*\n";
+                desc += "`#" + (i+1) + "` "  + card.findCardTitle(false)
+                + " ┇ " + card.findRarityEmote() 
+                + " ┇ " + card.getSetEmote()
+                + " ┇ " + card.formatXP(cc.getIsSellable())
+                + " ┇ *x" + cc.getCardQuantity() + "*\n";
 
             } catch(IndexOutOfBoundsException e) {
                 desc += "`#" + (i+1) + "`\n";
@@ -211,27 +211,27 @@ public class TradeDisplay extends Display {
         } else {
             desc += "⏳ Deciding\n";
         }
-        desc += "**Trading Fee** ┇ " + UX.formatCredits(tax2) + "\n";
+        desc += "**Trading Fee** ┇ " + Card.formatCredits(tax2) + "\n";
         desc += "┅┅\n";
 
         for(int i = 0; i < 5; i++) {
             try {
-                Card card = offers2.get(i);
-                Data data = card.getData();
+                CardContainer cc = offers2.get(i);
+                Card card = cc.getCard();
 
-                desc += "`#" + (i+1) + "` "  + UX.findCardTitle(data, false)
-                + " ┇ " + UX.findRarityEmote(data) 
-                + " ┇ " + data.getSetEmote()
-                + " ┇ " + UX.formatXP(data, card.getSellable())
-                + " ┇ *x" + card.getCardQuantity() + "*\n";
+                desc += "`#" + (i+1) + "` "  + card.findCardTitle(false)
+                + " ┇ " + card.findRarityEmote() 
+                + " ┇ " + card.getSetEmote()
+                + " ┇ " + card.formatXP(cc.getIsSellable())
+                + " ┇ *x" + cc.getCardQuantity() + "*\n";
 
             } catch(IndexOutOfBoundsException e) {
                 desc += "`#" + (i+1) + "`\n";
             }
         }
-        embed.setTitle(ditto_ + " Trading Center " + ditto_);
+        embed.setTitle(IEmotes.ditto + " Trading Center " + IEmotes.ditto);
         embed.setDescription(desc);
-        embed.setColor(trade_);
+        embed.setColor(IColors.tradeColor);
         return embed;
     }
 }

@@ -4,7 +4,7 @@ import ca.gimmecards.Display.*;
 import ca.gimmecards.Helpers.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
-public class EventCmds extends Cmds {
+public class EventCmds {
     
     public static void seeEvent(MessageReceivedEvent event) {
         User user = User.findUser(event);
@@ -44,7 +44,7 @@ public class EventCmds extends Cmds {
             user.getBadges().add("bday");
             c = Card.addSingleCard(user, gift, true);
 
-            msg += UX.formatNick(event) + " received their event gift!\n";
+            msg += GameObject.formatNick(event) + " received their event gift!\n";
             msg += "+ " + bdayBadge_ + " **1 Year Anniversary Badge**";
 
             State.updateBackpackDisplay(event, user);

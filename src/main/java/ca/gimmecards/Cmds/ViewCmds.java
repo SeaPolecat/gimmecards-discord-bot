@@ -1,12 +1,11 @@
 package ca.gimmecards.Cmds;
-import ca.gimmecards.Interfaces.*;
 import ca.gimmecards.Main.*;
 import ca.gimmecards.Display.*;
-import ca.gimmecards.Helpers.*;
+import ca.gimmecards.OtherInterfaces.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
-public class ViewCmds extends Cmds implements CustomCards {
+public class ViewCmds {
 
     public static void openPack(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
@@ -17,92 +16,92 @@ public class ViewCmds extends Cmds implements CustomCards {
 
         if(packName == null) { return; }
 
-        if(!Check.isCooldownDone(user.getOpenEpoch(), 5, false)) {
-            JDA.sendMessage(event, red_, "⏰", "Please wait another " + Check.findTimeLeft(user.getOpenEpoch(), 5, false));
+        if(!User.isCooldownDone(user.getOpenEpoch(), 5, false)) {
+            GameManager.sendMessage(event, IColors.red, "⏰", "Please wait another " + User.findTimeLeft(user.getOpenEpoch(), 5, false));
 
         } else {
             try {
-                Data set = Data.findSet(packName.getAsString());
+                CardSet set = CardSet.findCardSet(packName.getAsString());
 
                 if(packName.getAsString().equalsIgnoreCase("gimme cards")) {
                     if(user.getStars() < 1) {
-                        JDA.sendMessage(event, red_, "❌", "Sorry, you're out of " + star_ + " **Stars**");
+                        GameManager.sendMessage(event, IColors.red, "❌", "Sorry, you're out of " + IEmotes.star + " **Stars**");
 
                     } else {
                         String msg = "";
                         String footer = event.getUser().getName() + "'s exclusive card";
-                        Data item = Card.pickCard(customs);
+                        Card item = Card.pickCard(ICustomCards.customs);
 
-                        msg += charmander_ + " ";
-                        msg += UX.formatNick(event) + " drew a card from " + logo_ + " **Gimme Cards**";
-                        msg += user.updateCredits(UX.randRange(8, 10), true);
+                        msg += IEmotes.charmander + " ";
+                        msg += GameManager.formatName(event) + " drew a card from " + IEmotes.logo + " **Gimme Cards**";
+                        msg += user.updateCredits(GameManager.randRange(8, 10), true);
                         msg += user.updateStars(-1, false);
 
                         user.resetOpenEpoch();
-                        Card.addSingleCard(user, item, false);
+                        user.addSingleCard(item, false);
                         
-                        Display.displayCard(event, user, ui, item, msg, footer, false);
+                        item.displayCard(event, ui, msg, footer, false);
                         try { User.saveUsers(); } catch(Exception e) {}
                     }
 
-                } else if(Check.isRareSet(set) || Check.isPromoSet(set)) {
+                } else if(set.isRareSet() || set.isPromoSet()) {
                     if(user.getStars() < 1) {
-                        JDA.sendMessage(event, red_, "❌", "Sorry, you're out of " + star_ + " **Stars**");
+                        GameManager.sendMessage(event, IColors.red, "❌", "Sorry, you're out of " + IEmotes.star + " **Stars**");
 
                     } else {
                         String msg = "";
                         String footer = event.getUser().getName();
-                        Data item = Card.pickCard(set.getSpecs());
+                        Card item = Card.pickCard(set.getSpecials());
 
-                        if(Check.isRareSet(set)) {
-                            msg += charmander_ + " ";
+                        if(set.isRareSet()) {
+                            msg += IEmotes.charmander + " ";
                             footer += "'s exclusive card";
                         } else {
-                            msg += bulbasaur_ + " ";
+                            msg += IEmotes.bulbasaur + " ";
                             footer += "'s promo card";
                         }
-                        msg += UX.formatNick(event) + " drew a card from " + set.getSetEmote() + " **" + set.getSetName() + "**";
-                        msg += user.updateCredits(UX.randRange(8, 10), true);
+                        msg += GameManager.formatName(event) + " drew a card from " + set.getSetEmote() + " **" + set.getSetName() + "**";
+                        msg += user.updateCredits(GameManager.randRange(8, 10), true);
                         msg += user.updateStars(-1, false);
 
                         user.resetOpenEpoch();
-                        Card.addSingleCard(user, item, false);
+                        user.addSingleCard(item, false);
 
-                        Display.displayCard(event, user, ui, item, msg, footer, false);
+                        item.displayCard(event, ui, msg, footer, false);
                         try { User.saveUsers(); } catch(Exception e) {}
                     }
 
                 } else {
-                    if(!Check.isPackUnlocked(user, set.getSetName())) {
-                        JDA.sendMessage(event, red_, "❌", "This pack is locked!");
+                    if(!user.isPackUnlocked(set.getSetName())) {
+                        GameManager.sendMessage(event, IColors.red, "❌", "This pack is locked!");
         
                     } else if(user.getTokens() < 1) {
-                        JDA.sendMessage(event, red_, "❌", "Sorry, you're out of " + token_ + " **Tokens**");
+                        GameManager.sendMessage(event, IColors.red, "❌", "Sorry, you're out of " + IEmotes.token + " **Tokens**");
         
                     } else {
                         String msg = "";
 
-                        if(Check.isOldSet(set)) {
-                            msg += squirtle_ + " ";
+                        if(set.isOldSet()) {
+                            msg += IEmotes.squirtle + " ";
                         } else {
-                            msg += pikachu_ + " ";
+                            msg += IEmotes.pikachu + " ";
                         }
-                        msg += UX.formatNick(event) + " opened " + set.getSetEmote() + " **" + set.getSetName() + "**";
+                        msg += GameManager.formatName(event) + " opened " + set.getSetEmote() + " **" + set.getSetName() + "**";
                         msg += user.updateTokens(-1, true);
-                        msg += user.updateCredits(UX.randRange(8, 10), false);
+                        msg += user.updateCredits(GameManager.randRange(8, 10), false);
     
                         disp.setDispType("new");
-                        disp.setNewCards(Card.addNewCards(user, set));
+                        disp.setNewCards(user.addNewCards(set));
                         disp.setMessage(msg);
 
                         user.resetOpenEpoch();
 
-                        JDA.sendDynamicEmbed(event, user, null, disp, 1);
+                        GameManager.sendDynamicEmbed(event, user, null, disp, 1);
                         try { User.saveUsers(); } catch(Exception e) {}
                     }
                 }
             } catch(NullPointerException e) {
-                JDA.sendMessage(event, red_, "❌", "Whoops, I couldn't find that pack...");
+                GameManager.sendMessage(event, IColors.red, "❌", "Whoops, I couldn't find that pack...");
             }
         }
     }
@@ -116,18 +115,18 @@ public class ViewCmds extends Cmds implements CustomCards {
         if(cardNum == null) { return; }
 
         try {
-            if(user.getCards().size() < 1) {
-                JDA.sendMessage(event, red_, "❌", "You don't have any cards yet!");
+            if(user.getCardContainers().size() < 1) {
+                GameManager.sendMessage(event, IColors.red, "❌", "You don't have any cards yet!");
 
             } else {
                 int page = cardNum.getAsInt();
 
                 disp.setDispType("old");
 
-                JDA.sendDynamicEmbed(event, user, null, disp, page);
+                GameManager.sendDynamicEmbed(event, user, null, disp, page);
             }
         } catch(NumberFormatException | IndexOutOfBoundsException e) {
-            JDA.sendMessage(event, red_, "❌", "Whoops, I couldn't find that card...");
+            GameManager.sendMessage(event, IColors.red, "❌", "Whoops, I couldn't find that card...");
         }
     }
 }
