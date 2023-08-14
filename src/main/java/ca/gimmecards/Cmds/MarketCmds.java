@@ -36,7 +36,6 @@ public class MarketCmds {
             embed.setFooter(guild.getName(), guild.getIconUrl());
             embed.setColor(IColors.marketColor);
             GameManager.sendEmbed(event, embed);
-            embed.clear();
         }
     }
 

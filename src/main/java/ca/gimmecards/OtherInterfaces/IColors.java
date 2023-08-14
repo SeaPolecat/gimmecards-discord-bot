@@ -18,4 +18,5 @@ public interface IColors {
     int voteColor = 0xC30038;
     int searchColor = 0xFB4D53;
     int ranksColor = 0xE85138;
+    int kofiColor = 0x16A9FC;
 }

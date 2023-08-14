@@ -23,7 +23,6 @@ public class CardCmds {
         embed.setDescription(desc);
         embed.setColor(IColors.blue);
         GameManager.sendEmbed(event, embed);
-        embed.clear();
     }
 
     public static void viewCardSets(MessageReceivedEvent event, String type) {
@@ -62,7 +61,6 @@ public class CardCmds {
         embed.setDescription(desc);
         embed.setColor(IColors.blue);
         GameManager.sendEmbed(event, embed);
-        embed.clear();
     }
 
     public static void wipeCardSets(MessageReceivedEvent event) {

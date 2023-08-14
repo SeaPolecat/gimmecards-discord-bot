@@ -12,6 +12,9 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Role;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Random;
@@ -308,8 +311,10 @@ public class User implements IUser {
                 tokenReward += 2;
                 creditsReward += ((this.level + 9) / 10) * 100;
                 keyReward++;
-                starReward++;
-    
+
+                if(hasPremiumRole(event)) {
+                    starReward++;
+                }
                 if(this.level == 50) {
                     this.badges.add("veteran");
                 } else if(this.level == 100) {
@@ -619,20 +624,36 @@ public class User implements IUser {
         return count;
     }
 
+    @Override
+    public boolean hasPremiumRole(SlashCommandInteractionEvent event) {
+        Guild guild = event.getJDA().getGuildById("1137436216627830784");
+        Member member = guild.getMemberById(event.getUser().getId());
+
+        try {
+            Role premiumRole = guild.getRoleById("1140346412131954798");
+
+            if(member.getRoles().contains(premiumRole)) {
+                return true;
+            }
+        } catch(NullPointerException e) {}
+
+        return false;
+    }
+
     //===============================================[ PRIVATE FUNCTIONS ]=============================================================
     
     /**
      * searches through the User list for a specific player
-     * @param userId the ID of the player to search for
+     * @param discordId the ID of the player to search for
      * @return the player to be searched
      */
-    private static User searchForUser(String userId) {
+    private static User searchForUser(String discordId) {
         for(User u : users) {
-            if(u.getUserId().equals(userId)) {
+            if(u.getUserId().equals(discordId)) {
                 return u;
             }
         }
-        users.add(0, new User(userId));
+        users.add(0, new User(discordId));
         return users.get(0);
     }
 

@@ -23,6 +23,7 @@ public interface IEmotes {
     String key = "<:key:875091820156162048>";
     String promostar = "<:promostar:955206901552001185>";
     String logo = "<:logo:1002625567922856086>";
+    String kofi = "<:kofi:1140389615379959860>";
 
     //badges
     String devBadge = "<:GimmeCardsDeveloper:998749089699213362>";

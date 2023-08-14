@@ -3,7 +3,10 @@ import ca.gimmecards.Main.*;
 import ca.gimmecards.OtherInterfaces.*;
 import ca.gimmecards.Display.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 
 public class HelpCmds {
     
@@ -31,7 +34,6 @@ public class HelpCmds {
         embed.setDescription(desc);
         embed.setColor(IColors.helpColor);
         GameManager.sendEmbed(event, embed);
-        embed.clear();
     }
 
     public static void viewRarities(SlashCommandInteractionEvent event) {
@@ -60,7 +62,6 @@ public class HelpCmds {
         embed.setDescription(desc);
         embed.setColor(IColors.helpColor);
         GameManager.sendEmbed(event, embed);
-        embed.clear();
     }
 
     public static void viewBadges(SlashCommandInteractionEvent event) {
@@ -89,7 +90,6 @@ public class HelpCmds {
         embed.setDescription(desc);
         embed.setColor(IColors.helpColor);
         GameManager.sendEmbed(event, embed);
-        embed.clear();
     }
 
     public static void viewChangelog(SlashCommandInteractionEvent event) {
@@ -98,5 +98,42 @@ public class HelpCmds {
         HelpDisplay disp = new HelpDisplay(user.getUserId()).findDisplay();
 
         GameManager.sendDynamicEmbed(event, user, server, disp, IChangelog.changelog.length);
+    }
+
+    public static void viewPremium(SlashCommandInteractionEvent event) {
+        EmbedBuilder embed = buildPremiumEmbed();
+
+        GameManager.sendEmbed(event, embed);
+    }
+
+    public static void viewPremium(ButtonInteractionEvent event) {
+        EmbedBuilder embed = buildPremiumEmbed();
+        Emoji kofiEmote = event.getJDA().getEmojiById("1140389615379959860");
+
+        event.editMessageEmbeds(embed.build())
+        .setActionRow(
+            Button.primary("temp", "How to get Premium").withEmoji(kofiEmote).asDisabled()
+        ).queue();
+    }
+
+    private static EmbedBuilder buildPremiumEmbed() {
+        EmbedBuilder embed = new EmbedBuilder();
+        String desc = "";
+
+        desc += "**1:** [Click here](https://discord.gg/XQP5D8sTUh) to join the *Gimme Cards* community server\n\n";
+
+        desc += "**2:** [Click here](https://ko-fi.com/gimmecards) to purchase the premium membership on Kofi "
+        + IEmotes.kofi + "\n\n";
+
+        desc += "**3:** Keep playing to earn " 
+        + IEmotes.star + " **Stars**, and use them to draw exclusive cards from `/rareshop` and `/promoshop`";
+
+        embed.setTitle(IEmotes.kofi + " How to get Premium " + IEmotes.kofi);
+        embed.setDescription(desc);
+        embed.setImage("https://storage.ko-fi.com/cdn/useruploads/post/7b76ada0-2b12-40c9-be94-b337eba13e20_kofitier.png");
+        embed.setColor(IColors.kofiColor);
+        embed.setFooter("For premium features to work, you need to stay in our community server");
+
+        return embed;
     }
 }

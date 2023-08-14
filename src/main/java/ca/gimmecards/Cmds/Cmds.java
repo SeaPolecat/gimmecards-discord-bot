@@ -22,8 +22,9 @@ public class Cmds extends ListenerAdapter {
     public void onMessageReceived(MessageReceivedEvent event) {
         if(event.getAuthor().isBot() == true) { return; }
         String[] args = event.getMessage().getContentRaw().split("\\s+");
+        String authorId = event.getAuthor().getId();
 
-        if(event.getAuthor().getId().equals("454773340163538955")) {
+        if(authorId.equals("454773340163538955") || authorId.equals("insert andy ID")) {
 
             //===========================================[ TESTING ]===================================================================
 
@@ -106,6 +107,8 @@ public class Cmds extends ListenerAdapter {
                     Commands.slash("rarities", "Show every possible card rarity in the game"),
     
                     Commands.slash("badges", "Show every possible badge in the game"),
+
+                    Commands.slash("premium", "See the instructions for getting Gimme Cards Premium"),
     
                     Commands.slash("changelog", "See the latest updates to the game"),
     
@@ -289,6 +292,9 @@ public class Cmds extends ListenerAdapter {
         }
         if(event.getName().equals("badges")) {
             HelpCmds.viewBadges(event);
+        }
+        if(event.getName().equals("premium")) {
+            HelpCmds.viewPremium(event);
         }
         if(event.getName().equals("changelog")) {
             HelpCmds.viewChangelog(event);

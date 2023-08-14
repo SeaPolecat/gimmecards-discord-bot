@@ -38,7 +38,6 @@ public class ShopCmds {
         embed.setDescription(desc);
         embed.setColor(IColors.rareshopColor);
         GameManager.sendEmbed(event, embed);
-        embed.clear();
     }
 
     public static void viewPromoShop(SlashCommandInteractionEvent event) {
@@ -56,7 +55,6 @@ public class ShopCmds {
         embed.setDescription(desc);
         embed.setColor(IColors.promoshopColor);
         GameManager.sendEmbed(event, embed);
-        embed.clear();
     }
 
     public static void unlockPack(SlashCommandInteractionEvent event) {

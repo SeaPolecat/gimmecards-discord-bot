@@ -43,9 +43,17 @@ public class MinigameCmds {
 
                 disp.endGame(true);
 
-                msg += GameManager.formatName(event) + " won the minigame!";
-                msg += user.updateTokens(2, true);
-                msg += user.updateCredits(GameManager.randRange(48, 60), false);
+                if(user.hasPremiumRole(event)) {
+                    msg += GameManager.formatName(event) + " won the minigame!";
+                    msg += user.updateTokens(3, true);
+                    msg += user.updateCredits(GameManager.randRange(72, 90), false);
+                    msg += user.updateStars(1, false);
+
+                } else {
+                    msg += GameManager.formatName(event) + " won the minigame!";
+                    msg += user.updateTokens(3, true);
+                    msg += user.updateCredits(GameManager.randRange(72, 90), false);
+                }
 
                 GameManager.sendMessage(event, user.getGameColor(), "🏆", msg);
                 try { User.saveUsers(); } catch(Exception e) {}

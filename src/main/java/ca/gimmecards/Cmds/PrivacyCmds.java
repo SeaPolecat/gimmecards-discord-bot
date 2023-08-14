@@ -26,8 +26,8 @@ public class PrivacyCmds {
 
         event.replyEmbeds(embed.build())
         .addActionRow(
-            Button.danger("deleteaccount_yes", "Yes"),
-            Button.secondary("deleteaccount_no", "No")
+            Button.danger(GameManager.createButtonId(event, "deleteaccount_yes"), "Yes"),
+            Button.secondary(GameManager.createButtonId(event, "deleteaccount_no"), "No")
         ).queue();
     }
 
@@ -53,8 +53,8 @@ public class PrivacyCmds {
 
                 event.editMessageEmbeds(embed.build())
                 .setActionRow(
-                    Button.danger("deleteaccount_yes", "Yes").asDisabled(),
-                    Button.secondary("deleteaccount_no", "No").asDisabled()
+                    Button.danger("temp", "Yes").asDisabled(),
+                    Button.secondary("temp2", "No").asDisabled()
                 ).queue();
 
                 try { User.saveUsers(); } catch(Exception e) {}
@@ -78,8 +78,8 @@ public class PrivacyCmds {
 
         event.editMessageEmbeds(embed.build())
         .setActionRow(
-            Button.danger("deleteaccount_yes", "Yes").asDisabled(),
-            Button.secondary("deleteaccount_no", "No").asDisabled()
+            Button.danger("temp", "Yes").asDisabled(),
+            Button.secondary("temp2", "No").asDisabled()
         ).queue();
     }
 }

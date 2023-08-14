@@ -2,6 +2,7 @@ package ca.gimmecards.Main;
 import ca.gimmecards.Display.*;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.guild.GuildLeaveEvent;
 import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -9,6 +10,7 @@ import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
+import org.jetbrains.annotations.Nullable;
 import java.nio.file.Paths;
 import java.text.NumberFormat;
 import java.util.Random;
@@ -54,9 +56,9 @@ public class GameManager extends ListenerAdapter {
      * @return a random int between the two ints
      */
     public static int randRange(int min, int max) {
-        int diff = max - min;
+        Random rand = new Random();
 
-        return new Random().nextInt(diff + 1) + min;
+        return rand.nextInt(min, max + 1);
     }
     
     /**
@@ -114,6 +116,20 @@ public class GameManager extends ListenerAdapter {
     //===================================[ DISCORD JDA HANDLER FUNCTIONS ]=============================================================
 
     /**
+     * creates a button ID that's used to handle page-flipping
+     * @param userId the Discord ID of the player
+     * @param slashId the ID of a specific slash command
+     * @param buttonType the type of button (left arrow, right arrow, or refresh)
+     * @return a button ID
+     */
+    public static String createButtonId(SlashCommandInteractionEvent event, String buttonType) {
+        String userId = event.getUser().getId();
+        String slashId = event.getInteraction().getId();
+
+        return userId + ";" + slashId + "_" + buttonType;
+    }
+
+    /**
      * sends a formatted embed message in the server based on a message event
      * @param event the message event
      * @param color the color that the embed should appear in
@@ -127,7 +143,6 @@ public class GameManager extends ListenerAdapter {
             embed.setDescription(emote + " " + msg);
             embed.setColor(color);
             sendEmbed(event, embed);
-            embed.clear();
         } catch(InsufficientPermissionException e) {}
     }
 
@@ -144,7 +159,30 @@ public class GameManager extends ListenerAdapter {
         embed.setDescription(emote + " " + msg);
         embed.setColor(color);
         sendEmbed(event, embed);
-        embed.clear();
+    }
+
+     /**
+      * sends a formatted embed message in the server based on a slash event, with a 'how to get Premium' button attached below
+      * @param event the slash event
+      * @param color the color that the embed should appear in
+      * @param emote the emote that should come before the message
+      * @param msg the string message you want to send
+      * @param adCard a sample premium card to show in /redeem messages; can be null if you don't want this to show
+      */
+    public static void sendPremiumMessage(SlashCommandInteractionEvent event, int color, String emote, String msg, @Nullable Card adCard) {
+        EmbedBuilder embed = new EmbedBuilder();
+        Emoji kofiEmote = event.getJDA().getEmojiById("1140389615379959860");
+
+        embed.setDescription(emote + " " + msg);
+
+        if(adCard != null) {
+            embed.setImage(adCard.getCardImage());
+        }
+        embed.setColor(color);
+        event.replyEmbeds(embed.build())
+        .addActionRow(
+            Button.primary(createButtonId(event, "premium"), "How to get Premium").withEmoji(kofiEmote)
+        ).queue();
     }
 
     /**
@@ -168,17 +206,6 @@ public class GameManager extends ListenerAdapter {
     }
 
     /**
-     * creates a button ID that's used to handle page-flipping
-     * @param userId the Discord ID of the player
-     * @param slashId the ID of a specific slash command
-     * @param buttonType the type of button (left arrow, right arrow, or refresh)
-     * @return a button ID
-     */
-    private static String createButtonId(String userId, String slashId, String buttonType) {
-        return userId + ";" + slashId + "_" + buttonType;
-    }
-
-    /**
      * sends an embed in the server that can be page-flipped or refreshed - based on a slash event
      * @param event the slash event
      * @param user the player
@@ -194,15 +221,15 @@ public class GameManager extends ListenerAdapter {
         if(page == -1) {
             event.replyEmbeds(embed.build())
             .addActionRow(
-                Button.secondary(createButtonId(user.getUserId(), slashId, "refresh")+"", "Refresh")
+                Button.secondary(createButtonId(event, "refresh"), "Refresh")
             ).queue();
 
         } else {
             event.replyEmbeds(embed.build())
             .addActionRow(
-                Button.primary(createButtonId(user.getUserId(), slashId, "left")+"", "◀"),
-                Button.primary(createButtonId(user.getUserId(), slashId, "right")+"", "▶"),
-                Button.secondary(createButtonId(user.getUserId(), slashId, "refresh")+"", "Refresh")
+                Button.primary(createButtonId(event, "left"), "◀"),
+                Button.primary(createButtonId(event, "right"), "▶"),
+                Button.secondary(createButtonId(event, "refresh"), "Refresh")
             ).queue();
         }
         disp.setSlashId(slashId);

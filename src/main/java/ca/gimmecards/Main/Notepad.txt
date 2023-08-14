@@ -1,13 +1,17 @@
-fixes (ALL)
+fixes
 ----------------------------------
--daily local storage deletion
--make market cards limited (like 5 per day)
+-regular display storage clearing
 -separate viewing and opening packs (have different Displays for each)
 
+//-clear embeds after sending
+-reset everyone's items
 
 
-features (at least 1)
+
+features
 -----------------------------------
+-add the Scarlet & Violet packs
+
 -show which cards you sold in ?sellall
 -surprise cards in chat
 -Poke coins + new minigame
@@ -22,7 +26,7 @@ features (at least 1)
 
 
 
-research (optional)
+research
 -----------------------------------
 -users' card counts are potentially too big
 -find a way to generate true random in Java
