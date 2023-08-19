@@ -120,4 +120,11 @@ public interface IUser {
      * @return the current number of cards the player owns
      */
     public int countOwnedCards();
+
+    /**
+     * checks whether the player has the 'Ultra Rare Collector' role in the community server, based on a slash event
+     * @param event the slash event
+     * @return whether the player has the role or not
+     */
+    public boolean hasPremiumRole(SlashCommandInteractionEvent event);
 }

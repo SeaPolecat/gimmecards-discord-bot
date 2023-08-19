@@ -169,6 +169,27 @@ public class Card implements ICard {
     }
 
     /**
+     * @return a random special card from the game
+     */
+    public static Card pickRandomSpecialCard() {
+        Random rand = new Random();
+        int setsChance = rand.nextInt(0, 1);
+        CardSet set;
+
+        /*if(setsChance == 0) {
+            return pickCard(ICustomCards.customs);
+        }*/
+        if(setsChance == 0) {
+            set = CardSet.rareSets[rand.nextInt(CardSet.rareSets.length)];
+            return pickCard(set.getSpecials());
+
+        } else {
+            set = CardSet.promoSets[rand.nextInt(CardSet.promoSets.length)];
+            return pickCard(set.getSpecials());
+        }
+    }
+
+    /**
      * finds a card from the game based on an ID
      * @param cardId the Pokemon TCG Online ID of the card
      * @return the card to be found; returns null if the card cannot be found
@@ -202,11 +223,11 @@ public class Card implements ICard {
                 return card;
             }
         }
-        for(Card card : ICustomCards.customs) {
+        /*for(Card card : ICustomCards.customs) {
             if(card.getCardId().equalsIgnoreCase(cardId)) {
                 return card;
             }
-        }
+        }*/
         return null;
     }
 
@@ -423,7 +444,6 @@ public class Card implements ICard {
         embed.setFooter(footer, ui.getUserIcon());
         embed.setColor(findEmbedColour());
         GameManager.sendEmbed(event, embed);
-        embed.clear();
     }
 
     //===============================================[ PRIVATE FUNCTIONS ]=============================================================

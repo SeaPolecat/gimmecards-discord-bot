@@ -25,14 +25,14 @@ public class Main {
 
     // PLEASE REDACT THESE BEFORE UPLOADING TO GITHUB!!!!!!
     
-    public static final String botToken = "REDACTED";
-    public static final String testToken = "REDACTED";
-    public static final String dblToken = "REDACTED";
-    public static final String encryptorPass = "REDACTED";
+    public static final String botToken = "";
+    public static final String testToken = "";
+    public static final String dblToken = "";
+    public static final String encryptorPass = "";
 
     //========================================[ UNIVERSAL VARIABLES ]==================================================================
 
-    public static final String updateMsg = "🟢 New update on 1/1/2023 ┇ `/changelog`";
+    public static final String updateMsg = "🔴 New update on 8/18/2023 ┇ `/changelog`";
     public static boolean isLocked = false;
 
     //============================================[ MAIN METHOD ]======================================================================

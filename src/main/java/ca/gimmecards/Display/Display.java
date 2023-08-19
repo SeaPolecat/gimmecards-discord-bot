@@ -78,48 +78,53 @@ public class Display extends ListenerAdapter {
      * @param event the button event
      */
     public void onButtonInteraction(ButtonInteractionEvent event) {
-        if(event.getComponentId().equalsIgnoreCase("deleteaccount_yes")) {
-            PrivacyCmds.confirmDeletion(event);
+        User user = User.findUser(event);
+        String buttonId = event.getComponentId();
+        int semiColIndex = buttonId.indexOf(";");
+        int underscoreIndex = buttonId.indexOf("_");
+        String userId = buttonId.substring(0, semiColIndex);
+        String slashId = buttonId.substring(semiColIndex + 1, underscoreIndex);
+        String buttonType = buttonId.substring(underscoreIndex + 1);
 
-        } else if(event.getComponentId().equalsIgnoreCase("deleteaccount_no")) {
-            PrivacyCmds.denyDeletion(event);
+        if(!user.getUserId().equals(userId)) {
+            event.reply("This is not your button!").setEphemeral(true).queue();
 
         } else {
-            User user = User.findUser(event);
-            Server server = Server.findServer(event);
-            ArrayList<Display> displays = new ArrayList<Display>();
+            if(buttonType.equals("deleteaccount_yes")) {
+                PrivacyCmds.confirmDeletion(event);
 
-            displays.add(new BackpackDisplay(user.getUserId()).findDisplay());
-            displays.add(new CollectionDisplay(user.getUserId()).findDisplay());
-            displays.add(new HelpDisplay(user.getUserId()).findDisplay());
-            displays.add(new LeaderboardDisplay(user.getUserId()).findDisplay());
-            displays.add(new MarketDisplay(user.getUserId()).findDisplay());
-            displays.add(new MinigameDisplay(user.getUserId()).findDisplay());
-            displays.add(new OldShopDisplay(user.getUserId()).findDisplay());
-            displays.add(new SearchDisplay(user.getUserId()).findDisplay());
-            displays.add(new ShopDisplay(user.getUserId()).findDisplay());
-            displays.add(new TradeDisplay(user.getUserId()).findDisplay());
-            displays.add(new ViewDisplay(user.getUserId()).findDisplay());
-            //
-            displays.add(new BackpackDisplay_MP(user.getUserId()).findDisplay());
-            displays.add(new CardDisplay_MP(user.getUserId()).findDisplay());
-            displays.add(new ViewDisplay_MP(user.getUserId()).findDisplay());
-            //
-            String buttonId = event.getComponentId();
-            int semiColIndex = buttonId.indexOf(";");
-            int underscoreIndex = buttonId.indexOf("_");
-            String userId = buttonId.substring(0, semiColIndex);
-            String slashId = buttonId.substring(semiColIndex + 1, underscoreIndex);
+            } else if(buttonType.equals("deleteaccount_no")) {
+                PrivacyCmds.denyDeletion(event);
 
-            for(Display disp : displays) {
-                if(slashId.equals(disp.getSlashId())) {
-                    flipPage(event, user, server, disp);
-                    return;
-                }
-            }
-            if(!user.getUserId().equals(userId)) {
-                event.reply("This is not your button!").setEphemeral(true).queue();
+            } else if(buttonType.equals("premium")) {
+                HelpCmds.viewPremium(event);
+
             } else {
+                ArrayList<Display> displays = new ArrayList<Display>();
+                Server server = Server.findServer(event);
+
+                displays.add(new BackpackDisplay(user.getUserId()).findDisplay());
+                displays.add(new CollectionDisplay(user.getUserId()).findDisplay());
+                displays.add(new HelpDisplay(user.getUserId()).findDisplay());
+                displays.add(new LeaderboardDisplay(user.getUserId()).findDisplay());
+                displays.add(new MarketDisplay(user.getUserId()).findDisplay());
+                displays.add(new MinigameDisplay(user.getUserId()).findDisplay());
+                displays.add(new OldShopDisplay(user.getUserId()).findDisplay());
+                displays.add(new SearchDisplay(user.getUserId()).findDisplay());
+                displays.add(new ShopDisplay(user.getUserId()).findDisplay());
+                displays.add(new TradeDisplay(user.getUserId()).findDisplay());
+                displays.add(new ViewDisplay(user.getUserId()).findDisplay());
+                //
+                displays.add(new BackpackDisplay_MP(user.getUserId()).findDisplay());
+                displays.add(new CardDisplay_MP(user.getUserId()).findDisplay());
+                displays.add(new ViewDisplay_MP(user.getUserId()).findDisplay());
+
+                for(Display disp : displays) {
+                    if(slashId.equals(disp.getSlashId())) {
+                        flipPage(event, user, server, disp);
+                        return;
+                    }
+                }
                 event.reply("This button is outdated. Please send a new command!").setEphemeral(true).queue();
             }
         }
@@ -137,7 +142,7 @@ public class Display extends ListenerAdapter {
     private void flipPage(ButtonInteractionEvent event, User user, Server server, Display disp) {
         String buttonId = event.getComponentId();
         int underscoreIndex = buttonId.indexOf("_");
-        String choice = buttonId.substring(underscoreIndex + 1);
+        String buttonType = buttonId.substring(underscoreIndex + 1);
 
         if(disp instanceof CollectionDisplay) {
             if(user.getCardContainers().size() < 1) {
@@ -202,20 +207,21 @@ public class Display extends ListenerAdapter {
             }
         }
 
-        if(choice.equals("left")) {
+        if(buttonType.equals("left")) {
             if(disp.getPage() <= 1) {
                 disp.setPage(disp.getMaxPage());
             } else {
                 disp.prevPage();
             }
 
-        } else if(choice.equals("right")) {
+        } else if(buttonType.equals("right")) {
             if(disp.getPage() >= disp.getMaxPage()) {
                 disp.setPage(1);
             } else {
                 disp.nextPage();
             }
         }
+        // if the buttonType is not 'left' or 'right', flip to the same page
         GameManager.editEmbed(event, user, server, disp, disp.getPage());
     }
 }

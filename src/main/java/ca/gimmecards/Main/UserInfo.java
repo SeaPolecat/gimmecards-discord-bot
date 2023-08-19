@@ -35,7 +35,7 @@ public class UserInfo {
         net.dv8tion.jda.api.entities.User user = event.getJDA().getUserById(mention.getUserId()+"");
 
         if(user != null) {
-            userName = user.getName();
+            userName = user.getEffectiveName();
             userPing = user.getAsMention();
             userIcon = user.getAvatarUrl();
 

@@ -19,11 +19,10 @@ public class CardCmds {
         desc += "**Servers** ┇ " + event.getJDA().getGuilds().size() + "\n";
         desc += "┅┅\n";
 
-        embed.setTitle(IEmotes.logo + " Current Stats " + IEmotes.logo);
+        embed.setTitle(IEmotes.mascot + " Current Stats " + IEmotes.mascot);
         embed.setDescription(desc);
         embed.setColor(IColors.blue);
         GameManager.sendEmbed(event, embed);
-        embed.clear();
     }
 
     public static void viewCardSets(MessageReceivedEvent event, String type) {
@@ -35,16 +34,16 @@ public class CardCmds {
 
         if(type.equalsIgnoreCase("new")) {
             sets = CardSet.sets;
-            title = IEmotes.logo + " **Card Sets** " + IEmotes.logo;
+            title = IEmotes.mascot + " **Card Sets** " + IEmotes.mascot;
         } else if(type.equalsIgnoreCase("old")) {
             sets = CardSet.oldSets;
-            title = IEmotes.logo + " **Old Card Sets** " + IEmotes.logo;
+            title = IEmotes.mascot + " **Old Card Sets** " + IEmotes.mascot;
         } else if(type.equalsIgnoreCase("rare")) {
             sets = CardSet.rareSets;
-            title = IEmotes.logo + " **Rare Card Sets** " + IEmotes.logo;
+            title = IEmotes.mascot + " **Rare Card Sets** " + IEmotes.mascot;
         } else if(type.equalsIgnoreCase("promo")) {
             sets = CardSet.promoSets;
-            title = IEmotes.logo + " **Promo Card Sets** " + IEmotes.logo;
+            title = IEmotes.mascot + " **Promo Card Sets** " + IEmotes.mascot;
         }
         for(int i = 0; i < sets.length; i++) {
             if(sets[i] == null) {
@@ -62,7 +61,6 @@ public class CardCmds {
         embed.setDescription(desc);
         embed.setColor(IColors.blue);
         GameManager.sendEmbed(event, embed);
-        embed.clear();
     }
 
     public static void wipeCardSets(MessageReceivedEvent event) {

@@ -29,7 +29,6 @@ public class VoteCmds {
             embed.setDescription(desc);
             embed.setColor(IColors.voteColor);
             GameManager.sendEmbed(event, embed);
-            embed.clear();
         }
     }
     
@@ -60,10 +59,17 @@ public class VoteCmds {
 
                     user.resetVoteEpoch();
 
-                    msg += GameManager.formatName(event) + " claimed their gift! Thank you for voting 😊";
-                    msg += user.updateTokens(5, true);
-                    msg += user.updateCredits(GameManager.randRange(120, 150), false);
-                    msg += user.updateStars(1, false);
+                    if(user.hasPremiumRole(event)) {
+                        msg += GameManager.formatName(event) + " claimed their gift! Thank you for voting 😊";
+                        msg += user.updateTokens(6, true);
+                        msg += user.updateCredits(GameManager.randRange(144, 180), false);
+                        msg += user.updateStars(1, false);
+
+                    } else {
+                        msg += GameManager.formatName(event) + " claimed their gift! Thank you for voting 😊";
+                        msg += user.updateTokens(6, true);
+                        msg += user.updateCredits(GameManager.randRange(144, 180), false);
+                    }
 
                     GameManager.sendMessage(event, user.getGameColor(), IEmotes.lootbox, msg);
                     try { User.saveUsers(); } catch(Exception e) {}

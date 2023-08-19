@@ -18,7 +18,7 @@ public class PrivacyCmds {
         desc += "After confirming, your user info will disappear from *Gimme Cards*, along with any cards and items.\n\n";
         desc += "*We're sad to see you go... but all stories must come to an end.*";
 
-        embed.setTitle(IEmotes.logo + " Are You Sure? " + IEmotes.logo);
+        embed.setTitle(IEmotes.mascot + " Are You Sure? " + IEmotes.mascot);
         embed.setDescription(desc);
         embed.setImage("https://c.tenor.com/J6lraJXFl4IAAAAC/pokemon-pikachu.gif");
         embed.setFooter("the end of " + ui.getUserName() + "'s journey", ui.getUserIcon());
@@ -26,8 +26,8 @@ public class PrivacyCmds {
 
         event.replyEmbeds(embed.build())
         .addActionRow(
-            Button.danger("deleteaccount_yes", "Yes"),
-            Button.secondary("deleteaccount_no", "No")
+            Button.danger(GameManager.createButtonId(event, "deleteaccount_yes"), "Yes"),
+            Button.secondary(GameManager.createButtonId(event, "deleteaccount_no"), "No")
         ).queue();
     }
 
@@ -53,8 +53,8 @@ public class PrivacyCmds {
 
                 event.editMessageEmbeds(embed.build())
                 .setActionRow(
-                    Button.danger("deleteaccount_yes", "Yes").asDisabled(),
-                    Button.secondary("deleteaccount_no", "No").asDisabled()
+                    Button.danger("temp", "Yes").asDisabled(),
+                    Button.secondary("temp2", "No").asDisabled()
                 ).queue();
 
                 try { User.saveUsers(); } catch(Exception e) {}
@@ -71,15 +71,15 @@ public class PrivacyCmds {
 
         desc += "We're glad you're not going away... *welcome back!*";
 
-        embed.setTitle(IEmotes.logo + " Welcome Back " + IEmotes.logo);
+        embed.setTitle(IEmotes.mascot + " Welcome Back " + IEmotes.mascot);
         embed.setDescription(desc);
         embed.setImage("https://media.tenor.com/qObvHG4rT28AAAAC/pikachu-pokemon.gif");
         embed.setColor(IColors.blue);
 
         event.editMessageEmbeds(embed.build())
         .setActionRow(
-            Button.danger("deleteaccount_yes", "Yes").asDisabled(),
-            Button.secondary("deleteaccount_no", "No").asDisabled()
+            Button.danger("temp", "Yes").asDisabled(),
+            Button.secondary("temp2", "No").asDisabled()
         ).queue();
     }
 }

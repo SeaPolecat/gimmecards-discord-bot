@@ -23,8 +23,11 @@ public class ViewCmds {
             try {
                 CardSet set = CardSet.findCardSet(packName.getAsString());
 
-                if(packName.getAsString().equalsIgnoreCase("gimme cards")) {
-                    if(user.getStars() < 1) {
+                /*if(packName.getAsString().equalsIgnoreCase("gimme cards")) {
+                    if(!user.hasPremiumRole(event)) {
+                        GameManager.sendPremiumMessage(event, IColors.kofiColor, IEmotes.kofi, "Sorry, this is a premium feature!", null);
+
+                    } else if(user.getStars() < 1) {
                         GameManager.sendMessage(event, IColors.red, "❌", "Sorry, you're out of " + IEmotes.star + " **Stars**");
 
                     } else {
@@ -44,8 +47,12 @@ public class ViewCmds {
                         try { User.saveUsers(); } catch(Exception e) {}
                     }
 
-                } else if(set.isRareSet() || set.isPromoSet()) {
-                    if(user.getStars() < 1) {
+                }*/
+                if(set.isRareSet() || set.isPromoSet()) {
+                    if(!user.hasPremiumRole(event)) {
+                        GameManager.sendPremiumMessage(event, IColors.kofiColor, IEmotes.kofi, "Sorry, this is a premium feature!", null);
+
+                    } else if(user.getStars() < 1) {
                         GameManager.sendMessage(event, IColors.red, "❌", "Sorry, you're out of " + IEmotes.star + " **Stars**");
 
                     } else {

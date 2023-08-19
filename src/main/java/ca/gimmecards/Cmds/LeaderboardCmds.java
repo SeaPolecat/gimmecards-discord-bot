@@ -67,7 +67,7 @@ public class LeaderboardCmds implements Comparator<User> {
 
         for(User u : User.users) {
             try {
-                new UserInfo(u, event);
+                new UserInfo(u, event).getUserName().length();
                 players.add(u);
             } catch(NullPointerException e) {}
         }

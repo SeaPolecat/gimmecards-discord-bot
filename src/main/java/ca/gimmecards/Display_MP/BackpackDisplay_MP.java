@@ -80,7 +80,7 @@ public class BackpackDisplay_MP extends Display {
                     break;
                 }
             }
-            for(String badge : user.getBadges()) {
+            for(String badge : mention.getBadges()) {
                 if(badge.equalsIgnoreCase("original")) {
                     desc += IEmotes.originalBagde + " ";
                     break;

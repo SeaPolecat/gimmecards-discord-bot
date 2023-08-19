@@ -1,6 +1,13 @@
 package ca.gimmecards.Cmds;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
+/*embed.addField("**Rule 1**", "Please follow Discord's [Terms of Service](https://discord.com/terms)", false);
+embed.addField("**Rule 2**", "Be respectful to the staff and other server members at all times", false);
+embed.addField("**Rule 3**", "NSFW or explicit content/behavior is prohibited, as this is a family-friendly server", false);
+embed.addField("**Rule 4**", "Advertising of any kind is not allowed, either in this server or in others' DMs", false);
+embed.addField("**Rule 5**", "Please do not spam the chat, unless you're using the bot. This includes unneccesary mentions/pings", false);
+embed.addField("**Rule 6**", "Try to post in the correct channels; they are separated for a reason", false);*/
+
 public class TestingCmds {
 
     /*public User(String id, int gc, int cc, int l, int xp, int mxp, int t, int creds, int k, int s, long oe, long ve, long de, long re, long me, long marketE, String sm, boolean si, ArrayList<String> b, String pc, ArrayList<String> p, ArrayList<Card> c, boolean ir, boolean irr) {
@@ -52,27 +59,6 @@ public class TestingCmds {
         }
         GameObject.sendMessage(event, IColors.blue_, "", "done testing!");
         try { User.saveUsers(); } catch(Exception e) {}*/
-
-        /*for(User u : User.users) {
-            for(int i = 0; i < u.getCardContainers().size(); i++) {
-                CardContainer cc = u.getCardContainers().get(i);
-                CardContainer container = new CardContainer(
-                    cc.getCard(),
-                    cc.getCardNum(),
-                    cc.getCardQuantity(),
-                    cc.getIsSellable(),
-                    cc.getIsFav()
-                );
-                u.getCardContainers().set(i, container);
-            }
-        }
-        for(User u : User.users) {
-            for(CardContainer cc : u.getCardContainers()) {
-                System.out.println(cc.getCard().getCardName());
-            }
-        }
-        GameObject.sendMessage(event, IColors.blue_, "", "done testing!");
-        //try { User.saveUsers(); } catch(Exception e) {}
         
         /*for(int i = 0; i < User.users.size(); i++) {
             User u = User.users.get(i);
@@ -98,31 +84,17 @@ public class TestingCmds {
                 u.getPinnedCard(),
                 u.getBadges(),
                 u.getPacks(),
-                u.getCardContainers()
+                u.getCardContainers(),
+                10,
+                false
             );
             User.users.set(i, user);
         }
         for(User u : User.users) {
-            for(CardContainer cc : u.getCardContainers()) {
-                System.out.println(cc.getIsFav());
-            }
+            System.out.println(u.getQuestRedeems());
+            System.out.println(u.getIsQuestComplete());
         }
-        GameObject.sendMessage(event, IColors.blue_, "", "done testing!");
+        GameManager.sendMessage(event, IColors.blue, "", "done testing!");
         try { User.saveUsers(); } catch(Exception e) {}*/
-
-        /*for(User u : User.users) {
-            if(u.getUserId().equalsIgnoreCase("454773340163538955")) {
-                ArrayList<String> ids = new ArrayList<String>();
-
-                for(CardContainer cc : u.getCardContainers()) {
-                    if(cc.getCard().getCardName().equals("Pikachu Cosplay Charizard X")) {
-                        System.out.println(cc.getCard().getCardId());
-
-                        ids.add(cc.getCard().getCardId());
-                    }
-                }
-                System.out.println(ids.get(0).equals(ids.get(1)));
-            }
-        }*/
     }
 }

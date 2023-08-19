@@ -26,8 +26,8 @@ public class ShopCmds {
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
-        desc += "┅┅\n";
-        desc += IEmotes.star + " " + IEmotes.logo + " Gimme Cards 🚫\n";
+        /*desc += "┅┅\n";
+        desc += IEmotes.star + " " + IEmotes.logo + " Gimme Cards 🚫\n";*/
         for(int i = 0; i < CardSet.rareSets.length; i++) {
             CardSet set = CardSet.rareSets[i];
 
@@ -38,7 +38,6 @@ public class ShopCmds {
         embed.setDescription(desc);
         embed.setColor(IColors.rareshopColor);
         GameManager.sendEmbed(event, embed);
-        embed.clear();
     }
 
     public static void viewPromoShop(SlashCommandInteractionEvent event) {
@@ -56,7 +55,6 @@ public class ShopCmds {
         embed.setDescription(desc);
         embed.setColor(IColors.promoshopColor);
         GameManager.sendEmbed(event, embed);
-        embed.clear();
     }
 
     public static void unlockPack(SlashCommandInteractionEvent event) {

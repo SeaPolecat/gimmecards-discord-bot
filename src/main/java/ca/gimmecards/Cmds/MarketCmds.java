@@ -20,8 +20,10 @@ public class MarketCmds {
             if(User.isCooldownDone(server.getMarketEpoch(), 1440, true)) {
                 server.refreshMarket();
             }
-            desc += "Next refresh in " + User.findTimeLeft(server.getMarketEpoch(), 1440, true) + "\n";
+            desc += "Next refresh in " + User.findTimeLeft(server.getMarketEpoch(), 1440, true) + "\n\n";
+            desc += "`/mview (card #)` to view a card\n";
             desc += "┅┅\n";
+
             for(Card item : server.getMarket()) {
                 
                 desc += "`#" + count + "` " + item.findCardTitle(false)
@@ -36,7 +38,6 @@ public class MarketCmds {
             embed.setFooter(guild.getName(), guild.getIconUrl());
             embed.setColor(IColors.marketColor);
             GameManager.sendEmbed(event, embed);
-            embed.clear();
         }
     }
 

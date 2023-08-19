@@ -12,6 +12,9 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Role;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Random;
@@ -47,6 +50,8 @@ public class User implements IUser {
     private ArrayList<String> badges;                   // list of names of the badges the player owns
     private ArrayList<String> packs;                    // list of names of the packs the player owns
     private ArrayList<CardContainer> cardContainers;    // the player's cards
+    private Integer questRedeems;
+    private Boolean isQuestComplete;
 
     //=============================================[ CONSTRUCTORS ]====================================================================
     
@@ -61,7 +66,7 @@ public class User implements IUser {
         this.level = 1;
         this.XP = 0;
         this.maxXP = 500;
-        this.tokens = 1;
+        this.tokens = 0;
         this.credits = 0;
         this.stars = 0;
         this.keys = 1;
@@ -77,6 +82,8 @@ public class User implements IUser {
         this.badges = new ArrayList<String>();
         this.packs = new ArrayList<String>();
         this.cardContainers = new ArrayList<CardContainer>();
+        this.questRedeems = 10;
+        this.isQuestComplete = false;
     }
 
     /**
@@ -106,6 +113,8 @@ public class User implements IUser {
         this.badges = user.getBadges();
         this.packs = user.getPacks();
         this.cardContainers = user.getCardContainers();
+        this.questRedeems = user.getQuestRedeems();
+        this.isQuestComplete = user.getIsQuestComplete();
     }
 
     //===============================================[ GETTERS ] ======================================================================
@@ -132,6 +141,8 @@ public class User implements IUser {
     public ArrayList<String> getBadges() { return this.badges; }
     public ArrayList<String> getPacks() { return this.packs; }
     public ArrayList<CardContainer> getCardContainers() { return this.cardContainers; }
+    public int getQuestRedeems() { return this.questRedeems; }
+    public boolean getIsQuestComplete() { return this.isQuestComplete; }
     
     //================================================[ SETTERS ]======================================================================
 
@@ -152,6 +163,8 @@ public class User implements IUser {
     public void setSortMethod(String sortMethod) { this.sortMethod = sortMethod; }
     public void setIsSortIncreasing(boolean isSortIncreasing) { this.isSortIncreasing = isSortIncreasing; }
     public void setPinnedCard(String pinnedCard) { this.pinnedCard = pinnedCard; }
+    public void minusQuestRedeem() { this.questRedeems--; }
+    public void completeQuest() { this.isQuestComplete = true; }
 
     //=============================================[ PUBLIC STATIC FUNCTIONS ]==============================================================
     
@@ -292,10 +305,8 @@ public class User implements IUser {
     @Override
     public String checkLevelUp(SlashCommandInteractionEvent event) {
         int prevLvl = this.level;
-        int tokenReward = 0;
         int creditsReward = 0;
         int keyReward = 0;
-        int starReward = 0;
         String msg = "";
 
         if(this.XP >= this.maxXP) {
@@ -304,12 +315,10 @@ public class User implements IUser {
 
             while(this.XP >= this.maxXP) {
                 levelUp();
-    
-                tokenReward += 2;
+
                 creditsReward += ((this.level + 9) / 10) * 100;
                 keyReward++;
-                starReward++;
-    
+
                 if(this.level == 50) {
                     this.badges.add("veteran");
                 } else if(this.level == 100) {
@@ -317,10 +326,8 @@ public class User implements IUser {
                 }
             }
             msg += "\nLevel **" + prevLvl + "** ➜ **" + this.level + "**";
-            msg += updateTokens(tokenReward, true);
             msg += updateCredits(creditsReward, false);
             msg += updateKeys(keyReward, false);
-            msg += updateStars(starReward, false);
         }
         return msg;
     }
@@ -619,20 +626,36 @@ public class User implements IUser {
         return count;
     }
 
+    @Override
+    public boolean hasPremiumRole(SlashCommandInteractionEvent event) {
+        Guild guild = event.getJDA().getGuildById("1137436216627830784");
+        Member member = guild.getMemberById(event.getUser().getId());
+
+        try {
+            Role premiumRole = guild.getRoleById("1140346412131954798");
+
+            if(member.getRoles().contains(premiumRole)) {
+                return true;
+            }
+        } catch(NullPointerException e) {}
+
+        return false;
+    }
+
     //===============================================[ PRIVATE FUNCTIONS ]=============================================================
     
     /**
      * searches through the User list for a specific player
-     * @param userId the ID of the player to search for
+     * @param discordId the ID of the player to search for
      * @return the player to be searched
      */
-    private static User searchForUser(String userId) {
+    private static User searchForUser(String discordId) {
         for(User u : users) {
-            if(u.getUserId().equals(userId)) {
+            if(u.getUserId().equals(discordId)) {
                 return u;
             }
         }
-        users.add(0, new User(userId));
+        users.add(0, new User(discordId));
         return users.get(0);
     }
 
