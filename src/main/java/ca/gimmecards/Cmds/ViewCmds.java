@@ -23,7 +23,7 @@ public class ViewCmds {
             try {
                 CardSet set = CardSet.findCardSet(packName.getAsString());
 
-                if(packName.getAsString().equalsIgnoreCase("gimme cards")) {
+                /*if(packName.getAsString().equalsIgnoreCase("gimme cards")) {
                     if(!user.hasPremiumRole(event)) {
                         GameManager.sendPremiumMessage(event, IColors.kofiColor, IEmotes.kofi, "Sorry, this is a premium feature!", null);
 
@@ -47,7 +47,8 @@ public class ViewCmds {
                         try { User.saveUsers(); } catch(Exception e) {}
                     }
 
-                } else if(set.isRareSet() || set.isPromoSet()) {
+                }*/
+                if(set.isRareSet() || set.isPromoSet()) {
                     if(!user.hasPremiumRole(event)) {
                         GameManager.sendPremiumMessage(event, IColors.kofiColor, IEmotes.kofi, "Sorry, this is a premium feature!", null);
 

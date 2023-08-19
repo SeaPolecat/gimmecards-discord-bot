@@ -3,8 +3,10 @@ import ca.gimmecards.Main.*;
 
 public interface ICustomCards {
     
+//==================================================[ CUSTOM CARDS ]===================================================================
+
     Card[] customs = {
-        new Card(
+        /*new Card(
             IEmotes.logo,
             "Gimme Cards",
             "custom-0",
@@ -926,9 +928,11 @@ public interface ICustomCards {
             "Pokémon",
             new String[]{"Colorless"},
             1150
-        ),
+        ),*/
 
-        new Card(
+//====================================================[ MERCH ITEMS ]==================================================================
+
+        /*new Card(
             IEmotes.logo,
             "Gimme Cards",
             "merch-0",
@@ -938,6 +942,6 @@ public interface ICustomCards {
             "Pokémon",
             new String[]{"Lightning", "Fire"},
             2023
-        )
+        )*/
     };
 }

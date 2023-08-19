@@ -94,7 +94,7 @@ public class LeaderboardDisplay extends Display {
             embed.setTitle(IEmotes.trainer + " Top Collectors Here " + IEmotes.trainer);
             embed.setColor(IColors.ranksColor);
         } else if(dispType.equalsIgnoreCase("leaderboard")) {
-            embed.setTitle(IEmotes.logo + " World's Top Collectors " + IEmotes.logo);
+            embed.setTitle(IEmotes.mascot + " World's Top Collectors " + IEmotes.mascot);
             embed.setColor(IColors.blue);
         }
         embed.setDescription(desc);

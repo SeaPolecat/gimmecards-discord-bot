@@ -26,8 +26,8 @@ public class ShopCmds {
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
-        desc += "┅┅\n";
-        desc += IEmotes.star + " " + IEmotes.logo + " Gimme Cards 🚫\n";
+        /*desc += "┅┅\n";
+        desc += IEmotes.star + " " + IEmotes.logo + " Gimme Cards 🚫\n";*/
         for(int i = 0; i < CardSet.rareSets.length; i++) {
             CardSet set = CardSet.rareSets[i];
 

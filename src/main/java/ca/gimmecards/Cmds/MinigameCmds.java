@@ -64,8 +64,17 @@ public class MinigameCmds {
 
                     disp.endGame(false);
 
-                    msg += GameManager.formatName(event) + " lost the minigame... But there's always next time!";
-                    msg += user.updateCredits(GameManager.randRange(24, 30), true);
+                    if(user.hasPremiumRole(event)) {
+                        msg += GameManager.formatName(event) + " lost the minigame... But there's always next time!";
+                        msg += user.updateTokens(1, true);
+                        msg += user.updateCredits(GameManager.randRange(24, 30), true);
+                        msg += user.updateStars(1, false);
+
+                    } else {
+                        msg += GameManager.formatName(event) + " lost the minigame... But there's always next time!";
+                        msg += user.updateTokens(1, true);
+                        msg += user.updateCredits(GameManager.randRange(24, 30), true);
+                    }
 
                     GameManager.sendMessage(event, user.getGameColor(), "😭", msg);
                     try { User.saveUsers(); } catch(Exception e) {}

@@ -74,7 +74,8 @@ public class MinigameDisplay extends Display {
         String desc = "";
 
         desc += GameManager.formatCmd("guess (rarity)") + " to play\n";
-        desc += GameManager.formatCmd("rarities") + " for hints\n\n";
+        desc += GameManager.formatCmd("rarities") + " for hints\n";
+        desc += "┅┅\n";
 
         desc += "**Rarity** ┇ ";
         if(!hasWon && tries > 0) {

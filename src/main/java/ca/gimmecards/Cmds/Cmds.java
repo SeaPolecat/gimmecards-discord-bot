@@ -24,7 +24,7 @@ public class Cmds extends ListenerAdapter {
         String[] args = event.getMessage().getContentRaw().split("\\s+");
         String authorId = event.getAuthor().getId();
 
-        if(authorId.equals("454773340163538955") || authorId.equals("insert andy ID")) {
+        if(authorId.equals("454773340163538955") || authorId.equals("967695872689315890")) {
 
             //===========================================[ TESTING ]===================================================================
 
@@ -90,6 +90,10 @@ public class Cmds extends ListenerAdapter {
     
                     //GIFT
                     Commands.slash("gifttoken", "Gift someone tokens")
+                    .addOption(OptionType.USER, "user", "mention a user", true)
+                    .addOption(OptionType.INTEGER, "amount", "enter an amount", true),
+
+                    Commands.slash("giftcredits", "Gift someone credits")
                     .addOption(OptionType.USER, "user", "mention a user", true)
                     .addOption(OptionType.INTEGER, "amount", "enter an amount", true),
     
@@ -275,6 +279,9 @@ public class Cmds extends ListenerAdapter {
         //GIFT
         if(event.getName().equals("gifttoken")) {
             GiftCmds.giftToken(event);
+        }
+        if(event.getName().equals("giftcredits")) {
+            GiftCmds.giftCredits(event);
         }
         if(event.getName().equals("giftstar")) {
             GiftCmds.giftStar(event);

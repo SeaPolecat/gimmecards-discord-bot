@@ -18,41 +18,78 @@ public class BackpackCmds {
     public static void redeemToken(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
 
-        //if(!User.isCooldownDone(user.getRedeemEpoch(), 30, true)) {
-            //GameManager.sendMessage(event, IColors.red, "⏰", "Please wait another " 
-            //+ User.findTimeLeft(user.getRedeemEpoch(), 30, true));
+        if(!User.isCooldownDone(user.getRedeemEpoch(), 30, true)) {
+            GameManager.sendMessage(event, IColors.red, "⏰", "Please wait another " 
+            + User.findTimeLeft(user.getRedeemEpoch(), 30, true));
 
-        //} else {
+        } else {
             String msg = "";
             int adChance = GameManager.randRange(0, 1);
 
             user.resetRedeemEpoch();
+            user.minusQuestRedeem();
 
             if(user.hasPremiumRole(event)) {
                 msg += GameManager.formatName(event) + " redeemed a token and star!";
+
+                if(user.getQuestRedeems() > 0) {
+                    msg += "\n\n**REVIVAL QUEST**\nRedeem `" + user.getQuestRedeems() + "` more times for a special gift!";
+                }
                 msg += user.updateTokens(1, true);
                 msg += user.updateCredits(GameManager.randRange(24, 30), false);
                 msg += user.updateStars(1, false);
 
             } else {
                 msg += GameManager.formatName(event) + " redeemed a token!";
+
+                if(user.getQuestRedeems() > 0) {
+                    msg += "\n\n**REVIVAL QUEST**\nRedeem `" + user.getQuestRedeems() + "` more times for a special gift!";
+                }
                 msg += user.updateTokens(1, true);
                 msg += user.updateCredits(GameManager.randRange(24, 30), false);
             }
-            msg += "\n\n" + Main.updateMsg + "\n\n";
+            msg += "\n┅┅\n";
+            msg += Main.updateMsg + "\n\n";
 
-            if(!user.hasPremiumRole(event) && adChance == 0) {
-                Card adCard = Card.pickRandomSpecialCard();
+            if(user.getQuestRedeems() < 1 && !user.getIsQuestComplete()) {
+                EmbedBuilder embed = new EmbedBuilder();
+                Card gift = new Card(
+                    IEmotes.mascot,
+                    "Gimme Cards",
+                    "merch-1",
+                    "Vibing Scatterbug",
+                    "Merch",
+                    "https://i.ibb.co/W3YbM7X/Vibing-Scatterbug.png",
+                    "Pokémon",
+                    new String[]{"Grass"},
+                    81423
+                );
 
-                msg += IEmotes.kofi + " Get the premium membership for exclusive cards, like this one!";
+                user.completeQuest();
+                user.addSingleCard(gift, true);
 
-                GameManager.sendPremiumMessage(event, user.getGameColor(), "🎒", msg, adCard);
+                msg += "🎉 **QUEST COMPLETE** 🎉\n"
+                + "Thank you for continuing to support *Gimme Cards*, and here's a plush of our new mascot, just for you!";
+
+                embed.setDescription("🎒 " + msg);
+                embed.setImage(gift.getCardImage());
+                embed.setColor(user.getGameColor());
+                event.replyEmbeds(embed.build()).queue();
 
             } else {
-                GameManager.sendMessage(event, user.getGameColor(), "🎒", msg);
+                if(!user.hasPremiumRole(event) && adChance == 0) {
+                    Card adCard = Card.pickRandomSpecialCard();
+
+                    msg += IEmotes.kofi + " Get the premium membership for exclusive cards, like this one!";
+
+                    GameManager.sendPremiumMessage(event, user.getGameColor(), "🎒", msg, adCard);
+
+                } else {
+                    GameManager.sendMessage(event, user.getGameColor(), "🎒", msg);
+                }
             }
-            //try { User.saveUsers(); } catch(Exception e) {}
-        //}
+            try { User.saveUsers(); } catch(Exception e) {}
+        }
     }
 
     public static void receiveDailyReward(SlashCommandInteractionEvent event) {

@@ -21,8 +21,8 @@ public class HelpCmds {
         desc += "[Click here](https://www.gimmecards.ca/) to visit our website, "
         + "where you'll find a quick tutorial and list of commands.\n\n";
 
-        desc += "**Official Server**\n";
-        desc += "[Click here](https://discord.gg/urtHCGcE7y) to join our official server, "
+        desc += "**Community Server**\n";
+        desc += "[Click here](https://discord.gg/wmVvK2cyzM) to join our community server, "
         + "where you can ask questions, give ideas, or simply hang out with other collectors.\n\n";
 
         desc += "**Invite Me!**\n";
@@ -120,7 +120,7 @@ public class HelpCmds {
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
-        desc += "**1:** [Click here](https://discord.gg/XQP5D8sTUh) to join the *Gimme Cards* community server\n\n";
+        desc += "**1:** [Click here](https://discord.gg/wmVvK2cyzM) to join the *Gimme Cards* community server\n\n";
 
         desc += "**2:** [Click here](https://ko-fi.com/gimmecards) to purchase the premium membership on Kofi "
         + IEmotes.kofi + "\n\n";

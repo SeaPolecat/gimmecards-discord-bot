@@ -298,6 +298,25 @@ public interface IChangelog {
         + "🔹*Gimme Cards* has switched to slash commands! Now you must start every command with the `/` prefix. "
         + "If this doesn't work, try re-inviting the bot, or make sure that the \"Use Application Commands\" "
         + "permission is enabled in all your channels\n"
-        + "🔹Because of slash commands, now you need to refresh displays manually, using the gray \"Refresh\" button"
+        + "🔹Because of slash commands, now you need to refresh displays manually, using the gray \"Refresh\" button",
+
+        "**Update 8/18/2023**\n"
+        + "🔸*Gimme Cards* is back!! 😝 To celebrate our return, there is a new **REVIVAL QUEST**... please use "
+        + "`/redeem` ***10*** times to receive a special gift 🎁\n"
+        + "🔸Due to poor funding, we've drastically modified our monetization plan. Earning ***Stars*** and drawing cards "
+        + "from [rareshop] and [promoshop] now require a *Gimme Cards* premium membership. Please use [premium] for more info\n"
+        + "🔹To start with a clean slate and re-balance everything again, everyone's current levels and items have been reset. "
+        + "Don't worry, you'll keep all your old cards though 😌\n"
+        + "🔹The fan-made *Gimme Cards* pack has been disabled, as we're looking to revamp that as well. "
+        + "Please use [help] to join our community server and submit new custom cards!\n"
+        + "🔹The command [cards] has been changed to [collection]\n"
+        + "🔹Levelling up no longer gives tokens or stars\n"
+        + "🔹Losing at [minigame] now gives ***1*** token instead of nothing\n"
+        + "🔹Players now get more loot from these commands:\n"
+        + "```\n"
+        + "/redeem: +1 token --> +1 token (+1 star if premium)\n"
+        + "/minigame: +2 tokens --> +3 tokens (+1 star if premium)\n"
+        + "/claim: +5 tokens --> +6 tokens (+1 star if premium)\n"
+        + "```"
     };
 }

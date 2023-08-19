@@ -130,12 +130,12 @@ public class SearchCmds {
                 }
             }
         }
-        for(Card card : ICustomCards.customs) {
+        /*for(Card card : ICustomCards.customs) {
             String name = findName(card, sortMethod);
             
             if(name.toLowerCase().contains(key.toLowerCase())) {
                 searchedCards.add(card);
             }
-        }
+        }*/
     }
 }

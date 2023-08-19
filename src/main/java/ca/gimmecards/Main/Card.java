@@ -173,13 +173,13 @@ public class Card implements ICard {
      */
     public static Card pickRandomSpecialCard() {
         Random rand = new Random();
-        int setsChance = rand.nextInt(0, 3);
+        int setsChance = rand.nextInt(0, 1);
         CardSet set;
 
-        if(setsChance == 0) {
+        /*if(setsChance == 0) {
             return pickCard(ICustomCards.customs);
-
-        } else if(setsChance == 1) {
+        }*/
+        if(setsChance == 0) {
             set = CardSet.rareSets[rand.nextInt(CardSet.rareSets.length)];
             return pickCard(set.getSpecials());
 
@@ -223,11 +223,11 @@ public class Card implements ICard {
                 return card;
             }
         }
-        for(Card card : ICustomCards.customs) {
+        /*for(Card card : ICustomCards.customs) {
             if(card.getCardId().equalsIgnoreCase(cardId)) {
                 return card;
             }
-        }
+        }*/
         return null;
     }
 

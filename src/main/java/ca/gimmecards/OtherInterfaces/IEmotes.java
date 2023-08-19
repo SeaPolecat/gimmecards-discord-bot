@@ -22,7 +22,7 @@ public interface IEmotes {
     String star = "<:star:954519273831800862>";
     String key = "<:key:875091820156162048>";
     String promostar = "<:promostar:955206901552001185>";
-    String logo = "<:logo:1002625567922856086>";
+    String mascot = "<:mascot:1141859649906278500>";
     String kofi = "<:kofi:1140389615379959860>";
 
     //badges

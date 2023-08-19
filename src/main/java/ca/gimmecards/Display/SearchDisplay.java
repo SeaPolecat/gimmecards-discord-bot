@@ -44,8 +44,10 @@ public class SearchDisplay extends Display {
         if(searchedCards.size() % 15 != 0) {
             addMaxPage();
         }
-        desc += "`" + GameManager.formatNumber(searchedCards.size()) + "` search results\n";
+        desc += "`" + GameManager.formatNumber(searchedCards.size()) + "` search results\n\n";
+        desc += "`/sview (card ID)` to view a card\n";
         desc += "┅┅\n";
+
         for(int i = startIndex; i < startIndex + 15; i++) {
             Card card = searchedCards.get(i);
 

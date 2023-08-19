@@ -3,15 +3,11 @@ fixes
 -regular display storage clearing
 -separate viewing and opening packs (have different Displays for each)
 
-//-clear embeds after sending
--reset everyone's items
-
 
 
 features
 -----------------------------------
--add the Scarlet & Violet packs
-
+-add the Scarlet & Violet packs (when they're available in the API)
 -show which cards you sold in ?sellall
 -surprise cards in chat
 -Poke coins + new minigame
@@ -30,4 +26,4 @@ research
 -----------------------------------
 -users' card counts are potentially too big
 -find a way to generate true random in Java
--reduce cpu load, try a binary search method and clearing all embeds
+-try a binary search method

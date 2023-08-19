@@ -11,12 +11,9 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import org.jetbrains.annotations.Nullable;
-import java.nio.file.Paths;
 import java.text.NumberFormat;
+import java.nio.file.Paths;
 import java.util.Random;
-/*import net.dv8tion.jda.api.interactions.commands.OptionType;
-import net.dv8tion.jda.api.interactions.commands.build.Commands;
-import net.dv8tion.jda.api.interactions.commands.build.OptionData;*/
 
 public class GameManager extends ListenerAdapter {
 
@@ -287,7 +284,7 @@ public class GameManager extends ListenerAdapter {
         //==================================[ UPDATING GLOBAL SLASH COMMANDS ]=========================================================
 
         /*Main.jda.updateCommands().addCommands(
-            
+
             //LOCK
             Commands.slash("qazxsw", "[REDACTED]"),
             
@@ -298,6 +295,10 @@ public class GameManager extends ListenerAdapter {
 
             //GIFT
             Commands.slash("gifttoken", "Gift someone tokens")
+            .addOption(OptionType.USER, "user", "mention a user", true)
+            .addOption(OptionType.INTEGER, "amount", "enter an amount", true),
+
+            Commands.slash("giftcredits", "Gift someone credits")
             .addOption(OptionType.USER, "user", "mention a user", true)
             .addOption(OptionType.INTEGER, "amount", "enter an amount", true),
 
@@ -315,6 +316,8 @@ public class GameManager extends ListenerAdapter {
             Commands.slash("rarities", "Show every possible card rarity in the game"),
 
             Commands.slash("badges", "Show every possible badge in the game"),
+
+            Commands.slash("premium", "See the instructions for getting Gimme Cards Premium"),
 
             Commands.slash("changelog", "See the latest updates to the game"),
 
