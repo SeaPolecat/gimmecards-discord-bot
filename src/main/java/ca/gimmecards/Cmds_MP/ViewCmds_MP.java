@@ -30,7 +30,7 @@ public class ViewCmds_MP {
     
                 GameManager.sendDynamicEmbed(event, user, null, disp, page);
             }
-        } catch(NumberFormatException | IndexOutOfBoundsException e) {
+        } catch(NumberFormatException | ArithmeticException | IndexOutOfBoundsException e) {
             GameManager.sendMessage(event, IColors.red, "❌", "Whoops, I couldn't find that card...");
         }
     }

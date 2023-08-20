@@ -1,5 +1,4 @@
 package ca.gimmecards.Cmds;
-import ca.gimmecards.Display.BackpackDisplay;
 import ca.gimmecards.Display.Display;
 import ca.gimmecards.Main.*;
 import ca.gimmecards.OtherInterfaces.*;

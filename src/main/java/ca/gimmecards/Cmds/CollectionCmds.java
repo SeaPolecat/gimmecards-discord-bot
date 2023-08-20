@@ -58,7 +58,7 @@ public class CollectionCmds {
                 GameManager.sendMessage(event, user.getGameColor(), "❤", "Added **" + cardTitle + "** to your favorites!");
                 try { User.saveUsers(); } catch(Exception e) {}
             }
-        } catch(NumberFormatException | IndexOutOfBoundsException e) {
+        } catch(NumberFormatException | ArithmeticException | IndexOutOfBoundsException e) {
             GameManager.sendMessage(event, IColors.red, "❌", "Whoops, I couldn't find that card...");
         }
     }
@@ -84,7 +84,7 @@ public class CollectionCmds {
                 GameManager.sendMessage(event, user.getGameColor(), "💔", "Removed **" + cardTitle + "** from your favorites!");
                 try { User.saveUsers(); } catch(Exception e) {}
             }
-        } catch(NumberFormatException | IndexOutOfBoundsException e) {
+        } catch(NumberFormatException | ArithmeticException | IndexOutOfBoundsException e) {
             GameManager.sendMessage(event, IColors.red, "❌", "Whoops, I couldn't find that card...");
         }
     }

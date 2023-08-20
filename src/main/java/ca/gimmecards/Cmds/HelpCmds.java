@@ -110,7 +110,7 @@ public class HelpCmds {
         EmbedBuilder embed = buildPremiumEmbed();
         Emoji kofiEmote = event.getJDA().getEmojiById("1140389615379959860");
 
-        event.editMessageEmbeds(embed.build())
+        event.getHook().editOriginalEmbeds(embed.build())
         .setActionRow(
             Button.primary("temp", "How to get Premium").withEmoji(kofiEmote).asDisabled()
         ).queue();

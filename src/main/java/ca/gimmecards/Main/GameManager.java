@@ -1,6 +1,5 @@
 package ca.gimmecards.Main;
 import ca.gimmecards.Display.*;
-import ca.gimmecards.OtherInterfaces.IDisplays;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
@@ -16,7 +15,6 @@ import java.text.NumberFormat;
 import java.nio.file.Paths;
 import java.util.Calendar;
 import java.util.Random;
-import java.util.ArrayList;
 
 public class GameManager extends ListenerAdapter {
 
@@ -25,7 +23,7 @@ public class GameManager extends ListenerAdapter {
     /**
      * the address of this game's save files; please change this accordingly (remember the 2 backslashes at the end)
      */
-    protected static String address = "C:\\Users\\andyh\\Downloads\\GimmeCards_new1\\GimmeCards\\src\\main\\java\\ca\\gimmecards\\Storage\\";
+    protected static String address = "C:\\Users\\wangw\\Documents\\GimmeCards\\src\\main\\java\\ca\\gimmecards\\Storage\\";
 
     protected static String setsPath = "CardSets.json";
     protected static String oldSetsPath = "OldCardSets.json";
@@ -194,8 +192,8 @@ public class GameManager extends ListenerAdapter {
             embed.setImage(adCard.getCardImage());
         }
         embed.setColor(color);
-        event.replyEmbeds(embed.build())
-        .addActionRow(
+        event.getHook().editOriginalEmbeds(embed.build())
+        .setActionRow(
             Button.primary(createButtonId(event, "premium"), "How to get Premium").withEmoji(kofiEmote)
         ).queue();
     }
@@ -217,7 +215,7 @@ public class GameManager extends ListenerAdapter {
      * @param embed the embed to send
      */
     public static void sendEmbed(SlashCommandInteractionEvent event, EmbedBuilder embed) {
-        event.replyEmbeds(embed.build()).queue();
+        event.getHook().editOriginalEmbeds(embed.build()).queue();
     }
 
     /**
@@ -234,14 +232,14 @@ public class GameManager extends ListenerAdapter {
         String slashId = event.getInteraction().getId();
 
         if(page == -1) {
-            event.replyEmbeds(embed.build())
-            .addActionRow(
+            event.getHook().editOriginalEmbeds(embed.build())
+            .setActionRow(
                 Button.secondary(createButtonId(event, "refresh"), "Refresh")
             ).queue();
 
         } else {
-            event.replyEmbeds(embed.build())
-            .addActionRow(
+            event.getHook().editOriginalEmbeds(embed.build())
+            .setActionRow(
                 Button.primary(createButtonId(event, "left"), "◀"),
                 Button.primary(createButtonId(event, "right"), "▶"),
                 Button.secondary(createButtonId(event, "refresh"), "Refresh")
@@ -262,8 +260,8 @@ public class GameManager extends ListenerAdapter {
     public static void editEmbed(ButtonInteractionEvent event, User user, Server server, Display disp, int page) {
         UserInfo ui = new UserInfo(event);
         EmbedBuilder embed = disp.buildEmbed(user, ui, server, page);
-
-        event.editMessageEmbeds(embed.build()).queue();
+        
+        event.getHook().editOriginalEmbeds(embed.build()).queue();
     }
 
     //==============================================[ EVENT FUNCTIONS ]================================================================

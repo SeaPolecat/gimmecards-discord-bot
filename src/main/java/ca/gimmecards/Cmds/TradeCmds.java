@@ -75,7 +75,7 @@ public class TradeCmds {
 
                     GameManager.sendMessage(event, user.getGameColor(), IEmotes.ditto, GameManager.formatName(event) + " offers **" + cardTitle + "**");
                 }
-            } catch(NumberFormatException | IndexOutOfBoundsException e) {
+            } catch(NumberFormatException | ArithmeticException | IndexOutOfBoundsException e) {
                 GameManager.sendMessage(event, IColors.red, "❌", "Whoops, I couldn't find that card...");
             }
         }
@@ -114,7 +114,7 @@ public class TradeCmds {
 
                 GameManager.sendMessage(event, user.getGameColor(), IEmotes.ditto, GameManager.formatName(event) + " took back **" + cardTitle + "**");
 
-            } catch(NumberFormatException | IndexOutOfBoundsException e) {
+            } catch(NumberFormatException | ArithmeticException | IndexOutOfBoundsException e) {
                 GameManager.sendMessage(event, IColors.red, "❌", "Whoops, I couldn't find that card...");
             }
         }

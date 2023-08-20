@@ -30,7 +30,7 @@ public class CollectionCmds_MP {
                 try {
                     GameManager.sendDynamicEmbed(event, user, null, disp, page.getAsInt());
 
-                } catch(NumberFormatException | IndexOutOfBoundsException e) {
+                } catch(NumberFormatException | ArithmeticException | IndexOutOfBoundsException e) {
                     GameManager.sendMessage(event, IColors.red, "❌", "Whoops, I couldn't find that page...");
                 }
             } else {

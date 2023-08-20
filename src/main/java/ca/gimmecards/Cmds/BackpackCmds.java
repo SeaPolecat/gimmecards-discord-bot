@@ -74,7 +74,7 @@ public class BackpackCmds {
                 embed.setDescription("🎒 " + msg);
                 embed.setImage(gift.getCardImage());
                 embed.setColor(user.getGameColor());
-                event.replyEmbeds(embed.build()).queue();
+                event.getHook().editOriginalEmbeds(embed.build()).queue();
 
             } else {
                 if(!user.hasPremiumRole(event) && adChance == 0) {
@@ -134,8 +134,7 @@ public class BackpackCmds {
             "Set your game's theme color to **" + hexCode.getAsString().toUpperCase() + "**");
             try { User.saveUsers(); } catch(Exception e) {}
 
-        } catch(NumberFormatException e) {
-            e.printStackTrace();
+        } catch(NumberFormatException | ArithmeticException e) {
             GameManager.sendMessage(event, IColors.red, "❌", "That's not a valid hex code!");
         }
     }
@@ -158,7 +157,7 @@ public class BackpackCmds {
             GameManager.sendMessage(event, user.getGameColor(), "🎒", "**" + cardTitle + "** has been pinned to your backpack!");
             try { User.saveUsers(); } catch(Exception e) {}
             
-        } catch(NumberFormatException | IndexOutOfBoundsException e) {
+        } catch(NumberFormatException | ArithmeticException | IndexOutOfBoundsException e) {
             GameManager.sendMessage(event, IColors.red, "❌", "Whoops, I couldn't find that card...");
         }
     }

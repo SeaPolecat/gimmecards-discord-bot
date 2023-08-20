@@ -24,8 +24,8 @@ public class PrivacyCmds {
         embed.setFooter("the end of " + ui.getUserName() + "'s journey", ui.getUserIcon());
         embed.setColor(IColors.blue);
 
-        event.replyEmbeds(embed.build())
-        .addActionRow(
+        event.getHook().editOriginalEmbeds(embed.build())
+        .setActionRow(
             Button.danger(GameManager.createButtonId(event, "deleteaccount_yes"), "Yes"),
             Button.secondary(GameManager.createButtonId(event, "deleteaccount_no"), "No")
         ).queue();
@@ -51,7 +51,7 @@ public class PrivacyCmds {
             if(u.getUserId().equals(user.getUserId())) {
                 User.users.remove(i);
 
-                event.editMessageEmbeds(embed.build())
+                event.getHook().editOriginalEmbeds(embed.build())
                 .setActionRow(
                     Button.danger("temp", "Yes").asDisabled(),
                     Button.secondary("temp2", "No").asDisabled()
@@ -76,7 +76,7 @@ public class PrivacyCmds {
         embed.setImage("https://media.tenor.com/qObvHG4rT28AAAAC/pikachu-pokemon.gif");
         embed.setColor(IColors.blue);
 
-        event.editMessageEmbeds(embed.build())
+        event.getHook().editOriginalEmbeds(embed.build())
         .setActionRow(
             Button.danger("temp", "Yes").asDisabled(),
             Button.secondary("temp2", "No").asDisabled()

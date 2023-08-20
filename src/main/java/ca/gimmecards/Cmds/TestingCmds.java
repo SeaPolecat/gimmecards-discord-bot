@@ -49,7 +49,7 @@ public class TestingCmds {
 
     public static void testSomething(MessageReceivedEvent event) {
 
-        int count = 0;
+        /*int count = 0;
 
         for(User u : User.users) {
             for(CardContainer cc : u.getCardContainers()) {
@@ -121,7 +121,7 @@ public class TestingCmds {
             }
         }
         GameManager.sendMessage(event, IColors.blue, "", "done testing! " + count + " cards updated");
-        //try { User.saveUsers(); } catch(Exception e) {}
+        try { User.saveUsers(); } catch(Exception e) {}*/
 
         /*int dupes = 0;
 
@@ -154,7 +154,7 @@ public class TestingCmds {
 
         // ====================================================================================================
 
-        if (IDisplays.backpackDisplays.size() != 0) {
+        /*if (IDisplays.backpackDisplays.size() != 0) {
             GameManager.sendMessage(event, IColors.blue, "", "ERROR: size of backpackDisplays is " + IDisplays.backpackDisplays.size() + "\n");
         }
         if (IDisplays.collectionDisplays.size() != 0) {
@@ -195,7 +195,7 @@ public class TestingCmds {
         }
         if (IDisplays.viewDisplays_MP.size() != 0) {
             GameManager.sendMessage(event, IColors.blue, "", "ERROR: size of backpackDisplays is " + IDisplays.viewDisplays_MP.size() + "\n");
-        }
+        }*/
 
 
         /*for(User u : User.users) {

@@ -106,8 +106,10 @@ public class Display extends ListenerAdapter {
         String slashId = buttonId.substring(semiColIndex + 1, underscoreIndex);
         String buttonType = buttonId.substring(underscoreIndex + 1);
 
+        event.deferEdit().queue();
+
         if(!user.getUserId().equals(userId)) {
-            event.reply("This is not your button!").setEphemeral(true).queue();
+            event.getHook().sendMessage("This is not your button!").setEphemeral(true).queue();
 
         } else {
             if(buttonType.equals("deleteaccount_yes")) {
@@ -145,7 +147,7 @@ public class Display extends ListenerAdapter {
                         return;
                     }
                 }
-                event.reply("This button is outdated. Please send a new command!").setEphemeral(true).queue();
+                event.getHook().sendMessage("This button is outdated. Please send a new command!").setEphemeral(true).queue();
             }
         }
     }

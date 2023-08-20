@@ -40,7 +40,7 @@ public class SellCmds {
                     GameManager.sendMessage(event, user.getGameColor(), "🎴", msg);
                     try { User.saveUsers(); } catch(Exception e) {}
                 }
-            } catch(NumberFormatException | IndexOutOfBoundsException e) {
+            } catch(NumberFormatException | ArithmeticException | IndexOutOfBoundsException e) {
                 GameManager.sendMessage(event, IColors.red, "❌", "Whoops, I couldn't find that card...");
             }
         }

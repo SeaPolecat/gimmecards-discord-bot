@@ -55,7 +55,7 @@ public class MarketCmds {
 
             GameManager.sendDynamicEmbed(event, user, server, disp, page);
 
-        } catch(NumberFormatException | IndexOutOfBoundsException e) {
+        } catch(NumberFormatException | ArithmeticException | IndexOutOfBoundsException e) {
             GameManager.sendMessage(event, IColors.red, "❌", "Whoops, I couldn't find that card...");
         }
     }
@@ -96,7 +96,7 @@ public class MarketCmds {
                     item.displayCard(event, ui, msg, footer, false);
                     try { User.saveUsers(); } catch(Exception e) {}
                 }
-            } catch(NumberFormatException | IndexOutOfBoundsException e) {
+            } catch(NumberFormatException | ArithmeticException | IndexOutOfBoundsException e) {
                 GameManager.sendMessage(event, IColors.red, "❌", "Whoops, I couldn't find that card...");
             }
         }

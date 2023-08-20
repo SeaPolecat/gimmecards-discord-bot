@@ -259,6 +259,8 @@ public class Cmds extends ListenerAdapter {
      */
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
 
+        event.deferReply().queue();
+
         //LOCK
         if(event.getUser().getId().equals("454773340163538955") && event.getName().equals("plmnko")) {
             Main.isLocked = false;
