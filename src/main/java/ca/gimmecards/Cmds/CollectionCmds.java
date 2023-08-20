@@ -27,6 +27,14 @@ public class CollectionCmds {
                 GameManager.sendDynamicEmbed(event, user, null, disp, 1);
             }
         }
+        if (GameManager.globalCDChecker()) {
+            //Since it's time to delete all the IDs, the if statement returns true.
+            //If we do reset the timer, then we must reset the timestamp epoch
+            GameManager.globalTimeStampEpoch();
+
+            //We remove the IDs so the bot doesn't need to store useless info
+            Display.deletingIDs();
+        } 
     }
 
     public static void favouriteCard(SlashCommandInteractionEvent event) {

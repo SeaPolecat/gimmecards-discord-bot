@@ -1,4 +1,12 @@
 package ca.gimmecards.Cmds;
+import java.util.ArrayList;
+import ca.gimmecards.Display.*;
+import ca.gimmecards.Main.*;
+import ca.gimmecards.OtherInterfaces.*;
+import ca.gimmecards.Display_MP.BackpackDisplay_MP;
+import ca.gimmecards.Display_MP.CardDisplay_MP;
+import ca.gimmecards.Display_MP.ViewDisplay_MP;
+import ca.gimmecards.OtherInterfaces.IDisplays;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 /*embed.addField("**Rule 1**", "Please follow Discord's [Terms of Service](https://discord.com/terms)", false);
@@ -38,6 +46,50 @@ public class TestingCmds {
     }*/
 
     public static void testSomething(MessageReceivedEvent event) {
+
+        if (IDisplays.backpackDisplays.size() != 0) {
+            GameManager.sendMessage(event, IColors.blue, "", "ERROR: size of backpackDisplays is " + IDisplays.backpackDisplays.size() + "\n");
+        }
+        if (IDisplays.collectionDisplays.size() != 0) {
+            GameManager.sendMessage(event, IColors.blue, "", "ERROR: size of backpackDisplays is " + IDisplays.collectionDisplays.size() + "\n");
+        }
+        if (IDisplays.helpDisplays.size() != 0) {
+            GameManager.sendMessage(event, IColors.blue, "", "ERROR: size of backpackDisplays is " + IDisplays.helpDisplays.size() + "\n");
+        }
+        if (IDisplays.leaderboardDisplays.size() != 0) {
+            GameManager.sendMessage(event, IColors.blue, "", "ERROR: size of backpackDisplays is " + IDisplays.leaderboardDisplays.size() + "\n");
+        }
+        if (IDisplays.marketDisplays.size() != 0) {
+            GameManager.sendMessage(event, IColors.blue, "", "ERROR: size of backpackDisplays is " + IDisplays.marketDisplays.size() + "\n");
+        }
+        if (IDisplays.minigameDisplays.size() != 0) {
+            GameManager.sendMessage(event, IColors.blue, "", "ERROR: size of backpackDisplays is " + IDisplays.minigameDisplays.size() + "\n");
+        }
+        if (IDisplays.oldShopDisplays.size() != 0) {
+            GameManager.sendMessage(event, IColors.blue, "", "ERROR: size of backpackDisplays is " + IDisplays.oldShopDisplays.size() + "\n");
+        }
+        if (IDisplays.searchDisplays.size() != 0) {
+            GameManager.sendMessage(event, IColors.blue, "", "ERROR: size of backpackDisplays is " + IDisplays.searchDisplays.size() + "\n");
+        }
+        if (IDisplays.shopDisplays.size() != 0) {
+            GameManager.sendMessage(event, IColors.blue, "", "ERROR: size of backpackDisplays is " + IDisplays.shopDisplays.size() + "\n");
+        }
+        if (IDisplays.tradeDisplays.size() != 0) {
+            GameManager.sendMessage(event, IColors.blue, "", "ERROR: size of backpackDisplays is " + IDisplays.tradeDisplays.size() + "\n");
+        }
+        if (IDisplays.viewDisplays.size() != 0) {
+            GameManager.sendMessage(event, IColors.blue, "", "ERROR: size of backpackDisplays is " + IDisplays.viewDisplays.size() + "\n");
+        }
+        if (IDisplays.backpackDisplays_MP.size() != 0) {
+            GameManager.sendMessage(event, IColors.blue, "", "ERROR: size of backpackDisplays is " + IDisplays.backpackDisplays_MP.size() + "\n");
+        }
+        if (IDisplays.cardDisplays_MP.size() != 0) {
+            GameManager.sendMessage(event, IColors.blue, "", "ERROR: size of backpackDisplays is " + IDisplays.cardDisplays_MP.size() + "\n");
+        }
+        if (IDisplays.viewDisplays_MP.size() != 0) {
+            GameManager.sendMessage(event, IColors.blue, "", "ERROR: size of backpackDisplays is " + IDisplays.viewDisplays_MP.size() + "\n");
+        }
+
 
         /*for(User u : User.users) {
             u.addTokens(50);
@@ -97,4 +149,5 @@ public class TestingCmds {
         GameManager.sendMessage(event, IColors.blue, "", "done testing!");
         try { User.saveUsers(); } catch(Exception e) {}*/
     }
+    
 }

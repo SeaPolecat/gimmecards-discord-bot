@@ -1,4 +1,6 @@
 package ca.gimmecards.Cmds;
+import ca.gimmecards.Display.BackpackDisplay;
+import ca.gimmecards.Display.Display;
 import ca.gimmecards.Main.*;
 import ca.gimmecards.OtherInterfaces.*;
 import java.io.IOException;
@@ -256,5 +258,16 @@ public class CardCmds {
                 GameManager.sendMessage(event, IColors.red, "", "`Rate limit reached. Please wait for a bit.`");
             }
         }
+    }
+
+    public static void clearingIDs(MessageReceivedEvent event) {
+        GameManager.sendMessage(event, IColors.red, "", "Size of array: " + IDisplays.collectionDisplays.size());
+        Display.deletingIDs();
+        if (IDisplays.collectionDisplays.size() == 0) {
+            GameManager.sendMessage(event, IColors.red, "", "successfully deleted all IDs!");
+        }
+    }
+    public static void checkSizeOfArray(MessageReceivedEvent event) {
+        GameManager.sendMessage(event, IColors.red, "", "Size of array: " + IDisplays.collectionDisplays.size());
     }
 }

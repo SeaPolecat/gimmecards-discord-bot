@@ -70,6 +70,12 @@ public class Cmds extends ListenerAdapter {
             if(isValidCommand(event, args, new String[]{"addpromo"}, new String[]{"set #"})) {
                 CardCmds.addSpecialContents(event, args, false);
             }
+            if(isValidCommand(event, args, new String[]{"clear"}, null)) {
+                CardCmds.clearingIDs(event);
+            }
+            if(isValidCommand(event, args, new String[]{"arraysize"}, null)) {
+                CardCmds.checkSizeOfArray(event);
+            }
 
             //========================================[ GUILD SLASH UPDATE ]===========================================================
 
@@ -454,6 +460,7 @@ public class Cmds extends ListenerAdapter {
         if(event.getName().equals("reject")) {
             TradeCmds.rejectOffer(event);
         }
+
     }
 
     //===============================================[ PRIVATE FUNCTIONS ]=============================================================

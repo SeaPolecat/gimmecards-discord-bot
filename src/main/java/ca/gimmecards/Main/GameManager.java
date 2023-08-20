@@ -1,5 +1,6 @@
 package ca.gimmecards.Main;
 import ca.gimmecards.Display.*;
+import ca.gimmecards.OtherInterfaces.IDisplays;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
@@ -13,7 +14,9 @@ import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import org.jetbrains.annotations.Nullable;
 import java.text.NumberFormat;
 import java.nio.file.Paths;
+import java.util.Calendar;
 import java.util.Random;
+import java.util.ArrayList;
 
 public class GameManager extends ListenerAdapter {
 
@@ -22,7 +25,7 @@ public class GameManager extends ListenerAdapter {
     /**
      * the address of this game's save files; please change this accordingly (remember the 2 backslashes at the end)
      */
-    protected static String address = "C:\\Users\\wangw\\Documents\\GimmeCards\\src\\main\\java\\ca\\gimmecards\\Storage\\";
+    protected static String address = "C:\\Users\\andyh\\Downloads\\GimmeCards_new1\\GimmeCards\\src\\main\\java\\ca\\gimmecards\\Storage\\";
 
     protected static String setsPath = "CardSets.json";
     protected static String oldSetsPath = "OldCardSets.json";
@@ -43,6 +46,21 @@ public class GameManager extends ListenerAdapter {
             return address + path;
         }
     }
+
+    //==============================================[ GLOBAL CHECKER ]===============================================================
+    
+    public static long globalDeletionEpoch = (long)(0);
+    /*
+     * Requries: 
+     * Modifies: 
+     * Effects: 
+     */
+
+    public static boolean globalCDChecker() {
+        return User.isCooldownDone(globalDeletionEpoch, 60, true);
+    }
+
+    public static void globalTimeStampEpoch() { globalDeletionEpoch = Calendar.getInstance().getTimeInMillis() / 60000; } //set time to current timestamp in minutes
 
     //==============================================[ FORMAT FUNCTIONS ]===============================================================
 
