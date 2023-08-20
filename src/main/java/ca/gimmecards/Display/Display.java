@@ -1,5 +1,6 @@
 package ca.gimmecards.Display;
 import ca.gimmecards.Main.*;
+import ca.gimmecards.OtherInterfaces.IDisplays;
 import ca.gimmecards.Cmds.*;
 import ca.gimmecards.Display_MP.*;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -69,6 +70,25 @@ public class Display extends ListenerAdapter {
      */
     public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, int page) {
         return null;
+    }
+
+    //==============================================[ PUBLIC STATIC FUNCTIONS ]================================================================
+    
+    public static void deletingIDs() {
+        IDisplays.backpackDisplays.clear(); 
+        IDisplays.collectionDisplays.clear();
+        IDisplays.helpDisplays.clear();
+        IDisplays.leaderboardDisplays.clear();
+        IDisplays.marketDisplays.clear();
+        IDisplays.minigameDisplays.clear();
+        IDisplays.oldShopDisplays.clear();
+        IDisplays.searchDisplays.clear();
+        IDisplays.shopDisplays.clear();
+        IDisplays.tradeDisplays.clear();
+        IDisplays.viewDisplays.clear();
+        IDisplays.backpackDisplays_MP.clear();
+        IDisplays.cardDisplays_MP.clear();
+        IDisplays.viewDisplays_MP.clear();
     }
 
     //==============================================[ EVENT FUNCTIONS ]================================================================

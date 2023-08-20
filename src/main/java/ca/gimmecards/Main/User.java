@@ -12,6 +12,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
@@ -39,7 +40,7 @@ public class User implements IUser {
     private Integer stars;                              // number of stars the player has
     private Integer keys;                               // number of keys the player has
     private Long openEpoch;                             // used to keep track of the cooldown of /open
-    private long voteEpoch;                             // used to keep track of the cooldown of /vote and /claim
+    private Long voteEpoch;                             // used to keep track of the cooldown of /vote and /claim
     private Long dailyEpoch;                            // used to keep track of the cooldown of /daily
     private Long redeemEpoch;                           // used to keep track of the cooldown of /redeem
     private Long minigameEpoch;                         // used to keep track of the cooldown of /minigame
@@ -76,6 +77,7 @@ public class User implements IUser {
         this.redeemEpoch = (long)(0);
         this.minigameEpoch = (long)(0);
         this.marketEpoch = (long)(0);
+
         this.sortMethod = "newest";
         this.isSortIncreasing = true;
         this.pinnedCard = "";
@@ -154,13 +156,13 @@ public class User implements IUser {
     public void addCredits(int credits) { this.credits += credits; }
     public void addStars(int stars) { this.stars += stars; }
     public void addKeys(int keys) { this.keys += keys; }
-    public void resetOpenEpoch() { this.openEpoch = Calendar.getInstance().getTimeInMillis() / 1000; }
-    public void resetVoteEpoch() { this.voteEpoch = Calendar.getInstance().getTimeInMillis() / 60000; }
-    public void resetDailyEpoch() { this.dailyEpoch = Calendar.getInstance().getTimeInMillis() / 60000; }
-    public void resetRedeemEpoch() { this.redeemEpoch = Calendar.getInstance().getTimeInMillis() / 60000; }
-    public void resetMinigameEpoch() { this.minigameEpoch = Calendar.getInstance().getTimeInMillis() / 60000; }
-    public void resetMarketEpoch() { this.marketEpoch = Calendar.getInstance().getTimeInMillis() / 60000; }
-    public void setSortMethod(String sortMethod) { this.sortMethod = sortMethod; }
+    public void resetOpenEpoch() { this.openEpoch = Calendar.getInstance().getTimeInMillis() / 1000; }          //1000 means its counting in seconds
+    public void resetVoteEpoch() { this.voteEpoch = Calendar.getInstance().getTimeInMillis() / 60000; }         //60000 means its counting in minutes
+    public void resetDailyEpoch() { this.dailyEpoch = Calendar.getInstance().getTimeInMillis() / 60000; }       //60000 means its counting in minutes
+    public void resetRedeemEpoch() { this.redeemEpoch = Calendar.getInstance().getTimeInMillis() / 60000; }     //60000 means its counting in minutes
+    public void resetMinigameEpoch() { this.minigameEpoch = Calendar.getInstance().getTimeInMillis() / 60000; } //60000 means its counting in minutes
+    public void resetMarketEpoch() { this.marketEpoch = Calendar.getInstance().getTimeInMillis() / 60000; }     //60000 means its counting in minutes
+    public void setSortMethod(String sortMethod) { this.sortMethod = sortMethod; } 
     public void setIsSortIncreasing(boolean isSortIncreasing) { this.isSortIncreasing = isSortIncreasing; }
     public void setPinnedCard(String pinnedCard) { this.pinnedCard = pinnedCard; }
     public void minusQuestRedeem() { this.questRedeems--; }
@@ -205,6 +207,12 @@ public class User implements IUser {
      */
     public static User findUser(SlashCommandInteractionEvent event) {
         String discordId = event.getUser().getId();
+        
+        return searchForUser(discordId);
+    }
+
+    public static User findUser(MessageReceivedEvent event) {
+        String discordId = event.getAuthor().getId();
         
         return searchForUser(discordId);
     }
