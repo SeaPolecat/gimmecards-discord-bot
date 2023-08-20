@@ -78,6 +78,8 @@ public class Card implements ICard {
     public String getCardSupertype() { return this.cardSupertype; }
     public String[] getCardSubtypes() { return this.cardSubtypes; }
     public int getCardPrice() { return this.cardPrice; }
+    //
+    public void setCardPrice(int cp) { this.cardPrice = cp; }
 
     //=============================================[ PUBLIC STATIC FUNCTIONS ]==============================================================
 
@@ -173,7 +175,7 @@ public class Card implements ICard {
      */
     public static Card pickRandomSpecialCard() {
         Random rand = new Random();
-        int setsChance = rand.nextInt(0, 1);
+        int setsChance = rand.nextInt(2);
         CardSet set;
 
         /*if(setsChance == 0) {
