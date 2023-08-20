@@ -39,7 +39,7 @@ public class User implements IUser {
     private Integer stars;                              // number of stars the player has
     private Integer keys;                               // number of keys the player has
     private Long openEpoch;                             // used to keep track of the cooldown of /open
-    private long voteEpoch;                             // used to keep track of the cooldown of /vote and /claim
+    private Long voteEpoch;                             // used to keep track of the cooldown of /vote and /claim
     private Long dailyEpoch;                            // used to keep track of the cooldown of /daily
     private Long redeemEpoch;                           // used to keep track of the cooldown of /redeem
     private Long minigameEpoch;                         // used to keep track of the cooldown of /minigame

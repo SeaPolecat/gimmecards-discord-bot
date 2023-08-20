@@ -1,4 +1,6 @@
 package ca.gimmecards.Cmds;
+import ca.gimmecards.Main.*;
+import ca.gimmecards.OtherInterfaces.IColors;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 /*embed.addField("**Rule 1**", "Please follow Discord's [Terms of Service](https://discord.com/terms)", false);
@@ -38,6 +40,111 @@ public class TestingCmds {
     }*/
 
     public static void testSomething(MessageReceivedEvent event) {
+
+        int count = 0;
+
+        for(User u : User.users) {
+            for(CardContainer cc : u.getCardContainers()) {
+                Card newCard = null;
+
+                for(CardSet cs : CardSet.sets) {
+                    for(Card c : cs.getCommons()) {
+                        if(cc.getCard().getCardId().equals(c.getCardId())) {
+                            newCard = c;
+                        }
+                    }
+                    for(Card c : cs.getUncommons()) {
+                        if(cc.getCard().getCardId().equals(c.getCardId())) {
+                            newCard = c;
+                        }
+                    }
+                    for(Card c : cs.getRares()) {
+                        if(cc.getCard().getCardId().equals(c.getCardId())) {
+                            newCard = c;
+                        }
+                    }
+                    for(Card c : cs.getShinies()) {
+                        if(cc.getCard().getCardId().equals(c.getCardId())) {
+                            newCard = c;
+                        }
+                    }
+                }
+                for(CardSet cs : CardSet.oldSets) {
+                    for(Card c : cs.getCommons()) {
+                        if(cc.getCard().getCardId().equals(c.getCardId())) {
+                            newCard = c;
+                        }
+                    }
+                    for(Card c : cs.getUncommons()) {
+                        if(cc.getCard().getCardId().equals(c.getCardId())) {
+                            newCard = c;
+                        }
+                    }
+                    for(Card c : cs.getRares()) {
+                        if(cc.getCard().getCardId().equals(c.getCardId())) {
+                            newCard = c;
+                        }
+                    }
+                    for(Card c : cs.getShinies()) {
+                        if(cc.getCard().getCardId().equals(c.getCardId())) {
+                            newCard = c;
+                        }
+                    }
+                }
+                for(CardSet cs : CardSet.rareSets) {
+                    for(Card c : cs.getSpecials()) {
+                        if(cc.getCard().getCardId().equals(c.getCardId())) {
+                            newCard = c;
+                        }
+                    }
+                }
+                for(CardSet cs : CardSet.promoSets) {
+                    for(Card c : cs.getSpecials()) {
+                        if(cc.getCard().getCardId().equals(c.getCardId())) {
+                            newCard = c;
+                        }
+                    }
+                }
+
+                try {
+                    cc.getCard().setCardPrice(newCard.getCardPrice());
+                    count++;
+                } catch(NullPointerException e) {}
+            }
+        }
+        GameManager.sendMessage(event, IColors.blue, "", "done testing! " + count + " cards updated");
+        //try { User.saveUsers(); } catch(Exception e) {}
+
+        /*int dupes = 0;
+
+        for(int i = 0; i < User.users.size(); i++) {
+            User u = User.users.get(i);
+
+            for(int k = 0; k < User.users.size(); k++) {
+                User u2 = User.users.get(k);
+
+                if(u.getUserId().equals(u2.getUserId()) && i != k) {
+                    System.out.println("duplicate found!");
+                    System.out.println(u.getCardCount());
+                    dupes++;
+                }
+            }
+        }
+        System.out.println(dupes + " duplicates found!");*/
+
+        /*for(User u : User.users) {
+            try {
+                net.dv8tion.jda.api.entities.User user = event.getJDA().getUserById(u.getUserId());
+
+                // user not in the same server as GC
+                if(user.getEffectiveName().contains("\u1D0B\u026A\u0274\u0262")) {
+                    System.out.println(u.getUserId());
+                }
+
+            } catch(NullPointerException e) {}
+        }*/
+
+        // ====================================================================================================
 
         /*for(User u : User.users) {
             u.addTokens(50);
