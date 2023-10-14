@@ -29,6 +29,29 @@ public class GiftCmds {
         }
     }
 
+    public static void giftKey(SlashCommandInteractionEvent event) {
+        User user = User.findUser(event);
+        //
+        OptionMapping user_ = event.getOption("user");
+        OptionMapping amount = event.getOption("amount");
+
+        if(user_ == null || amount == null) { return; }
+
+        if(!user.getUserId().equals("454773340163538955")) {
+            GameManager.sendMessage(event, IColors.red, "❌", "Only the owner of Gimme Cards can use this command!");
+
+        } else {
+            String msg = "";
+            User mention = User.findOtherUser(event, user_.getAsUser().getId());
+
+            msg += GameManager.formatName(mention, event) + " has received a gift of keys!";
+            msg += mention.updateKeys(amount.getAsInt(), true);
+
+            GameManager.sendMessage(event, mention.getGameColor(), "🎒", msg);
+            try { User.saveUsers(); } catch(Exception e) {}
+        }
+    }
+
     public static void giftCredits(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
         //
