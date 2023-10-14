@@ -14,7 +14,7 @@ public class GiftCmds {
 
         if(user_ == null || amount == null) { return; }
 
-        if(!user.getUserId().equals("454773340163538955")) {
+        if(!user.getUserId().equals("454773340163538955") || !user.getUserId().equals("967695872689315890")) {
             GameManager.sendMessage(event, IColors.red, "❌", "Only the owner of Gimme Cards can use this command!");
 
         } else {
@@ -37,7 +37,7 @@ public class GiftCmds {
 
         if(user_ == null || amount == null) { return; }
 
-        if(!user.getUserId().equals("454773340163538955")) {
+        if(!user.getUserId().equals("454773340163538955") || !user.getUserId().equals("967695872689315890")) {
             GameManager.sendMessage(event, IColors.red, "❌", "Only the owner of Gimme Cards can use this command!");
 
         } else {
@@ -60,7 +60,7 @@ public class GiftCmds {
 
         if(user_ == null || amount == null) { return; }
 
-        if(!user.getUserId().equals("454773340163538955")) {
+        if(!user.getUserId().equals("454773340163538955") || !user.getUserId().equals("967695872689315890")) {
             GameManager.sendMessage(event, IColors.red, "❌", "Only the owner of Gimme Cards can use this command!");
 
         } else {
@@ -83,7 +83,7 @@ public class GiftCmds {
 
         if(user_ == null || amount == null) { return; }
 
-        if(!user.getUserId().equals("454773340163538955")) {
+        if(!user.getUserId().equals("454773340163538955") || !user.getUserId().equals("967695872689315890")) {
             GameManager.sendMessage(event, IColors.red, "❌", "Only the owner of Gimme Cards can use this command!");
 
         } else {
@@ -106,7 +106,7 @@ public class GiftCmds {
 
         if(user_ == null || cardId == null) { return; }
 
-        if(!user.getUserId().equals("454773340163538955")) {
+        if(!user.getUserId().equals("454773340163538955") || !user.getUserId().equals("967695872689315890")) {
             GameManager.sendMessage(event, IColors.red, "❌", "Only the owner of Gimme Cards can use this command!");
 
         } else {

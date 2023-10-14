@@ -66,7 +66,7 @@ public interface ICustomCards {
             new String[]{"Colorless"},
             30
         ),
-
+*/
         new Card(
             IEmotes.logo,
             "Gimme Cards",
@@ -126,7 +126,7 @@ public interface ICustomCards {
             new String[]{"Lightning"},
             320
         ),
-
+/*
         new Card(
             IEmotes.logo,
             "Gimme Cards",
@@ -810,7 +810,7 @@ public interface ICustomCards {
             new String[]{"Grass"},
             40
         ),
-
+*/
         new Card(
             IEmotes.logo,
             "Gimme Cards",
@@ -929,7 +929,43 @@ public interface ICustomCards {
             "Pokémon",
             new String[]{"Colorless"},
             1150
-        ),*/
+        ),
+
+        new Card(
+            IEmotes.logo,
+            "Gimme Cards",
+            "custom-77",
+            "Trishula VSTAR",
+            "Custom",
+            "https://cdn.discordapp.com/attachments/995802885487087797/1162785039298338999/Trishula_VSTAR.png?ex=653d32f4&is=652abdf4&hm=7cbd7230d8e2373803ec7964e220789b95e3b158800c8f1117890f74d8ff05ef&",
+            "Pokémon",
+            new String[]{"Water"},
+            2500
+        ),
+
+        new Card(
+            IEmotes.logo,
+            "Gimme Cards",
+            "custom-78",
+            "Trishula VMAX",
+            "Custom",
+            "https://cdn.discordapp.com/attachments/995802885487087797/1162785057665200240/Trishula_VMAX.png?ex=653d32f9&is=652abdf9&hm=9d70e69d9bf851928253b88b1ae02e63d573c7ec08d6b754322156e6cabecd78&",
+            "Pokémon",
+            new String[]{"Water"},
+            3650
+        ),
+
+        new Card(
+            IEmotes.logo,
+            "Gimme Cards",
+            "custom-79",
+            "StarryNight VSTAR",
+            "Custom",
+            "https://cdn.discordapp.com/attachments/995802885487087797/1162785081082007692/StarryNight_.png?ex=653d32fe&is=652abdfe&hm=9a5f50f1ae6eb11f99fe1e23656beac170796faac16114dc6fd4ff459bea8a0b&",
+            "Pokémon",
+            new String[]{"Dragon"},
+            3200
+        ),
 
 //====================================================[ MERCH ITEMS ]==================================================================
 
