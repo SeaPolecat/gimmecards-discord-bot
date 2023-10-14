@@ -72,11 +72,9 @@ public interface IUser {
     public ArrayList<Card> addNewCards(CardSet set);
 
     /**
-     * sorts the player's cards
-     * @param methodToSort the sorting method that the player would like to use
-     * @param shouldSortIncreasing whether the sorting method is increasing or decreasing
+     * sorts the player's cards based on either alphabetical, xp, quantity, or newest
      */
-    public void sortCards(String methodToSort, boolean shouldSortIncreasing);
+    public void sortCards();
 
     /**
      * checks whether the player owns a certain card

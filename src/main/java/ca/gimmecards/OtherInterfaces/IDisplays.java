@@ -16,6 +16,8 @@ public interface IDisplays {
     public ArrayList<SearchDisplay> searchDisplays = new ArrayList<SearchDisplay>();
     public ArrayList<ShopDisplay> shopDisplays = new ArrayList<ShopDisplay>();
     public ArrayList<TradeDisplay> tradeDisplays = new ArrayList<TradeDisplay>();
+    public ArrayList<OpenDisplay> openDisplays = new ArrayList<OpenDisplay>();
+    public ArrayList<OpenBoxDisplay> openBoxDisplays = new ArrayList<OpenBoxDisplay>();
     public ArrayList<ViewDisplay> viewDisplays = new ArrayList<ViewDisplay>();
 
     //multiplayer

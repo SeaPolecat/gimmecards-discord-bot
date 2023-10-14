@@ -157,7 +157,7 @@ public class CollectionCmds {
             }
 
         }
-        user.sortCards(user.getSortMethod(), user.getIsSortIncreasing());
+        user.sortCards();
 
         GameManager.sendMessage(event, user.getGameColor(), "🎴", "Your cards have been sorted!");
         try { User.saveUsers(); } catch(Exception e) {}

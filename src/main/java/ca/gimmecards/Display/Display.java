@@ -88,6 +88,8 @@ public class Display extends ListenerAdapter {
         IDisplays.viewDisplays.clear();
         IDisplays.backpackDisplays_MP.clear();
         IDisplays.cardDisplays_MP.clear();
+        IDisplays.openDisplays.clear();
+        IDisplays.openBoxDisplays.clear();
         IDisplays.viewDisplays_MP.clear();
     }
 
@@ -135,6 +137,8 @@ public class Display extends ListenerAdapter {
                 displays.add(new SearchDisplay(user.getUserId()).findDisplay());
                 displays.add(new ShopDisplay(user.getUserId()).findDisplay());
                 displays.add(new TradeDisplay(user.getUserId()).findDisplay());
+                displays.add(new OpenDisplay(user.getUserId()).findDisplay());
+                displays.add(new OpenBoxDisplay(user.getUserId()).findDisplay());
                 displays.add(new ViewDisplay(user.getUserId()).findDisplay());
                 //
                 displays.add(new BackpackDisplay_MP(user.getUserId()).findDisplay());

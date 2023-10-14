@@ -24,6 +24,7 @@ public interface IEmotes {
     String promostar = "<:promostar:955206901552001185>";
     String mascot = "<:mascot:1141859649906278500>";
     String kofi = "<:kofi:1140389615379959860>";
+    String topgg = "<:topgg:1158152227131772928>";
 
     //badges
     String devBadge = "<:GimmeCardsDeveloper:998749089699213362>";

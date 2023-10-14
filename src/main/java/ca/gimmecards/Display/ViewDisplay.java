@@ -2,27 +2,12 @@ package ca.gimmecards.Display;
 import ca.gimmecards.Main.*;
 import ca.gimmecards.OtherInterfaces.*;
 import net.dv8tion.jda.api.EmbedBuilder;
-import java.util.ArrayList;
 
 public class ViewDisplay extends Display {
 
-    private String dispType;
-    private ArrayList<Card> newCards;
-    private String message;
-
     public ViewDisplay(String ui) {
         super(ui);
-        newCards = new ArrayList<Card>();
-        message = "";
     }
-    
-    public String getDispType() { return dispType; }
-    public ArrayList<Card> getNewCards() { return newCards; }
-    public String getMessage() { return message; }
-    //
-    public void setDispType(String dt) { dispType = dt; }
-    public void setNewCards(ArrayList<Card> nc) { newCards = nc; }
-    public void setMessage(String m) { message = m; }
 
     @Override
     public ViewDisplay findDisplay() {
@@ -39,38 +24,15 @@ public class ViewDisplay extends Display {
 
     @Override
     public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, int page) {
-        int startIndex = page - 1;
-        Card card = null;
-        String cardTitle = "";
-        Boolean isSellable = null;
+        Card card = user.getCardContainers().get(page - 1).getCard();
+        CardContainer cc = user.getCardContainers().get(page - 1);
+        String cardTitle = card.findCardTitle(cc.getIsFav());
+        Boolean isSellable = cc.getIsSellable();
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
-        if(dispType.equalsIgnoreCase("old")) {
-            setMaxPage(user.getCardContainers().size());
-        } else if(dispType.equalsIgnoreCase("new")) {
-            setMaxPage(newCards.size());
-        }
-        if(dispType.equalsIgnoreCase("old")) {
-            CardContainer cc = user.getCardContainers().get(startIndex);
+        setMaxPage(user.getCardContainers().size());
 
-            card = user.getCardContainers().get(startIndex).getCard();
-            cardTitle = card.findCardTitle(cc.getIsFav());
-            isSellable = cc.getIsSellable();
-
-        } else { // dispType.equalsIgnoreCase("new")
-            card = newCards.get(startIndex);
-            cardTitle = card.findCardTitle(false);
-            isSellable = card.isCardSellable();
-
-            if(!user.ownsCard(card)) {
-                cardTitle += " 🆕";
-            }
-        }
-        if(dispType.equalsIgnoreCase("new")) {
-            desc += message;
-            desc += "\n┅┅\n";
-        }
         desc += "**Rarity** ┇ " + card.findRarityEmote() + " " + card.getCardRarity() + "\n";
         desc += "**Card Set** ┇ " + card.getSetEmote() + " " + card.getSetName() + "\n";
         desc += "**XP Value** ┇ " + card.formatXP(isSellable) + "\n\n";

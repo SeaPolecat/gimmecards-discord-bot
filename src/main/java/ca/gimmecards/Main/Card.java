@@ -78,8 +78,6 @@ public class Card implements ICard {
     public String getCardSupertype() { return this.cardSupertype; }
     public String[] getCardSubtypes() { return this.cardSubtypes; }
     public int getCardPrice() { return this.cardPrice; }
-    //
-    public void setCardPrice(int cp) { this.cardPrice = cp; }
 
     //=============================================[ PUBLIC STATIC FUNCTIONS ]==============================================================
 

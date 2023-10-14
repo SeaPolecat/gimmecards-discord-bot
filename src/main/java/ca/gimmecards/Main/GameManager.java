@@ -23,7 +23,7 @@ public class GameManager extends ListenerAdapter {
     /**
      * the address of this game's save files; please change this accordingly (remember the 2 backslashes at the end)
      */
-    protected static String address = "C:\\Users\\wangw\\Documents\\GimmeCards\\src\\main\\java\\ca\\gimmecards\\Storage\\";
+    protected static String address = "C:\\Users\\wangw\\Documents\\DocumentsV2\\GimmeCards\\src\\main\\java\\ca\\gimmecards\\Storage\\";
 
     protected static String setsPath = "CardSets.json";
     protected static String oldSetsPath = "OldCardSets.json";
@@ -55,7 +55,7 @@ public class GameManager extends ListenerAdapter {
      */
 
     public static boolean globalCDChecker() {
-        return User.isCooldownDone(globalDeletionEpoch, 60, true);
+        return User.isCooldownDone(globalDeletionEpoch, 720, true);
     }
 
     public static void globalTimeStampEpoch() { globalDeletionEpoch = Calendar.getInstance().getTimeInMillis() / 60000; } //set time to current timestamp in minutes

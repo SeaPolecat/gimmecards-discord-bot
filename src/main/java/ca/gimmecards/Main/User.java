@@ -441,7 +441,6 @@ public class User implements IUser {
             newCard.setIsFav(true);
         }
         this.cardContainers.add(newCard);
-        sortCards(this.sortMethod, this.isSortIncreasing);
     }
 
     @Override
@@ -481,23 +480,22 @@ public class User implements IUser {
                 this.cardContainers.add(new CardContainer(card, this.cardCount, card.isCardSellable()));
             }
         }
-        sortCards(this.sortMethod, this.isSortIncreasing);
         return newCards;
     }
 
     @Override
-    public void sortCards(String methodToSort, boolean shouldSortIncreasing) {
+    public void sortCards() {
 
         for(int i = 0; i < this.cardContainers.size() - 1; i++) {
             for(int k = i + 1; k < this.cardContainers.size(); k++) {
                 Card card1 = this.cardContainers.get(i).getCard();
                 Card card2 = this.cardContainers.get(k).getCard();
 
-                if(methodToSort.equalsIgnoreCase("alphabetical")) {
+                if(this.sortMethod.equalsIgnoreCase("alphabetical")) {
                     String cardName1 = card1.getCardName();
                     String cardName2 = card2.getCardName();
     
-                    if(shouldSortIncreasing) {
+                    if(this.isSortIncreasing) {
                         if(cardName1.compareToIgnoreCase(cardName2) > 0) {
                             swapCards(i, k);
                         }
@@ -507,11 +505,11 @@ public class User implements IUser {
                         }
                     }
 
-                } else if(methodToSort.equalsIgnoreCase("xp")) {
+                } else if(this.sortMethod.equalsIgnoreCase("xp")) {
                     int xp1 = card1.getCardPrice();
                     int xp2 = card2.getCardPrice();
     
-                    if(shouldSortIncreasing) {
+                    if(this.isSortIncreasing) {
                         if(xp1 > xp2) {
                             swapCards(i, k);
                         }
@@ -521,11 +519,11 @@ public class User implements IUser {
                         }
                     }
 
-                } else if(methodToSort.equalsIgnoreCase("quantity")) {
+                } else if(this.sortMethod.equalsIgnoreCase("quantity")) {
                     int quantity1 = this.cardContainers.get(i).getCardQuantity();
                     int quantity2 = this.cardContainers.get(k).getCardQuantity();
     
-                    if(shouldSortIncreasing) {
+                    if(this.isSortIncreasing) {
                         if(quantity1 > quantity2) {
                             swapCards(i, k);
                         }
@@ -535,11 +533,11 @@ public class User implements IUser {
                         }
                     }
 
-                } else if(methodToSort.equalsIgnoreCase("newest")) {
+                } else if(this.sortMethod.equalsIgnoreCase("newest")) {
                     int num1 = this.cardContainers.get(i).getCardNum();
                     int num2 = this.cardContainers.get(k).getCardNum();
 
-                    if(shouldSortIncreasing) {
+                    if(this.isSortIncreasing) {
                         if(num1 > num2) {
                             swapCards(i, k);
                         }

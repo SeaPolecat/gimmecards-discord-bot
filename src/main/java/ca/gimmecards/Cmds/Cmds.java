@@ -184,6 +184,9 @@ public class Cmds extends ListenerAdapter {
                     //VIEW
                     Commands.slash("open", "Use a token to open a pack")
                     .addOption(OptionType.STRING, "pack-name", "enter a pack name", true),
+
+                    Commands.slash("openbox", "Use 10 tokens to open 10 packs at once")
+                    .addOption(OptionType.STRING, "pack-name", "enter a pack name", true),
     
                     Commands.slash("view", "Show the details of a card you own")
                     .addOption(OptionType.INTEGER, "card-number", "enter a card number", true)
@@ -215,10 +218,16 @@ public class Cmds extends ListenerAdapter {
                     //SEARCH
                     Commands.slash("search", "Search for cards from the Pokémon card database")
                     .addOptions(
-                        new OptionData(OptionType.STRING, "option", "select an option", true)
+                        new OptionData(OptionType.STRING, "location", "where are you searching?", true)
+                        .addChoice("collection", "collection")
+                        .addChoice("pokedex", "pokedex"),
+
+                        new OptionData(OptionType.STRING, "filter", "what filters are you using?", true)
                         .addChoice("card", "card")
                         .addChoice("pack", "pack")
                         .addChoice("rarity", "rarity"),
+
+                        new OptionData(OptionType.BOOLEAN, "exact-match", "should the results exactly match your keywords?", true),
     
                         new OptionData(OptionType.STRING, "keywords", "enter some keywords", true)
                     ),
@@ -385,10 +394,15 @@ public class Cmds extends ListenerAdapter {
             CollectionCmds.sortCards(event);
         }
 
-        //VIEW
+        //OPEN
         if(event.getName().equals("open")) {
-            ViewCmds.openPack(event);
+            OpenCmds.openPack(event);
         }
+        if(event.getName().equals("openbox")) {
+            OpenCmds.openTenPacks(event);
+        }
+
+        //VIEW
         if(event.getName().equals("view")) {
             if(event.getOption("user") == null) {
                 ViewCmds.viewCard(event);

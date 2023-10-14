@@ -2,6 +2,8 @@ package ca.gimmecards.Cmds;
 import ca.gimmecards.Main.*;
 import ca.gimmecards.OtherInterfaces.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.EmbedBuilder;
 import java.io.IOException;
 import java.net.http.HttpClient;
@@ -20,15 +22,19 @@ public class VoteCmds {
 
         } else {
             EmbedBuilder embed = new EmbedBuilder();
+            Emoji topggEmote = event.getJDA().getEmojiById("1158152227131772928");
             String desc = "";
     
-            desc += "Use the link below to vote, then type " + GameManager.formatCmd("claim") + " to claim your reward!\n\n";
-            desc += "[Vote on Top.gg](https://top.gg/bot/814025499381727232/vote)";
+            desc += "Click the button below to vote, then type " + GameManager.formatCmd("claim") + " to claim your reward!\n\n";
     
             embed.setTitle(IEmotes.lootbox + " Voting Reward " + IEmotes.lootbox);
             embed.setDescription(desc);
             embed.setColor(IColors.voteColor);
-            GameManager.sendEmbed(event, embed);
+
+            event.getHook().editOriginalEmbeds(embed.build())
+            .setActionRow(
+                Button.link("https://top.gg/bot/814025499381727232/vote", "Vote on Top.gg").withEmoji(topggEmote)
+            ).queue();
         }
     }
     

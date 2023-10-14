@@ -6,6 +6,7 @@ public interface ICustomCards {
 //==================================================[ CUSTOM CARDS ]===================================================================
 
     Card[] customs = {
+        
         /*new Card(
             IEmotes.logo,
             "Gimme Cards",
