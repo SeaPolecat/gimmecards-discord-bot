@@ -128,13 +128,13 @@ public class SearchDisplay extends Display {
                 }
             }
         }
-        /*for(Card card : ICustomCards.customs) {
+        for(Card card : ICustomCards.customs) {
             String name = findName(card);
 
             if(this.isExact ? name.equalsIgnoreCase(this.keywords) : name.toLowerCase().contains(this.keywords.toLowerCase())) {
                 searchedCards.add(card);
             }
-        }*/
+        }
     }
 
     @Override

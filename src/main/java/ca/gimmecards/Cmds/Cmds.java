@@ -106,6 +106,10 @@ public class Cmds extends ListenerAdapter {
                     Commands.slash("giftstar", "Gift someone stars")
                     .addOption(OptionType.USER, "user", "mention a user", true)
                     .addOption(OptionType.INTEGER, "amount", "enter an amount", true),
+
+                    Commands.slash("giftkey", "Gift someone keys")
+                    .addOption(OptionType.USER, "user", "mention a user", true)
+                    .addOption(OptionType.INTEGER, "amount", "enter an amount", true),
     
                     Commands.slash("giftcard", "Gift someone any card")
                     .addOption(OptionType.USER, "user", "mention a user", true)
@@ -302,6 +306,9 @@ public class Cmds extends ListenerAdapter {
         }
         if(event.getName().equals("giftstar")) {
             GiftCmds.giftStar(event);
+        }
+        if(event.getName().equals("giftkey")) {
+            GiftCmds.giftKey(event);
         }
         if(event.getName().equals("giftcard")) {
             GiftCmds.giftCard(event);

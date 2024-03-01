@@ -24,7 +24,7 @@ public class OpenCmds {
             try {
                 CardSet set = CardSet.findCardSet(packName.getAsString());
 
-                /*if(packName.getAsString().equalsIgnoreCase("gimme cards")) {
+                if(packName.getAsString().equalsIgnoreCase("gimme cards")) {
                     if(!user.hasPremiumRole(event)) {
                         GameManager.sendPremiumMessage(event, IColors.kofiColor, IEmotes.kofi, "Sorry, this is a premium feature!", null);
 
@@ -37,7 +37,7 @@ public class OpenCmds {
                         Card item = Card.pickCard(ICustomCards.customs);
 
                         msg += IEmotes.charmander + " ";
-                        msg += GameManager.formatName(event) + " drew a card from " + IEmotes.logo + " **Gimme Cards**";
+                        msg += GameManager.formatName(event) + " drew a card from " + IEmotes.mascot + " **Gimme Cards**";
                         msg += user.updateCredits(GameManager.randRange(8, 10), true);
                         msg += user.updateStars(-1, false);
 
@@ -48,8 +48,7 @@ public class OpenCmds {
                         try { User.saveUsers(); } catch(Exception e) {}
                     }
 
-                }*/
-                if(set.isRareSet() || set.isPromoSet()) {
+                } else if(set.isRareSet() || set.isPromoSet()) {
                     if(!user.hasPremiumRole(event)) {
                         GameManager.sendPremiumMessage(event, IColors.kofiColor, IEmotes.kofi, "Sorry, this is a premium feature!", null);
 
@@ -74,7 +73,6 @@ public class OpenCmds {
 
                         user.resetOpenEpoch();
                         user.addSingleCard(item, false);
-                        user.sortCards();
 
                         item.displayCard(event, ui, msg, footer, false);
                         try { User.saveUsers(); } catch(Exception e) {}
@@ -103,7 +101,6 @@ public class OpenCmds {
                         disp.setMessage(msg);
 
                         user.resetOpenEpoch();
-                        user.sortCards();
 
                         GameManager.sendDynamicEmbed(event, user, null, disp, 1);
                         try { User.saveUsers(); } catch(Exception e) {}
@@ -130,7 +127,39 @@ public class OpenCmds {
             try {
                 CardSet set = CardSet.findCardSet(packName.getAsString());
 
-                if(set.isRareSet() || set.isPromoSet()) {
+                if(packName.getAsString().equalsIgnoreCase("gimme cards")) {
+                    if(!user.hasPremiumRole(event)) {
+                        GameManager.sendPremiumMessage(event, IColors.kofiColor, IEmotes.kofi, "Sorry, this is a premium feature!", null);
+
+                    } else if(user.getStars() < 10) {
+                        GameManager.sendMessage(event, IColors.red, "❌", "Sorry, you need ***10*** " + IEmotes.star + " **Stars**");
+
+                    } else {
+                        String msg = "";
+                        ArrayList<ArrayList<Card>> newPacks = new ArrayList<ArrayList<Card>>();
+
+                        msg += IEmotes.charmander + " ";
+                        msg += GameManager.formatName(event) + " drew ***10*** cards from " + IEmotes.mascot + " **Gimme Cards**";
+                        msg += user.updateCredits(GameManager.randRange(8, 10), true);
+                        msg += user.updateStars(-1, false);
+
+                        newPacks.add(new ArrayList<Card>());
+                        for(int i = 0; i < 10; i++) {
+                            Card item = Card.pickCard(ICustomCards.customs);
+
+                            user.addSingleCard(item, false);
+                            newPacks.get(0).add(item);
+                        }
+                        disp.setNewPacks(newPacks);
+                        disp.setMessage(msg);
+
+                        user.resetOpenEpoch();
+                        
+                        GameManager.sendDynamicEmbed(event, user, null, disp, 1);
+                        try { User.saveUsers(); } catch(Exception e) {}
+                    }
+
+                } else if(set.isRareSet() || set.isPromoSet()) {
                     if(!user.hasPremiumRole(event)) {
                         GameManager.sendPremiumMessage(event, IColors.kofiColor, IEmotes.kofi, "Sorry, this is a premium feature!", null);
 
@@ -161,7 +190,6 @@ public class OpenCmds {
                         disp.setMessage(msg);
 
                         user.resetOpenEpoch();
-                        user.sortCards();
 
                         GameManager.sendDynamicEmbed(event, user, null, disp, 1);
                         try { User.saveUsers(); } catch(Exception e) {}
@@ -194,7 +222,6 @@ public class OpenCmds {
                         disp.setMessage(msg);
 
                         user.resetOpenEpoch();
-                        user.sortCards();
 
                         GameManager.sendDynamicEmbed(event, user, null, disp, 1);
                         try { User.saveUsers(); } catch(Exception e) {}
@@ -202,6 +229,7 @@ public class OpenCmds {
                 }
             } catch(NullPointerException e) {
                 GameManager.sendMessage(event, IColors.red, "❌", "Whoops, I couldn't find that pack...");
+                e.printStackTrace();
             }
         }
     }

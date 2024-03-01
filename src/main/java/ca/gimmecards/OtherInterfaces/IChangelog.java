@@ -302,7 +302,7 @@ public interface IChangelog {
 
         "**Update 8/18/2023**\n"
         + "🔸*Gimme Cards* is back!! 😝 To celebrate our return, there is a new **REVIVAL QUEST**... please use "
-        + "`/redeem` ***10*** times to receive a special gift 🎁\n"
+        + "[redeem] ***10*** times to receive a special gift 🎁\n"
         + "🔸Due to poor funding, we've drastically modified our monetization plan. Earning ***Stars*** and drawing cards "
         + "from [rareshop] and [promoshop] now require a *Gimme Cards* premium membership. Please use [premium] for more info\n"
         + "🔹To start with a clean slate and re-balance everything again, everyone's current levels and items have been reset. "
@@ -317,6 +317,20 @@ public interface IChangelog {
         + "/redeem: +1 token --> +1 token (+1 star if premium)\n"
         + "/minigame: +2 tokens --> +3 tokens (+1 star if premium)\n"
         + "/claim: +5 tokens --> +6 tokens (+1 star if premium)\n"
+        + "```",
+
+        "**Update 10/14/2023**\n"
+        + "🔸*Gimme Cards* community-made cards are back!! 🥳 We've added a few new ones and brought back some old ones, "
+        + "***21*** in total\n"
+        + "🔸The Revival Quest is now over, but you can still find the gift by opening the *Gimme Cards* pack in [rareshop]\n"
+        + "🔹Slightly changed the design of [vote]\n"
+        + "🔹New command [openbox] that lets you open ***10*** packs at once! 🎴 This works for the premium shops as well\n"
+        + "🔹Added new options to the [search] command:\n"
+        + "```\n"
+        + "1. location (collection / pokedex)\n"
+        + "2. filter (card / pack / rarity)\n"
+        + "3. exact-match (true / false)\n"
+        + "4. keywords\n"
         + "```"
     };
 }

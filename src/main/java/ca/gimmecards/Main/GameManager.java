@@ -322,6 +322,10 @@ public class GameManager extends ListenerAdapter {
             .addOption(OptionType.USER, "user", "mention a user", true)
             .addOption(OptionType.INTEGER, "amount", "enter an amount", true),
 
+            Commands.slash("giftkey", "Gift someone keys")
+            .addOption(OptionType.USER, "user", "mention a user", true)
+            .addOption(OptionType.INTEGER, "amount", "enter an amount", true),
+
             Commands.slash("giftcard", "Gift someone any card")
             .addOption(OptionType.USER, "user", "mention a user", true)
             .addOption(OptionType.STRING, "card-id", "enter a card ID", true),
@@ -400,6 +404,9 @@ public class GameManager extends ListenerAdapter {
             Commands.slash("open", "Use a token to open a pack")
             .addOption(OptionType.STRING, "pack-name", "enter a pack name", true),
 
+            Commands.slash("openbox", "Use 10 tokens to open 10 packs at once")
+            .addOption(OptionType.STRING, "pack-name", "enter a pack name", true),
+
             Commands.slash("view", "Show the details of a card you own")
             .addOption(OptionType.INTEGER, "card-number", "enter a card number", true)
             .addOption(OptionType.USER, "user", "mention a user", false),
@@ -430,10 +437,16 @@ public class GameManager extends ListenerAdapter {
             //SEARCH
             Commands.slash("search", "Search for cards from the Pokémon card database")
             .addOptions(
-                new OptionData(OptionType.STRING, "option", "select an option", true)
+                new OptionData(OptionType.STRING, "location", "where are you searching?", true)
+                .addChoice("collection", "collection")
+                .addChoice("pokedex", "pokedex"),
+
+                new OptionData(OptionType.STRING, "filter", "what filters are you using?", true)
                 .addChoice("card", "card")
                 .addChoice("pack", "pack")
                 .addChoice("rarity", "rarity"),
+
+                new OptionData(OptionType.BOOLEAN, "exact-match", "should the results exactly match your keywords?", true),
 
                 new OptionData(OptionType.STRING, "keywords", "enter some keywords", true)
             ),

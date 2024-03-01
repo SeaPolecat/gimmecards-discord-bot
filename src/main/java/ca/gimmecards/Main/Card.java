@@ -223,11 +223,11 @@ public class Card implements ICard {
                 return card;
             }
         }
-        /*for(Card card : ICustomCards.customs) {
+        for(Card card : ICustomCards.customs) {
             if(card.getCardId().equalsIgnoreCase(cardId)) {
                 return card;
             }
-        }*/
+        }
         return null;
     }
 

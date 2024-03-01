@@ -51,8 +51,6 @@ public class User implements IUser {
     private ArrayList<String> badges;                   // list of names of the badges the player owns
     private ArrayList<String> packs;                    // list of names of the packs the player owns
     private ArrayList<CardContainer> cardContainers;    // the player's cards
-    private Integer questRedeems;
-    private Boolean isQuestComplete;
 
     //=============================================[ CONSTRUCTORS ]====================================================================
     
@@ -77,15 +75,12 @@ public class User implements IUser {
         this.redeemEpoch = (long)(0);
         this.minigameEpoch = (long)(0);
         this.marketEpoch = (long)(0);
-
         this.sortMethod = "newest";
         this.isSortIncreasing = true;
         this.pinnedCard = "";
         this.badges = new ArrayList<String>();
         this.packs = new ArrayList<String>();
         this.cardContainers = new ArrayList<CardContainer>();
-        this.questRedeems = 10;
-        this.isQuestComplete = false;
     }
 
     /**
@@ -115,8 +110,6 @@ public class User implements IUser {
         this.badges = user.getBadges();
         this.packs = user.getPacks();
         this.cardContainers = user.getCardContainers();
-        this.questRedeems = user.getQuestRedeems();
-        this.isQuestComplete = user.getIsQuestComplete();
     }
 
     //===============================================[ GETTERS ] ======================================================================
@@ -143,8 +136,6 @@ public class User implements IUser {
     public ArrayList<String> getBadges() { return this.badges; }
     public ArrayList<String> getPacks() { return this.packs; }
     public ArrayList<CardContainer> getCardContainers() { return this.cardContainers; }
-    public int getQuestRedeems() { return this.questRedeems; }
-    public boolean getIsQuestComplete() { return this.isQuestComplete; }
     
     //================================================[ SETTERS ]======================================================================
 
@@ -165,8 +156,6 @@ public class User implements IUser {
     public void setSortMethod(String sortMethod) { this.sortMethod = sortMethod; } 
     public void setIsSortIncreasing(boolean isSortIncreasing) { this.isSortIncreasing = isSortIncreasing; }
     public void setPinnedCard(String pinnedCard) { this.pinnedCard = pinnedCard; }
-    public void minusQuestRedeem() { this.questRedeems--; }
-    public void completeQuest() { this.isQuestComplete = true; }
 
     //=============================================[ PUBLIC STATIC FUNCTIONS ]==============================================================
     
@@ -441,6 +430,7 @@ public class User implements IUser {
             newCard.setIsFav(true);
         }
         this.cardContainers.add(newCard);
+        sortCards();
     }
 
     @Override
@@ -480,6 +470,7 @@ public class User implements IUser {
                 this.cardContainers.add(new CardContainer(card, this.cardCount, card.isCardSellable()));
             }
         }
+        sortCards();
         return newCards;
     }
 

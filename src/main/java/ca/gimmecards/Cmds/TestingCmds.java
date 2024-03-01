@@ -1,14 +1,11 @@
 package ca.gimmecards.Cmds;
 import ca.gimmecards.Main.*;
-import ca.gimmecards.OtherInterfaces.IColors;
 import java.util.ArrayList;
 import ca.gimmecards.Display.*;
-import ca.gimmecards.Main.*;
 import ca.gimmecards.OtherInterfaces.*;
-import ca.gimmecards.Display_MP.BackpackDisplay_MP;
-import ca.gimmecards.Display_MP.CardDisplay_MP;
-import ca.gimmecards.Display_MP.ViewDisplay_MP;
-import ca.gimmecards.OtherInterfaces.IDisplays;
+import ca.gimmecards.Display_MP.*;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 /*embed.addField("**Rule 1**", "Please follow Discord's [Terms of Service](https://discord.com/terms)", false);
@@ -19,33 +16,6 @@ embed.addField("**Rule 5**", "Please do not spam the chat, unless you're using t
 embed.addField("**Rule 6**", "Try to post in the correct channels; they are separated for a reason", false);*/
 
 public class TestingCmds {
-
-    /*public User(String id, int gc, int cc, int l, int xp, int mxp, int t, int creds, int k, int s, long oe, long ve, long de, long re, long me, long marketE, String sm, boolean si, ArrayList<String> b, String pc, ArrayList<String> p, ArrayList<Card> c, boolean ir, boolean irr) {
-        userId = id;
-        gameColor = gc;
-        cardCount = cc;
-        level = l;
-        XP = xp;
-        maxXP = mxp;
-        tokens = t;
-        credits = creds;
-        keys = k;
-        stars = s;
-        openEpoch = oe;
-        voteEpoch = ve;
-        dailyEpoch = de;
-        redeemEpoch = re;
-        minigameEpoch = me;
-        marketEpoch = marketE;
-        sortMethod = sm;
-        sortIncreasing = si;
-        badges = b;
-        pinCard = pc;
-        packs = p;
-        cards = c;
-        isRare = ir;
-        isRadiantRare = irr;
-    }*/
 
     public static void testSomething(MessageReceivedEvent event) {
 
@@ -197,7 +167,6 @@ public class TestingCmds {
             GameManager.sendMessage(event, IColors.blue, "", "ERROR: size of backpackDisplays is " + IDisplays.viewDisplays_MP.size() + "\n");
         }*/
 
-
         /*for(User u : User.users) {
             u.addTokens(50);
             u.addStars(10);
@@ -243,18 +212,89 @@ public class TestingCmds {
                 u.getPinnedCard(),
                 u.getBadges(),
                 u.getPacks(),
-                u.getCardContainers(),
-                10,
-                false
+                u.getCardContainers()
             );
             User.users.set(i, user);
-        }
-        for(User u : User.users) {
-            System.out.println(u.getQuestRedeems());
-            System.out.println(u.getIsQuestComplete());
         }
         GameManager.sendMessage(event, IColors.blue, "", "done testing!");
         try { User.saveUsers(); } catch(Exception e) {}*/
     }
-    
+
+    // EVENT REDEEM CMD
+    /*public static void redeemToken(SlashCommandInteractionEvent event) {
+        User user = User.findUser(event);
+
+        if(!User.isCooldownDone(user.getRedeemEpoch(), 30, true)) {
+            GameManager.sendMessage(event, IColors.red, "⏰", "Please wait another " 
+            + User.findTimeLeft(user.getRedeemEpoch(), 30, true));
+
+        } else {
+            String msg = "";
+            int adChance = GameManager.randRange(0, 1);
+
+            user.resetRedeemEpoch();
+            user.minusQuestRedeem();
+
+            if(user.hasPremiumRole(event)) {
+                msg += GameManager.formatName(event) + " redeemed a token and star!";
+
+                if(user.getQuestRedeems() > 0) {
+                    msg += "\n\n**REVIVAL QUEST**\nRedeem `" + user.getQuestRedeems() + "` more times for a special gift!";
+                }
+                msg += user.updateTokens(1, true);
+                msg += user.updateCredits(GameManager.randRange(24, 30), false);
+                msg += user.updateStars(1, false);
+
+            } else {
+                msg += GameManager.formatName(event) + " redeemed a token!";
+
+                if(user.getQuestRedeems() > 0) {
+                    msg += "\n\n**REVIVAL QUEST**\nRedeem `" + user.getQuestRedeems() + "` more times for a special gift!";
+                }
+                msg += user.updateTokens(1, true);
+                msg += user.updateCredits(GameManager.randRange(24, 30), false);
+            }
+            msg += "\n┅┅\n";
+            msg += Main.updateMsg + "\n\n";
+
+            if(user.getQuestRedeems() < 1 && !user.getIsQuestComplete()) {
+                EmbedBuilder embed = new EmbedBuilder();
+                Card gift = new Card(
+                    IEmotes.mascot,
+                    "Gimme Cards",
+                    "merch-1",
+                    "Vibing Scatterbug",
+                    "Merch",
+                    "https://i.ibb.co/W3YbM7X/Vibing-Scatterbug.png",
+                    "Pokémon",
+                    new String[]{"Grass"},
+                    81423
+                );
+
+                user.completeQuest();
+                user.addSingleCard(gift, true);
+
+                msg += "🎉 **QUEST COMPLETE** 🎉\n"
+                + "Thank you for continuing to support *Gimme Cards*, and here's a plush of our new mascot, just for you!";
+
+                embed.setDescription("🎒 " + msg);
+                embed.setImage(gift.getCardImage());
+                embed.setColor(user.getGameColor());
+                event.getHook().editOriginalEmbeds(embed.build()).queue();
+
+            } else {
+                if(!user.hasPremiumRole(event) && adChance == 0) {
+                    Card adCard = Card.pickRandomSpecialCard();
+
+                    msg += IEmotes.kofi + " Get the premium membership for exclusive cards, like this one!";
+
+                    GameManager.sendPremiumMessage(event, user.getGameColor(), "🎒", msg, adCard);
+
+                } else {
+                    GameManager.sendMessage(event, user.getGameColor(), "🎒", msg);
+                }
+            }
+            try { User.saveUsers(); } catch(Exception e) {}
+        }
+    }*/
 }

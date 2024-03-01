@@ -48,36 +48,38 @@ public class TradeCmds {
 
         if(cardNum == null) { return; }
 
-        if(disp.getUserId().isEmpty()) {
-            GameManager.sendMessage(event, IColors.red, "❌", "You haven't started a trade yet!");
+        try {
+            if(disp.oneAccepted()) {
+                GameManager.sendMessage(event, IColors.red, "❌", "Both players must unaccept first!");
 
-        } else if(disp.oneAccepted()) {
-            GameManager.sendMessage(event, IColors.red, "❌", "Both players must unaccept first!");
+            } else {
+                try {
+                    int index = cardNum.getAsInt() - 1;
+                    ArrayList<CardContainer> offers = disp.getOffers(user.getUserId());
+                    CardContainer cc = user.getCardContainers().get(index);
+                    Card card = cc.getCard();
+                    String cardTitle = card.findCardTitle(false);
 
-        } else {
-            try {
-                int index = cardNum.getAsInt() - 1;
-                ArrayList<CardContainer> offers = disp.getOffers(user.getUserId());
-                CardContainer cc = user.getCardContainers().get(index);
-                Card card = cc.getCard();
-                String cardTitle = card.findCardTitle(false);
+                    if(offers.size() >= 5) {
+                        GameManager.sendMessage(event, IColors.red, "❌", "Sorry, all your trade slots are full!");
 
-                if(offers.size() >= 5) {
-                    GameManager.sendMessage(event, IColors.red, "❌", "Sorry, all your trade slots are full!");
+                    } else if(!isValidOffer(offers, cc)) {
+                        GameManager.sendMessage(event, IColors.red, "❌", "You can't offer any more of that card!");
 
-                } else if(!isValidOffer(offers, cc)) {
-                    GameManager.sendMessage(event, IColors.red, "❌", "You can't offer any more of that card!");
+                    } else {
+                        if(card.isCardSellable()) {
+                            disp.addTax(user.getUserId(), (int)(card.getCardPrice() * 0.25));
+                        }
 
-                } else {
-                    if(card.isCardSellable()) {
-                        disp.addTax(user.getUserId(), (int)(card.getCardPrice() * 0.25));
+                        GameManager.sendMessage(event, user.getGameColor(), IEmotes.ditto, GameManager.formatName(event) + " offers **" + cardTitle + "**");
                     }
-
-                    GameManager.sendMessage(event, user.getGameColor(), IEmotes.ditto, GameManager.formatName(event) + " offers **" + cardTitle + "**");
+                } catch(NumberFormatException | ArithmeticException | IndexOutOfBoundsException e) {
+                    GameManager.sendMessage(event, IColors.red, "❌", "Whoops, I couldn't find that card...");
                 }
-            } catch(NumberFormatException | ArithmeticException | IndexOutOfBoundsException e) {
-                GameManager.sendMessage(event, IColors.red, "❌", "Whoops, I couldn't find that card...");
             }
+            
+        } catch(NullPointerException e) {
+            GameManager.sendMessage(event, IColors.red, "❌", "You haven't started a trade yet!");
         }
     }
 
@@ -89,34 +91,36 @@ public class TradeCmds {
 
         if(tradeNum == null) { return; }
 
-        if(disp.getUserId().isEmpty()) {
-            GameManager.sendMessage(event, IColors.red, "❌", "You haven't started a trade yet!");
+        try {
+            if(disp.oneAccepted()) {
+                GameManager.sendMessage(event, IColors.red, "❌", "Both players must unaccept first!");
 
-        } else if(disp.oneAccepted()) {
-            GameManager.sendMessage(event, IColors.red, "❌", "Both players must unaccept first!");
+            } else {
+                try {
+                    int index = tradeNum.getAsInt() - 1;
+                    ArrayList<CardContainer> offers = disp.getOffers(user.getUserId());
+                    CardContainer offer = offers.get(index);
+                    Card card = offer.getCard();
+                    String cardTitle = card.findCardTitle(false);
 
-        } else {
-            try {
-                int index = tradeNum.getAsInt() - 1;
-                ArrayList<CardContainer> offers = disp.getOffers(user.getUserId());
-                CardContainer offer = offers.get(index);
-                Card card = offer.getCard();
-                String cardTitle = card.findCardTitle(false);
+                    if(offer.getCardQuantity() > 1) {
+                        offer.minusCardQuantity();
+                    } else {
+                        offers.remove(index);
+                    }
+                    if(card.isCardSellable()) {
+                        disp.addTax(user.getUserId(), -(int)(card.getCardPrice() * 0.25));
+                    }
 
-                if(offer.getCardQuantity() > 1) {
-                    offer.minusCardQuantity();
-                } else {
-                    offers.remove(index);
+                    GameManager.sendMessage(event, user.getGameColor(), IEmotes.ditto, GameManager.formatName(event) + " took back **" + cardTitle + "**");
+
+                } catch(NumberFormatException | ArithmeticException | IndexOutOfBoundsException e) {
+                    GameManager.sendMessage(event, IColors.red, "❌", "Whoops, I couldn't find that card...");
                 }
-                if(card.isCardSellable()) {
-                    disp.addTax(user.getUserId(), -(int)(card.getCardPrice() * 0.25));
-                }
-
-                GameManager.sendMessage(event, user.getGameColor(), IEmotes.ditto, GameManager.formatName(event) + " took back **" + cardTitle + "**");
-
-            } catch(NumberFormatException | ArithmeticException | IndexOutOfBoundsException e) {
-                GameManager.sendMessage(event, IColors.red, "❌", "Whoops, I couldn't find that card...");
             }
+
+        } catch(NullPointerException e) {
+            GameManager.sendMessage(event, IColors.red, "❌", "You haven't started a trade yet!");
         }
     }
 
@@ -124,43 +128,45 @@ public class TradeCmds {
         User user = User.findUser(event);
         TradeDisplay disp = new TradeDisplay(user.getUserId()).findDisplay();
 
-        if(disp.getUserId().isEmpty()) {
-            GameManager.sendMessage(event, IColors.red, "❌", "You haven't started a trade yet!");
+        try {
+            if(disp.getAccept(user.getUserId())) {
+                GameManager.sendMessage(event, IColors.red, "❌", "You've already accepted the trade!");
 
-        } else if(disp.getAccept(user.getUserId())) {
-            GameManager.sendMessage(event, IColors.red, "❌", "You've already accepted the trade!");
-
-        } else if(disp.getUser(user.getUserId()).getCredits() < disp.getTax(user.getUserId())) {
-            GameManager.sendMessage(event, IColors.red, "❌", "Sorry, you don't have enough " + IEmotes.credits + " **Credits**");
-
-        } else {
-            disp.setAccept(user.getUserId(), true);
-
-            if(!disp.bothAccepted()) {
-                GameManager.sendMessage(event, user.getGameColor(), "✅", GameManager.formatName(event) 
-                + " accepted the trade! Waiting for the other player...");
+            } else if(disp.getUser(user.getUserId()).getCredits() < disp.getTax(user.getUserId())) {
+                GameManager.sendMessage(event, IColors.red, "❌", "Sorry, you don't have enough " + IEmotes.credits + " **Credits**");
 
             } else {
-                String msg = "";
+                disp.setAccept(user.getUserId(), true);
 
-                msg += GameManager.formatName(event) + " accepted and completed the trade!";
-                msg += user.updateCredits(-disp.getTax(user.getUserId()), true) + "\n\n";
+                if(!disp.bothAccepted()) {
+                    GameManager.sendMessage(event, user.getGameColor(), "✅", GameManager.formatName(event) 
+                    + " accepted the trade! Waiting for the other player...");
 
-                if(disp.isUser1(user.getUserId())) {
-                    msg += GameManager.formatName(disp.getUser2(), event) + "'s Trading Fee:";
-                    msg += disp.getUser2().updateCredits(-disp.getTax2(), true) + "\n";
                 } else {
-                    msg += GameManager.formatName(disp.getUser1(), event) + "'s Trading Fee:";
-                    msg += disp.getUser1().updateCredits(-disp.getTax1(), true) + "\n";
+                    String msg = "";
+
+                    msg += GameManager.formatName(event) + " accepted and completed the trade!";
+                    msg += user.updateCredits(-disp.getTax(user.getUserId()), true) + "\n\n";
+
+                    if(disp.isUser1(user.getUserId())) {
+                        msg += GameManager.formatName(disp.getUser2(), event) + "'s Trading Fee:";
+                        msg += disp.getUser2().updateCredits(-disp.getTax2(), true) + "\n";
+                    } else {
+                        msg += GameManager.formatName(disp.getUser1(), event) + "'s Trading Fee:";
+                        msg += disp.getUser1().updateCredits(-disp.getTax1(), true) + "\n";
+                    }
+                    tradeCards(disp.getUser1(), disp.getOffers1(), disp.getOffers2());
+                    tradeCards(disp.getUser2(), disp.getOffers2(), disp.getOffers1());
+
+                    disp.removeTradeDisplay();
+
+                    GameManager.sendMessage(event, user.getGameColor(), "✅", msg);
+                    try { User.saveUsers(); } catch(Exception e) {}
                 }
-                tradeCards(disp.getUser1(), disp.getOffers1(), disp.getOffers2());
-                tradeCards(disp.getUser2(), disp.getOffers2(), disp.getOffers1());
-
-                disp.removeTradeDisplay();
-
-                GameManager.sendMessage(event, user.getGameColor(), "✅", msg);
-                try { User.saveUsers(); } catch(Exception e) {}
             }
+
+        } catch(NullPointerException e) {
+            GameManager.sendMessage(event, IColors.red, "❌", "You haven't started a trade yet!");
         }
     }
 
@@ -168,17 +174,19 @@ public class TradeCmds {
         User user = User.findUser(event);
         TradeDisplay disp = new TradeDisplay(user.getUserId()).findDisplay();
 
-        if(disp.getUserId().isEmpty()) {
+        try {
+            if(!disp.getAccept(user.getUserId())) {
+                GameManager.sendMessage(event, IColors.red, "❌", "You've already unaccepted the trade!");
+
+            } else {
+                disp.setAccept(user.getUserId(), false);
+
+                GameManager.sendMessage(event, user.getGameColor(), "⏳", GameManager.formatName(event) 
+                + " needs more time to decide!");
+            }
+
+        } catch(NullPointerException e) {
             GameManager.sendMessage(event, IColors.red, "❌", "You haven't started a trade yet!");
-
-        } else if(!disp.getAccept(user.getUserId())) {
-            GameManager.sendMessage(event, IColors.red, "❌", "You've already unaccepted the trade!");
-
-        } else {
-            disp.setAccept(user.getUserId(), false);
-
-            GameManager.sendMessage(event, user.getGameColor(), "⏳", GameManager.formatName(event) 
-            + " needs more time to decide!");
         }
     }
 
@@ -186,16 +194,16 @@ public class TradeCmds {
         User user = User.findUser(event);
         TradeDisplay disp = new TradeDisplay(user.getUserId()).findDisplay();
 
-        if(disp.getUserId().isEmpty()) {
-            GameManager.sendMessage(event, IColors.red, "❌", "You haven't started a trade yet!");
-
-        } else {
+        try {
             disp.setReject(user.getUserId(), true);
             
             disp.removeTradeDisplay();
 
             GameManager.sendMessage(event, user.getGameColor(), "🛑", GameManager.formatName(event) 
             + " rejected the trade! Maybe next time...");
+
+        } catch(NullPointerException e) {
+            GameManager.sendMessage(event, IColors.red, "❌", "You haven't started a trade yet!");
         }
     }
 
