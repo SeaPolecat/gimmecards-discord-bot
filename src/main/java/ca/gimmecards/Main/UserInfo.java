@@ -1,4 +1,4 @@
-package ca.gimmecards.Main;
+package ca.gimmecards.main;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 

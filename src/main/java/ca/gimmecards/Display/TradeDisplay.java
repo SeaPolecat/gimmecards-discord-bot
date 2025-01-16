@@ -1,8 +1,10 @@
-package ca.gimmecards.Display;
-import ca.gimmecards.Main.*;
-import ca.gimmecards.OtherInterfaces.*;
+package ca.gimmecards.display;
+import ca.gimmecards.consts.*;
+import ca.gimmecards.main.*;
+import ca.gimmecards.utils.FormatUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class TradeDisplay extends Display {
 
@@ -16,11 +18,9 @@ public class TradeDisplay extends Display {
     private boolean accept2;
     private boolean reject1;
     private boolean reject2;
-    private int tax1;
-    private int tax2;
 
-    public TradeDisplay(String ui) {
-        super(ui);
+    public TradeDisplay() {
+        super();
         user1 = null;
         user2 = null;
         userInfo1 = null;
@@ -31,16 +31,12 @@ public class TradeDisplay extends Display {
         accept2 = false;
         reject1 = false;
         reject2 = false;
-        tax1 = 0;
-        tax2 = 0;
     }
 
     public User getUser1() { return user1; }
     public User getUser2() { return user2; }
     public ArrayList<CardContainer> getOffers1() { return offers1; }
     public ArrayList<CardContainer> getOffers2() { return offers2; }
-    public int getTax1() { return tax1; }
-    public int getTax2() { return tax2; }
     //
     public User getUser(String userId) {
         if(isUser1(userId)) {
@@ -66,12 +62,6 @@ public class TradeDisplay extends Display {
         }
         return accept2;
     }
-    public int getTax(String userId) {
-        if(isUser1(userId)) {
-            return tax1;
-        }
-        return tax2;
-    }
     //
     public void setUser1(User u1) { user1 = u1; }
     public void setUser2(User u2) { user2 = u2; }
@@ -92,51 +82,25 @@ public class TradeDisplay extends Display {
             reject2 = a;
         }
     }
-    public void addTax(String userId, int amount) {
-        if(isUser1(userId)) {
-            tax1 += amount;
-        } else {
-            tax2 += amount;
-        }
-    }
-    public void removeTax(String userId, int amount) {
-        if(isUser1(userId)) {
-            tax1 -= amount;
-        } else {
-            tax2 -= amount;
-        }
-    }
-
-    @Override
-    public TradeDisplay findDisplay() {
-        String userId = getUserId();
-
-        for(TradeDisplay t : IDisplays.tradeDisplays) {
-            if(t.getUser1() != null 
-            && t.getUser(userId).getUserId().equals(userId)) {
-                return t;
-            }
-        }
-        IDisplays.tradeDisplays.add(0, new TradeDisplay(userId));
-        return IDisplays.tradeDisplays.get(0);
-    }
 
     public void removeTradeDisplay() {
-        for(int i = 0; i < IDisplays.tradeDisplays.size(); i++) {
-            if(IDisplays.tradeDisplays.get(i).getUserId().equals(this.getUserId())) {
-                IDisplays.tradeDisplays.remove(i);
+        LinkedList<Display> displays = user1.getDisplays();
+
+        for(int i = 0; i < displays.size(); i++) {
+            if(displays.get(i) instanceof TradeDisplay) {
+                displays.remove(i);
                 break;
             }
         }
     }
 
     public boolean tradeExists(String userId) {
-        for(TradeDisplay disp : IDisplays.tradeDisplays) {
+        /*for(TradeDisplay disp : IDisplays.tradeDisplays) {
             if(disp.getUser1() != null 
             && disp.getUser(userId).getUserId().equals(userId)) {
                 return true;
             }
-        }
+        }*/
         return false;
     }
 
@@ -166,10 +130,10 @@ public class TradeDisplay extends Display {
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
-        desc += GameManager.formatCmd("offer (card #)") + " to offer a card\n";
-        desc += GameManager.formatCmd("unoffer (trade #)") + " remove an offer\n";
-        desc += GameManager.formatCmd("accept") + " / " + GameManager.formatCmd("unaccept") + " to lock your offer\n";
-        desc += GameManager.formatCmd("reject") + " to end trade\n\n";
+        desc += FormatUtils.formatCmd("offer (card #)") + " to offer a card\n";
+        desc += FormatUtils.formatCmd("unoffer (trade #)") + " remove an offer\n";
+        desc += FormatUtils.formatCmd("accept") + " / " + FormatUtils.formatCmd("unaccept") + " to lock your offer\n";
+        desc += FormatUtils.formatCmd("reject") + " to end trade\n\n";
 
         desc += userInfo1.getUserPing() + "\n";
         desc += "┅┅\n";
@@ -181,7 +145,6 @@ public class TradeDisplay extends Display {
         } else {
             desc += "⏳ Deciding\n";
         }
-        desc += "**Trading Fee** ┇ " + Card.formatCredits(tax1) + "\n";
         desc += "┅┅\n";
 
         for(int i = 0; i < 5; i++) {
@@ -211,7 +174,6 @@ public class TradeDisplay extends Display {
         } else {
             desc += "⏳ Deciding\n";
         }
-        desc += "**Trading Fee** ┇ " + Card.formatCredits(tax2) + "\n";
         desc += "┅┅\n";
 
         for(int i = 0; i < 5; i++) {
@@ -229,9 +191,9 @@ public class TradeDisplay extends Display {
                 desc += "`#" + (i+1) + "`\n";
             }
         }
-        embed.setTitle(IEmotes.ditto + " Trading Center " + IEmotes.ditto);
+        embed.setTitle(EmoteConsts.ditto + " Trading Center " + EmoteConsts.ditto);
         embed.setDescription(desc);
-        embed.setColor(IColors.tradeColor);
+        embed.setColor(ColorConsts.tradeColor);
         return embed;
     }
 }

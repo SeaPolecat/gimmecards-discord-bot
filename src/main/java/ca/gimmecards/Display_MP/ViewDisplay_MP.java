@@ -1,7 +1,6 @@
-package ca.gimmecards.Display_MP;
-import ca.gimmecards.Main.*;
-import ca.gimmecards.Display.*;
-import ca.gimmecards.OtherInterfaces.*;
+package ca.gimmecards.display_mp;
+import ca.gimmecards.display.*;
+import ca.gimmecards.main.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 public class ViewDisplay_MP extends Display {
@@ -10,8 +9,8 @@ public class ViewDisplay_MP extends Display {
     private User mention;
     private UserInfo mentionInfo;
 
-    public ViewDisplay_MP(String ui) {
-        super(ui);
+    public ViewDisplay_MP() {
+        super();
     }
 
     public User getUser() { return user; }
@@ -21,19 +20,6 @@ public class ViewDisplay_MP extends Display {
     public void setUser(User u) { user = u; }
     public void setMention(User m) { mention = m; }
     public void setMentionInfo(UserInfo mi) { mentionInfo = mi; }
-
-    @Override
-    public ViewDisplay_MP findDisplay() {
-        String userId = getUserId();
-
-        for(ViewDisplay_MP v : IDisplays.viewDisplays_MP) {
-            if(v.getUserId().equals(userId)) {
-                return v;
-            }
-        }
-        IDisplays.viewDisplays_MP.add(0, new ViewDisplay_MP(userId));
-        return IDisplays.viewDisplays_MP.get(0);
-    }
 
     @Override
     public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, int page) {

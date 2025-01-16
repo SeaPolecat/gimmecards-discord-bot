@@ -1,7 +1,8 @@
-package ca.gimmecards.Cmds;
-import ca.gimmecards.Main.*;
-import ca.gimmecards.Display.*;
-import ca.gimmecards.OtherInterfaces.*;
+package ca.gimmecards.cmds;
+import ca.gimmecards.consts.*;
+import ca.gimmecards.display.*;
+import ca.gimmecards.main.*;
+import ca.gimmecards.utils.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
@@ -9,18 +10,20 @@ public class SearchCmds {
 
     public static void searchCards(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
-        SearchDisplay disp = new SearchDisplay(user.getUserId()).findDisplay();
+        SearchDisplay disp = new SearchDisplay();
         //
         OptionMapping location = event.getOption("location");
         OptionMapping filter = event.getOption("filter");
         OptionMapping isExact = event.getOption("exact-match");
         OptionMapping keywords = event.getOption("keywords");
 
+        user.addDisplay(disp);
+
         if(location == null || filter == null || isExact == null || keywords == null) { return; }
 
         if(location.getAsString().equalsIgnoreCase("collection")) {
             if(user.getCardContainers().size() < 1) {
-                GameManager.sendMessage(event, IColors.red, "❌", "You don't have any cards yet!");
+                JDAUtils.sendMessage(event, ColorConsts.red, "❌", "You don't have any cards yet!");
 
             } else {
                 disp.modifyVariables(
@@ -29,7 +32,7 @@ public class SearchCmds {
                     isExact.getAsBoolean(),
                     keywords.getAsString()
                 );
-                GameManager.sendDynamicEmbed(event, user, null, disp, 1);
+                JDAUtils.sendDynamicEmbed(event, user, null, disp, 1);
             }
 
         } else if(location.getAsString().equalsIgnoreCase("pokedex")) {
@@ -39,7 +42,7 @@ public class SearchCmds {
                 isExact.getAsBoolean(),
                 keywords.getAsString()
             );
-            GameManager.sendDynamicEmbed(event, user, null, disp, 1);
+            JDAUtils.sendDynamicEmbed(event, user, null, disp, 1);
         }
     }
 
@@ -57,7 +60,7 @@ public class SearchCmds {
             card.displayCard(event, ui, "", footer, false);
 
         } catch(NullPointerException e) {
-            GameManager.sendMessage(event, IColors.red, "❌", "Whoops, I couldn't find that card...");
+            JDAUtils.sendMessage(event, ColorConsts.red, "❌", "Whoops, I couldn't find that card...");
         }
     }
 }

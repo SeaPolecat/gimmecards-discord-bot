@@ -1,6 +1,7 @@
-package ca.gimmecards.Cmds;
-import ca.gimmecards.Main.*;
-import ca.gimmecards.OtherInterfaces.*;
+package ca.gimmecards.cmds;
+import ca.gimmecards.consts.*;
+import ca.gimmecards.main.*;
+import ca.gimmecards.utils.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
@@ -14,7 +15,7 @@ public class SellCmds {
         if(cardNum == null) { return; }
         
         if(user.getCardContainers().size() < 1) {
-            GameManager.sendMessage(event, IColors.red, "❌", "You don't have any cards to sell!");
+            JDAUtils.sendMessage(event, ColorConsts.red, "❌", "You don't have any cards to sell!");
 
         } else {
             try {
@@ -22,26 +23,26 @@ public class SellCmds {
                 CardContainer cc = user.getCardContainers().get(index);
                 String cardTitle = cc.getCard().findCardTitle(cc.getIsFav());
                 int profit = findSingleProfit(user, index);
-                int creditsReward = (int)(profit * 0.02);
+                int creditsReward = (int)(profit * RewardConsts.sellCredits_percent);
                 
                 if(profit == -1) {
-                    GameManager.sendMessage(event, IColors.red, "❌", "Sorry, that card is in your favourites!");
+                    JDAUtils.sendMessage(event, ColorConsts.red, "❌", "Sorry, that card is in your favourites!");
 
                 } else {
                     String msg = "";
 
-                    msg += GameManager.formatName(event) + " sold **" + cardTitle + "**";
+                    msg += FormatUtils.formatName(event) + " sold **" + cardTitle + "**";
                     msg += user.updateXP(profit, true);
                     if(creditsReward > 0) {
                         msg += user.updateCredits(creditsReward, false);
                     }
                     msg += user.checkLevelUp(event);
                     
-                    GameManager.sendMessage(event, user.getGameColor(), "🎴", msg);
-                    try { User.saveUsers(); } catch(Exception e) {}
+                    JDAUtils.sendMessage(event, user.getGameColor(), "🎴", msg);
+                    try { DataUtils.saveUsers(); } catch(Exception e) {}
                 }
             } catch(NumberFormatException | ArithmeticException | IndexOutOfBoundsException e) {
-                GameManager.sendMessage(event, IColors.red, "❌", "Whoops, I couldn't find that card...");
+                JDAUtils.sendMessage(event, ColorConsts.red, "❌", "Whoops, I couldn't find that card...");
             }
         }
     }
@@ -50,30 +51,30 @@ public class SellCmds {
         User user = User.findUser(event);
 
         if(user.getCardContainers().size() < 1) {
-            GameManager.sendMessage(event, IColors.red, "❌", "You don't have any cards to sell!");
+            JDAUtils.sendMessage(event, ColorConsts.red, "❌", "You don't have any cards to sell!");
 
         } else if(!hasDuplicates(user)) {
-            GameManager.sendMessage(event, IColors.red, "❌", "You don't have any duplicate cards!");
+            JDAUtils.sendMessage(event, ColorConsts.red, "❌", "You don't have any duplicate cards!");
 
         } else {
             int profit = findDuplicatesProfit(user);
-            int creditsReward = (int)(profit * 0.02);
+            int creditsReward = (int)(profit * RewardConsts.sellCredits_percent);
             
             if(profit == -1) {
-                GameManager.sendMessage(event, IColors.red, "❌", "Sorry, all your duplicate cards are in your favourites!");
+                JDAUtils.sendMessage(event, ColorConsts.red, "❌", "Sorry, all your duplicate cards are in your favourites!");
                 
             } else {
                 String msg = "";
 
-                msg += GameManager.formatName(event) + " sold all duplicates!";
+                msg += FormatUtils.formatName(event) + " sold all duplicates!";
                 msg += user.updateXP(profit, true);
                 if(creditsReward > 0) {
                     msg += user.updateCredits(creditsReward, false);
                 }
                 msg += user.checkLevelUp(event);
     
-                GameManager.sendMessage(event, user.getGameColor(), "🎴", msg);
-                try { User.saveUsers(); } catch(Exception e) {}
+                JDAUtils.sendMessage(event, user.getGameColor(), "🎴", msg);
+                try { DataUtils.saveUsers(); } catch(Exception e) {}
             }
         }
     }
@@ -82,27 +83,27 @@ public class SellCmds {
         User user = User.findUser(event);
         
         if(user.getCardContainers().size() < 1) {
-            GameManager.sendMessage(event, IColors.red, "❌", "You don't have any cards to sell!");
+            JDAUtils.sendMessage(event, ColorConsts.red, "❌", "You don't have any cards to sell!");
 
         } else {
             int profit = findAllProfit(user);
-            int creditsReward = (int)(profit * 0.02);
+            int creditsReward = (int)(profit * RewardConsts.sellCredits_percent);
 
             if(profit == -1) {
-                GameManager.sendMessage(event, IColors.red, "❌", "Sorry, all your cards are in your favourites!");
+                JDAUtils.sendMessage(event, ColorConsts.red, "❌", "Sorry, all your cards are in your favourites!");
 
             } else {
                 String msg = "";
 
-                msg += GameManager.formatName(event) + " sold all their cards! (except favourites)";
+                msg += FormatUtils.formatName(event) + " sold all their cards! (except favourites)";
                 msg += user.updateXP(profit, true);
                 if(creditsReward > 0) {
                     msg += user.updateCredits(creditsReward, false);
                 }
                 msg += user.checkLevelUp(event);
         
-                GameManager.sendMessage(event, user.getGameColor(), "🎴", msg);
-                try { User.saveUsers(); } catch(Exception e) {}
+                JDAUtils.sendMessage(event, user.getGameColor(), "🎴", msg);
+                try { DataUtils.saveUsers(); } catch(Exception e) {}
             }
         }
     }

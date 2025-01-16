@@ -1,7 +1,8 @@
-package ca.gimmecards.Cmds;
-import ca.gimmecards.Main.*;
-import ca.gimmecards.Display.*;
-import ca.gimmecards.OtherInterfaces.*;
+package ca.gimmecards.cmds;
+import ca.gimmecards.consts.*;
+import ca.gimmecards.display.*;
+import ca.gimmecards.main.*;
+import ca.gimmecards.utils.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
@@ -9,23 +10,25 @@ public class ViewCmds {
 
     public static void viewCard(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
-        ViewDisplay disp = new ViewDisplay(user.getUserId()).findDisplay();
+        ViewDisplay disp = new ViewDisplay();
         //
         OptionMapping cardNum = event.getOption("card-number");
+
+        user.addDisplay(disp);
 
         if(cardNum == null) { return; }
 
         try {
             if(user.getCardContainers().size() < 1) {
-                GameManager.sendMessage(event, IColors.red, "❌", "You don't have any cards yet!");
+                JDAUtils.sendMessage(event, ColorConsts.red, "❌", "You don't have any cards yet!");
 
             } else {
                 int page = cardNum.getAsInt();
 
-                GameManager.sendDynamicEmbed(event, user, null, disp, page);
+                JDAUtils.sendDynamicEmbed(event, user, null, disp, page);
             }
         } catch(NumberFormatException | ArithmeticException | IndexOutOfBoundsException e) {
-            GameManager.sendMessage(event, IColors.red, "❌", "Whoops, I couldn't find that card...");
+            JDAUtils.sendMessage(event, ColorConsts.red, "❌", "Whoops, I couldn't find that card...");
         }
     }
 }

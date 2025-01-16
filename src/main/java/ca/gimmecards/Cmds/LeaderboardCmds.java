@@ -1,6 +1,7 @@
-package ca.gimmecards.Cmds;
-import ca.gimmecards.Main.*;
-import ca.gimmecards.Display.LeaderboardDisplay;
+package ca.gimmecards.cmds;
+import ca.gimmecards.display.LeaderboardDisplay;
+import ca.gimmecards.main.*;
+import ca.gimmecards.utils.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -30,8 +31,10 @@ public class LeaderboardCmds implements Comparator<User> {
     
     public static void viewRanks(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
-        LeaderboardDisplay disp = new LeaderboardDisplay(user.getUserId()).findDisplay();
+        LeaderboardDisplay disp = new LeaderboardDisplay();
         Guild guild = event.getGuild();
+
+        user.addDisplay(disp);
 
         if(guild != null) {
             List<Member> members = guild.getMembers();
@@ -55,15 +58,17 @@ public class LeaderboardCmds implements Comparator<User> {
             disp.setPlayers(players);
             disp.setPlayerInfos(playerInfos);
     
-            GameManager.sendDynamicEmbed(event, user, null, disp, 1);
+            JDAUtils.sendDynamicEmbed(event, user, null, disp, 1);
         }
     }
 
     public static void viewLeaderboard(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
-        LeaderboardDisplay disp = new LeaderboardDisplay(user.getUserId()).findDisplay();
+        LeaderboardDisplay disp = new LeaderboardDisplay();
         ArrayList<User> players = new ArrayList<User>();
         ArrayList<UserInfo> playerInfos = new ArrayList<UserInfo>();
+
+        user.addDisplay(disp);
 
         for(User u : User.users) {
             try {
@@ -81,6 +86,6 @@ public class LeaderboardCmds implements Comparator<User> {
         disp.setPlayers(players);
         disp.setPlayerInfos(playerInfos);
 
-        GameManager.sendDynamicEmbed(event, user, null, disp, 1);
+        JDAUtils.sendDynamicEmbed(event, user, null, disp, 1);
     }
 }

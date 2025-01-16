@@ -1,11 +1,12 @@
-package ca.gimmecards.Cmds;
-import ca.gimmecards.Main.*;
+package ca.gimmecards.cmds;
 import java.util.ArrayList;
-import ca.gimmecards.Display.*;
-import ca.gimmecards.OtherInterfaces.*;
-import ca.gimmecards.Display_MP.*;
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import java.util.Collections;
+import java.util.LinkedList;
+
+import ca.gimmecards.consts.*;
+import ca.gimmecards.display.*;
+import ca.gimmecards.main.*;
+import ca.gimmecards.utils.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 /*embed.addField("**Rule 1**", "Please follow Discord's [Terms of Service](https://discord.com/terms)", false);
@@ -91,7 +92,7 @@ public class TestingCmds {
             }
         }
         GameManager.sendMessage(event, IColors.blue, "", "done testing! " + count + " cards updated");
-        try { User.saveUsers(); } catch(Exception e) {}*/
+        try { DataHandler.saveUsers(); } catch(Exception e) {}*/
 
         /*int dupes = 0;
 
@@ -186,12 +187,23 @@ public class TestingCmds {
             Card.addSingleCard(u, merch, true);
         }
         GameObject.sendMessage(event, IColors.blue_, "", "done testing!");
-        try { User.saveUsers(); } catch(Exception e) {}*/
+        try { DataHandler.saveUsers(); } catch(Exception e) {}*/
+
+        //User.users.clear();
+        //try { DataHandler.saveUsers(); } catch(Exception e) {}
+
+
+        // clearing half of users so i can actually see the storage file
+        /*int OGsize = User.users.size() / 2;
+
+        for(int i = 0; i < OGsize; i++) {
+            User.users.remove(0);
+        }*/
         
-        /*for(int i = 0; i < User.users.size(); i++) {
+        for(int i = 0; i < User.users.size(); i++) {
             User u = User.users.get(i);
             User user = new User(
-                u.getUserId(),
+                u.getUserIdUnencrypted(),
                 u.getGameColor(),
                 u.getCardCount(),
                 u.getLevel(),
@@ -212,12 +224,30 @@ public class TestingCmds {
                 u.getPinnedCard(),
                 u.getBadges(),
                 u.getPacks(),
-                u.getCardContainers()
+                u.getCardContainers(),
+                new LinkedList<Display>()
             );
             User.users.set(i, user);
         }
-        GameManager.sendMessage(event, IColors.blue, "", "done testing!");
-        try { User.saveUsers(); } catch(Exception e) {}*/
+        for(User u : User.users) {
+            System.out.println(u.getDisplays());
+        }
+
+        Collections.sort(User.users);
+
+        for(int i = 1; i < User.users.size(); i++) {
+            User u = User.users.get(i);
+            User prevU = User.users.get(i - 1);
+            long diff = Long.parseLong(u.getUserId()) - Long.parseLong(prevU.getUserId());
+
+            if(diff < 0)
+                System.out.println("found negative!");
+        }
+
+        User.users.get(0).getCardContainers().clear();
+
+        //try { DataHandler.saveUsers(); } catch(Exception e) {}
+        JDAUtils.sendMessage(event, ColorConsts.blue, "", "done testing!");
     }
 
     // EVENT REDEEM CMD
@@ -294,7 +324,7 @@ public class TestingCmds {
                     GameManager.sendMessage(event, user.getGameColor(), "🎒", msg);
                 }
             }
-            try { User.saveUsers(); } catch(Exception e) {}
+            try { DataHandler.saveUsers(); } catch(Exception e) {}
         }
     }*/
 }

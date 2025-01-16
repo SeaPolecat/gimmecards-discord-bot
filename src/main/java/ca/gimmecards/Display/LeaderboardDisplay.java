@@ -1,6 +1,7 @@
-package ca.gimmecards.Display;
-import ca.gimmecards.Main.*;
-import ca.gimmecards.OtherInterfaces.*;
+package ca.gimmecards.display;
+import ca.gimmecards.consts.*;
+import ca.gimmecards.main.*;
+import ca.gimmecards.utils.FormatUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import java.util.ArrayList;
 
@@ -10,8 +11,8 @@ public class LeaderboardDisplay extends Display {
     private ArrayList<User> players;
     private ArrayList<UserInfo> playerInfos;
     
-    public LeaderboardDisplay(String ui) {
-        super(ui);
+    public LeaderboardDisplay() {
+        super();
         dispType = "";
         players = new ArrayList<User>();
         playerInfos = new ArrayList<UserInfo>();
@@ -24,19 +25,6 @@ public class LeaderboardDisplay extends Display {
     public void setDispType(String dt) { dispType = dt; }
     public void setPlayers(ArrayList<User> p) { players = p; }
     public void setPlayerInfos(ArrayList<UserInfo> pi) { playerInfos = pi; }
-
-    @Override
-    public LeaderboardDisplay findDisplay() {
-        String userId = getUserId();
-
-        for(LeaderboardDisplay l : IDisplays.leaderboardDisplays) {
-            if(l.getUserId().equals(userId)) {
-                return l;
-            }
-        }
-        IDisplays.leaderboardDisplays.add(0, new LeaderboardDisplay(userId));
-        return IDisplays.leaderboardDisplays.get(0);
-    }
 
     private int findSelfRank(String userId) {
         for(int i = 0; i < players.size(); i++) {
@@ -82,8 +70,8 @@ public class LeaderboardDisplay extends Display {
             }
             desc += " ┇ **" + pi.getUserName() + "**"
             + " ┇ *" + "Lvl. " + player.getLevel() + "*"
-            + " ┇ " + IEmotes.XP + " `" + GameManager.formatNumber(player.getXP()) 
-            + " / " + GameManager.formatNumber(player.getMaxXP()) + "`\n";
+            + " ┇ " + EmoteConsts.XP + " `" + FormatUtils.formatNumber(player.getXP()) 
+            + " / " + FormatUtils.formatNumber(player.getMaxXP()) + "`\n";
 
             if(i >= players.size() - 1) {
                 break;
@@ -91,11 +79,11 @@ public class LeaderboardDisplay extends Display {
         }
         desc += "┅┅\n";
         if(dispType.equalsIgnoreCase("ranks")) {
-            embed.setTitle(IEmotes.trainer + " Top Collectors Here " + IEmotes.trainer);
-            embed.setColor(IColors.ranksColor);
+            embed.setTitle(EmoteConsts.trainer + " Top Collectors Here " + EmoteConsts.trainer);
+            embed.setColor(ColorConsts.ranksColor);
         } else if(dispType.equalsIgnoreCase("leaderboard")) {
-            embed.setTitle(IEmotes.mascot + " World's Top Collectors " + IEmotes.mascot);
-            embed.setColor(IColors.blue);
+            embed.setTitle(EmoteConsts.mascot + " World's Top Collectors " + EmoteConsts.mascot);
+            embed.setColor(ColorConsts.blue);
         }
         embed.setDescription(desc);
         embed.setFooter("Page " + page + " of " + getMaxPage(), ui.getUserIcon());

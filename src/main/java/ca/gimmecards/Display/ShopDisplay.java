@@ -1,26 +1,9 @@
-package ca.gimmecards.Display;
-import ca.gimmecards.Main.*;
-import ca.gimmecards.OtherInterfaces.*;
+package ca.gimmecards.display;
+import ca.gimmecards.consts.*;
+import ca.gimmecards.main.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 public class ShopDisplay extends Display {
-
-    public ShopDisplay(String ui) {
-        super(ui);
-    }
-
-    @Override
-    public ShopDisplay findDisplay() {
-        String userId = getUserId();
-
-        for(ShopDisplay s : IDisplays.shopDisplays) {
-            if(s.getUserId().equals(userId)) {
-                return s;
-            }
-        }
-        IDisplays.shopDisplays.add(0, new ShopDisplay(userId));
-        return IDisplays.shopDisplays.get(0);
-    }
 
     @Override
     public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, int page) {
@@ -38,7 +21,7 @@ public class ShopDisplay extends Display {
         for(int i = startIndex; i < startIndex + 8; i++) {
             CardSet set = CardSet.sets[i];
 
-            desc += IEmotes.token + " " + set.getSetEmote() + " " + set.getSetName() + " ┇ ";
+            desc += EmoteConsts.token + " " + set.getSetEmote() + " " + set.getSetName() + " ┇ ";
             if(user.isPackUnlocked(set.getSetName())) {
                 desc += "✅\n";
             } else {
@@ -49,10 +32,10 @@ public class ShopDisplay extends Display {
             }
         }
         desc += "┅┅\n";
-        embed.setTitle(IEmotes.pikachu + " Poké Packs Shop " + IEmotes.pikachu);
+        embed.setTitle(EmoteConsts.pikachu + " Poké Packs Shop " + EmoteConsts.pikachu);
         embed.setDescription(desc);
         embed.setFooter("Page " + page + " of " + getMaxPage(), ui.getUserIcon());
-        embed.setColor(IColors.shopColor);
+        embed.setColor(ColorConsts.shopColor);
         return embed;
     }
 }

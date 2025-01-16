@@ -1,6 +1,7 @@
-package ca.gimmecards.Main;
-import ca.gimmecards.Cmds.*;
-import ca.gimmecards.Display.*;
+package ca.gimmecards.main;
+import ca.gimmecards.cmds.*;
+import ca.gimmecards.consts.*;
+import ca.gimmecards.utils.*;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.requests.GatewayIntent;
@@ -21,33 +22,19 @@ public class Main {
     public static DiscordBotListAPI dbl;
     public static BasicTextEncryptor encryptor = new BasicTextEncryptor();
 
-    //========================================[ TOKENS & PASSWORDS ]===================================================================
-
-    // PLEASE REDACT THESE BEFORE UPLOADING TO GITHUB!!!!!!
-    
-    public static final String botToken = "";
-    public static final String testToken = "";
-    public static final String dblToken = "";
-    public static final String encryptorPass = "";
-
-    //========================================[ UNIVERSAL VARIABLES ]==================================================================
-
-    public static final String updateMsg = "🟠 New update on 10/14/2023 ┇ `/changelog`";
-    public static boolean isLocked = false;
-
     //============================================[ MAIN METHOD ]======================================================================
 
     public static void main(String[] args) throws LoginException {
 
-        encryptor.setPassword(encryptorPass);
+        encryptor.setPassword(PasswordConsts.encryptorPassword);
 
         dbl = new DiscordBotListAPI.Builder()
-        .token(dblToken)
+        .token(PasswordConsts.dblToken)
         .botId("814025499381727232")
         .build();
 
         jda = JDABuilder
-        .createDefault(testToken, // change this token accordingly
+        .createDefault(PasswordConsts.testToken, // change this token accordingly
         GatewayIntent.MESSAGE_CONTENT, // comment this line out before releasing an update (the actual bot isn't allowed to have this)
         GatewayIntent.GUILD_MESSAGES,
         GatewayIntent.GUILD_MEMBERS,
@@ -61,17 +48,17 @@ public class Main {
         jda.getPresence().setStatus(OnlineStatus.ONLINE);
         jda.getPresence().setActivity(Activity.playing("type /help"));
 
-        jda.addEventListener(new GameManager());
         jda.addEventListener(new Cmds());
-        jda.addEventListener(new Display());
+        jda.addEventListener(new Server());
 
-        GameManager.globalTimeStampEpoch();
-
-        //to fix the bug where the first person won't be able to flip their collection page
-        if (GameManager.globalCDChecker()) {
-            //remember to modify the clearID cooldown under collectionCmds.java
-            GameManager.globalTimeStampEpoch();
-            Display.deletingIDs();
-        } 
+        // load up game data on startup
+        try { 
+            DataUtils.loadSets();
+            DataUtils.loadOldSets();
+            DataUtils.loadRareSets();
+            DataUtils.loadPromoSets();
+            DataUtils.loadUsers();
+            DataUtils.loadServers();
+        } catch(Exception e) {}
     }
 }

@@ -1,16 +1,18 @@
-package ca.gimmecards.Display;
-import ca.gimmecards.Main.*;
-import ca.gimmecards.OtherInterfaces.IDisplays;
+package ca.gimmecards.display;
 import net.dv8tion.jda.api.EmbedBuilder;
 import java.util.ArrayList;
+
+import ca.gimmecards.main.*;
 
 public class OpenDisplay extends Display {
 
     private ArrayList<Card> newCards;
     private String message;
 
-    public OpenDisplay(String ui) {
-        super(ui);
+    public OpenDisplay() {
+        super();
+        newCards = new ArrayList<Card>();
+        message = "";
     }
 
     public ArrayList<Card> getNewCards() { return newCards; }
@@ -18,19 +20,6 @@ public class OpenDisplay extends Display {
     //
     public void setNewCards(ArrayList<Card> nc) { newCards = nc; }
     public void setMessage(String m) { message = m; }
-
-    @Override
-    public OpenDisplay findDisplay() {
-        String userId = getUserId();
-
-        for(OpenDisplay o : IDisplays.openDisplays) {
-            if(o.getUserId().equals(userId)) {
-                return o;
-            }
-        }
-        IDisplays.openDisplays.add(0, new OpenDisplay(userId));
-        return IDisplays.openDisplays.get(0);
-    }
     
     @Override
     public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, int page) {

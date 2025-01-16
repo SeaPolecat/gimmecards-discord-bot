@@ -1,26 +1,15 @@
-package ca.gimmecards.Main;
-import ca.gimmecards.MainInterfaces.*;
-import ca.gimmecards.OtherInterfaces.*;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.io.Writer;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
+package ca.gimmecards.main;
+import ca.gimmecards.consts.*;
+import ca.gimmecards.display.*;
+import ca.gimmecards.utils.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Role;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.LinkedList;
 import java.util.Random;
 
-public class User implements IUser {
+public class User implements Comparable<User> {
 
     /**
      * a list of type User that's saved and loaded from Users.json; edited on a regular basis
@@ -51,15 +40,46 @@ public class User implements IUser {
     private ArrayList<String> badges;                   // list of names of the badges the player owns
     private ArrayList<String> packs;                    // list of names of the packs the player owns
     private ArrayList<CardContainer> cardContainers;    // the player's cards
+    private LinkedList<Display> displays;
 
     //=============================================[ CONSTRUCTORS ]====================================================================
     
+    public User(String userId, Integer gameColor, Integer cardCount, Integer level, Integer xP, Integer maxXP,
+            Integer tokens, Integer credits, Integer stars, Integer keys, Long openEpoch, Long voteEpoch,
+            Long dailyEpoch, Long redeemEpoch, Long minigameEpoch, Long marketEpoch, String sortMethod,
+            Boolean isSortIncreasing, String pinnedCard, ArrayList<String> badges, ArrayList<String> packs,
+            ArrayList<CardContainer> cardContainers, LinkedList<Display> displays) {
+        this.userId = userId;
+        this.gameColor = gameColor;
+        this.cardCount = cardCount;
+        this.level = level;
+        this.XP = xP;
+        this.maxXP = maxXP;
+        this.tokens = tokens;
+        this.credits = credits;
+        this.stars = stars;
+        this.keys = keys;
+        this.openEpoch = openEpoch;
+        this.voteEpoch = voteEpoch;
+        this.dailyEpoch = dailyEpoch;
+        this.redeemEpoch = redeemEpoch;
+        this.minigameEpoch = minigameEpoch;
+        this.marketEpoch = marketEpoch;
+        this.sortMethod = sortMethod;
+        this.isSortIncreasing = isSortIncreasing;
+        this.pinnedCard = pinnedCard;
+        this.badges = badges;
+        this.packs = packs;
+        this.cardContainers = cardContainers;
+        this.displays = displays;
+    }
+
     /**
      * creates a new User
      * @param userId the player's Discord ID
      */
     public User(String userId) {
-        this.userId = userId;
+        this.userId = Main.encryptor.encrypt(userId);
         this.gameColor = 0;
         this.cardCount = 0;
         this.level = 1;
@@ -81,40 +101,14 @@ public class User implements IUser {
         this.badges = new ArrayList<String>();
         this.packs = new ArrayList<String>();
         this.cardContainers = new ArrayList<CardContainer>();
-    }
-
-    /**
-     * duplicates a User, and encrypts their Discord ID to comply with Discord security guidelines
-     * @param user the User to duplicate
-     */
-    public User(User user) {
-        this.userId = Main.encryptor.encrypt(user.getUserId());
-        this.gameColor = user.getGameColor();
-        this.cardCount = user.getCardCount();
-        this.level = user.getLevel();
-        this.XP = user.getXP();
-        this.maxXP = user.getMaxXP();
-        this.tokens = user.getTokens();
-        this.credits = user.getCredits();
-        this.stars = user.getStars();
-        this.keys = user.getKeys();
-        this.openEpoch = user.getOpenEpoch();
-        this.voteEpoch = user.getVoteEpoch();
-        this.dailyEpoch = user.getDailyEpoch();
-        this.redeemEpoch = user.getRedeemEpoch();
-        this.minigameEpoch = user.getMinigameEpoch();
-        this.marketEpoch = user.getMarketEpoch();
-        this.sortMethod = user.getSortMethod();
-        this.isSortIncreasing = user.getIsSortIncreasing();
-        this.pinnedCard = user.getPinnedCard();
-        this.badges = user.getBadges();
-        this.packs = user.getPacks();
-        this.cardContainers = user.getCardContainers();
+        this.displays = new LinkedList<Display>();
     }
 
     //===============================================[ GETTERS ] ======================================================================
 
-    public String getUserId() { return this.userId; }
+    public String getUserId() { return Main.encryptor.decrypt(this.userId); }
+    public String getUserIdUnencrypted() { return this.userId; } // for testing purposes
+
     public int getGameColor() { return this.gameColor; }
     public int getCardCount() { return this.cardCount; }
     public int getLevel() { return this.level; }
@@ -136,6 +130,7 @@ public class User implements IUser {
     public ArrayList<String> getBadges() { return this.badges; }
     public ArrayList<String> getPacks() { return this.packs; }
     public ArrayList<CardContainer> getCardContainers() { return this.cardContainers; }
+    public LinkedList<Display> getDisplays() { return displays; }
     
     //================================================[ SETTERS ]======================================================================
 
@@ -147,47 +142,17 @@ public class User implements IUser {
     public void addCredits(int credits) { this.credits += credits; }
     public void addStars(int stars) { this.stars += stars; }
     public void addKeys(int keys) { this.keys += keys; }
-    public void resetOpenEpoch() { this.openEpoch = Calendar.getInstance().getTimeInMillis() / 1000; }          //1000 means its counting in seconds
-    public void resetVoteEpoch() { this.voteEpoch = Calendar.getInstance().getTimeInMillis() / 60000; }         //60000 means its counting in minutes
-    public void resetDailyEpoch() { this.dailyEpoch = Calendar.getInstance().getTimeInMillis() / 60000; }       //60000 means its counting in minutes
-    public void resetRedeemEpoch() { this.redeemEpoch = Calendar.getInstance().getTimeInMillis() / 60000; }     //60000 means its counting in minutes
-    public void resetMinigameEpoch() { this.minigameEpoch = Calendar.getInstance().getTimeInMillis() / 60000; } //60000 means its counting in minutes
-    public void resetMarketEpoch() { this.marketEpoch = Calendar.getInstance().getTimeInMillis() / 60000; }     //60000 means its counting in minutes
+    public void resetOpenEpoch() { this.openEpoch = Calendar.getInstance().getTimeInMillis() / 1000; }
+    public void resetVoteEpoch() { this.voteEpoch = Calendar.getInstance().getTimeInMillis() / 1000; }
+    public void resetDailyEpoch() { this.dailyEpoch = Calendar.getInstance().getTimeInMillis() / 1000; }
+    public void resetRedeemEpoch() { this.redeemEpoch = Calendar.getInstance().getTimeInMillis() / 1000; }
+    public void resetMinigameEpoch() { this.minigameEpoch = Calendar.getInstance().getTimeInMillis() / 1000; }
+    public void resetMarketEpoch() { this.marketEpoch = Calendar.getInstance().getTimeInMillis() / 1000; }
     public void setSortMethod(String sortMethod) { this.sortMethod = sortMethod; } 
     public void setIsSortIncreasing(boolean isSortIncreasing) { this.isSortIncreasing = isSortIncreasing; }
     public void setPinnedCard(String pinnedCard) { this.pinnedCard = pinnedCard; }
 
     //=============================================[ PUBLIC STATIC FUNCTIONS ]==============================================================
-    
-    /**
-     * loads data from Users.json into the ArrayList at the top
-     * @throws Exception ignores all possible exceptions
-     */
-    public static void loadUsers() throws Exception {
-        Reader reader = new InputStreamReader(new FileInputStream(GameManager.findSavePath(GameManager.userPath)), "UTF-8");
-        users = new Gson().fromJson(reader, new TypeToken<ArrayList<User>>() {}.getType());
-
-        for(User u : users) {
-            u.setUserId(Main.encryptor.decrypt(u.getUserId()));
-        }
-        reader.close();
-    }
-
-    /**
-     * saves data from the ArrayList at the top into Users.json
-     * @throws Exception ignores all possible exceptions
-     */
-    public static void saveUsers() throws Exception {
-        Gson gson = new GsonBuilder().create();
-        Writer writer = new OutputStreamWriter(new FileOutputStream(GameManager.findSavePath(GameManager.userPath)), "UTF-8");
-        ArrayList<User> encryptedUsers = new ArrayList<User>();
-
-        for(User u : users) {
-            encryptedUsers.add(new User(u));
-        }
-        gson.toJson(encryptedUsers, writer);
-        writer.close();
-    }
 
     /**
      * finds the author User based on a slash event
@@ -196,12 +161,6 @@ public class User implements IUser {
      */
     public static User findUser(SlashCommandInteractionEvent event) {
         String discordId = event.getUser().getId();
-        
-        return searchForUser(discordId);
-    }
-
-    public static User findUser(MessageReceivedEvent event) {
-        String discordId = event.getAuthor().getId();
         
         return searchForUser(discordId);
     }
@@ -227,69 +186,60 @@ public class User implements IUser {
         return searchForUser(otherUserId);
     }
 
-    /**
-     * checks if a specific command's cooldown is complete
-     * @param epoch one of the player's epoch times above
-     * @param cooldown the cooldown of the command that's being checked
-     * @param isMins whether the cooldown is measured in minutes or seconds
-     * @return whether the cooldown is complete
-     */
-    public static boolean isCooldownDone(Long epoch, int cooldown, boolean isMins) {
-        long current = isMins ? Calendar.getInstance().getTimeInMillis() / 60000 : Calendar.getInstance().getTimeInMillis() / 1000;
-
-        if(current - epoch >= cooldown) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * finds the amount of cooldown time left for a specific command
-     * @param epoch one of the player's epoch times above
-     * @param cooldown the cooldown of the command that's being checked
-     * @param isMins whether the cooldown is measured in minutes or seconds
-     * @return a string message telling the player how much cooldown time is left for the command they're using
-     */
-    public static String findTimeLeft(Long epoch, int cooldown, boolean isMins) {
-        long current;
-
-        if(isMins) {
-            current = Calendar.getInstance().getTimeInMillis() / 60000;
-            long minutes = cooldown - (current - epoch);
-
-            if(minutes > 60) {
-                int hours = (int)(minutes / 60);
-    
-                if(hours < 2) {
-                    return "**" + hours + " hour " + (minutes % 60) + " minutes**";
-                } else {
-                    return "**" + hours + " hours " + (minutes % 60) + " minutes**";
-                }
-            } else {
-                return "**" + minutes + " minutes**";
-            }
-
-        } else {
-            current = Calendar.getInstance().getTimeInMillis() / 1000;
-            long seconds = cooldown - (current - epoch);
-
-            if(seconds > 60) {
-                int minutes = (int)(seconds / 60);
-    
-                if(minutes < 2) {
-                    return "**" + minutes + " minute " + (seconds % 60) + " seconds**";
-                } else {
-                    return "**" + minutes + " minutes " + (seconds % 60) + " seconds**";
-                }
-            } else {
-                return "**" + seconds + " seconds**";
-            }
-        }
-    }
-
     //==============================================[ PUBLIC NON-STATIC FUNCTIONS ]=====================================================
     
     @Override
+    public int compareTo(User other) {
+        long userId = Long.parseLong(this.getUserId());
+        long otherId = Long.parseLong(other.getUserId());
+
+        if(userId < otherId)
+            return -1;
+        else if(userId > otherId)
+            return 1;
+
+        return 0;
+    }
+
+    public void addDisplay(Display dispToAdd) {
+        for(int i = 0; i < displays.size(); i++) {
+            Display disp = displays.get(i);
+
+            if(disp.getClass().equals(dispToAdd.getClass())) {
+                displays.remove(i);
+                break;
+            }
+        }
+        displays.addFirst(dispToAdd);
+    }
+
+    public Display findDisplay(Display dispToFind) {
+        Display result = null;
+
+        for(Display disp : displays) {
+            if(disp.getClass().equals(dispToFind.getClass())) {
+                result = disp;
+                break;
+            }
+        }
+        return result;
+    }
+
+    public Display findDisplay(String slashId) {
+        Display result = null;
+
+        for(Display disp : displays) {
+            if(disp.getSlashId().equals(slashId)) {
+                result = disp;
+                break;
+            }
+        }
+        return result;
+    }
+
+    /**
+     * handles a player levelling up
+     */
     public void levelUp() {
         int extraXP = this.XP - this.maxXP;
 
@@ -299,7 +249,11 @@ public class User implements IUser {
         this.maxXP += 500;
     }
     
-    @Override
+    /**
+     * checks whether the player has enough XP to level up
+     * @param event a slash event
+     * @return a string message telling the player that they levelled up; is attached under any XP message
+     */
     public String checkLevelUp(SlashCommandInteractionEvent event) {
         int prevLvl = this.level;
         int creditsReward = 0;
@@ -308,13 +262,13 @@ public class User implements IUser {
 
         if(this.XP >= this.maxXP) {
             msg += "\n┅┅";
-            msg += "\n" + GameManager.formatName(event) + "** LEVELED UP :tada:**";
+            msg += "\n" + FormatUtils.formatName(event) + "** LEVELED UP :tada:**";
 
             while(this.XP >= this.maxXP) {
                 levelUp();
 
-                creditsReward += ((this.level + 9) / 10) * 100;
-                keyReward++;
+                creditsReward += ((this.level + 9) / 10) * RewardConsts.levelupCredits_step;
+                keyReward += RewardConsts.levelupKeys;
 
                 if(this.level == 50) {
                     this.badges.add("veteran");
@@ -329,7 +283,12 @@ public class User implements IUser {
         return msg;
     }
 
-    @Override
+    /**
+     * handles XP
+     * @param quantity the amount of XP to give
+     * @param isStart whether or not it's shown at the start of the embed
+     * @return a string message telling the player how their XP changed
+     */
     public String updateXP(int quantity, boolean isAtTop) {
         String msg = "\n";
 
@@ -337,13 +296,18 @@ public class User implements IUser {
         if(isAtTop) {
             msg += "┅┅\n";
         }
-        msg += "+ " + GameManager.formatNumber(quantity);
-        msg += " " + IEmotes.XP + " **XP**";
+        msg += "+ " + FormatUtils.formatNumber(quantity);
+        msg += " " + EmoteConsts.XP + " **XP**";
 
         return msg;
     }
 
-    @Override
+    /**
+     * handles tokens
+     * @param quantity the amount of tokens to give (or remove)
+     * @param isStart whether or not it's shown at the start of the embed
+     * @return a string message telling the player how their tokens changed
+     */
     public String updateTokens(int quantity, boolean isAtTop) {
         String msg = "\n";
 
@@ -352,17 +316,22 @@ public class User implements IUser {
             msg += "┅┅\n";
         }
         msg += (quantity > 0) ? "+ " : "\\- ";
-        msg += GameManager.formatNumber(Math.abs(quantity));
+        msg += FormatUtils.formatNumber(Math.abs(quantity));
 
         if(quantity > 1 || quantity < -1) {
-            msg += " " + IEmotes.token + " **Tokens**";
+            msg += " " + EmoteConsts.token + " **Tokens**";
         } else {
-            msg += " " + IEmotes.token + " **Token**";
+            msg += " " + EmoteConsts.token + " **Token**";
         }
         return msg;
     }
 
-    @Override
+    /**
+     * handles credits
+     * @param quantity the amount of credits to give (or remove)
+     * @param isStart whether or not it's shown at the start of the embed
+     * @return a string message telling the player how their credits changed
+     */
     public String updateCredits(int quantity, boolean isAtTop) {
         String msg = "\n";
 
@@ -371,13 +340,18 @@ public class User implements IUser {
             msg += "┅┅\n";
         }
         msg += (quantity > 0) ? "+ " : "\\- ";
-        msg += GameManager.formatNumber(Math.abs(quantity));
-        msg += " " + IEmotes.credits + " **Credits**";
+        msg += FormatUtils.formatNumber(Math.abs(quantity));
+        msg += " " + EmoteConsts.credits + " **Credits**";
 
         return msg;
     }
 
-    @Override
+    /**
+     * handles stars
+     * @param quantity the amount of stars to give (or remove)
+     * @param isStart whether or not it's shown at the start of the embed
+     * @return a string message telling the player how their stars changed
+     */
     public String updateStars(int quantity, boolean isAtTop) {
         String msg = "\n";
 
@@ -386,17 +360,22 @@ public class User implements IUser {
             msg += "┅┅\n";
         }
         msg += (quantity > 0) ? "+ " : "\\- ";
-        msg += GameManager.formatNumber(Math.abs(quantity));
+        msg += FormatUtils.formatNumber(Math.abs(quantity));
 
         if(quantity > 1 || quantity < -1) {
-            msg += " " + IEmotes.star + " **Stars**";
+            msg += " " + EmoteConsts.star + " **Stars**";
         } else {
-            msg += " " + IEmotes.star + " **Star**";
+            msg += " " + EmoteConsts.star + " **Star**";
         }
         return msg;
     }
 
-    @Override
+    /**
+     * handles keys
+     * @param quantity the amount of keys to give (or remove)
+     * @param isStart whether or not it's shown at the start of the embed
+     * @return a string message telling the player how their keys changed
+     */
     public String updateKeys(int quantity, boolean isAtTop) {
         String msg = "\n";
 
@@ -405,13 +384,17 @@ public class User implements IUser {
             msg += "┅┅\n";
         }
         msg += (quantity > 0) ? "+ " : "\\- ";
-        msg += GameManager.formatNumber(Math.abs(quantity));
-        msg += " " + IEmotes.key + " **Key**";
+        msg += FormatUtils.formatNumber(Math.abs(quantity));
+        msg += " " + EmoteConsts.key + " **Key**";
 
         return msg;
     }
 
-    @Override
+    /**
+     * adds a single card to the player's CardContainer list
+     * @param card the card to add
+     * @param shouldAutoFav whether the card should be automatically favorited or not
+     */
     public void addSingleCard(Card card, boolean shouldAutoFav) {
         CardContainer newCard = null;
 
@@ -433,7 +416,11 @@ public class User implements IUser {
         sortCards();
     }
 
-    @Override
+    /**
+     * adds a list of cards to the player's CardContainer list
+     * @param set the card set that the list should be picked from
+     * @return a list of the new cards
+     */
     public ArrayList<Card> addNewCards(CardSet set) {
         ArrayList<Card> commons = set.getCommons();
         ArrayList<Card> uncommons = set.getUncommons();
@@ -474,7 +461,9 @@ public class User implements IUser {
         return newCards;
     }
 
-    @Override
+    /**
+     * sorts the player's cards based on either alphabetical, xp, quantity, or newest
+     */
     public void sortCards() {
 
         for(int i = 0; i < this.cardContainers.size() - 1; i++) {
@@ -542,7 +531,11 @@ public class User implements IUser {
         }
     }
 
-    @Override
+    /**
+     * checks whether the player owns a certain card
+     * @param card the card to check
+     * @return whether the player owns the card or not
+     */
     public boolean ownsCard(Card card) {
         for(CardContainer cc : this.cardContainers) {
             String cardId = cc.getCard().getCardId();
@@ -554,7 +547,9 @@ public class User implements IUser {
         return false;
     }
 
-    @Override
+    /**
+     * @return whether the player still owns their pinned card
+     */
     public boolean ownsPinnedCard() {
         for(CardContainer card : this.cardContainers) {
             String cardImage = card.getCard().getCardImage();
@@ -566,7 +561,9 @@ public class User implements IUser {
         return false;
     }
 
-    @Override
+    /**
+     * @return whether the player owns any pack from the regular shop
+     */
     public boolean ownsAnyShopPack() {
         for(String pack : this.packs) {
             for(CardSet set : CardSet.sets) {
@@ -578,7 +575,11 @@ public class User implements IUser {
         return false;
     }
 
-    @Override
+    /**
+     * checks whether the player owns a certain badge
+     * @param badge the badge to check
+     * @return whether the player owns the badge or not
+     */
     public boolean ownsBadge(String badge) {
         for(String b : this.badges) {
             if(b.equalsIgnoreCase(badge)) {
@@ -588,7 +589,11 @@ public class User implements IUser {
         return false;
     }
     
-    @Override
+    /**
+     * checks whether the player has unlocked a certain card pack in the shop
+     * @param setName the card set name of the pack to check
+     * @return whether the player has unlocked the pack or not
+     */
     public boolean isPackUnlocked(String setName) {
         for(String pack : this.packs) {
             if(pack.equalsIgnoreCase(setName)) {
@@ -598,7 +603,11 @@ public class User implements IUser {
         return false;
     }
 
-    @Override
+    /**
+     * counts how many packs the player owns in the shop (or oldshop)
+     * @param isOld whether this function should count packs from the shop or oldshop
+     * @return the number of packs the player owns
+     */
     public int countOwnedPacks(boolean isOld) {
         int count = 0;
         CardSet[] sets = isOld ? CardSet.oldSets : CardSet.sets;
@@ -613,7 +622,9 @@ public class User implements IUser {
         return count;
     }
 
-    @Override
+    /**
+     * @return the current number of cards the player owns
+     */
     public int countOwnedCards() {
         int count = 0;
 
@@ -623,37 +634,23 @@ public class User implements IUser {
         return count;
     }
 
-    @Override
-    public boolean hasPremiumRole(SlashCommandInteractionEvent event) {
-        Guild guild = event.getJDA().getGuildById("1137436216627830784");
-        Member member = guild.getMemberById(event.getUser().getId());
-
-        try {
-            Role premiumRole = guild.getRoleById("1140346412131954798");
-
-            if(member.getRoles().contains(premiumRole)) {
-                return true;
-            }
-        } catch(NullPointerException e) {}
-
-        return false;
-    }
-
     //===============================================[ PRIVATE FUNCTIONS ]=============================================================
     
     /**
-     * searches through the User list for a specific player
+     * searches through the User list for a specific player using the binary search algorithm
      * @param discordId the ID of the player to search for
      * @return the player to be searched
      */
     private static User searchForUser(String discordId) {
-        for(User u : users) {
-            if(u.getUserId().equals(discordId)) {
-                return u;
-            }
-        }
-        users.add(0, new User(discordId));
-        return users.get(0);
+        User targetUser = new User(discordId); // need to create a User object to compare with other users while searching
+        int index = SearchUtils.binarySearch(users, targetUser);
+
+        if(index == users.size() || targetUser.compareTo(users.get(index)) != 0)
+            users.add(index, targetUser);
+        else
+            targetUser = users.get(index);
+
+        return targetUser;
     }
 
     /**
@@ -664,7 +661,7 @@ public class User implements IUser {
     private void swapCards(int i1, int i2) {
         CardContainer temp = this.cardContainers.get(i1);
         
-        this.cardContainers.set(i1, this.cardContainers.get(i2));
-        this.cardContainers.set(i2, temp);
+        cardContainers.set(i1, this.cardContainers.get(i2));
+        cardContainers.set(i2, temp);
     }
 }

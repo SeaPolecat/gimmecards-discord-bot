@@ -1,26 +1,10 @@
-package ca.gimmecards.Display;
-import ca.gimmecards.Main.*;
-import ca.gimmecards.OtherInterfaces.*;
+package ca.gimmecards.display;
+import ca.gimmecards.consts.*;
+import ca.gimmecards.main.*;
+import ca.gimmecards.utils.FormatUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 public class CollectionDisplay extends Display {
-
-    public CollectionDisplay(String ui) {
-        super(ui);
-    }
-
-    @Override
-    public CollectionDisplay findDisplay() {
-        String userId = getUserId();
-
-        for(CollectionDisplay c : IDisplays.collectionDisplays) {
-            if(c.getUserId().equals(userId)) {
-                return c;
-            }
-        }
-        IDisplays.collectionDisplays.add(0, new CollectionDisplay(userId));
-        return IDisplays.collectionDisplays.get(0);
-    }
 
     @Override
     public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, int page) {
@@ -53,7 +37,7 @@ public class CollectionDisplay extends Display {
             }
         }
         desc += "┅┅\n";
-        embed.setTitle(ui.getUserName() + "'s Collection ┇ " + GameManager.formatNumber(user.countOwnedCards()) + " Cards");
+        embed.setTitle(ui.getUserName() + "'s Collection ┇ " + FormatUtils.formatNumber(user.countOwnedCards()) + " Cards");
         embed.setDescription(desc);
         embed.setFooter("Page " + page + " of " + getMaxPage(), ui.getUserIcon());
         embed.setColor(user.getGameColor());

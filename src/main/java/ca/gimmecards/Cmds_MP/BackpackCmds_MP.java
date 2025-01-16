@@ -1,6 +1,7 @@
-package ca.gimmecards.Cmds_MP;
-import ca.gimmecards.Main.*;
-import ca.gimmecards.Display_MP.*;
+package ca.gimmecards.cmds_mp;
+import ca.gimmecards.display_mp.*;
+import ca.gimmecards.main.*;
+import ca.gimmecards.utils.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
@@ -8,9 +9,11 @@ public class BackpackCmds_MP {
     
     public static void viewBackpack_(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
-        BackpackDisplay_MP disp = new BackpackDisplay_MP(user.getUserId()).findDisplay();
+        BackpackDisplay_MP disp = new BackpackDisplay_MP();
         //
         OptionMapping user_ = event.getOption("user");
+
+        user.addDisplay(disp);
 
         if(user_ == null) { return; }
 
@@ -24,6 +27,6 @@ public class BackpackCmds_MP {
         disp.setMention(mention);
         disp.setMentionInfo(new UserInfo(mention, event));
 
-        GameManager.sendDynamicEmbed(event, user, null, disp, -1);
+        JDAUtils.sendDynamicEmbed(event, user, null, disp, -1);
     }
 }

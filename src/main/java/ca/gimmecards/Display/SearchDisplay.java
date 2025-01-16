@@ -1,6 +1,7 @@
-package ca.gimmecards.Display;
-import ca.gimmecards.Main.*;
-import ca.gimmecards.OtherInterfaces.*;
+package ca.gimmecards.display;
+import ca.gimmecards.consts.*;
+import ca.gimmecards.main.*;
+import ca.gimmecards.utils.FormatUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import java.util.ArrayList;
 
@@ -11,8 +12,8 @@ public class SearchDisplay extends Display {
     private boolean isExact;
     private String keywords;
 
-    public SearchDisplay(String ui) {
-        super(ui);
+    public SearchDisplay() {
+        super();
     }
 
     public String getLocation() { return this.location; }
@@ -25,19 +26,6 @@ public class SearchDisplay extends Display {
         this.filter = filter;
         this.isExact = isExact;
         this.keywords = keywords;
-    }
-
-    @Override
-    public SearchDisplay findDisplay() {
-        String userId = getUserId();
-
-        for(SearchDisplay s : IDisplays.searchDisplays) {
-            if(s.getUserId().equals(userId)) {
-                return s;
-            }
-        }
-        IDisplays.searchDisplays.add(0, new SearchDisplay(userId));
-        return IDisplays.searchDisplays.get(0);
     }
 
     public String findName(Card card) {
@@ -128,7 +116,7 @@ public class SearchDisplay extends Display {
                 }
             }
         }
-        for(Card card : ICustomCards.customs) {
+        for(Card card : CustomCardConsts.customs) {
             String name = findName(card);
 
             if(this.isExact ? name.equalsIgnoreCase(this.keywords) : name.toLowerCase().contains(this.keywords.toLowerCase())) {
@@ -151,7 +139,7 @@ public class SearchDisplay extends Display {
             if(searchedCards.size() % 15 != 0) {
                 addMaxPage();
             }
-            desc += "***" + GameManager.formatNumber(searchedCards.size()) + "*** ";
+            desc += "***" + FormatUtils.formatNumber(searchedCards.size()) + "*** ";
             desc += this.isExact ? "exact " : "non-exact ";
             desc += "search results for `" + this.keywords + "`\n\n";
             desc += "`/view (card #)` to view a card\n";
@@ -184,10 +172,10 @@ public class SearchDisplay extends Display {
             } else {
                 setMaxPage(1);
             }
-            embed.setTitle(IEmotes.pokeball + " Searching " + ui.getUserName() + "'s Collection... " + IEmotes.pokeball);
+            embed.setTitle(EmoteConsts.pokeball + " Searching " + ui.getUserName() + "'s Collection... " + EmoteConsts.pokeball);
             embed.setDescription(desc);
             embed.setFooter("Page " + page + " of " + getMaxPage(), ui.getUserIcon());
-            embed.setColor(IColors.searchColor);
+            embed.setColor(ColorConsts.searchColor);
 
         } else if(this.location.equals("pokedex")) {
             ArrayList<Card> searchedCards = searchPokedex(user);
@@ -197,7 +185,7 @@ public class SearchDisplay extends Display {
             if(searchedCards.size() % 15 != 0) {
                 addMaxPage();
             }
-            desc += "***" + GameManager.formatNumber(searchedCards.size()) + "*** ";
+            desc += "***" + FormatUtils.formatNumber(searchedCards.size()) + "*** ";
             desc += this.isExact ? "exact " : "non-exact ";
             desc += "search results for `" + this.keywords + "`\n\n";
             desc += "`/sview (card ID)` to view a card\n";
@@ -222,10 +210,10 @@ public class SearchDisplay extends Display {
             } else {
                 setMaxPage(1);
             }
-            embed.setTitle(IEmotes.pokeball + " Searching the Pokédex... " + IEmotes.pokeball);
+            embed.setTitle(EmoteConsts.pokeball + " Searching the Pokédex... " + EmoteConsts.pokeball);
             embed.setDescription(desc);
             embed.setFooter("Page " + page + " of " + getMaxPage(), ui.getUserIcon());
-            embed.setColor(IColors.searchColor);
+            embed.setColor(ColorConsts.searchColor);
         }
         return embed;
     }

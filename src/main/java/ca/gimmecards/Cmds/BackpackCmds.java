@@ -1,7 +1,8 @@
-package ca.gimmecards.Cmds;
-import ca.gimmecards.Main.*;
-import ca.gimmecards.Display.*;
-import ca.gimmecards.OtherInterfaces.*;
+package ca.gimmecards.cmds;
+import ca.gimmecards.consts.*;
+import ca.gimmecards.display.*;
+import ca.gimmecards.main.*;
+import ca.gimmecards.utils.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -10,59 +11,46 @@ public class BackpackCmds {
 
     public static void viewBackpack(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
-        BackpackDisplay disp = new BackpackDisplay(user.getUserId()).findDisplay();
+        BackpackDisplay disp = new BackpackDisplay();
+        
+        user.addDisplay(disp);
 
-        GameManager.sendDynamicEmbed(event, user, null, disp, -1);
+        JDAUtils.sendDynamicEmbed(event, user, null, disp, -1);
     }
 
     public static void redeemToken(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
+        int cooldownLeft = TimeUtils.findCooldownLeft(CooldownConsts.redeemCooldown, user.getRedeemEpoch());
 
-        if(!User.isCooldownDone(user.getRedeemEpoch(), 30, true)) {
-            GameManager.sendMessage(event, IColors.red, "⏰", "Please wait another " 
-            + User.findTimeLeft(user.getRedeemEpoch(), 30, true));
+        if(cooldownLeft > 0) {
+            JDAUtils.sendMessage(event, ColorConsts.red, "⏰", "Please wait another " 
+            + FormatUtils.formatCooldown(cooldownLeft));
 
         } else {
             String msg = "";
-            int adChance = GameManager.randRange(0, 1);
 
             user.resetRedeemEpoch();
 
-            if(user.hasPremiumRole(event)) {
-                msg += GameManager.formatName(event) + " redeemed a token and star!";
-                msg += user.updateTokens(1, true);
-                msg += user.updateCredits(GameManager.randRange(24, 30), false);
-                msg += user.updateStars(1, false);
+            msg += FormatUtils.formatName(event) + " redeemed a token!";
+            msg += user.updateTokens(RewardConsts.redeemTokens, true);
+            msg += user.updateCredits(NumberUtils.randRange(RewardConsts.redeemCredits_min, RewardConsts.redeemCredits_max), false);
 
-            } else {
-                msg += GameManager.formatName(event) + " redeemed a token!";
-                msg += user.updateTokens(1, true);
-                msg += user.updateCredits(GameManager.randRange(24, 30), false);
-            }
             msg += "\n┅┅\n";
-            msg += Main.updateMsg + "\n\n";
+            msg += ChangelogConsts.updateMsg + "\n\n";
 
-            if(!user.hasPremiumRole(event) && adChance == 0) {
-                Card adCard = Card.pickRandomSpecialCard();
-
-                msg += IEmotes.kofi + " Get the premium membership for exclusive cards, like this one!";
-
-                GameManager.sendPremiumMessage(event, user.getGameColor(), "🎒", msg, adCard);
-
-            } else {
-                GameManager.sendMessage(event, user.getGameColor(), "🎒", msg);
-            }
-            try { User.saveUsers(); } catch(Exception e) {}
+            JDAUtils.sendMessage(event, user.getGameColor(), "🎒", msg);
+            try { DataUtils.saveUsers(); } catch(Exception e) {}
         }
     }
 
     public static void receiveDailyReward(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
         UserInfo ui = new UserInfo(event);
+        int cooldownLeft = TimeUtils.findCooldownLeft(CooldownConsts.dailyCooldown, user.getDailyEpoch());
 
-        if(!User.isCooldownDone(user.getDailyEpoch(), 1440, true)) {
-            GameManager.sendMessage(event, IColors.red, "⏰", "Please wait another " 
-            + User.findTimeLeft(user.getDailyEpoch(), 1440, true));
+        if(cooldownLeft > 0) {
+            JDAUtils.sendMessage(event, ColorConsts.red, "⏰", "Please wait another " 
+            + FormatUtils.formatCooldown(cooldownLeft));
 
         } else {
             Card item = Card.pickRandomCard("shiny");
@@ -70,15 +58,16 @@ public class BackpackCmds {
             String footer = ui.getUserName() + "'s shiny card";
 
             msg += "🎴 ";
-            msg += GameManager.formatName(event) + " claimed their daily shiny card!";
-            msg += user.updateCredits(GameManager.randRange(240, 300), true);
+            msg += FormatUtils.formatName(event) + " claimed their daily shiny card!";
+            msg += user.updateCredits(NumberUtils.randRange(RewardConsts.dailyCredits_min, RewardConsts.dailyCredits_max), true);
+            msg += user.updateStars(RewardConsts.dailyStars, false);
 
             user.resetDailyEpoch();
 
             user.addSingleCard(item, false);
             
             item.displayCard(event, ui, msg, footer, false);
-            try { User.saveUsers(); } catch(Exception e) {}
+            try { DataUtils.saveUsers(); } catch(Exception e) {}
         }
     }
 
@@ -94,12 +83,12 @@ public class BackpackCmds {
 
             user.setGameColor(color);
 
-            GameManager.sendMessage(event, user.getGameColor(), IEmotes.eevee, 
+            JDAUtils.sendMessage(event, user.getGameColor(), EmoteConsts.eevee, 
             "Set your game's theme color to **" + hexCode.getAsString().toUpperCase() + "**");
-            try { User.saveUsers(); } catch(Exception e) {}
+            try { DataUtils.saveUsers(); } catch(Exception e) {}
 
         } catch(NumberFormatException | ArithmeticException e) {
-            GameManager.sendMessage(event, IColors.red, "❌", "That's not a valid hex code!");
+            JDAUtils.sendMessage(event, ColorConsts.red, "❌", "That's not a valid hex code!");
         }
     }
 
@@ -118,11 +107,11 @@ public class BackpackCmds {
 
             user.setPinnedCard(cardImage);
 
-            GameManager.sendMessage(event, user.getGameColor(), "🎒", "**" + cardTitle + "** has been pinned to your backpack!");
-            try { User.saveUsers(); } catch(Exception e) {}
+            JDAUtils.sendMessage(event, user.getGameColor(), "🎒", "**" + cardTitle + "** has been pinned to your backpack!");
+            try { DataUtils.saveUsers(); } catch(Exception e) {}
             
         } catch(NumberFormatException | ArithmeticException | IndexOutOfBoundsException e) {
-            GameManager.sendMessage(event, IColors.red, "❌", "Whoops, I couldn't find that card...");
+            JDAUtils.sendMessage(event, ColorConsts.red, "❌", "Whoops, I couldn't find that card...");
         }
     }
 
@@ -132,40 +121,46 @@ public class BackpackCmds {
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
-        desc += GameManager.formatCmd("redeem") + " ┇ ";
-        if(User.isCooldownDone(user.getRedeemEpoch(), 30, true)) {
+        int redeemCDLeft = TimeUtils.findCooldownLeft(CooldownConsts.redeemCooldown, user.getRedeemEpoch());
+        int minigameCDLeft = TimeUtils.findCooldownLeft(CooldownConsts.minigameCooldown, user.getMinigameEpoch());
+        int voteCDLeft = TimeUtils.findCooldownLeft(CooldownConsts.voteCooldown, user.getVoteEpoch());
+        int dailyCDLeft = TimeUtils.findCooldownLeft(CooldownConsts.dailyCooldown, user.getDailyEpoch());
+        int buyCDLeft = TimeUtils.findCooldownLeft(CooldownConsts.buyCooldown, user.getMarketEpoch());
+
+        desc += FormatUtils.formatCmd("redeem") + " ┇ ";
+        if(redeemCDLeft == 0) {
             desc += "✅\n\n";
         } else {
-            desc += "⏰ " + User.findTimeLeft(user.getRedeemEpoch(), 30, true) + "\n\n";
+            desc += "⏰ " + FormatUtils.formatCooldown(redeemCDLeft) + "\n\n";
         }
-        desc += GameManager.formatCmd("minigame") + " ┇ ";
-        if(User.isCooldownDone(user.getMinigameEpoch(), 60, true)) {
+        desc += FormatUtils.formatCmd("minigame") + " ┇ ";
+        if(minigameCDLeft == 0) {
             desc += "✅\n\n";
         } else {
-            desc += "⏰ " + User.findTimeLeft(user.getMinigameEpoch(), 60, true) + "\n\n";
+            desc += "⏰ " + FormatUtils.formatCooldown(minigameCDLeft) + "\n\n";
         }
-        desc += GameManager.formatCmd("vote") + " ┇ ";
-        if(User.isCooldownDone(user.getVoteEpoch(), 720, true)) {
+        desc += FormatUtils.formatCmd("vote") + " ┇ ";
+        if(voteCDLeft == 0) {
             desc += "✅\n\n";
         } else {
-            desc += "⏰ " + User.findTimeLeft(user.getVoteEpoch(), 720, true) + "\n\n";
+            desc += "⏰ " + FormatUtils.formatCooldown(voteCDLeft) + "\n\n";
         }
-        desc += GameManager.formatCmd("daily") + " ┇ ";
-        if(User.isCooldownDone(user.getDailyEpoch(), 1440, true)) {
+        desc += FormatUtils.formatCmd("daily") + " ┇ ";
+        if(dailyCDLeft == 0) {
             desc += "✅\n\n";
         } else {
-            desc += "⏰ " + User.findTimeLeft(user.getDailyEpoch(), 1440, true) + "\n\n";
+            desc += "⏰ " + FormatUtils.formatCooldown(dailyCDLeft) + "\n\n";
         }
-        desc += GameManager.formatCmd("buy") + " ┇ ";
-        if(User.isCooldownDone(user.getMarketEpoch(), 15, true)) {
+        desc += FormatUtils.formatCmd("buy") + " ┇ ";
+        if(buyCDLeft == 0) {
             desc += "✅";
         } else {
-            desc += "⏰ " + User.findTimeLeft(user.getMarketEpoch(), 15, true);
+            desc += "⏰ " + FormatUtils.formatCooldown(buyCDLeft);
         }
         embed.setTitle(ui.getUserName() + "'s Cooldowns");
         embed.setThumbnail(ui.getUserIcon());
         embed.setDescription(desc);
         embed.setColor(user.getGameColor());
-        GameManager.sendEmbed(event, embed);
+        JDAUtils.sendEmbed(event, embed);
     }
 }

@@ -1,26 +1,9 @@
-package ca.gimmecards.Display;
-import ca.gimmecards.Main.*;
-import ca.gimmecards.OtherInterfaces.*;
+package ca.gimmecards.display;
+import ca.gimmecards.consts.*;
+import ca.gimmecards.main.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 public class OldShopDisplay extends Display {
-
-    public OldShopDisplay(String ui) {
-        super(ui);
-    }
-
-    @Override
-    public OldShopDisplay findDisplay() {
-        String userId = getUserId();
-
-        for(OldShopDisplay o : IDisplays.oldShopDisplays) {
-            if(o.getUserId().equals(userId)) {
-                return o;
-            }
-        }
-        IDisplays.oldShopDisplays.add(0, new OldShopDisplay(userId));
-        return IDisplays.oldShopDisplays.get(0);
-    }
 
     @Override
     public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, int page) {
@@ -38,7 +21,7 @@ public class OldShopDisplay extends Display {
         for(int i = startIndex; i < startIndex + 8; i++) {
             CardSet set = CardSet.oldSets[i];
 
-            desc += IEmotes.token + " " + set.getSetEmote() + " " + set.getSetName() + " ┇ ";
+            desc += EmoteConsts.token + " " + set.getSetEmote() + " " + set.getSetName() + " ┇ ";
             if(user.isPackUnlocked(set.getSetName())) {
                 desc += "✅\n";
             } else {
@@ -49,10 +32,10 @@ public class OldShopDisplay extends Display {
             }
         }
         desc += "┅┅\n";
-        embed.setTitle(IEmotes.squirtle + " Legacy Packs Shop " + IEmotes.squirtle + " 🚫");
+        embed.setTitle(EmoteConsts.squirtle + " Legacy Packs Shop " + EmoteConsts.squirtle + " 🚫");
         embed.setDescription(desc);
         embed.setFooter("Page " + page + " of " + getMaxPage(), ui.getUserIcon());
-        embed.setColor(IColors.oldshopColor);
+        embed.setColor(ColorConsts.oldshopColor);
         return embed;
     }
 }

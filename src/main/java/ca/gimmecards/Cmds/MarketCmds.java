@@ -1,7 +1,8 @@
-package ca.gimmecards.Cmds;
-import ca.gimmecards.Main.*;
-import ca.gimmecards.Display.*;
-import ca.gimmecards.OtherInterfaces.*;
+package ca.gimmecards.cmds;
+import ca.gimmecards.consts.*;
+import ca.gimmecards.display.*;
+import ca.gimmecards.main.*;
+import ca.gimmecards.utils.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.entities.Guild;
@@ -14,49 +15,53 @@ public class MarketCmds {
         EmbedBuilder embed = new EmbedBuilder();
         Guild guild = event.getGuild();
         String desc = "";
-        int count = 1;
+        int itemNum = 1;
 
         if(guild != null) {
-            if(User.isCooldownDone(server.getMarketEpoch(), 1440, true)) {
+            int cooldownLeft = TimeUtils.findCooldownLeft(CooldownConsts.marketResetCooldown, server.getMarketEpoch());
+
+            if(cooldownLeft == 0) {
                 server.refreshMarket();
             }
-            desc += "Next refresh in " + User.findTimeLeft(server.getMarketEpoch(), 1440, true) + "\n\n";
+            desc += "Next refresh in " + FormatUtils.formatCooldown(cooldownLeft) + "\n\n";
             desc += "`/mview (card #)` to view a card\n";
             desc += "┅┅\n";
 
             for(Card item : server.getMarket()) {
                 
-                desc += "`#" + count + "` " + item.findCardTitle(false)
+                desc += "`#" + itemNum + "` " + item.findCardTitle(false)
                 + " ┇ " + item.findRarityEmote() 
                 + " ┇ " + item.getSetEmote()
                 + " ┇ " + item.formatCredits() + "\n";
-                count++;
+                itemNum++;
             }
             desc += "┅┅\n";
-            embed.setTitle(IEmotes.mew + " Daily Market " + IEmotes.mew);
+            embed.setTitle(EmoteConsts.mew + " Daily Market " + EmoteConsts.mew);
             embed.setDescription(desc);
             embed.setFooter(guild.getName(), guild.getIconUrl());
-            embed.setColor(IColors.marketColor);
-            GameManager.sendEmbed(event, embed);
+            embed.setColor(ColorConsts.marketColor);
+            JDAUtils.sendEmbed(event, embed);
         }
     }
 
     public static void viewItem(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
         Server server = Server.findServer(event);
-        MarketDisplay disp = new MarketDisplay(user.getUserId()).findDisplay();
+        MarketDisplay disp = new MarketDisplay();
         //
         OptionMapping cardNum = event.getOption("card-number");
+
+        user.addDisplay(disp);
 
         if(cardNum == null) { return; }
 
         try {
             int page = cardNum.getAsInt();
 
-            GameManager.sendDynamicEmbed(event, user, server, disp, page);
+            JDAUtils.sendDynamicEmbed(event, user, server, disp, page);
 
         } catch(NumberFormatException | ArithmeticException | IndexOutOfBoundsException e) {
-            GameManager.sendMessage(event, IColors.red, "❌", "Whoops, I couldn't find that card...");
+            JDAUtils.sendMessage(event, ColorConsts.red, "❌", "Whoops, I couldn't find that card...");
         }
     }
 
@@ -66,12 +71,13 @@ public class MarketCmds {
         Server server = Server.findServer(event);
         //
         OptionMapping cardNum = event.getOption("card-number");
+        int cooldownLeft = TimeUtils.findCooldownLeft(CooldownConsts.buyCooldown, user.getMarketEpoch());
 
         if(cardNum == null) { return; }
 
-        if(!User.isCooldownDone(user.getMarketEpoch(), 15, true)) {
-            GameManager.sendMessage(event, IColors.red, "⏰", "Please wait another " 
-            + User.findTimeLeft(user.getMarketEpoch(), 15, true));
+        if(cooldownLeft > 0) {
+            JDAUtils.sendMessage(event, ColorConsts.red, "⏰", "Please wait another " 
+            + FormatUtils.formatCooldown(cooldownLeft));
 
         } else {
             try {
@@ -79,14 +85,14 @@ public class MarketCmds {
                 Card item = server.getMarket().get(index);
     
                 if(user.getCredits() < item.getCardPrice()) {
-                    GameManager.sendMessage(event, IColors.red, "❌", "Sorry, you don't have enough " + IEmotes.credits + " **Credits**");
+                    JDAUtils.sendMessage(event, ColorConsts.red, "❌", "Sorry, you don't have enough " + EmoteConsts.credits + " **Credits**");
     
                 } else {
                     String msg = "";
                     String footer = ui.getUserName() + "'s purchase";
     
-                    msg += IEmotes.mew + " ";
-                    msg += GameManager.formatName(event) + " bought " + item.findCardTitle(false) + " from the market!";
+                    msg += EmoteConsts.mew + " ";
+                    msg += FormatUtils.formatName(event) + " bought " + item.findCardTitle(false) + " from the market!";
                     msg += user.updateCredits(-item.getCardPrice(), true);
 
                     user.resetMarketEpoch();
@@ -94,10 +100,10 @@ public class MarketCmds {
                     user.addSingleCard(item, false);
                     
                     item.displayCard(event, ui, msg, footer, false);
-                    try { User.saveUsers(); } catch(Exception e) {}
+                    try { DataUtils.saveUsers(); } catch(Exception e) {}
                 }
             } catch(NumberFormatException | ArithmeticException | IndexOutOfBoundsException e) {
-                GameManager.sendMessage(event, IColors.red, "❌", "Whoops, I couldn't find that card...");
+                JDAUtils.sendMessage(event, ColorConsts.red, "❌", "Whoops, I couldn't find that card...");
             }
         }
     }

@@ -1,33 +1,15 @@
-package ca.gimmecards.Main;
-import ca.gimmecards.MainInterfaces.*;
+package ca.gimmecards.main;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.Reader;
-import java.io.Writer;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonElement;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.net.URL;
 
-public class CardSet implements ICardSet {
-
-    //==============================================[ SET CODES ]======================================================================
-
-    // the Pokemon TCG Online codes for each set; used to determine which cards to crawl from the API
-
-    public static Hashtable<Integer, String> setCodes = new Hashtable<>();
-    public static Hashtable<Integer, String> oldSetCodes = new Hashtable<>();
-    public static Hashtable<Integer, String> rareSetCodes = new Hashtable<>();
-    public static Hashtable<Integer, String> promoSetCodes = new Hashtable<>();
+public class CardSet {
 
     //=============================================[ CARD SETS ]========================================================================
 
@@ -102,94 +84,6 @@ public class CardSet implements ICardSet {
     public ArrayList<Card> getSpecials() { return specials; }
 
     //=============================================[ PUBLIC STATIC FUNCTIONS ]==============================================================
-
-    /**
-     * loads data from CardSets.json into the ArrayList at the top
-     * @throws Exception ignores all possible exceptions
-     */
-    public static void loadSets() throws Exception {
-        Reader reader = new InputStreamReader(new FileInputStream(GameManager.findSavePath(GameManager.setsPath)), "UTF-8");
-        sets = new Gson().fromJson(reader, CardSet[].class);
-
-        reader.close();
-    }
-
-    /**
-     * saves data from the ArrayList at the top into CardSets.json
-     * @throws Exception ignores all possible exceptions
-     */
-    public static void saveSets() throws Exception {
-        Gson gson = new GsonBuilder().create();
-        Writer writer = new OutputStreamWriter(new FileOutputStream(GameManager.findSavePath(GameManager.setsPath)), "UTF-8");
-        gson.toJson(sets, writer);
-        writer.close();
-    }
-
-    /**
-     * loads data from OldCardSets.json into the ArrayList at the top
-     * @throws Exception ignores all possible exceptions
-     */
-    public static void loadOldSets() throws Exception {
-        Reader reader = new InputStreamReader(new FileInputStream(GameManager.findSavePath(GameManager.oldSetsPath)), "UTF-8");
-        oldSets = new Gson().fromJson(reader, CardSet[].class);
-
-        reader.close();
-    }
-
-    /**
-     * saves data from the ArrayList at the top into OldCardSets.json
-     * @throws Exception ignores all possible exceptions
-     */
-    public static void saveOldSets() throws Exception {
-        Gson gson = new GsonBuilder().create();
-        Writer writer = new OutputStreamWriter(new FileOutputStream(GameManager.findSavePath(GameManager.oldSetsPath)), "UTF-8");
-        gson.toJson(oldSets, writer);
-        writer.close();
-    }
-
-    /**
-     * loads data from RareCardSets.json into the ArrayList at the top
-     * @throws Exception ignores all possible exceptions
-     */
-    public static void loadRareSets() throws Exception {
-        Reader reader = new InputStreamReader(new FileInputStream(GameManager.findSavePath(GameManager.rareSetsPath)), "UTF-8");
-        rareSets = new Gson().fromJson(reader, CardSet[].class);
-
-        reader.close();
-    }
-
-    /**
-     * saves data from the ArrayList at the top into RareCardSets.json
-     * @throws Exception ignores all possible exceptions
-     */
-    public static void saveRareSets() throws Exception {
-        Gson gson = new GsonBuilder().create();
-        Writer writer = new OutputStreamWriter(new FileOutputStream(GameManager.findSavePath(GameManager.rareSetsPath)), "UTF-8");
-        gson.toJson(rareSets, writer);
-        writer.close();
-    }
-
-    /**
-     * loads data from PromoCardSets.json into the ArrayList at the top
-     * @throws Exception ignores all possible exceptions
-     */
-    public static void loadPromoSets() throws Exception {
-        Reader reader = new InputStreamReader(new FileInputStream(GameManager.findSavePath(GameManager.promoSetsPath)), "UTF-8");
-        promoSets = new Gson().fromJson(reader, CardSet[].class);
-
-        reader.close();
-    }
-
-    /**
-     * saves data from the ArrayList at the top into PromoCardSets.json
-     * @throws Exception ignores all possible exceptions
-     */
-    public static void savePromoSets() throws Exception {
-        Gson gson = new GsonBuilder().create();
-        Writer writer = new OutputStreamWriter(new FileOutputStream(GameManager.findSavePath(GameManager.promoSetsPath)), "UTF-8");
-        gson.toJson(promoSets, writer);
-        writer.close();
-    }
 
     /**
      * crawls through the Pokemon TCG API to search for new cards to add to the game
@@ -393,7 +287,9 @@ public class CardSet implements ICardSet {
 
     //==============================================[ PUBLIC NON-STATIC FUNCTIONS ]=====================================================
 
-    @Override
+    /**
+     * @return whether this card set can be sold for XP
+     */
     public boolean isSetSellable() {
         if(this.setName.equalsIgnoreCase("gimme cards")) {
             return false;
@@ -404,7 +300,9 @@ public class CardSet implements ICardSet {
         return true;
     }
 
-    @Override
+    /**
+     * @return whether this card set is from the oldshop
+     */
     public boolean isOldSet() {        
         for(CardSet set : CardSet.oldSets) {
             if(set.getSetName().equalsIgnoreCase(this.setName)) {
@@ -414,7 +312,9 @@ public class CardSet implements ICardSet {
         return false;
     }
 
-    @Override
+    /**
+     * @return whether this card set is from the rareshop
+     */
     public boolean isRareSet() {        
         for(CardSet set : CardSet.rareSets) {
             if(set.getSetName().equalsIgnoreCase(this.setName)) {
@@ -424,7 +324,9 @@ public class CardSet implements ICardSet {
         return false;
     }
 
-    @Override
+    /**
+     * @return whether this card set is from the promoshop
+     */
     public boolean isPromoSet() {        
         for(CardSet set : CardSet.promoSets) {
             if(set.getSetName().equalsIgnoreCase(this.setName)) {

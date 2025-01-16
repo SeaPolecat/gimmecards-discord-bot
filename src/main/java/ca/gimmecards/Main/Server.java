@@ -1,22 +1,16 @@
-package ca.gimmecards.Main;
-import ca.gimmecards.MainInterfaces.*;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.io.Writer;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
+package ca.gimmecards.main;
+import net.dv8tion.jda.api.events.guild.GuildLeaveEvent;
 import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.entities.Guild;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class Server implements IServer {
+import ca.gimmecards.utils.*;
+
+public class Server extends ListenerAdapter implements Comparable<Server> {
     
     /**
      * a list of type Server that's saved and loaded from Servers.json; edited on a regular basis
@@ -30,6 +24,11 @@ public class Server implements IServer {
     private Long marketEpoch;           // used to keep track of the market's refresh cooldown
 
     //=============================================[ CONSTRUCTORS ]====================================================================
+
+    /**
+     * default constructor for Server
+     */
+    public Server() {}
 
     /**
      * creates a new Server
@@ -63,36 +62,6 @@ public class Server implements IServer {
     public void resetMarketEpoch() { this.marketEpoch = Calendar.getInstance().getTimeInMillis() / 60000; }
 
     //=============================================[ PUBLIC STATIC FUNCTIONS ]==============================================================
-
-    /**
-     * loads data from Servers.json into the ArrayList at the top
-     * @throws Exception ignores all possible exceptions
-     */
-    public static void loadServers() throws Exception {
-        Reader reader = new InputStreamReader(new FileInputStream(GameManager.findSavePath(GameManager.serverPath)), "UTF-8");
-        servers = new Gson().fromJson(reader, new TypeToken<ArrayList<Server>>() {}.getType());
-
-        for(Server s : servers) {
-            s.setServerId(Main.encryptor.decrypt(s.getServerId()));
-        }
-        reader.close();
-    }
-
-    /**
-     * saves data from the ArrayList at the top into Servers.json
-     * @throws Exception ignores all possible exceptions
-     */
-    public static void saveServers() throws Exception {
-        Gson gson = new GsonBuilder().create();
-        Writer writer = new OutputStreamWriter(new FileOutputStream(GameManager.findSavePath(GameManager.serverPath)), "UTF-8");
-        ArrayList<Server> encServers = new ArrayList<Server>();
-        
-        for(Server s : servers) {
-            encServers.add(new Server(s));
-        }
-        gson.toJson(encServers, writer);
-        writer.close();
-    }
 
     /**
      * finds the local Server based on a ready event
@@ -138,6 +107,14 @@ public class Server implements IServer {
     //==============================================[ PUBLIC NON-STATIC FUNCTIONS ]=====================================================
 
     @Override
+    public int compareTo(Server other) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'compareTo'");
+    }
+
+    /**
+     * refreshes the card market in the server
+     */
     public void refreshMarket() {
         this.market.clear();
         resetMarketEpoch();
@@ -145,7 +122,7 @@ public class Server implements IServer {
         for(int i = 0; i < 15; i++) {
             this.market.add(Card.pickRandomCard("shiny"));
         }
-        try { saveServers(); } catch(Exception e) {}
+        try { DataUtils.saveServers(); } catch(Exception e) {}
     }
 
     //===============================================[ PRIVATE FUNCTIONS ]=============================================================
@@ -163,5 +140,23 @@ public class Server implements IServer {
         }
         servers.add(0, new Server(serverId));
         return servers.get(0);
+    }
+
+    //==============================================[ JDA EVENT FUNCTIONS ]================================================================
+
+    /**
+     * an event function that's called whenever the bot leaves a server; used to delete a server's data within Servers.json if the bot leaves that server
+     * @param event the GuildLeave event
+     */
+    public void onGuildLeave(GuildLeaveEvent event) {
+        for(int i = 0; i < servers.size(); i++) {
+            Server s = servers.get(i);
+
+            if(s.getServerId().equals(event.getGuild().getId())) {
+                servers.remove(i);
+                try { DataUtils.saveServers(); } catch(Exception e) {}
+                break;
+            }
+        }
     }
 }

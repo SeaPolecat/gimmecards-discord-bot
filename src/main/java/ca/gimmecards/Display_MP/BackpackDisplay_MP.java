@@ -1,7 +1,8 @@
-package ca.gimmecards.Display_MP;
-import ca.gimmecards.Main.*;
-import ca.gimmecards.Display.*;
-import ca.gimmecards.OtherInterfaces.*;
+package ca.gimmecards.display_mp;
+import ca.gimmecards.consts.*;
+import ca.gimmecards.display.*;
+import ca.gimmecards.main.*;
+import ca.gimmecards.utils.FormatUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 public class BackpackDisplay_MP extends Display {
@@ -10,8 +11,8 @@ public class BackpackDisplay_MP extends Display {
     private User mention;
     private UserInfo mentionInfo;
 
-    public BackpackDisplay_MP(String ui) {
-        super(ui);
+    public BackpackDisplay_MP() {
+        super();
     }
 
     public User getUser() { return user; }
@@ -23,66 +24,53 @@ public class BackpackDisplay_MP extends Display {
     public void setMentionInfo(UserInfo mi) { mentionInfo = mi; }
 
     @Override
-    public BackpackDisplay_MP findDisplay() {
-        String userId = getUserId();
-
-        for(BackpackDisplay_MP b : IDisplays.backpackDisplays_MP) {
-            if(b.getUserId().equals(userId)) {
-                return b;
-            }
-        }
-        IDisplays.backpackDisplays_MP.add(0, new BackpackDisplay_MP(userId));
-        return IDisplays.backpackDisplays_MP.get(0);
-    }
-
-    @Override
     public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, int page) {
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
-        desc += IEmotes.XP + " " + GameManager.formatNumber(mention.getXP()) + "/" + GameManager.formatNumber(mention.getMaxXP()) + " until next level\n";
+        desc += EmoteConsts.XP + " " + FormatUtils.formatNumber(mention.getXP()) + "/" + FormatUtils.formatNumber(mention.getMaxXP()) + " until next level\n";
         desc += "┅┅\n";
-        desc += IEmotes.token + " **Tokens** ┇ " + GameManager.formatNumber(mention.getTokens()) + "\n";
-        desc += IEmotes.credits + " **Credits** ┇ " + GameManager.formatNumber(mention.getCredits()) + "\n";
-        desc += IEmotes.star + " **Stars** ┇ " + GameManager.formatNumber(mention.getStars()) + "\n";
-        desc += IEmotes.key + " **Keys** ┇ " + GameManager.formatNumber(mention.getKeys()) + "\n";
+        desc += EmoteConsts.token + " **Tokens** ┇ " + FormatUtils.formatNumber(mention.getTokens()) + "\n";
+        desc += EmoteConsts.credits + " **Credits** ┇ " + FormatUtils.formatNumber(mention.getCredits()) + "\n";
+        desc += EmoteConsts.star + " **Stars** ┇ " + FormatUtils.formatNumber(mention.getStars()) + "\n";
+        desc += EmoteConsts.key + " **Keys** ┇ " + FormatUtils.formatNumber(mention.getKeys()) + "\n";
         desc += "┅┅\n";
 
         if(mention.getBadges().size() > 0) {
             desc += "**Badges** ┇ ";
             for(String badge : mention.getBadges()) {
                 if(badge.equalsIgnoreCase("dev")) {
-                    desc += IEmotes.devBadge + " ";
+                    desc += EmoteConsts.devBadge + " ";
                     break;
                 }
             }
             for(String badge : mention.getBadges()) {
                 if(badge.equalsIgnoreCase("staff")) {
-                    desc += IEmotes.staffBadge + " ";
+                    desc += EmoteConsts.staffBadge + " ";
                     break;
                 }
             }
             for(String badge : mention.getBadges()) {
                 if(badge.equalsIgnoreCase("veteran")) {
-                    desc += IEmotes.veteranBadge + " ";
+                    desc += EmoteConsts.veteranBadge + " ";
                     break;
                 }
             }
             for(String badge : mention.getBadges()) {
                 if(badge.equalsIgnoreCase("master")) {
-                    desc += IEmotes.masterBadge + " ";
+                    desc += EmoteConsts.masterBadge + " ";
                     break;
                 }
             }
             for(String badge : mention.getBadges()) {
                 if(badge.equalsIgnoreCase("bday")) {
-                    desc += IEmotes.bdayBadge + " ";
+                    desc += EmoteConsts.bdayBadge + " ";
                     break;
                 }
             }
             for(String badge : mention.getBadges()) {
                 if(badge.equalsIgnoreCase("original")) {
-                    desc += IEmotes.originalBagde + " ";
+                    desc += EmoteConsts.originalBagde + " ";
                     break;
                 }
             }

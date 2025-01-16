@@ -1,6 +1,7 @@
-package ca.gimmecards.Display;
-import ca.gimmecards.Main.*;
-import ca.gimmecards.OtherInterfaces.*;
+package ca.gimmecards.display;
+import ca.gimmecards.consts.*;
+import ca.gimmecards.main.*;
+import ca.gimmecards.utils.FormatUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 public class MinigameDisplay extends Display {
@@ -10,8 +11,8 @@ public class MinigameDisplay extends Display {
     private boolean hasWon;
     private Card card;
 
-    public MinigameDisplay(String ui) {
-        super(ui);
+    public MinigameDisplay() {
+        super();
         tries = 3;
         isOver = false;
         hasWon = false;
@@ -40,19 +41,6 @@ public class MinigameDisplay extends Display {
         }
     }
 
-    @Override
-    public MinigameDisplay findDisplay() {
-        String userId = getUserId();
-
-        for(MinigameDisplay m : IDisplays.minigameDisplays) {
-            if(m.getUserId().equals(userId)) {
-                return m;
-            }
-        }
-        IDisplays.minigameDisplays.add(0, new MinigameDisplay(userId));
-        return IDisplays.minigameDisplays.get(0);
-    }
-
     public boolean isGuessCorrect(String guess) {
         String cardRarity = card.getCardRarity();
 
@@ -73,8 +61,8 @@ public class MinigameDisplay extends Display {
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
-        desc += GameManager.formatCmd("guess (rarity)") + " to play\n";
-        desc += GameManager.formatCmd("rarities") + " for hints\n";
+        desc += FormatUtils.formatCmd("guess (rarity)") + " to play\n";
+        desc += FormatUtils.formatCmd("rarities") + " for hints\n";
         desc += "┅┅\n";
 
         desc += "**Rarity** ┇ ";
@@ -94,11 +82,11 @@ public class MinigameDisplay extends Display {
         desc += "**Tries Left** ┇ " + tries + "\n\n";
         desc += "*Click on image for zoomed view*";
 
-        embed.setTitle(IEmotes.clefairy + " Guess My Rarity " + IEmotes.clefairy);
+        embed.setTitle(EmoteConsts.clefairy + " Guess My Rarity " + EmoteConsts.clefairy);
         embed.setDescription(desc);
         embed.setImage(cardImage);
         embed.setFooter(ui.getUserName() + "'s minigame", ui.getUserIcon());
-        embed.setColor(IColors.minigameColor);
+        embed.setColor(ColorConsts.minigameColor);
         return embed;
     }
 }

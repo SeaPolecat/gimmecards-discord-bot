@@ -1,4 +1,4 @@
-package ca.gimmecards.Main;
+package ca.gimmecards.main;
 
 public class CardContainer {
 

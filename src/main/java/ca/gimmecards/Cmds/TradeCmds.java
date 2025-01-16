@@ -1,7 +1,8 @@
-package ca.gimmecards.Cmds;
-import ca.gimmecards.Main.*;
-import ca.gimmecards.Display.*;
-import ca.gimmecards.OtherInterfaces.*;
+package ca.gimmecards.cmds;
+import ca.gimmecards.consts.*;
+import ca.gimmecards.display.*;
+import ca.gimmecards.main.*;
+import ca.gimmecards.utils.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import java.util.ArrayList;
@@ -11,23 +12,25 @@ public class TradeCmds {
     public static void sendTrade(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
         Server server = Server.findServer(event);
-        TradeDisplay disp = new TradeDisplay(user.getUserId()).findDisplay();
+        TradeDisplay disp = new TradeDisplay();
         //
         OptionMapping user_ = event.getOption("user");
+
+        user.addDisplay(disp);
 
         if(user_ == null) { return; }
 
         if(disp.tradeExists(user.getUserId())) {
-            GameManager.sendMessage(event, IColors.red, "❌", "You're in a trade already!");
+            JDAUtils.sendMessage(event, ColorConsts.red, "❌", "You're in a trade already!");
             
         } else {
             User mention = User.findOtherUser(event, user_.getAsUser().getId());
 
             if(disp.tradeExists(mention.getUserId())) {
-                GameManager.sendMessage(event, IColors.red, "❌", "That user is in a trade already!");
+                JDAUtils.sendMessage(event, ColorConsts.red, "❌", "That user is in a trade already!");
 
             } else if(mention.getUserId().equals(user.getUserId())) {
-                GameManager.sendMessage(event, IColors.red, "❌", "You can't trade with yourself!");
+                JDAUtils.sendMessage(event, ColorConsts.red, "❌", "You can't trade with yourself!");
 
             } else {
                 disp.setUser1(user);
@@ -35,14 +38,14 @@ public class TradeCmds {
                 disp.setUserInfo1(new UserInfo(event));
                 disp.setUserInfo2(new UserInfo(mention, event));
 
-                GameManager.sendDynamicEmbed(event, user, server, disp, -1);
+                JDAUtils.sendDynamicEmbed(event, user, server, disp, -1);
             }
         }
     }
 
     public static void offerCard(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
-        TradeDisplay disp = new TradeDisplay(user.getUserId()).findDisplay();
+        TradeDisplay disp = (TradeDisplay) user.findDisplay(new TradeDisplay());
         //
         OptionMapping cardNum = event.getOption("card-number");
 
@@ -50,7 +53,7 @@ public class TradeCmds {
 
         try {
             if(disp.oneAccepted()) {
-                GameManager.sendMessage(event, IColors.red, "❌", "Both players must unaccept first!");
+                JDAUtils.sendMessage(event, ColorConsts.red, "❌", "Both players must unaccept first!");
 
             } else {
                 try {
@@ -61,31 +64,27 @@ public class TradeCmds {
                     String cardTitle = card.findCardTitle(false);
 
                     if(offers.size() >= 5) {
-                        GameManager.sendMessage(event, IColors.red, "❌", "Sorry, all your trade slots are full!");
+                        JDAUtils.sendMessage(event, ColorConsts.red, "❌", "Sorry, all your trade slots are full!");
 
                     } else if(!isValidOffer(offers, cc)) {
-                        GameManager.sendMessage(event, IColors.red, "❌", "You can't offer any more of that card!");
+                        JDAUtils.sendMessage(event, ColorConsts.red, "❌", "You can't offer any more of that card!");
 
                     } else {
-                        if(card.isCardSellable()) {
-                            disp.addTax(user.getUserId(), (int)(card.getCardPrice() * 0.25));
-                        }
-
-                        GameManager.sendMessage(event, user.getGameColor(), IEmotes.ditto, GameManager.formatName(event) + " offers **" + cardTitle + "**");
+                        JDAUtils.sendMessage(event, user.getGameColor(), EmoteConsts.ditto, FormatUtils.formatName(event) + " offers **" + cardTitle + "**");
                     }
                 } catch(NumberFormatException | ArithmeticException | IndexOutOfBoundsException e) {
-                    GameManager.sendMessage(event, IColors.red, "❌", "Whoops, I couldn't find that card...");
+                    JDAUtils.sendMessage(event, ColorConsts.red, "❌", "Whoops, I couldn't find that card...");
                 }
             }
             
         } catch(NullPointerException e) {
-            GameManager.sendMessage(event, IColors.red, "❌", "You haven't started a trade yet!");
+            JDAUtils.sendMessage(event, ColorConsts.red, "❌", "You haven't started a trade yet!");
         }
     }
 
     public static void unofferCard(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
-        TradeDisplay disp = new TradeDisplay(user.getUserId()).findDisplay();
+        TradeDisplay disp = (TradeDisplay) user.findDisplay(new TradeDisplay());
         //
         OptionMapping tradeNum = event.getOption("trade-number");
 
@@ -93,7 +92,7 @@ public class TradeCmds {
 
         try {
             if(disp.oneAccepted()) {
-                GameManager.sendMessage(event, IColors.red, "❌", "Both players must unaccept first!");
+                JDAUtils.sendMessage(event, ColorConsts.red, "❌", "Both players must unaccept first!");
 
             } else {
                 try {
@@ -108,102 +107,87 @@ public class TradeCmds {
                     } else {
                         offers.remove(index);
                     }
-                    if(card.isCardSellable()) {
-                        disp.addTax(user.getUserId(), -(int)(card.getCardPrice() * 0.25));
-                    }
-
-                    GameManager.sendMessage(event, user.getGameColor(), IEmotes.ditto, GameManager.formatName(event) + " took back **" + cardTitle + "**");
+                    JDAUtils.sendMessage(event, user.getGameColor(), EmoteConsts.ditto, FormatUtils.formatName(event) + " took back **" + cardTitle + "**");
 
                 } catch(NumberFormatException | ArithmeticException | IndexOutOfBoundsException e) {
-                    GameManager.sendMessage(event, IColors.red, "❌", "Whoops, I couldn't find that card...");
+                    JDAUtils.sendMessage(event, ColorConsts.red, "❌", "Whoops, I couldn't find that card...");
                 }
             }
 
         } catch(NullPointerException e) {
-            GameManager.sendMessage(event, IColors.red, "❌", "You haven't started a trade yet!");
+            JDAUtils.sendMessage(event, ColorConsts.red, "❌", "You haven't started a trade yet!");
         }
     }
 
     public static void acceptOffer(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
-        TradeDisplay disp = new TradeDisplay(user.getUserId()).findDisplay();
+        TradeDisplay disp = (TradeDisplay) user.findDisplay(new TradeDisplay());
 
         try {
             if(disp.getAccept(user.getUserId())) {
-                GameManager.sendMessage(event, IColors.red, "❌", "You've already accepted the trade!");
-
-            } else if(disp.getUser(user.getUserId()).getCredits() < disp.getTax(user.getUserId())) {
-                GameManager.sendMessage(event, IColors.red, "❌", "Sorry, you don't have enough " + IEmotes.credits + " **Credits**");
-
+                JDAUtils.sendMessage(event, ColorConsts.red, "❌", "You've already accepted the trade!");
+                
             } else {
                 disp.setAccept(user.getUserId(), true);
 
                 if(!disp.bothAccepted()) {
-                    GameManager.sendMessage(event, user.getGameColor(), "✅", GameManager.formatName(event) 
+                    JDAUtils.sendMessage(event, user.getGameColor(), "✅", FormatUtils.formatName(event) 
                     + " accepted the trade! Waiting for the other player...");
 
                 } else {
                     String msg = "";
 
-                    msg += GameManager.formatName(event) + " accepted and completed the trade!";
-                    msg += user.updateCredits(-disp.getTax(user.getUserId()), true) + "\n\n";
-
-                    if(disp.isUser1(user.getUserId())) {
-                        msg += GameManager.formatName(disp.getUser2(), event) + "'s Trading Fee:";
-                        msg += disp.getUser2().updateCredits(-disp.getTax2(), true) + "\n";
-                    } else {
-                        msg += GameManager.formatName(disp.getUser1(), event) + "'s Trading Fee:";
-                        msg += disp.getUser1().updateCredits(-disp.getTax1(), true) + "\n";
-                    }
+                    msg += FormatUtils.formatName(event) + " accepted and completed the trade!";
+                    
                     tradeCards(disp.getUser1(), disp.getOffers1(), disp.getOffers2());
                     tradeCards(disp.getUser2(), disp.getOffers2(), disp.getOffers1());
 
                     disp.removeTradeDisplay();
 
-                    GameManager.sendMessage(event, user.getGameColor(), "✅", msg);
-                    try { User.saveUsers(); } catch(Exception e) {}
+                    JDAUtils.sendMessage(event, user.getGameColor(), "✅", msg);
+                    try { DataUtils.saveUsers(); } catch(Exception e) {}
                 }
             }
 
         } catch(NullPointerException e) {
-            GameManager.sendMessage(event, IColors.red, "❌", "You haven't started a trade yet!");
+            JDAUtils.sendMessage(event, ColorConsts.red, "❌", "You haven't started a trade yet!");
         }
     }
 
     public static void unacceptOffer(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
-        TradeDisplay disp = new TradeDisplay(user.getUserId()).findDisplay();
+        TradeDisplay disp = (TradeDisplay) user.findDisplay(new TradeDisplay());
 
         try {
             if(!disp.getAccept(user.getUserId())) {
-                GameManager.sendMessage(event, IColors.red, "❌", "You've already unaccepted the trade!");
+                JDAUtils.sendMessage(event, ColorConsts.red, "❌", "You've already unaccepted the trade!");
 
             } else {
                 disp.setAccept(user.getUserId(), false);
 
-                GameManager.sendMessage(event, user.getGameColor(), "⏳", GameManager.formatName(event) 
+                JDAUtils.sendMessage(event, user.getGameColor(), "⏳", FormatUtils.formatName(event) 
                 + " needs more time to decide!");
             }
 
         } catch(NullPointerException e) {
-            GameManager.sendMessage(event, IColors.red, "❌", "You haven't started a trade yet!");
+            JDAUtils.sendMessage(event, ColorConsts.red, "❌", "You haven't started a trade yet!");
         }
     }
 
     public static void rejectOffer(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
-        TradeDisplay disp = new TradeDisplay(user.getUserId()).findDisplay();
+        TradeDisplay disp = (TradeDisplay) user.findDisplay(new TradeDisplay());
 
         try {
             disp.setReject(user.getUserId(), true);
             
             disp.removeTradeDisplay();
 
-            GameManager.sendMessage(event, user.getGameColor(), "🛑", GameManager.formatName(event) 
+            JDAUtils.sendMessage(event, user.getGameColor(), "🛑", FormatUtils.formatName(event) 
             + " rejected the trade! Maybe next time...");
 
         } catch(NullPointerException e) {
-            GameManager.sendMessage(event, IColors.red, "❌", "You haven't started a trade yet!");
+            JDAUtils.sendMessage(event, ColorConsts.red, "❌", "You haven't started a trade yet!");
         }
     }
 

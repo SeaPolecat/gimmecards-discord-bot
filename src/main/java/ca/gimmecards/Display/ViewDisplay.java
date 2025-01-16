@@ -1,26 +1,8 @@
-package ca.gimmecards.Display;
-import ca.gimmecards.Main.*;
-import ca.gimmecards.OtherInterfaces.*;
+package ca.gimmecards.display;
+import ca.gimmecards.main.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 public class ViewDisplay extends Display {
-
-    public ViewDisplay(String ui) {
-        super(ui);
-    }
-
-    @Override
-    public ViewDisplay findDisplay() {
-        String userId = getUserId();
-
-        for(ViewDisplay v : IDisplays.viewDisplays) {
-            if(v.getUserId().equals(userId)) {
-                return v;
-            }
-        }
-        IDisplays.viewDisplays.add(0, new ViewDisplay(userId));
-        return IDisplays.viewDisplays.get(0);
-    }
 
     @Override
     public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, int page) {

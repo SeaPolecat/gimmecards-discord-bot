@@ -1,6 +1,6 @@
-package ca.gimmecards.Main;
-import ca.gimmecards.MainInterfaces.*;
-import ca.gimmecards.OtherInterfaces.*;
+package ca.gimmecards.main;
+import ca.gimmecards.consts.*;
+import ca.gimmecards.utils.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import com.google.gson.JsonElement;
@@ -8,7 +8,7 @@ import com.google.gson.JsonArray;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Card implements ICard {
+public class Card {
 
     //==========================================[ INSTANCE VARIABLES ]===================================================================
 
@@ -223,7 +223,7 @@ public class Card implements ICard {
                 return card;
             }
         }
-        for(Card card : ICustomCards.customs) {
+        for(Card card : CustomCardConsts.customs) {
             if(card.getCardId().equalsIgnoreCase(cardId)) {
                 return card;
             }
@@ -231,18 +231,11 @@ public class Card implements ICard {
         return null;
     }
 
-    /**
-     * formats this card's credits amount
-     * @param amount the amount of credits
-     * @return the formatted credits amount
-     */
-    public static String formatCredits(int amount) {
-        return IEmotes.credits + " **" + GameManager.formatNumber(amount) + "**";
-    }
-
     //==============================================[ PUBLIC NON-STATIC FUNCTIONS ]=====================================================
 
-    @Override
+    /**
+     * @return whether this card can be sold for XP
+     */
     public boolean isCardSellable() {
         if(this.setName.equalsIgnoreCase("gimme cards")) {
             return false;
@@ -253,7 +246,9 @@ public class Card implements ICard {
         return true;
     }
 
-    @Override
+    /**
+     * @return whether this card is from the oldshop
+     */
     public boolean isOldCard() {        
         for(CardSet set : CardSet.oldSets) {
             if(set.getSetName().equalsIgnoreCase(this.setName)) {
@@ -263,7 +258,9 @@ public class Card implements ICard {
         return false;
     }
 
-    @Override
+    /**
+     * @return whether this card is from the rareshop
+     */
     public boolean isRareCard() {        
         for(CardSet set : CardSet.rareSets) {
             if(set.getSetName().equalsIgnoreCase(this.setName)) {
@@ -273,7 +270,9 @@ public class Card implements ICard {
         return false;
     }
 
-    @Override
+    /**
+     * @return whether this card is from the promoshop
+     */
     public boolean isPromoCard() {        
         for(CardSet set : CardSet.promoSets) {
             if(set.getSetName().equalsIgnoreCase(this.setName)) {
@@ -283,7 +282,9 @@ public class Card implements ICard {
         return false;
     }
 
-    @Override
+    /**
+     * @return whether this card is a shiny card (a card that isn't common, uncommon, or rare)
+     */
     public boolean isShinyCard() {
         if(this.cardRarity.equalsIgnoreCase("common")
         || this.cardRarity.equalsIgnoreCase("uncommon")
@@ -293,7 +294,11 @@ public class Card implements ICard {
         return true;
     }
 
-    @Override
+    /**
+     * finds the formatted title for this card
+     * @param isFav whether or not this card has been favorited by the player
+     * @return the formatted title
+     */
     public String findCardTitle(boolean isFav) {
         String cardTitle = "";
 
@@ -309,27 +314,27 @@ public class Card implements ICard {
                 String cardSubType = this.cardSubtypes[i];
     
                 if(cardSubType.equalsIgnoreCase("water")) {
-                    cardTitle += IEmotes.water;
+                    cardTitle += EmoteConsts.water;
                 } else if(cardSubType.equalsIgnoreCase("psychic")) {
-                    cardTitle += IEmotes.psychic;
+                    cardTitle += EmoteConsts.psychic;
                 } else if(cardSubType.equalsIgnoreCase("metal")) {
-                    cardTitle += IEmotes.metal;
+                    cardTitle += EmoteConsts.metal;
                 } else if(cardSubType.equalsIgnoreCase("lightning")) {
-                    cardTitle += IEmotes.lightning;
+                    cardTitle += EmoteConsts.lightning;
                 } else if(cardSubType.equalsIgnoreCase("grass")) {
-                    cardTitle += IEmotes.grass;
+                    cardTitle += EmoteConsts.grass;
                 } else if(cardSubType.equalsIgnoreCase("fire")) {
-                    cardTitle += IEmotes.fire;
+                    cardTitle += EmoteConsts.fire;
                 } else if(cardSubType.equalsIgnoreCase("fighting")) {
-                    cardTitle += IEmotes.fighting;
+                    cardTitle += EmoteConsts.fighting;
                 } else if(cardSubType.equalsIgnoreCase("fairy")) {
-                    cardTitle += IEmotes.fairy;
+                    cardTitle += EmoteConsts.fairy;
                 } else if(cardSubType.equalsIgnoreCase("dragon")) {
-                    cardTitle += IEmotes.dragon;
+                    cardTitle += EmoteConsts.dragon;
                 } else if(cardSubType.equalsIgnoreCase("darkness")) {
-                    cardTitle += IEmotes.darkness;
+                    cardTitle += EmoteConsts.darkness;
                 } else if(cardSubType.equalsIgnoreCase("colorless")) {
-                    cardTitle += IEmotes.colorless;
+                    cardTitle += EmoteConsts.colorless;
                 }
             }
         }
@@ -340,7 +345,9 @@ public class Card implements ICard {
         return cardTitle;
     }
 
-    @Override
+    /**
+     * @return finds the Discord emote that represents this card's rarity
+     */
     public String findRarityEmote() {
         String rarityEmote = "";
 
@@ -362,9 +369,13 @@ public class Card implements ICard {
         return rarityEmote;
     }
 
-    @Override
+    /**
+     * formats this card's XP amount
+     * @param isSellable whether or not this card can be sold for XP
+     * @return the formatted XP amount
+     */
     public String formatXP(boolean isSellable) {
-        String formattedXP = IEmotes.XP + " **" + GameManager.formatNumber(this.cardPrice) + "**";
+        String formattedXP = EmoteConsts.XP + " **" + FormatUtils.formatNumber(this.cardPrice) + "**";
 
         if(!isSellable) {
             return formattedXP + " 🚫";
@@ -372,9 +383,11 @@ public class Card implements ICard {
         return formattedXP;
     }
 
-    @Override
+    /**
+     * @return a formatted string of this card's credits amount
+     */
     public String formatCredits() {
-        String formattedCredits = IEmotes.credits + " **" + GameManager.formatNumber(this.cardPrice) + "**";
+        String formattedCredits = EmoteConsts.credits + " **" + FormatUtils.formatNumber(this.cardPrice) + "**";
 
         if(!isCardSellable()) {
             return formattedCredits + " 🚫";
@@ -382,7 +395,9 @@ public class Card implements ICard {
         return formattedCredits;
     }
 
-    @Override
+    /**
+     * @return an embed color that's based on this card's supertype and/or subtype
+     */
     public int findEmbedColour() {
         int embedColour = 0;
 
@@ -423,7 +438,15 @@ public class Card implements ICard {
         return embedColour;
     }
 
-    @Override
+    /**
+     * displays a single card via an embed
+     * @param event the slash event
+     * @param ui a UserInfo object containing the player's basic information
+     * @param card the card to display
+     * @param message the message that shows at the top of the embed
+     * @param footer the footer of the embed
+     * @param isFav whether or not the card should be displayed with the favorited symbol (a heart)
+     */
     public void displayCard(SlashCommandInteractionEvent event, UserInfo ui, String message, String footer, boolean isFav) {
         String cardTitle = findCardTitle(isFav);
         EmbedBuilder embed = new EmbedBuilder();
@@ -443,7 +466,7 @@ public class Card implements ICard {
         embed.setImage(this.cardImage);
         embed.setFooter(footer, ui.getUserIcon());
         embed.setColor(findEmbedColour());
-        GameManager.sendEmbed(event, embed);
+        JDAUtils.sendEmbed(event, embed);
     }
 
     //===============================================[ PRIVATE FUNCTIONS ]=============================================================

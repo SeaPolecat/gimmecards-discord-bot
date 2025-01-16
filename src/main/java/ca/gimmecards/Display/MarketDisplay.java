@@ -1,26 +1,8 @@
-package ca.gimmecards.Display;
-import ca.gimmecards.Main.*;
-import ca.gimmecards.OtherInterfaces.*;
+package ca.gimmecards.display;
+import ca.gimmecards.main.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 public class MarketDisplay extends Display {
-
-    public MarketDisplay(String ui) {
-        super(ui);
-    }
-
-    @Override
-    public MarketDisplay findDisplay() {
-        String userId = getUserId();
-
-        for(MarketDisplay m : IDisplays.marketDisplays) {
-            if(m.getUserId().equals(userId)) {
-                return m;
-            }
-        }
-        IDisplays.marketDisplays.add(0, new MarketDisplay(userId));
-        return IDisplays.marketDisplays.get(0);
-    }
 
     @Override
     public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, int page) {
