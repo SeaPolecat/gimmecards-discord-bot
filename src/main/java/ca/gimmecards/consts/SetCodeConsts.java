@@ -5,7 +5,7 @@ public class SetCodeConsts {
 
     // the Pokemon TCG Online codes for each set; used to determine which cards to crawl from the API
     
-    public static final Map<Integer, String> setCodes = Map.ofEntries(
+    public static final Map<Integer, String> SET_CODES = Map.ofEntries(
         Map.entry(1, "BLW"),
         Map.entry(2, "EPO"),
         Map.entry(3, "NVI"),
@@ -55,7 +55,7 @@ public class SetCodeConsts {
         Map.entry(47, "SIT")
     );
 
-    public static final Map<Integer, String> oldSetCodes = Map.ofEntries(
+    public static final Map<Integer, String> OLD_SET_CODES = Map.ofEntries(
         Map.entry(1, "BS"),
         Map.entry(2, "JU"),
         Map.entry(3, "FO"),
@@ -104,7 +104,7 @@ public class SetCodeConsts {
         Map.entry(46, "CL")
     );
 
-    public static final Map<Integer, String> rareSetCodes = Map.ofEntries(
+    public static final Map<Integer, String> RARE_SET_CODES = Map.ofEntries(
         Map.entry(1, "DRV"),
         Map.entry(2, "DCR"),
         Map.entry(3, "GEN"),
@@ -116,7 +116,7 @@ public class SetCodeConsts {
         Map.entry(9, "CEL")
     );
 
-    public static final Map<Integer, String> promoSetCodes = Map.ofEntries(
+    public static final Map<Integer, String> PROMO_SET_CODES = Map.ofEntries(
         Map.entry(1, "NP"),
         Map.entry(2, "DPP"),
         Map.entry(3, "HS"),

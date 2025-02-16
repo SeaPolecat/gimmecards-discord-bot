@@ -13,22 +13,10 @@ public class CardSet {
 
     //=============================================[ CARD SETS ]========================================================================
 
-    /**
-     * a list of type CardSet that's saved and loaded from CardSets.json
-     */
-    public static CardSet[] sets = new CardSet[47];
-    /**
-     * a list of type CardSet that's saved and loaded from OldCardSets.json
-     */
-    public static CardSet[] oldSets = new CardSet[46];
-    /**
-     * a list of type CardSet that's saved and loaded from RareCardSets.json
-     */
-    public static CardSet[] rareSets = new CardSet[9];
-    /**
-     * a list of type CardSet that's saved and loaded from PromoCardSets.json
-     */
-    public static CardSet[] promoSets = new CardSet[6];
+    public static CardSet[] sets = new CardSet[47];         // a list of type CardSet that's saved and loaded from CardSets.json
+    public static CardSet[] oldSets = new CardSet[46];      // a list of type CardSet that's saved and loaded from OldCardSets.json
+    public static CardSet[] rareSets = new CardSet[9];      // a list of type CardSet that's saved and loaded from RareCardSets.json
+    public static CardSet[] promoSets = new CardSet[6];     // a list of type CardSet that's saved and loaded from PromoCardSets.json
 
     //==========================================[ INSTANCE VARIABLES ]===================================================================
 
@@ -83,7 +71,7 @@ public class CardSet {
     public ArrayList<Card> getShinies() { return shinies; }
     public ArrayList<Card> getSpecials() { return specials; }
 
-    //=============================================[ PUBLIC STATIC FUNCTIONS ]==============================================================
+    //=============================================[ STATIC METHODS ]==============================================================
 
     /**
      * crawls through the Pokemon TCG API to search for new cards to add to the game
@@ -285,7 +273,7 @@ public class CardSet {
         }
     }
 
-    //==============================================[ PUBLIC NON-STATIC FUNCTIONS ]=====================================================
+    //==============================================[ INSTANCE METHODS ]=====================================================
 
     /**
      * @return whether this card set can be sold for XP
@@ -336,7 +324,7 @@ public class CardSet {
         return false;
     }
 
-    //===============================================[ PRIVATE FUNCTIONS ]=============================================================
+    //===============================================[ HELPER METHODS ]=============================================================
 
     /**
      * finds the XP value of a card based on its real-life price in the Pokemon TCG Online game

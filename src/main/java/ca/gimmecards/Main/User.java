@@ -6,7 +6,9 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 
 public class User implements Comparable<User> {
@@ -14,7 +16,7 @@ public class User implements Comparable<User> {
     /**
      * a list of type User that's saved and loaded from Users.json; edited on a regular basis
      */
-    public static ArrayList<User> users = new ArrayList<User>();
+    public static List<User> users = Collections.synchronizedList(new ArrayList<User>());
     
     //==========================================[ INSTANCE VARIABLES ]===================================================================
 
@@ -123,7 +125,7 @@ public class User implements Comparable<User> {
     public long getDailyEpoch() { return this.dailyEpoch; }
     public long getRedeemEpoch() { return this.redeemEpoch; }
     public long getMinigameEpoch() { return this.minigameEpoch; }
-    public Long getMarketEpoch() { return this.marketEpoch; }
+    public long getMarketEpoch() { return this.marketEpoch; }
     public String getSortMethod() { return this.sortMethod; }
     public boolean getIsSortIncreasing() { return this.isSortIncreasing; }
     public String getPinnedCard() { return this.pinnedCard; }
@@ -152,7 +154,7 @@ public class User implements Comparable<User> {
     public void setIsSortIncreasing(boolean isSortIncreasing) { this.isSortIncreasing = isSortIncreasing; }
     public void setPinnedCard(String pinnedCard) { this.pinnedCard = pinnedCard; }
 
-    //=============================================[ PUBLIC STATIC FUNCTIONS ]==============================================================
+    //=============================================[ STATIC METHODS ]==============================================================
 
     /**
      * finds the author User based on a slash event
@@ -160,9 +162,7 @@ public class User implements Comparable<User> {
      * @return the author User
      */
     public static User findUser(SlashCommandInteractionEvent event) {
-        String discordId = event.getUser().getId();
-        
-        return searchForUser(discordId);
+        return searchForUser(event.getUser().getId());
     }
 
     /**
@@ -171,53 +171,56 @@ public class User implements Comparable<User> {
      * @return the author User
      */
     public static User findUser(ButtonInteractionEvent event) {
-        String discordId = event.getUser().getId();
-
-        return searchForUser(discordId);
+        return searchForUser(event.getUser().getId());
     }
 
     /**
      * finds a mentioned User based on a slash event
      * @param event the slash event
-     * @param otherUserId the Discord ID of the mentioned User
+     * @param targetId the Discord ID of the mentioned User
      * @return the mentioned User
      */
-    public static User findOtherUser(SlashCommandInteractionEvent event, String otherUserId) {
-        return searchForUser(otherUserId);
+    public static User findTargetUser(SlashCommandInteractionEvent event, String targetId) {
+        return searchForUser(targetId);
     }
 
-    //==============================================[ PUBLIC NON-STATIC FUNCTIONS ]=====================================================
+    public static User findTargetUser(ButtonInteractionEvent event, String targetId) {
+        return searchForUser(targetId);
+    }
+
+    //==============================================[ INSTANCE METHODS ]=====================================================
     
     @Override
     public int compareTo(User other) {
-        long userId = Long.parseLong(this.getUserId());
-        long otherId = Long.parseLong(other.getUserId());
+        Long userId = Long.parseLong(this.getUserId());
+        Long otherId = Long.parseLong(other.getUserId());
 
-        if(userId < otherId)
-            return -1;
-        else if(userId > otherId)
-            return 1;
-
-        return 0;
+        return userId.compareTo(otherId);
     }
 
-    public void addDisplay(Display dispToAdd) {
+    private void removeDisplay(Display dispToRemove) {
         for(int i = 0; i < displays.size(); i++) {
             Display disp = displays.get(i);
 
-            if(disp.getClass().equals(dispToAdd.getClass())) {
+            if(disp.getClass().equals(dispToRemove.getClass())) {
                 displays.remove(i);
                 break;
             }
         }
-        displays.addFirst(dispToAdd);
     }
 
-    public Display findDisplay(Display dispToFind) {
+    public Display addDisplay(Display dispToAdd) {
+        removeDisplay(dispToAdd);
+        displays.addFirst(dispToAdd);
+
+        return dispToAdd;
+    }
+
+    public <T> Display findDisplay(Class<T> clazz) {
         Display result = null;
 
         for(Display disp : displays) {
-            if(disp.getClass().equals(dispToFind.getClass())) {
+            if(clazz.isInstance(disp)) {
                 result = disp;
                 break;
             }
@@ -255,6 +258,7 @@ public class User implements Comparable<User> {
      * @return a string message telling the player that they levelled up; is attached under any XP message
      */
     public String checkLevelUp(SlashCommandInteractionEvent event) {
+        UserInfo ui = new UserInfo(event);
         int prevLvl = this.level;
         int creditsReward = 0;
         int keyReward = 0;
@@ -262,13 +266,13 @@ public class User implements Comparable<User> {
 
         if(this.XP >= this.maxXP) {
             msg += "\n┅┅";
-            msg += "\n" + FormatUtils.formatName(event) + "** LEVELED UP :tada:**";
+            msg += "\n" + ui.getUserPing() + "** LEVELED UP :tada:**";
 
             while(this.XP >= this.maxXP) {
                 levelUp();
 
-                creditsReward += ((this.level + 9) / 10) * RewardConsts.levelupCredits_step;
-                keyReward += RewardConsts.levelupKeys;
+                creditsReward += ((this.level + 9) / 10) * RewardConsts.LEVELUP_CREDITS_MULTFACTOR;
+                keyReward += RewardConsts.LEVELUP_KEYS;
 
                 if(this.level == 50) {
                     this.badges.add("veteran");
@@ -319,9 +323,9 @@ public class User implements Comparable<User> {
         msg += FormatUtils.formatNumber(Math.abs(quantity));
 
         if(quantity > 1 || quantity < -1) {
-            msg += " " + EmoteConsts.token + " **Tokens**";
+            msg += " " + EmoteConsts.TOKEN + " **Tokens**";
         } else {
-            msg += " " + EmoteConsts.token + " **Token**";
+            msg += " " + EmoteConsts.TOKEN + " **Token**";
         }
         return msg;
     }
@@ -341,7 +345,7 @@ public class User implements Comparable<User> {
         }
         msg += (quantity > 0) ? "+ " : "\\- ";
         msg += FormatUtils.formatNumber(Math.abs(quantity));
-        msg += " " + EmoteConsts.credits + " **Credits**";
+        msg += " " + EmoteConsts.CREDITS + " **Credits**";
 
         return msg;
     }
@@ -363,9 +367,9 @@ public class User implements Comparable<User> {
         msg += FormatUtils.formatNumber(Math.abs(quantity));
 
         if(quantity > 1 || quantity < -1) {
-            msg += " " + EmoteConsts.star + " **Stars**";
+            msg += " " + EmoteConsts.STAR + " **Stars**";
         } else {
-            msg += " " + EmoteConsts.star + " **Star**";
+            msg += " " + EmoteConsts.STAR + " **Star**";
         }
         return msg;
     }
@@ -385,7 +389,7 @@ public class User implements Comparable<User> {
         }
         msg += (quantity > 0) ? "+ " : "\\- ";
         msg += FormatUtils.formatNumber(Math.abs(quantity));
-        msg += " " + EmoteConsts.key + " **Key**";
+        msg += " " + EmoteConsts.KEY + " **Key**";
 
         return msg;
     }
@@ -465,69 +469,29 @@ public class User implements Comparable<User> {
      * sorts the player's cards based on either alphabetical, xp, quantity, or newest
      */
     public void sortCards() {
+        if(this.sortMethod.equalsIgnoreCase("alphabetical")) {
+            if(this.isSortIncreasing)
+                Collections.sort(this.cardContainers);
+            else
+                Collections.sort(this.cardContainers, CardContainer.BY_NAME_DESCENDING);
 
-        for(int i = 0; i < this.cardContainers.size() - 1; i++) {
-            for(int k = i + 1; k < this.cardContainers.size(); k++) {
-                Card card1 = this.cardContainers.get(i).getCard();
-                Card card2 = this.cardContainers.get(k).getCard();
-
-                if(this.sortMethod.equalsIgnoreCase("alphabetical")) {
-                    String cardName1 = card1.getCardName();
-                    String cardName2 = card2.getCardName();
-    
-                    if(this.isSortIncreasing) {
-                        if(cardName1.compareToIgnoreCase(cardName2) > 0) {
-                            swapCards(i, k);
-                        }
-                    } else {
-                        if(cardName1.compareToIgnoreCase(cardName2) < 0) {
-                            swapCards(i, k);
-                        }
-                    }
-
-                } else if(this.sortMethod.equalsIgnoreCase("xp")) {
-                    int xp1 = card1.getCardPrice();
-                    int xp2 = card2.getCardPrice();
-    
-                    if(this.isSortIncreasing) {
-                        if(xp1 > xp2) {
-                            swapCards(i, k);
-                        }
-                    } else {
-                        if(xp1 < xp2) {
-                            swapCards(i, k);
-                        }
-                    }
-
-                } else if(this.sortMethod.equalsIgnoreCase("quantity")) {
-                    int quantity1 = this.cardContainers.get(i).getCardQuantity();
-                    int quantity2 = this.cardContainers.get(k).getCardQuantity();
-    
-                    if(this.isSortIncreasing) {
-                        if(quantity1 > quantity2) {
-                            swapCards(i, k);
-                        }
-                    } else {
-                        if(quantity1 < quantity2) {
-                            swapCards(i, k);
-                        }
-                    }
-
-                } else if(this.sortMethod.equalsIgnoreCase("newest")) {
-                    int num1 = this.cardContainers.get(i).getCardNum();
-                    int num2 = this.cardContainers.get(k).getCardNum();
-
-                    if(this.isSortIncreasing) {
-                        if(num1 > num2) {
-                            swapCards(i, k);
-                        }
-                    } else {
-                        if(num1 < num2) {
-                            swapCards(i, k);
-                        }
-                    }
-                }
-            }
+        } else if(this.sortMethod.equalsIgnoreCase("xp")) {
+            if(this.isSortIncreasing)
+                Collections.sort(this.cardContainers, CardContainer.BY_XP);
+            else
+                Collections.sort(this.cardContainers, CardContainer.BY_XP_DESCENDING);
+                
+        } else if(this.sortMethod.equalsIgnoreCase("quantity")) {
+            if(this.isSortIncreasing)
+                Collections.sort(this.cardContainers, CardContainer.BY_QUANTITY);
+            else
+                Collections.sort(this.cardContainers, CardContainer.BY_QUANTITY_DESCENDING);
+                
+        } else if(this.sortMethod.equalsIgnoreCase("newest")) {
+            if(this.isSortIncreasing)
+                Collections.sort(this.cardContainers, CardContainer.BY_NEWEST);
+            else
+                Collections.sort(this.cardContainers, CardContainer.BY_NEWEST_DESCENDING);
         }
     }
 
@@ -634,34 +598,27 @@ public class User implements Comparable<User> {
         return count;
     }
 
-    //===============================================[ PRIVATE FUNCTIONS ]=============================================================
+    //===============================================[ HELPER METHODS ]=============================================================
     
     /**
      * searches through the User list for a specific player using the binary search algorithm
-     * @param discordId the ID of the player to search for
+     * @param userId the ID of the player to search for
      * @return the player to be searched
      */
-    private static User searchForUser(String discordId) {
-        User targetUser = new User(discordId); // need to create a User object to compare with other users while searching
-        int index = SearchUtils.binarySearch(users, targetUser);
+    private static User searchForUser(String userId) {
+        User userToFind = new User(userId); // need to create a User object to compare with other users while searching
 
-        if(index == users.size() || targetUser.compareTo(users.get(index)) != 0)
-            users.add(index, targetUser);
-        else
-            targetUser = users.get(index);
+        synchronized(users) {
+            int index = SearchUtils.binarySearch(users, userToFind);
+    
+            if(index == users.size() || userToFind.compareTo(users.get(index)) != 0) {
+                users.add(index, userToFind);
+                UserRanked.usersRanked.add(new UserRanked("", userToFind));
 
-        return targetUser;
-    }
-
-    /**
-     * swaps two CardContainers within the player's CardContainer list
-     * @param i1 first index
-     * @param i2 second index
-     */
-    private void swapCards(int i1, int i2) {
-        CardContainer temp = this.cardContainers.get(i1);
-        
-        cardContainers.set(i1, this.cardContainers.get(i2));
-        cardContainers.set(i2, temp);
+            } else {
+                userToFind = users.get(index);
+            }
+        }
+        return userToFind;
     }
 }

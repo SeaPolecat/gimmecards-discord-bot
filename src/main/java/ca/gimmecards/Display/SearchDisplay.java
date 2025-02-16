@@ -3,6 +3,7 @@ import ca.gimmecards.consts.*;
 import ca.gimmecards.main.*;
 import ca.gimmecards.utils.FormatUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import java.util.ArrayList;
 
 public class SearchDisplay extends Display {
@@ -12,8 +13,8 @@ public class SearchDisplay extends Display {
     private boolean isExact;
     private String keywords;
 
-    public SearchDisplay() {
-        super();
+    public SearchDisplay(SlashCommandInteractionEvent event) {
+        super(event);
     }
 
     public String getLocation() { return this.location; }
@@ -116,7 +117,7 @@ public class SearchDisplay extends Display {
                 }
             }
         }
-        for(Card card : CustomCardConsts.customs) {
+        for(Card card : CustomCardConsts.CUSTOM_CARDS) {
             String name = findName(card);
 
             if(this.isExact ? name.equalsIgnoreCase(this.keywords) : name.toLowerCase().contains(this.keywords.toLowerCase())) {
@@ -125,20 +126,26 @@ public class SearchDisplay extends Display {
         }
     }
 
+    private void getValidPage(ArrayList<Card> searchedCards) {
+        int numFullPages = searchedCards.size() / 15;
+        int remainder = searchedCards.size() % 15;
+
+        setMaxPage(numFullPages + (remainder / remainder));
+        checkOverflow();
+    }
+
     @Override
-    public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, int page) {
-        int startIndex = page * 15 - 15;
+    public EmbedBuilder buildEmbed(User user, Server server) {
+        UserInfo ui = getUserInfo();
+        int startIndex = getPage() * 15 - 15;
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
         if(this.location.equalsIgnoreCase("collection")) {
             ArrayList<Card> searchedCards = searchCollection(user);
 
-            setMaxPage(searchedCards.size() / 15);
+            getValidPage(searchedCards);
 
-            if(searchedCards.size() % 15 != 0) {
-                addMaxPage();
-            }
             desc += "***" + FormatUtils.formatNumber(searchedCards.size()) + "*** ";
             desc += this.isExact ? "exact " : "non-exact ";
             desc += "search results for `" + this.keywords + "`\n\n";
@@ -172,19 +179,16 @@ public class SearchDisplay extends Display {
             } else {
                 setMaxPage(1);
             }
-            embed.setTitle(EmoteConsts.pokeball + " Searching " + ui.getUserName() + "'s Collection... " + EmoteConsts.pokeball);
+            embed.setTitle(EmoteConsts.POKEBALL + " Searching " + ui.getUserName() + "'s Collection... " + EmoteConsts.POKEBALL);
             embed.setDescription(desc);
-            embed.setFooter("Page " + page + " of " + getMaxPage(), ui.getUserIcon());
-            embed.setColor(ColorConsts.searchColor);
+            embed.setFooter("Page " + getPage() + " of " + getMaxPage(), ui.getUserIcon());
+            embed.setColor(ColorConsts.SEARCH_COLOR);
 
         } else if(this.location.equals("pokedex")) {
             ArrayList<Card> searchedCards = searchPokedex(user);
 
-            setMaxPage(searchedCards.size() / 15);
+            getValidPage(searchedCards);
 
-            if(searchedCards.size() % 15 != 0) {
-                addMaxPage();
-            }
             desc += "***" + FormatUtils.formatNumber(searchedCards.size()) + "*** ";
             desc += this.isExact ? "exact " : "non-exact ";
             desc += "search results for `" + this.keywords + "`\n\n";
@@ -210,10 +214,10 @@ public class SearchDisplay extends Display {
             } else {
                 setMaxPage(1);
             }
-            embed.setTitle(EmoteConsts.pokeball + " Searching the Pokédex... " + EmoteConsts.pokeball);
+            embed.setTitle(EmoteConsts.POKEBALL + " Searching the Pokédex... " + EmoteConsts.POKEBALL);
             embed.setDescription(desc);
-            embed.setFooter("Page " + page + " of " + getMaxPage(), ui.getUserIcon());
-            embed.setColor(ColorConsts.searchColor);
+            embed.setFooter("Page " + getPage() + " of " + getMaxPage(), ui.getUserIcon());
+            embed.setColor(ColorConsts.SEARCH_COLOR);
         }
         return embed;
     }

@@ -18,7 +18,7 @@ public class MarketCmds {
         int itemNum = 1;
 
         if(guild != null) {
-            int cooldownLeft = TimeUtils.findCooldownLeft(CooldownConsts.marketResetCooldown, server.getMarketEpoch());
+            int cooldownLeft = TimeUtils.findCooldownLeft(CooldownConsts.MARKET_RESET_CD, server.getMarketEpoch());
 
             if(cooldownLeft == 0) {
                 server.refreshMarket();
@@ -36,47 +36,39 @@ public class MarketCmds {
                 itemNum++;
             }
             desc += "┅┅\n";
-            embed.setTitle(EmoteConsts.mew + " Daily Market " + EmoteConsts.mew);
+            embed.setTitle(EmoteConsts.MEW + " Daily Market " + EmoteConsts.MEW);
             embed.setDescription(desc);
             embed.setFooter(guild.getName(), guild.getIconUrl());
-            embed.setColor(ColorConsts.marketColor);
+            embed.setColor(ColorConsts.MARKET_COLOR);
             JDAUtils.sendEmbed(event, embed);
         }
     }
 
     public static void viewItem(SlashCommandInteractionEvent event) {
+        OptionMapping cardNum = event.getOption("card-number");
+        //
         User user = User.findUser(event);
         Server server = Server.findServer(event);
-        MarketDisplay disp = new MarketDisplay();
-        //
-        OptionMapping cardNum = event.getOption("card-number");
-
-        user.addDisplay(disp);
-
-        if(cardNum == null) { return; }
+        MarketDisplay disp = (MarketDisplay) user.addDisplay(new MarketDisplay(event, server, cardNum.getAsInt()));
 
         try {
-            int page = cardNum.getAsInt();
-
-            JDAUtils.sendDynamicEmbed(event, user, server, disp, page);
+            JDAUtils.sendDynamicEmbed(event, disp, user, server, true);
 
         } catch(NumberFormatException | ArithmeticException | IndexOutOfBoundsException e) {
-            JDAUtils.sendMessage(event, ColorConsts.red, "❌", "Whoops, I couldn't find that card...");
+            JDAUtils.sendMessage(event, ColorConsts.RED, "❌", "Whoops, I couldn't find that card...");
         }
     }
 
     public static void purchaseItem(SlashCommandInteractionEvent event) {
+        OptionMapping cardNum = event.getOption("card-number");
+        //
         User user = User.findUser(event);
         UserInfo ui = new UserInfo(event);
         Server server = Server.findServer(event);
-        //
-        OptionMapping cardNum = event.getOption("card-number");
-        int cooldownLeft = TimeUtils.findCooldownLeft(CooldownConsts.buyCooldown, user.getMarketEpoch());
-
-        if(cardNum == null) { return; }
+        int cooldownLeft = TimeUtils.findCooldownLeft(CooldownConsts.BUY_CD, user.getMarketEpoch());
 
         if(cooldownLeft > 0) {
-            JDAUtils.sendMessage(event, ColorConsts.red, "⏰", "Please wait another " 
+            JDAUtils.sendMessage(event, ColorConsts.RED, "⏰", "Please wait another " 
             + FormatUtils.formatCooldown(cooldownLeft));
 
         } else {
@@ -85,14 +77,14 @@ public class MarketCmds {
                 Card item = server.getMarket().get(index);
     
                 if(user.getCredits() < item.getCardPrice()) {
-                    JDAUtils.sendMessage(event, ColorConsts.red, "❌", "Sorry, you don't have enough " + EmoteConsts.credits + " **Credits**");
+                    JDAUtils.sendMessage(event, ColorConsts.RED, "❌", "Sorry, you don't have enough " + EmoteConsts.CREDITS + " **Credits**");
     
                 } else {
                     String msg = "";
                     String footer = ui.getUserName() + "'s purchase";
     
-                    msg += EmoteConsts.mew + " ";
-                    msg += FormatUtils.formatName(event) + " bought " + item.findCardTitle(false) + " from the market!";
+                    msg += EmoteConsts.MEW + " ";
+                    msg += ui.getUserPing() + " bought " + item.findCardTitle(false) + " from the market!";
                     msg += user.updateCredits(-item.getCardPrice(), true);
 
                     user.resetMarketEpoch();
@@ -103,7 +95,7 @@ public class MarketCmds {
                     try { DataUtils.saveUsers(); } catch(Exception e) {}
                 }
             } catch(NumberFormatException | ArithmeticException | IndexOutOfBoundsException e) {
-                JDAUtils.sendMessage(event, ColorConsts.red, "❌", "Whoops, I couldn't find that card...");
+                JDAUtils.sendMessage(event, ColorConsts.RED, "❌", "Whoops, I couldn't find that card...");
             }
         }
     }

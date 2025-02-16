@@ -4,9 +4,6 @@ import ca.gimmecards.display.*;
 import ca.gimmecards.main.*;
 import ca.gimmecards.utils.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
-import net.dv8tion.jda.api.interactions.components.buttons.Button;
-import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 public class HelpCmds {
@@ -31,9 +28,9 @@ public class HelpCmds {
         //https://discord.com/api/oauth2/authorize?client_id=814025499381727232&permissions=354368&scope=bot
         + "to invite me to your own server!";
 
-        embed.setTitle(EmoteConsts.eevee + " Getting Started " + EmoteConsts.eevee);
+        embed.setTitle(EmoteConsts.EEVEE + " Getting Started " + EmoteConsts.EEVEE);
         embed.setDescription(desc);
-        embed.setColor(ColorConsts.helpColor);
+        embed.setColor(ColorConsts.HELP_COLOR);
         JDAUtils.sendEmbed(event, embed);
     }
 
@@ -59,9 +56,9 @@ public class HelpCmds {
         desc += "✨ Custom\n";
         desc += "🛍️ Merch\n";
 
-        embed.setTitle(EmoteConsts.eevee + " All Rarities " + EmoteConsts.eevee);
+        embed.setTitle(EmoteConsts.EEVEE + " All Rarities " + EmoteConsts.EEVEE);
         embed.setDescription(desc);
-        embed.setColor(ColorConsts.helpColor);
+        embed.setColor(ColorConsts.HELP_COLOR);
         JDAUtils.sendEmbed(event, embed);
     }
 
@@ -69,74 +66,35 @@ public class HelpCmds {
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
-        desc += EmoteConsts.devBadge + " **Gimme Cards Developer**\n";
+        desc += EmoteConsts.DEV_BADGE + " **Gimme Cards Developer**\n";
         desc += "Given to the developer of Gimme Cards, *SeaPolecat*\n\n";
 
-        desc += EmoteConsts.staffBadge + " **Gimme Cards Staff**\n";
+        desc += EmoteConsts.STAFF_BADGE + " **Gimme Cards Staff**\n";
         desc += "Given to the staff members in our official [support server](https://discord.gg/urtHCGcE7y)\n\n";
 
-        desc += EmoteConsts.veteranBadge + " **Veteran Collector**\n";
+        desc += EmoteConsts.VETERAN_BADGE + " **Veteran Collector**\n";
         desc += "Given to collectors who are level 50+\n\n";
 
-        desc += EmoteConsts.masterBadge + " **Master Collector**\n";
+        desc += EmoteConsts.MASTER_BADGE + " **Master Collector**\n";
         desc += "Given to collectors who are level 100+\n\n";
 
-        desc += EmoteConsts.bdayBadge + " **1 Year Anniversary**\n";
+        desc += EmoteConsts.BDAY_BADGE + " **1 Year Anniversary**\n";
         desc += "Given to collectors who participated in the Gimme Cards 1 Year Anniversary event\n\n";
 
-        desc += EmoteConsts.originalBagde + " **Original Collector**\n";
+        desc += EmoteConsts.ORIGINAL_BADGE + " **Original Collector**\n";
         desc += "Given to collectors who created their account before Gimme Cards was verified (2023)";
 
-        embed.setTitle(EmoteConsts.eevee + " All Badges " + EmoteConsts.eevee);
+        embed.setTitle(EmoteConsts.EEVEE + " All Badges " + EmoteConsts.EEVEE);
         embed.setDescription(desc);
-        embed.setColor(ColorConsts.helpColor);
+        embed.setColor(ColorConsts.HELP_COLOR);
         JDAUtils.sendEmbed(event, embed);
     }
 
     public static void viewChangelog(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
         Server server = Server.findServer(event);
-        HelpDisplay disp = new HelpDisplay();
-        
-        user.addDisplay(disp);
+        HelpDisplay disp = (HelpDisplay) user.addDisplay(new HelpDisplay(event));
 
-        JDAUtils.sendDynamicEmbed(event, user, server, disp, ChangelogConsts.changelog.length);
-    }
-
-    public static void viewPremium(SlashCommandInteractionEvent event) {
-        EmbedBuilder embed = buildPremiumEmbed();
-
-        JDAUtils.sendEmbed(event, embed);
-    }
-
-    public static void viewPremium(ButtonInteractionEvent event) {
-        EmbedBuilder embed = buildPremiumEmbed();
-        Emoji kofiEmote = event.getJDA().getEmojiById("1140389615379959860");
-
-        event.getHook().editOriginalEmbeds(embed.build())
-        .setActionRow(
-            Button.primary("temp", "How to get Premium").withEmoji(kofiEmote).asDisabled()
-        ).queue();
-    }
-
-    private static EmbedBuilder buildPremiumEmbed() {
-        EmbedBuilder embed = new EmbedBuilder();
-        String desc = "";
-
-        desc += "**1:** [Click here](https://discord.gg/wmVvK2cyzM) to join the *Gimme Cards* community server\n\n";
-
-        desc += "**2:** [Click here](https://ko-fi.com/gimmecards) to purchase the premium membership on Kofi "
-        + EmoteConsts.kofi + "\n\n";
-
-        desc += "**3:** Keep playing to earn " 
-        + EmoteConsts.star + " **Stars**, and use them to draw exclusive cards from `/rareshop` and `/promoshop`";
-
-        embed.setTitle(EmoteConsts.kofi + " How to get Premium " + EmoteConsts.kofi);
-        embed.setDescription(desc);
-        embed.setImage("https://storage.ko-fi.com/cdn/useruploads/post/7b76ada0-2b12-40c9-be94-b337eba13e20_kofitier.png");
-        embed.setColor(ColorConsts.kofiColor);
-        embed.setFooter("For premium features to work, you need to stay in our community server");
-
-        return embed;
+        JDAUtils.sendDynamicEmbed(event, disp, user, server, true);
     }
 }

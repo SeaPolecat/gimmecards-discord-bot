@@ -1,18 +1,20 @@
 package ca.gimmecards.display;
-import net.dv8tion.jda.api.EmbedBuilder;
-import java.util.ArrayList;
-
 import ca.gimmecards.main.*;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+
+import java.util.ArrayList;
 
 public class OpenBoxDisplay extends Display {
 
     private ArrayList<ArrayList<Card>> newPacks;
     private String message;
     
-    public OpenBoxDisplay() {
-        super();
+    public OpenBoxDisplay(SlashCommandInteractionEvent event) {
+        super(event);
         newPacks = new ArrayList<ArrayList<Card>>();
-        message = "";
+
+        setMaxPage(newPacks.size());
     }
 
     public ArrayList<ArrayList<Card>> getNewPacks() { return this.newPacks; }
@@ -22,15 +24,14 @@ public class OpenBoxDisplay extends Display {
     public void setMessage(String message) { this.message = message; }
 
     @Override
-    public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, int page) {
+    public EmbedBuilder buildEmbed(User user, Server server) {
+        UserInfo ui = getUserInfo();
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
-        setMaxPage(newPacks.size());
-
         desc += message;
         desc += "\n┅┅\n";
-        for(Card newCard : this.newPacks.get(page - 1)) {
+        for(Card newCard : this.newPacks.get(getPage() - 1)) {
             desc += newCard.findCardTitle(false)
             + " ┇ " + newCard.findRarityEmote()
             + " ┇ " + newCard.getSetEmote()
@@ -40,7 +41,7 @@ public class OpenBoxDisplay extends Display {
         
         embed.setTitle(ui.getUserName() + "'s New Cards");
         embed.setDescription(desc);
-        embed.setFooter("Page " + page + " of " + getMaxPage(), ui.getUserIcon());
+        embed.setFooter("Page " + getPage() + " of " + getMaxPage(), ui.getUserIcon());
         embed.setColor(user.getGameColor());
         return embed;
     }

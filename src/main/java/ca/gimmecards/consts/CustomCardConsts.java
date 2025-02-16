@@ -5,10 +5,10 @@ public class CustomCardConsts {
     
 //==================================================[ CUSTOM CARDS ]===================================================================
 
-    public static final Card[] customs = {
+    public static final Card[] CUSTOM_CARDS = {
 
         new Card(
-            EmoteConsts.mascot,
+            EmoteConsts.MASCOT,
             "Gimme Cards",
             "gimmecards-0",
             "SeaPolecat's Pikachu GX",
@@ -20,7 +20,7 @@ public class CustomCardConsts {
         ),
 
         new Card(
-            EmoteConsts.mascot,
+            EmoteConsts.MASCOT,
             "Gimme Cards",
             "gimmecards-1",
             "Madarachu EX",
@@ -32,7 +32,7 @@ public class CustomCardConsts {
         ),
 
         new Card(
-            EmoteConsts.mascot,
+            EmoteConsts.MASCOT,
             "Gimme Cards",
             "gimmecards-2",
             "Kakachu EX",
@@ -44,7 +44,7 @@ public class CustomCardConsts {
         ),
 
         new Card(
-            EmoteConsts.mascot,
+            EmoteConsts.MASCOT,
             "Gimme Cards",
             "gimmecards-3",
             "Sasukachu EX",
@@ -56,7 +56,7 @@ public class CustomCardConsts {
         ),
 
         new Card(
-            EmoteConsts.mascot,
+            EmoteConsts.MASCOT,
             "Gimme Cards",
             "gimmecards-4",
             "Itachu EX",
@@ -68,7 +68,7 @@ public class CustomCardConsts {
         ),
 
         new Card(
-            EmoteConsts.mascot,
+            EmoteConsts.MASCOT,
             "Gimme Cards",
             "gimmecards-5",
             "Thokachu V",
@@ -80,7 +80,7 @@ public class CustomCardConsts {
         ),
 
         new Card(
-            EmoteConsts.mascot,
+            EmoteConsts.MASCOT,
             "Gimme Cards",
             "gimmecards-6",
             "The World V",
@@ -92,7 +92,7 @@ public class CustomCardConsts {
         ),
 
         new Card(
-            EmoteConsts.mascot,
+            EmoteConsts.MASCOT,
             "Gimme Cards",
             "gimmecards-7",
             "Star Platinum",
@@ -104,7 +104,7 @@ public class CustomCardConsts {
         ),
 
         new Card(
-            EmoteConsts.mascot,
+            EmoteConsts.MASCOT,
             "Gimme Cards",
             "gimmecards-8",
             "Star Platinum, The World! VMAX",
@@ -116,7 +116,7 @@ public class CustomCardConsts {
         ),
 
         new Card(
-            EmoteConsts.mascot,
+            EmoteConsts.MASCOT,
             "Gimme Cards",
             "gimmecards-9",
             "Tusk act 1",
@@ -128,7 +128,7 @@ public class CustomCardConsts {
         ),
 
         new Card(
-            EmoteConsts.mascot,
+            EmoteConsts.MASCOT,
             "Gimme Cards",
             "gimmecards-10",
             "Tusk act 2",
@@ -140,7 +140,7 @@ public class CustomCardConsts {
         ),
 
         new Card(
-            EmoteConsts.mascot,
+            EmoteConsts.MASCOT,
             "Gimme Cards",
             "gimmecards-11",
             "Tusk act 3",
@@ -152,7 +152,7 @@ public class CustomCardConsts {
         ),
 
         new Card(
-            EmoteConsts.mascot,
+            EmoteConsts.MASCOT,
             "Gimme Cards",
             "gimmecards-12",
             "Tusk act 4 VMAX",
@@ -164,7 +164,7 @@ public class CustomCardConsts {
         ),
 
         new Card(
-            EmoteConsts.mascot,
+            EmoteConsts.MASCOT,
             "Gimme Cards",
             "gimmecards-13",
             "Golden Experience",
@@ -176,7 +176,7 @@ public class CustomCardConsts {
         ),
 
         new Card(
-            EmoteConsts.mascot,
+            EmoteConsts.MASCOT,
             "Gimme Cards",
             "gimmecards-14",
             "Requiem Arrow",
@@ -188,7 +188,7 @@ public class CustomCardConsts {
         ),
 
         new Card(
-            EmoteConsts.mascot,
+            EmoteConsts.MASCOT,
             "Gimme Cards",
             "gimmecards-15",
             "G.E.R VMAX",
@@ -200,7 +200,7 @@ public class CustomCardConsts {
         ),
 
         new Card(
-            EmoteConsts.mascot,
+            EmoteConsts.MASCOT,
             "Gimme Cards",
             "gimmecards-16",
             "IcyJail Trishula VSTAR",
@@ -212,7 +212,7 @@ public class CustomCardConsts {
         ),
 
         new Card(
-            EmoteConsts.mascot,
+            EmoteConsts.MASCOT,
             "Gimme Cards",
             "gimmecards-17",
             "Zero Trishula VMAX",
@@ -224,7 +224,7 @@ public class CustomCardConsts {
         ),
 
         new Card(
-            EmoteConsts.mascot,
+            EmoteConsts.MASCOT,
             "Gimme Cards",
             "gimmecards-18",
             "StarryNight VSTAR",
@@ -238,7 +238,7 @@ public class CustomCardConsts {
 //====================================================[ MERCH ITEMS ]==================================================================
 
         new Card(
-            EmoteConsts.mascot,
+            EmoteConsts.MASCOT,
             "Gimme Cards",
             "gimmecards-0M",
             "Pikachu Cosplay Charizard X",
@@ -250,7 +250,7 @@ public class CustomCardConsts {
         ),
 
         new Card(
-            EmoteConsts.mascot,
+            EmoteConsts.MASCOT,
             "Gimme Cards",
             "gimmecards-1M",
             "Vibing Scatterbug",

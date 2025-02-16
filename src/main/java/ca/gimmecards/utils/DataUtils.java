@@ -7,18 +7,20 @@ import com.google.gson.reflect.*;
 import java.util.ArrayList;
 
 public class DataUtils {
+
+    // these are all private, so they don't need to go in the Constants folder
     
     /**
      * the address of this game's local save files; please change this accordingly (remember the 2 backslashes at the end)
      */
-    private static final String prefix = "C:\\Users\\wangw\\Downloads\\GimmeCards\\src\\main\\java\\ca\\gimmecards\\storage\\";
+    private static final String PREFIX = "C:\\Users\\wangw\\Downloads\\GimmeCards\\src\\main\\java\\ca\\gimmecards\\storage\\";
 
-    private static final String setsAddress = "CardSets.json";
-    private static final String oldSetsAddress = "OldCardSets.json";
-    private static final String rareSetsAddress = "RareCardSets.json";
-    private static final String promoSetsAddress = "PromoCardSets.json";
-    private static final String userAddress = "Users.json";
-    private static final String serverAddress = "Servers.json";
+    private static final String SETS_ADDRESS = "CardSets.json";
+    private static final String OLD_SETS_ADDRESS = "OldCardSets.json";
+    private static final String RARE_SETS_ADDRESS = "RareCardSets.json";
+    private static final String PROMO_SETS_ADDRESS = "PromoCardSets.json";
+    private static final String USER_ADDRESS = "Users.json";
+    private static final String SERVER_ADDRESS = "Servers.json";
 
     /**
      * determines whether or not to add a prefix to the address of a storage file
@@ -29,7 +31,7 @@ public class DataUtils {
         if(Paths.get(address).toFile().length() > 0) {
             return address;
         } else {
-            return prefix + address;
+            return PREFIX + address;
         }
     }
 
@@ -40,15 +42,19 @@ public class DataUtils {
      */
     public static void loadUsers() {
         try {
-            Reader reader = new InputStreamReader(new FileInputStream(findSaveAddress(userAddress)), "UTF-8");
+            Reader reader = new InputStreamReader(new FileInputStream(findSaveAddress(USER_ADDRESS)), "UTF-8");
 
             User.users = new Gson().fromJson(reader, new TypeToken<ArrayList<User>>() {}.getType());
             reader.close();
 
             // displays are supposed to be temporary, so clear any that were accidentally saved
-            for(User u : User.users)
+            for(User u : User.users) {
                 u.getDisplays().clear();
 
+                synchronized(UserRanked.usersRanked) {
+                    UserRanked.usersRanked.add(new UserRanked("", u));
+                }
+            }
             saveUsers();
 
         } catch(Exception e) {
@@ -62,7 +68,7 @@ public class DataUtils {
      */
     public static void loadServers() {
         try {
-            Reader reader = new InputStreamReader(new FileInputStream(findSaveAddress(serverAddress)), "UTF-8");
+            Reader reader = new InputStreamReader(new FileInputStream(findSaveAddress(SERVER_ADDRESS)), "UTF-8");
             Server.servers = new Gson().fromJson(reader, new TypeToken<ArrayList<Server>>() {}.getType());
     
             for(Server s : Server.servers) {
@@ -81,7 +87,7 @@ public class DataUtils {
      */
     public static void loadSets() {
         try {
-            Reader reader = new InputStreamReader(new FileInputStream(findSaveAddress(setsAddress)), "UTF-8");
+            Reader reader = new InputStreamReader(new FileInputStream(findSaveAddress(SETS_ADDRESS)), "UTF-8");
             CardSet.sets = new Gson().fromJson(reader, CardSet[].class);
     
             reader.close();
@@ -97,7 +103,7 @@ public class DataUtils {
      */
     public static void loadOldSets() {
         try {
-            Reader reader = new InputStreamReader(new FileInputStream(findSaveAddress(oldSetsAddress)), "UTF-8");
+            Reader reader = new InputStreamReader(new FileInputStream(findSaveAddress(OLD_SETS_ADDRESS)), "UTF-8");
             CardSet.oldSets = new Gson().fromJson(reader, CardSet[].class);
     
             reader.close();
@@ -113,7 +119,7 @@ public class DataUtils {
      */
     public static void loadRareSets() {
         try {
-            Reader reader = new InputStreamReader(new FileInputStream(findSaveAddress(rareSetsAddress)), "UTF-8");
+            Reader reader = new InputStreamReader(new FileInputStream(findSaveAddress(RARE_SETS_ADDRESS)), "UTF-8");
             CardSet.rareSets = new Gson().fromJson(reader, CardSet[].class);
     
             reader.close();
@@ -129,7 +135,7 @@ public class DataUtils {
      */
     public static void loadPromoSets() {
         try {
-            Reader reader = new InputStreamReader(new FileInputStream(findSaveAddress(promoSetsAddress)), "UTF-8");
+            Reader reader = new InputStreamReader(new FileInputStream(findSaveAddress(PROMO_SETS_ADDRESS)), "UTF-8");
             CardSet.promoSets = new Gson().fromJson(reader, CardSet[].class);
     
             reader.close();
@@ -147,13 +153,15 @@ public class DataUtils {
     public static void saveUsers() {
         try {
             Gson gson = new GsonBuilder().create();
-            Writer writer = new OutputStreamWriter(new FileOutputStream(findSaveAddress(userAddress)), "UTF-8");
+            Writer writer = new OutputStreamWriter(new FileOutputStream(findSaveAddress(USER_ADDRESS)), "UTF-8");
 
             gson.toJson(User.users, writer);
             writer.close();
 
         } catch(Exception e) {
             System.out.println(e.toString());
+
+            System.out.println("AAAAAA HEREEEEE");
         }
     }
 
@@ -164,7 +172,7 @@ public class DataUtils {
     public static void saveServers() {
         try {
             Gson gson = new GsonBuilder().create();
-            Writer writer = new OutputStreamWriter(new FileOutputStream(findSaveAddress(serverAddress)), "UTF-8");
+            Writer writer = new OutputStreamWriter(new FileOutputStream(findSaveAddress(SERVER_ADDRESS)), "UTF-8");
             ArrayList<Server> encServers = new ArrayList<Server>();
             
             for(Server s : Server.servers) {
@@ -185,7 +193,7 @@ public class DataUtils {
     public static void saveSets() {
         try {
             Gson gson = new GsonBuilder().create();
-            Writer writer = new OutputStreamWriter(new FileOutputStream(findSaveAddress(setsAddress)), "UTF-8");
+            Writer writer = new OutputStreamWriter(new FileOutputStream(findSaveAddress(SETS_ADDRESS)), "UTF-8");
 
             gson.toJson(CardSet.sets, writer);
             writer.close();
@@ -202,7 +210,7 @@ public class DataUtils {
     public static void saveOldSets() {
         try {
             Gson gson = new GsonBuilder().create();
-            Writer writer = new OutputStreamWriter(new FileOutputStream(findSaveAddress(oldSetsAddress)), "UTF-8");
+            Writer writer = new OutputStreamWriter(new FileOutputStream(findSaveAddress(OLD_SETS_ADDRESS)), "UTF-8");
     
             gson.toJson(CardSet.oldSets, writer);
             writer.close();
@@ -219,7 +227,7 @@ public class DataUtils {
     public static void saveRareSets() {
         try {
             Gson gson = new GsonBuilder().create();
-            Writer writer = new OutputStreamWriter(new FileOutputStream(findSaveAddress(rareSetsAddress)), "UTF-8");
+            Writer writer = new OutputStreamWriter(new FileOutputStream(findSaveAddress(RARE_SETS_ADDRESS)), "UTF-8");
     
             gson.toJson(CardSet.rareSets, writer);
             writer.close();
@@ -236,7 +244,7 @@ public class DataUtils {
     public static void savePromoSets() {
         try {
             Gson gson = new GsonBuilder().create();
-            Writer writer = new OutputStreamWriter(new FileOutputStream(findSaveAddress(promoSetsAddress)), "UTF-8");
+            Writer writer = new OutputStreamWriter(new FileOutputStream(findSaveAddress(PROMO_SETS_ADDRESS)), "UTF-8");
     
             gson.toJson(CardSet.promoSets, writer);
             writer.close();

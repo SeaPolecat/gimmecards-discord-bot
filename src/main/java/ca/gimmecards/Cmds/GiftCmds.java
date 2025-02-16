@@ -8,127 +8,122 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 public class GiftCmds {
     
     public static void giftToken(SlashCommandInteractionEvent event) {
-        User user = User.findUser(event);
-        //
-        OptionMapping user_ = event.getOption("user");
+        OptionMapping targetOption = event.getOption("user");
         OptionMapping amount = event.getOption("amount");
-
-        if(user_ == null || amount == null) { return; }
+        //
+        User user = User.findUser(event);
+        UserInfo ui = new UserInfo(event);
 
         if(!user.getUserId().equals("454773340163538955") && !user.getUserId().equals("967695872689315890")) {
-            JDAUtils.sendMessage(event, ColorConsts.red, "❌", "Only Gimme Cards developers can use this command!");
+            JDAUtils.sendMessage(event, ColorConsts.RED, "❌", "Only Gimme Cards developers can use this command!");
 
         } else {
             String msg = "";
-            User mention = User.findOtherUser(event, user_.getAsUser().getId());
+            User target = User.findTargetUser(event, targetOption.getAsUser().getId());
 
-            msg += FormatUtils.formatName(mention, event) + " has received a gift of tokens!";
-            msg += mention.updateTokens(amount.getAsInt(), true);
+            msg += ui.getUserPing() + " has received a gift of tokens!";
+            msg += target.updateTokens(amount.getAsInt(), true);
 
-            JDAUtils.sendMessage(event, mention.getGameColor(), "🎒", msg);
+            JDAUtils.sendMessage(event, target.getGameColor(), "🎒", msg);
             try { DataUtils.saveUsers(); } catch(Exception e) {}
         }
     }
 
     public static void giftCredits(SlashCommandInteractionEvent event) {
-        User user = User.findUser(event);
-        //
-        OptionMapping user_ = event.getOption("user");
+        OptionMapping targetOption = event.getOption("user");
         OptionMapping amount = event.getOption("amount");
-
-        if(user_ == null || amount == null) { return; }
+        //
+        User user = User.findUser(event);
+        UserInfo ui = new UserInfo(event);
 
         if(!user.getUserId().equals("454773340163538955") && !user.getUserId().equals("967695872689315890")) {
-            JDAUtils.sendMessage(event, ColorConsts.red, "❌", "Only Gimme Cards developers can use this command!");
+            JDAUtils.sendMessage(event, ColorConsts.RED, "❌", "Only Gimme Cards developers can use this command!");
 
         } else {
             String msg = "";
-            User mention = User.findOtherUser(event, user_.getAsUser().getId());
+            User target = User.findTargetUser(event, targetOption.getAsUser().getId());
 
-            msg += FormatUtils.formatName(mention, event) + " has received a gift of credits!";
-            msg += mention.updateCredits(amount.getAsInt(), true);
+            msg += ui.getUserPing() + " has received a gift of credits!";
+            msg += target.updateCredits(amount.getAsInt(), true);
 
-            JDAUtils.sendMessage(event, mention.getGameColor(), "🎒", msg);
+            JDAUtils.sendMessage(event, target.getGameColor(), "🎒", msg);
             try { DataUtils.saveUsers(); } catch(Exception e) {}
         }
     }
 
     public static void giftStar(SlashCommandInteractionEvent event) {
-        User user = User.findUser(event);
-        //
-        OptionMapping user_ = event.getOption("user");
+        OptionMapping targetOption = event.getOption("user");
         OptionMapping amount = event.getOption("amount");
-
-        if(user_ == null || amount == null) { return; }
+        //
+        User user = User.findUser(event);
+        UserInfo ui = new UserInfo(event);
 
         if(!user.getUserId().equals("454773340163538955") && !user.getUserId().equals("967695872689315890")) {
-            JDAUtils.sendMessage(event, ColorConsts.red, "❌", "Only Gimme Cards developers can use this command!");
+            JDAUtils.sendMessage(event, ColorConsts.RED, "❌", "Only Gimme Cards developers can use this command!");
 
         } else {
             String msg = "";
-            User mention = User.findOtherUser(event, user_.getAsUser().getId());
+            User target = User.findTargetUser(event, targetOption.getAsUser().getId());
 
-            msg += FormatUtils.formatName(mention, event) + " has received a gift of stars!";
-            msg += mention.updateStars(amount.getAsInt(), true);
+            msg += ui.getUserPing() + " has received a gift of stars!";
+            msg += target.updateStars(amount.getAsInt(), true);
 
-            JDAUtils.sendMessage(event, mention.getGameColor(), "🎒", msg);
+            JDAUtils.sendMessage(event, target.getGameColor(), "🎒", msg);
             try { DataUtils.saveUsers(); } catch(Exception e) {}
         }
     }
 
     public static void giftKey(SlashCommandInteractionEvent event) {
-        User user = User.findUser(event);
-        //
-        OptionMapping user_ = event.getOption("user");
+        OptionMapping targetOption = event.getOption("user");
         OptionMapping amount = event.getOption("amount");
-
-        if(user_ == null || amount == null) { return; }
+        //
+        User user = User.findUser(event);
+        UserInfo ui = new UserInfo(event);
 
         if(!user.getUserId().equals("454773340163538955") && !user.getUserId().equals("967695872689315890")) {
-            JDAUtils.sendMessage(event, ColorConsts.red, "❌", "Only Gimme Cards developers can use this command!");
+            JDAUtils.sendMessage(event, ColorConsts.RED, "❌", "Only Gimme Cards developers can use this command!");
 
         } else {
             String msg = "";
-            User mention = User.findOtherUser(event, user_.getAsUser().getId());
+            User target = User.findTargetUser(event, targetOption.getAsUser().getId());
 
-            msg += FormatUtils.formatName(mention, event) + " has received a gift of keys!";
-            msg += mention.updateKeys(amount.getAsInt(), true);
+            msg += ui.getUserPing() + " has received a gift of keys!";
+            msg += target.updateKeys(amount.getAsInt(), true);
 
-            JDAUtils.sendMessage(event, mention.getGameColor(), "🎒", msg);
+            JDAUtils.sendMessage(event, target.getGameColor(), "🎒", msg);
             try { DataUtils.saveUsers(); } catch(Exception e) {}
         }
     }
 
     public static void giftCard(SlashCommandInteractionEvent event) {
-        User user = User.findUser(event);
-        //
-        OptionMapping user_ = event.getOption("user");
+        OptionMapping targetOption = event.getOption("user");
         OptionMapping cardId = event.getOption("card-id");
-
-        if(user_ == null || cardId == null) { return; }
+        //
+        User user = User.findUser(event);
+        UserInfo ui = new UserInfo(event);
 
         if(!user.getUserId().equals("454773340163538955") && !user.getUserId().equals("967695872689315890")) {
-            JDAUtils.sendMessage(event, ColorConsts.red, "❌", "Only Gimme Cards developers can use this command!");
+            JDAUtils.sendMessage(event, ColorConsts.RED, "❌", "Only Gimme Cards developers can use this command!");
 
         } else {
             try {
                 String msg = "";
-                User mention = User.findOtherUser(event, user_.getAsUser().getId());
-                UserInfo mi = new UserInfo(mention, event);
+                User target = User.findTargetUser(event, targetOption.getAsUser().getId());
+                UserInfo mi = new UserInfo(event, target);
                 Card item = Card.findCardById(cardId.getAsString());
                 String cardTitle = item.findCardTitle(true);
                 String footer = mi.getUserName() + "'s gift";
 
                 msg += "🎴 ";
-                msg += FormatUtils.formatName(mention, event) + " has received the gift of **" + cardTitle + "**";
+                msg += ui.getUserPing() + " has received the gift of **" + cardTitle + "**";
 
-                mention.addSingleCard(item, true);
+                target.addSingleCard(item, true);
                 
                 item.displayCard(event, mi, msg, footer, true);
                 try { DataUtils.saveUsers(); } catch(Exception e) {}
     
             } catch(NullPointerException e) {
-                JDAUtils.sendMessage(event, ColorConsts.red, "❌", "Whoops, I couldn't find that card...");
+                JDAUtils.sendMessage(event, ColorConsts.RED, "❌", "Whoops, I couldn't find that card...");
             }
         }
     }

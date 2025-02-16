@@ -2,7 +2,6 @@ package ca.gimmecards.utils;
 import ca.gimmecards.display.*;
 import ca.gimmecards.main.*;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -19,11 +18,13 @@ public class JDAUtils {
      * @param buttonType the type of button (left arrow, right arrow, or refresh)
      * @return a button ID
      */
-    public static String createButtonId(SlashCommandInteractionEvent event, String buttonType) {
-        String userId = event.getUser().getId();
-        String slashId = event.getInteraction().getId();
+    public static String createButtonId(Display disp, String buttonType, User[] editableUsers) {
+        String buttonId = disp.getSlashId() + ";" + buttonType;
 
-        return userId + ";" + slashId + "_" + buttonType;
+        for(User u : editableUsers)
+            buttonId += ";" + u.getUserId();
+
+        return buttonId;
     }
 
     /**
@@ -58,30 +59,6 @@ public class JDAUtils {
         sendEmbed(event, embed);
     }
 
-     /**
-      * sends a formatted embed message in the server based on a slash event, with a 'how to get Premium' button attached below
-      * @param event the slash event
-      * @param color the color that the embed should appear in
-      * @param emote the emote that should come before the message
-      * @param msg the string message you want to send
-      * @param adCard a sample premium card to show in /redeem messages; can be null if you don't want this to show
-      */
-    public static void sendPremiumMessage(SlashCommandInteractionEvent event, int color, String emote, String msg, @Nullable Card adCard) {
-        EmbedBuilder embed = new EmbedBuilder();
-        Emoji kofiEmote = event.getJDA().getEmojiById("1140389615379959860");
-
-        embed.setDescription(emote + " " + msg);
-
-        if(adCard != null) {
-            embed.setImage(adCard.getCardImage());
-        }
-        embed.setColor(color);
-        event.getHook().editOriginalEmbeds(embed.build())
-        .setActionRow(
-            Button.primary(createButtonId(event, "premium"), "How to get Premium").withEmoji(kofiEmote)
-        ).queue();
-    }
-
     /**
      * sends a plain embed in the server based on a message event
      * @param event the message event
@@ -110,27 +87,40 @@ public class JDAUtils {
      * @param disp the type of Display that this embed should show
      * @param page the page number that this embed should initially show
      */
-    public static void sendDynamicEmbed(SlashCommandInteractionEvent event, User user, Server server, Display disp, int page) {
-        UserInfo ui = new UserInfo(event);
-        EmbedBuilder embed = disp.buildEmbed(user, ui, server, page);
-        String slashId = event.getInteraction().getId();
 
-        if(page == -1) {
-            event.getHook().editOriginalEmbeds(embed.build())
-            .setActionRow(
-                Button.secondary(createButtonId(event, "refresh"), "Refresh")
-            ).queue();
+    private static void addFlippableButtons(SlashCommandInteractionEvent event, Display disp, EmbedBuilder embed, User[] editableUsers) {
+        event.getHook().editOriginalEmbeds(embed.build())
+        .setActionRow(
+            Button.primary(createButtonId(disp, "left", editableUsers), "◀"),
+            Button.primary(createButtonId(disp, "right", editableUsers), "▶"),
+            Button.secondary(createButtonId(disp, "refresh", editableUsers), "Refresh")
+        ).queue();
+    }
 
-        } else {
-            event.getHook().editOriginalEmbeds(embed.build())
-            .setActionRow(
-                Button.primary(createButtonId(event, "left"), "◀"),
-                Button.primary(createButtonId(event, "right"), "▶"),
-                Button.secondary(createButtonId(event, "refresh"), "Refresh")
-            ).queue();
-        }
-        disp.setSlashId(slashId);
-        disp.setPage(page);
+    private static void addNonFlippableButtons(SlashCommandInteractionEvent event, Display disp, EmbedBuilder embed, User[] editableUsers) {
+        event.getHook().editOriginalEmbeds(embed.build())
+        .setActionRow(
+            Button.secondary(createButtonId(disp, "refresh", editableUsers), "Refresh")
+        ).queue();
+    }
+
+    public static void sendDynamicEmbed(SlashCommandInteractionEvent event, Display disp, User user, @Nullable Server server, boolean isFlippable) {
+        EmbedBuilder embed = disp.buildEmbed(user, server);
+
+        if(isFlippable)
+            addFlippableButtons(event, disp, embed, new User[]{user});
+        else
+            addNonFlippableButtons(event, disp, embed, new User[]{user});
+    }
+
+    // for multiplayer
+    public static void sendDynamicEmbed(SlashCommandInteractionEvent event, Display disp, User user, User target, User[] editableUsers, @Nullable Server server, boolean isFlippable) {
+        EmbedBuilder embed = disp.buildEmbed(target, server);
+
+        if(isFlippable)
+            addFlippableButtons(event, disp, embed, editableUsers);
+        else
+            addNonFlippableButtons(event, disp, embed, editableUsers);
     }
 
     /**
@@ -141,10 +131,13 @@ public class JDAUtils {
      * @param disp the type of Display that this embed should show
      * @param page the page number that this embed should show after being edited
      */
-    public static void editEmbed(ButtonInteractionEvent event, User user, Server server, Display disp, int page) {
-        UserInfo ui = new UserInfo(event);
-        EmbedBuilder embed = disp.buildEmbed(user, ui, server, page);
-        
+    public static void editEmbed(ButtonInteractionEvent event, Display disp, User user, @Nullable Server server) {
+        EmbedBuilder embed = disp.buildEmbed(user, server);
+
+        if(embed == null) {
+            event.getMessage().delete().queue();
+            return;
+        }
         event.getHook().editOriginalEmbeds(embed.build()).queue();
     }
 }

@@ -28,11 +28,11 @@ public class UserInfo {
 
     /**
      * creates a new UserInfo based on a mentioned player and a slash event
-     * @param mention the mentioned player
+     * @param target the mentioned player
      * @param event the slash event
      */
-    public UserInfo(User mention, SlashCommandInteractionEvent event) {
-        net.dv8tion.jda.api.entities.User user = event.getJDA().getUserById(mention.getUserId()+"");
+    public UserInfo(SlashCommandInteractionEvent event, User target) {
+        net.dv8tion.jda.api.entities.User user = event.getJDA().getUserById(target.getUserId());
 
         if(user != null) {
             userName = user.getEffectiveName();

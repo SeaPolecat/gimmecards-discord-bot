@@ -3,44 +3,42 @@ import ca.gimmecards.display.*;
 import ca.gimmecards.main.*;
 import ca.gimmecards.utils.FormatUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 public class CollectionDisplay_MP extends Display {
 
-    private User user;
-    private User mention;
-    private UserInfo mentionInfo;
-
-    public CollectionDisplay_MP() {
-        super();
-        mention = null;
-        mentionInfo = null;
+    public CollectionDisplay_MP(SlashCommandInteractionEvent event, User target, int page) {
+        super(event, target);
+        
+        setPage(page);
     }
 
-    public User getUser() { return user; }
-    public User getMention() { return mention; }
-    public UserInfo getMentionInfo() { return mentionInfo; }
-    //
-    public void setUser(User u) { user = u; }
-    public void setMention(User m) { mention = m; }
-    public void setMentionInfo(UserInfo mi) { mentionInfo = mi; }
+    private void getValidPage(User target) {
+        int numFullPages = target.getCardContainers().size() / 15;
+        int remainder = target.getCardContainers().size() % 15;
+
+        setMaxPage(numFullPages + (remainder / remainder));
+        checkOverflow();
+    }
 
     @Override
-    public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, int page) {
-        int startIndex = page * 15 - 15;
+    public EmbedBuilder buildEmbed(User target, Server server) {
+        if(target.getCardContainers().size() == 0)
+            return null;
+
+        getValidPage(target);
+
+        UserInfo userInfo = getUserInfo(), targetInfo = getTargetInfo();
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
-        String sortOrder = mention.getIsSortIncreasing() ? "increasing" : "decreasing";
+        String sortOrder = target.getIsSortIncreasing() ? "increasing" : "decreasing";
+        int startIndex = getPage() * 15 - 15;
         int count = startIndex + 1;
 
-        setMaxPage(mention.getCardContainers().size() / 15);
-
-        if(mention.getCardContainers().size() % 15 != 0) {
-            addMaxPage();
-        }
-        desc += "Sorted by `" + mention.getSortMethod() + "` `" + sortOrder + "`\n";
+        desc += "Sorted by `" + target.getSortMethod() + "` `" + sortOrder + "`\n";
         desc += "┅┅\n";
         for(int i = startIndex; i < startIndex + 15; i++) {
-            CardContainer cc = mention.getCardContainers().get(i);
+            CardContainer cc = target.getCardContainers().get(i);
             Card card = cc.getCard();
 
             desc += "`#" + count + "` " + card.findCardTitle(cc.getIsFav())
@@ -50,16 +48,16 @@ public class CollectionDisplay_MP extends Display {
             + " ┇ *x" + cc.getCardQuantity() + "*\n";
             count++;
             
-            if(i >= mention.getCardContainers().size() - 1) {
+            if(i >= target.getCardContainers().size() - 1) {
                 break;
             }
         }
         desc += "┅┅\n";
-        embed.setTitle(ui.getUserName() + " ➜ " + mentionInfo.getUserName() 
-        + "'s Collection ┇ " + FormatUtils.formatNumber(mention.countOwnedCards()) + " Cards");
+        embed.setTitle(userInfo.getUserName() + " ➜ " + targetInfo.getUserName() 
+        + "'s Collection ┇ " + FormatUtils.formatNumber(target.countOwnedCards()) + " Cards");
         embed.setDescription(desc);
-        embed.setFooter("Page " + page + " of " + getMaxPage(), ui.getUserIcon());
-        embed.setColor(mention.getGameColor());
+        embed.setFooter("Page " + getPage() + " of " + getMaxPage(), userInfo.getUserIcon());
+        embed.setColor(target.getGameColor());
         return embed;
     }
 }

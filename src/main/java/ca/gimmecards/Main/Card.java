@@ -79,7 +79,7 @@ public class Card {
     public String[] getCardSubtypes() { return this.cardSubtypes; }
     public int getCardPrice() { return this.cardPrice; }
 
-    //=============================================[ PUBLIC STATIC FUNCTIONS ]==============================================================
+    //=============================================[ STATIC METHODS ]==============================================================
 
     /**
      * picks a random card from an ArrayList of cards
@@ -223,7 +223,7 @@ public class Card {
                 return card;
             }
         }
-        for(Card card : CustomCardConsts.customs) {
+        for(Card card : CustomCardConsts.CUSTOM_CARDS) {
             if(card.getCardId().equalsIgnoreCase(cardId)) {
                 return card;
             }
@@ -231,7 +231,7 @@ public class Card {
         return null;
     }
 
-    //==============================================[ PUBLIC NON-STATIC FUNCTIONS ]=====================================================
+    //==============================================[ INSTANCE METHODS ]=====================================================
 
     /**
      * @return whether this card can be sold for XP
@@ -314,27 +314,27 @@ public class Card {
                 String cardSubType = this.cardSubtypes[i];
     
                 if(cardSubType.equalsIgnoreCase("water")) {
-                    cardTitle += EmoteConsts.water;
+                    cardTitle += EmoteConsts.WATER;
                 } else if(cardSubType.equalsIgnoreCase("psychic")) {
-                    cardTitle += EmoteConsts.psychic;
+                    cardTitle += EmoteConsts.PSYCHIC;
                 } else if(cardSubType.equalsIgnoreCase("metal")) {
-                    cardTitle += EmoteConsts.metal;
+                    cardTitle += EmoteConsts.METAL;
                 } else if(cardSubType.equalsIgnoreCase("lightning")) {
-                    cardTitle += EmoteConsts.lightning;
+                    cardTitle += EmoteConsts.LIGHTNING;
                 } else if(cardSubType.equalsIgnoreCase("grass")) {
-                    cardTitle += EmoteConsts.grass;
+                    cardTitle += EmoteConsts.GRASS;
                 } else if(cardSubType.equalsIgnoreCase("fire")) {
-                    cardTitle += EmoteConsts.fire;
+                    cardTitle += EmoteConsts.FIRE;
                 } else if(cardSubType.equalsIgnoreCase("fighting")) {
-                    cardTitle += EmoteConsts.fighting;
+                    cardTitle += EmoteConsts.FIGHTING;
                 } else if(cardSubType.equalsIgnoreCase("fairy")) {
-                    cardTitle += EmoteConsts.fairy;
+                    cardTitle += EmoteConsts.FAIRY;
                 } else if(cardSubType.equalsIgnoreCase("dragon")) {
-                    cardTitle += EmoteConsts.dragon;
+                    cardTitle += EmoteConsts.DRAGON;
                 } else if(cardSubType.equalsIgnoreCase("darkness")) {
-                    cardTitle += EmoteConsts.darkness;
+                    cardTitle += EmoteConsts.DARKNESS;
                 } else if(cardSubType.equalsIgnoreCase("colorless")) {
-                    cardTitle += EmoteConsts.colorless;
+                    cardTitle += EmoteConsts.COLORLESS;
                 }
             }
         }
@@ -387,7 +387,7 @@ public class Card {
      * @return a formatted string of this card's credits amount
      */
     public String formatCredits() {
-        String formattedCredits = EmoteConsts.credits + " **" + FormatUtils.formatNumber(this.cardPrice) + "**";
+        String formattedCredits = EmoteConsts.CREDITS + " **" + FormatUtils.formatNumber(this.cardPrice) + "**";
 
         if(!isCardSellable()) {
             return formattedCredits + " 🚫";
@@ -469,7 +469,7 @@ public class Card {
         JDAUtils.sendEmbed(event, embed);
     }
 
-    //===============================================[ PRIVATE FUNCTIONS ]=============================================================
+    //===============================================[ HELPER METHODS ]=============================================================
 
     /**
      * finds this card's subtypes (fire, water, lightning, etc.)

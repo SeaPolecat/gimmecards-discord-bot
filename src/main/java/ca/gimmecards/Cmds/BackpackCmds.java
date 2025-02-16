@@ -11,60 +11,60 @@ public class BackpackCmds {
 
     public static void viewBackpack(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
-        BackpackDisplay disp = new BackpackDisplay();
-        
-        user.addDisplay(disp);
+        BackpackDisplay disp = (BackpackDisplay) user.addDisplay(new BackpackDisplay(event));
 
-        JDAUtils.sendDynamicEmbed(event, user, null, disp, -1);
+        JDAUtils.sendDynamicEmbed(event, disp, user, null, false);
     }
 
     public static void redeemToken(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
-        int cooldownLeft = TimeUtils.findCooldownLeft(CooldownConsts.redeemCooldown, user.getRedeemEpoch());
+        UserInfo ui = new UserInfo(event);
+        int cooldownLeft = TimeUtils.findCooldownLeft(CooldownConsts.REDEEM_CD, user.getRedeemEpoch());
 
-        if(cooldownLeft > 0) {
-            JDAUtils.sendMessage(event, ColorConsts.red, "⏰", "Please wait another " 
-            + FormatUtils.formatCooldown(cooldownLeft));
+        //if(cooldownLeft > 0) {
+            //JDAUtils.sendMessage(event, ColorConsts.RED, "⏰", "Please wait another " 
+            //+ FormatUtils.formatCooldown(cooldownLeft));
 
-        } else {
+        //} else {
             String msg = "";
 
             user.resetRedeemEpoch();
 
-            msg += FormatUtils.formatName(event) + " redeemed a token!";
-            msg += user.updateTokens(RewardConsts.redeemTokens, true);
-            msg += user.updateCredits(NumberUtils.randRange(RewardConsts.redeemCredits_min, RewardConsts.redeemCredits_max), false);
+            msg += ui.getUserPing() + " redeemed a token!";
+            msg += user.updateTokens(RewardConsts.REDEEM_TOKENS, true);
+            msg += user.updateCredits(NumberUtils.randRange(RewardConsts.REDEEM_CREDITS_MIN, RewardConsts.REDEEM_CREDITS_MAX), false);
 
             msg += "\n┅┅\n";
-            msg += ChangelogConsts.updateMsg + "\n\n";
+            msg += ChangelogConsts.UPDATE_MESSAGE + "\n\n";
 
             JDAUtils.sendMessage(event, user.getGameColor(), "🎒", msg);
             try { DataUtils.saveUsers(); } catch(Exception e) {}
-        }
+        //}
     }
 
     public static void receiveDailyReward(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
         UserInfo ui = new UserInfo(event);
-        int cooldownLeft = TimeUtils.findCooldownLeft(CooldownConsts.dailyCooldown, user.getDailyEpoch());
+        int cooldownLeft = TimeUtils.findCooldownLeft(CooldownConsts.DAILY_CD, user.getDailyEpoch());
 
         if(cooldownLeft > 0) {
-            JDAUtils.sendMessage(event, ColorConsts.red, "⏰", "Please wait another " 
+            JDAUtils.sendMessage(event, ColorConsts.RED, "⏰", "Please wait another " 
             + FormatUtils.formatCooldown(cooldownLeft));
 
         } else {
             Card item = Card.pickRandomCard("shiny");
             String msg = "";
-            String footer = ui.getUserName() + "'s shiny card";
 
             msg += "🎴 ";
-            msg += FormatUtils.formatName(event) + " claimed their daily shiny card!";
-            msg += user.updateCredits(NumberUtils.randRange(RewardConsts.dailyCredits_min, RewardConsts.dailyCredits_max), true);
-            msg += user.updateStars(RewardConsts.dailyStars, false);
+            msg += ui.getUserPing() + " claimed their daily shiny card!";
+            msg += user.updateCredits(NumberUtils.randRange(RewardConsts.DAILY_CREDITS_MIN, RewardConsts.DAILY_CREDITS_MAX), true);
+            msg += user.updateStars(RewardConsts.DAILY_STARS, false);
 
             user.resetDailyEpoch();
 
             user.addSingleCard(item, false);
+
+            String footer = ui.getUserName() + "'s shiny card";
             
             item.displayCard(event, ui, msg, footer, false);
             try { DataUtils.saveUsers(); } catch(Exception e) {}
@@ -72,32 +72,28 @@ public class BackpackCmds {
     }
 
     public static void assignGameColor(SlashCommandInteractionEvent event) {
-        User user = User.findUser(event);
-        //
         OptionMapping hexCode = event.getOption("hex-code");
-
-        if(hexCode == null) { return; }
+        //
+        User user = User.findUser(event);
 
         try {
             int color = Integer.parseInt(hexCode.getAsString(), 16);
 
             user.setGameColor(color);
 
-            JDAUtils.sendMessage(event, user.getGameColor(), EmoteConsts.eevee, 
+            JDAUtils.sendMessage(event, user.getGameColor(), EmoteConsts.EEVEE, 
             "Set your game's theme color to **" + hexCode.getAsString().toUpperCase() + "**");
             try { DataUtils.saveUsers(); } catch(Exception e) {}
 
         } catch(NumberFormatException | ArithmeticException e) {
-            JDAUtils.sendMessage(event, ColorConsts.red, "❌", "That's not a valid hex code!");
+            JDAUtils.sendMessage(event, ColorConsts.RED, "❌", "That's not a valid hex code!");
         }
     }
 
     public static void pinCard(SlashCommandInteractionEvent event) {
-        User user = User.findUser(event);
-        //
         OptionMapping cardNum = event.getOption("card-number");
-
-        if(cardNum == null) { return; }
+        //
+        User user = User.findUser(event);
 
         try {
             int index = cardNum.getAsInt() - 1;
@@ -111,7 +107,7 @@ public class BackpackCmds {
             try { DataUtils.saveUsers(); } catch(Exception e) {}
             
         } catch(NumberFormatException | ArithmeticException | IndexOutOfBoundsException e) {
-            JDAUtils.sendMessage(event, ColorConsts.red, "❌", "Whoops, I couldn't find that card...");
+            JDAUtils.sendMessage(event, ColorConsts.RED, "❌", "Whoops, I couldn't find that card...");
         }
     }
 
@@ -121,11 +117,11 @@ public class BackpackCmds {
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
-        int redeemCDLeft = TimeUtils.findCooldownLeft(CooldownConsts.redeemCooldown, user.getRedeemEpoch());
-        int minigameCDLeft = TimeUtils.findCooldownLeft(CooldownConsts.minigameCooldown, user.getMinigameEpoch());
-        int voteCDLeft = TimeUtils.findCooldownLeft(CooldownConsts.voteCooldown, user.getVoteEpoch());
-        int dailyCDLeft = TimeUtils.findCooldownLeft(CooldownConsts.dailyCooldown, user.getDailyEpoch());
-        int buyCDLeft = TimeUtils.findCooldownLeft(CooldownConsts.buyCooldown, user.getMarketEpoch());
+        int redeemCDLeft = TimeUtils.findCooldownLeft(CooldownConsts.REDEEM_CD, user.getRedeemEpoch());
+        int minigameCDLeft = TimeUtils.findCooldownLeft(CooldownConsts.MINIGAME_CD, user.getMinigameEpoch());
+        int voteCDLeft = TimeUtils.findCooldownLeft(CooldownConsts.VOTE_CD, user.getVoteEpoch());
+        int dailyCDLeft = TimeUtils.findCooldownLeft(CooldownConsts.DAILY_CD, user.getDailyEpoch());
+        int buyCDLeft = TimeUtils.findCooldownLeft(CooldownConsts.BUY_CD, user.getMarketEpoch());
 
         desc += FormatUtils.formatCmd("redeem") + " ┇ ";
         if(redeemCDLeft == 0) {

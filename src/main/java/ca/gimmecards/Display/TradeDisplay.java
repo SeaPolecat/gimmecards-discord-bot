@@ -3,144 +3,81 @@ import ca.gimmecards.consts.*;
 import ca.gimmecards.main.*;
 import ca.gimmecards.utils.FormatUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 public class TradeDisplay extends Display {
 
-    private User user1;
-    private User user2;
-    private UserInfo userInfo1;
-    private UserInfo userInfo2;
-    private ArrayList<CardContainer> offers1;
-    private ArrayList<CardContainer> offers2;
-    private boolean accept1;
-    private boolean accept2;
-    private boolean reject1;
-    private boolean reject2;
+    private ArrayList<CardContainer> offers;
+    private boolean hasAccepted;
+    private boolean hasRejected;
+    private boolean hasCompleted;
+    private boolean isFirst;
 
-    public TradeDisplay() {
-        super();
-        user1 = null;
-        user2 = null;
-        userInfo1 = null;
-        userInfo2 = null;
-        offers1 = new ArrayList<CardContainer>();
-        offers2 = new ArrayList<CardContainer>();
-        accept1 = false;
-        accept2 = false;
-        reject1 = false;
-        reject2 = false;
+    public TradeDisplay(SlashCommandInteractionEvent event, User user, User target, boolean isFirst) {
+        super(event, user, target);
+        
+        this.offers = new ArrayList<CardContainer>();
+        this.hasAccepted = false;
+        this.hasRejected = false;
+        this.hasCompleted = false;
+        this.isFirst = isFirst;
     }
 
-    public User getUser1() { return user1; }
-    public User getUser2() { return user2; }
-    public ArrayList<CardContainer> getOffers1() { return offers1; }
-    public ArrayList<CardContainer> getOffers2() { return offers2; }
-    //
-    public User getUser(String userId) {
-        if(isUser1(userId)) {
-            return user1;
-        }
-        return user2;
-    }
-    public UserInfo getUserInfo(String userId) {
-        if(isUser1(userId)) {
-            return userInfo1;
-        }
-        return userInfo2;
-    }
-    public ArrayList<CardContainer> getOffers(String userId) {
-        if(isUser1(userId)) {
-            return offers1;
-        }
-        return offers2;
-    }
-    public boolean getAccept(String userId) {
-        if(isUser1(userId)) {
-            return accept1;
-        }
-        return accept2;
-    }
-    //
-    public void setUser1(User u1) { user1 = u1; }
-    public void setUser2(User u2) { user2 = u2; }
-    public void setUserInfo1(UserInfo ui1) { userInfo1 = ui1; }
-    public void setUserInfo2(UserInfo ui2) { userInfo2 = ui2; }
+    public ArrayList<CardContainer> getOffers() { return offers; }
+    public boolean getHasAccepted() { return hasAccepted; }
+    public boolean getHasRejected() { return hasRejected; }
+    public boolean getHasCompleted() { return hasCompleted; }
 
-    public void setAccept(String userId, boolean a) {
-        if(isUser1(userId)) {
-            accept1 = a;
-        } else {
-            accept2 = a;
-        }
-    }
-    public void setReject(String userId, boolean a) {
-        if(isUser1(userId)) {
-            reject1 = a;
-        } else {
-            reject2 = a;
-        }
-    }
-
-    public void removeTradeDisplay() {
-        LinkedList<Display> displays = user1.getDisplays();
-
-        for(int i = 0; i < displays.size(); i++) {
-            if(displays.get(i) instanceof TradeDisplay) {
-                displays.remove(i);
-                break;
-            }
-        }
-    }
-
-    public boolean tradeExists(String userId) {
-        /*for(TradeDisplay disp : IDisplays.tradeDisplays) {
-            if(disp.getUser1() != null 
-            && disp.getUser(userId).getUserId().equals(userId)) {
-                return true;
-            }
-        }*/
-        return false;
-    }
-
-    public boolean isUser1(String userId) {
-        if(userId.equals(user1.getUserId())) {
-            return true;
-        }
-        return false;
-    }
-
-    public boolean oneAccepted() {
-        if(accept1 || accept2) {
-            return true;
-        }
-        return false;
-    }
-
-    public boolean bothAccepted() {
-        if(accept1 && accept2) {
-            return true;
-        }
-        return false;
-    }
+    public void setHasAccepted(boolean hasAccepted) { this.hasAccepted = hasAccepted; }
+    public void setHasRejected(boolean hasRejected) { this.hasRejected = hasRejected; }
+    public void setHasCompleted(boolean hasCompleted) { this.hasCompleted = hasCompleted; }
 
     @Override
-    public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, int page) {
+    public EmbedBuilder buildEmbed(User target, Server server) {
+        UserInfo userInfo = getUserInfo(), targetInfo = getTargetInfo();
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
+        TradeDisplay targetDisp = (TradeDisplay) target.findDisplay(TradeDisplay.class);
+
+        String firstPing = "", secondPing = "";
+        boolean firstHasRejected = false, secondHasRejected = false;
+        boolean firstHasAccepted = false, secondHasAccepted = false;
+        ArrayList<CardContainer> firstOffers = null, secondOffers = null;
+
+        if(this.isFirst) {
+            firstPing = userInfo.getUserPing();
+            firstHasRejected = this.hasRejected;
+            firstHasAccepted = this.hasAccepted;
+            firstOffers = this.offers;
+
+            secondPing = targetInfo.getUserPing();
+            secondHasRejected = targetDisp.getHasRejected();
+            secondHasAccepted = targetDisp.getHasAccepted();
+            secondOffers = targetDisp.getOffers();
+        } else {
+            firstPing = targetInfo.getUserPing();
+            firstHasRejected = targetDisp.hasRejected;
+            firstHasAccepted = targetDisp.hasAccepted;
+            firstOffers = targetDisp.offers;
+
+            secondPing = userInfo.getUserPing();
+            secondHasRejected = this.hasRejected;
+            secondHasAccepted = this.hasAccepted;
+            secondOffers = this.offers;
+        }
 
         desc += FormatUtils.formatCmd("offer (card #)") + " to offer a card\n";
         desc += FormatUtils.formatCmd("unoffer (trade #)") + " remove an offer\n";
         desc += FormatUtils.formatCmd("accept") + " / " + FormatUtils.formatCmd("unaccept") + " to lock your offer\n";
         desc += FormatUtils.formatCmd("reject") + " to end trade\n\n";
 
-        desc += userInfo1.getUserPing() + "\n";
+        desc += firstPing + "\n";
         desc += "┅┅\n";
         desc += "**Offer Status** ┇ ";
-        if(reject1) {
+        if(firstHasRejected) {
             desc += "🛑 Rejected\n";
-        } else if(accept1) {
+        } else if(firstHasAccepted) {
             desc += "✅ Accepted\n";
         } else {
             desc += "⏳ Deciding\n";
@@ -149,7 +86,7 @@ public class TradeDisplay extends Display {
 
         for(int i = 0; i < 5; i++) {
             try {
-                CardContainer cc = offers1.get(i);
+                CardContainer cc = firstOffers.get(i);
                 Card card = cc.getCard();
 
                 desc += "`#" + (i+1) + "` "  + card.findCardTitle(false)
@@ -164,12 +101,12 @@ public class TradeDisplay extends Display {
         }
         desc += "\n";
 
-        desc += userInfo2.getUserPing() + "\n";
+        desc += secondPing + "\n";
         desc += "┅┅\n";
         desc += "**Offer Status** ┇ ";
-        if(reject2) {
+        if(secondHasRejected) {
             desc += "🛑 Rejected\n";
-        } else if(accept2) {
+        } else if(secondHasAccepted) {
             desc += "✅ Accepted\n";
         } else {
             desc += "⏳ Deciding\n";
@@ -178,7 +115,7 @@ public class TradeDisplay extends Display {
 
         for(int i = 0; i < 5; i++) {
             try {
-                CardContainer cc = offers2.get(i);
+                CardContainer cc = secondOffers.get(i);
                 Card card = cc.getCard();
 
                 desc += "`#" + (i+1) + "` "  + card.findCardTitle(false)
@@ -191,9 +128,9 @@ public class TradeDisplay extends Display {
                 desc += "`#" + (i+1) + "`\n";
             }
         }
-        embed.setTitle(EmoteConsts.ditto + " Trading Center " + EmoteConsts.ditto);
+        embed.setTitle(EmoteConsts.DITTO + " Trading Center " + EmoteConsts.DITTO);
         embed.setDescription(desc);
-        embed.setColor(ColorConsts.tradeColor);
+        embed.setColor(ColorConsts.TRADE_COLOR);
         return embed;
     }
 }

@@ -2,22 +2,30 @@ package ca.gimmecards.display;
 import ca.gimmecards.consts.*;
 import ca.gimmecards.main.*;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 public class HelpDisplay extends Display {
 
+    public HelpDisplay(SlashCommandInteractionEvent event) {
+        super(event);
+
+        setPage(ChangelogConsts.CHANGELOG.length);
+        setMaxPage(ChangelogConsts.CHANGELOG.length);
+    }
+
     @Override
-    public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, int page) {
-        int startIndex = page - 1;
+    public EmbedBuilder buildEmbed(User user, Server server) {
+        UserInfo ui = getUserInfo();
+        int startIndex = getPage() - 1;
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
-        setMaxPage(ChangelogConsts.changelog.length);
-        desc = ChangelogConsts.changelog[startIndex].replace("[", "`/").replace("]", "`");
+        desc = ChangelogConsts.CHANGELOG[startIndex].replace("[", "`/").replace("]", "`");
         
-        embed.setTitle(EmoteConsts.eevee + " Le Changelog " + EmoteConsts.eevee);
+        embed.setTitle(EmoteConsts.EEVEE + " Le Changelog " + EmoteConsts.EEVEE);
         embed.setDescription(desc);
-        embed.setFooter("Page " + page + " of " + getMaxPage(), ui.getUserIcon());
-        embed.setColor(ColorConsts.helpColor);
+        embed.setFooter("Page " + getPage() + " of " + getMaxPage(), ui.getUserIcon());
+        embed.setColor(ColorConsts.HELP_COLOR);
         return embed;
     }
 }

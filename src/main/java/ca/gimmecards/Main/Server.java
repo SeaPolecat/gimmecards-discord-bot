@@ -59,9 +59,9 @@ public class Server extends ListenerAdapter implements Comparable<Server> {
     //================================================[ SETTERS ]======================================================================
 
     public void setServerId(String serverId) { this.serverId = serverId; }
-    public void resetMarketEpoch() { this.marketEpoch = Calendar.getInstance().getTimeInMillis() / 60000; }
+    public void resetMarketEpoch() { this.marketEpoch = Calendar.getInstance().getTimeInMillis() / 1000; }
 
-    //=============================================[ PUBLIC STATIC FUNCTIONS ]==============================================================
+    //=============================================[ STATIC METHODS ]==============================================================
 
     /**
      * finds the local Server based on a ready event
@@ -104,7 +104,7 @@ public class Server extends ListenerAdapter implements Comparable<Server> {
         return searchForServer(serverId);
     }
 
-    //==============================================[ PUBLIC NON-STATIC FUNCTIONS ]=====================================================
+    //==============================================[ INSTANCE METHODS ]=====================================================
 
     @Override
     public int compareTo(Server other) {
@@ -125,7 +125,7 @@ public class Server extends ListenerAdapter implements Comparable<Server> {
         try { DataUtils.saveServers(); } catch(Exception e) {}
     }
 
-    //===============================================[ PRIVATE FUNCTIONS ]=============================================================
+    //===============================================[ HELPER METHODS ]=============================================================
 
     /**
      * searches through the Server list for a specific server
@@ -142,7 +142,7 @@ public class Server extends ListenerAdapter implements Comparable<Server> {
         return servers.get(0);
     }
 
-    //==============================================[ JDA EVENT FUNCTIONS ]================================================================
+    //==============================================[ JDA EVENT METHODS ]================================================================
 
     /**
      * an event function that's called whenever the bot leaves a server; used to delete a server's data within Servers.json if the bot leaves that server

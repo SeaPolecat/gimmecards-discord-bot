@@ -2,26 +2,32 @@ package ca.gimmecards.display;
 import ca.gimmecards.consts.*;
 import ca.gimmecards.main.*;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 public class ShopDisplay extends Display {
 
+    public ShopDisplay(SlashCommandInteractionEvent event) {
+        super(event);
+
+        int numFullPages = CardSet.sets.length / 8;
+        int remainder = CardSet.sets.length % 8;
+
+        setMaxPage(numFullPages + (remainder / remainder));
+    }
+
     @Override
-    public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, int page) {
-        int startIndex = page * 8 - 8;
+    public EmbedBuilder buildEmbed(User user, Server server) {
+        UserInfo ui = getUserInfo();
+        int startIndex = getPage() * 8 - 8;
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
-        setMaxPage(CardSet.sets.length / 8);
-
-        if(CardSet.sets.length % 8 != 0) {
-            addMaxPage();
-        }
         desc += "`" + user.countOwnedPacks(false) + "/" + CardSet.sets.length + "` packs unlocked\n";
         desc += "┅┅\n";
         for(int i = startIndex; i < startIndex + 8; i++) {
             CardSet set = CardSet.sets[i];
 
-            desc += EmoteConsts.token + " " + set.getSetEmote() + " " + set.getSetName() + " ┇ ";
+            desc += EmoteConsts.TOKEN + " " + set.getSetEmote() + " " + set.getSetName() + " ┇ ";
             if(user.isPackUnlocked(set.getSetName())) {
                 desc += "✅\n";
             } else {
@@ -32,10 +38,10 @@ public class ShopDisplay extends Display {
             }
         }
         desc += "┅┅\n";
-        embed.setTitle(EmoteConsts.pikachu + " Poké Packs Shop " + EmoteConsts.pikachu);
+        embed.setTitle(EmoteConsts.PIKACHU + " Poké Packs Shop " + EmoteConsts.PIKACHU);
         embed.setDescription(desc);
-        embed.setFooter("Page " + page + " of " + getMaxPage(), ui.getUserIcon());
-        embed.setColor(ColorConsts.shopColor);
+        embed.setFooter("Page " + getPage() + " of " + getMaxPage(), ui.getUserIcon());
+        embed.setColor(ColorConsts.SHOP_COLOR);
         return embed;
     }
 }

@@ -9,35 +9,29 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 public class CollectionCmds_MP {
     
     public static void viewCards_(SlashCommandInteractionEvent event) {
-        User user = User.findUser(event);
-        CollectionDisplay_MP disp = new CollectionDisplay_MP();
-        //
         OptionMapping page = event.getOption("page");
-        OptionMapping user_ = event.getOption("user");
+        OptionMapping targetOption = event.getOption("user");
+        //
+        User user = User.findUser(event);
+        User target = User.findTargetUser(event, targetOption.getAsUser().getId());
+        CollectionDisplay_MP disp = null;
+
+        if(page == null)
+            disp = new CollectionDisplay_MP(event, target, 1);
+        else
+            disp = new CollectionDisplay_MP(event, target, page.getAsInt());
 
         user.addDisplay(disp);
 
-        if(user_ == null) { return; }
-
-        User mention = User.findOtherUser(event, user_.getAsUser().getId());
-
-        if(mention.getCardContainers().size() < 1) {
-            JDAUtils.sendMessage(event, ColorConsts.red, "❌", "That user doesn't have any cards yet!");
+        if(target.getCardContainers().size() < 1) {
+            JDAUtils.sendMessage(event, ColorConsts.RED, "❌", "That user doesn't have any cards yet!");
 
         } else {
-            disp.setUser(user);
-            disp.setMention(mention);
-            disp.setMentionInfo(new UserInfo(mention, event));
+            try {
+                JDAUtils.sendDynamicEmbed(event, disp, user, target, new User[]{user}, null, true);
 
-            if(page != null) {
-                try {
-                    JDAUtils.sendDynamicEmbed(event, user, null, disp, page.getAsInt());
-
-                } catch(NumberFormatException | ArithmeticException | IndexOutOfBoundsException e) {
-                    JDAUtils.sendMessage(event, ColorConsts.red, "❌", "Whoops, I couldn't find that page...");
-                }
-            } else {
-                JDAUtils.sendDynamicEmbed(event, user, null, disp, 1);
+            } catch(NumberFormatException | ArithmeticException | IndexOutOfBoundsException e) {
+                JDAUtils.sendMessage(event, ColorConsts.RED, "❌", "Whoops, I couldn't find that page...");
             }
         }
     }

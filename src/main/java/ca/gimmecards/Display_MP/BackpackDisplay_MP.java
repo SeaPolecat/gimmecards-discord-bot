@@ -4,85 +4,75 @@ import ca.gimmecards.display.*;
 import ca.gimmecards.main.*;
 import ca.gimmecards.utils.FormatUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 public class BackpackDisplay_MP extends Display {
 
-    private User user;
-    private User mention;
-    private UserInfo mentionInfo;
-
-    public BackpackDisplay_MP() {
-        super();
+    public BackpackDisplay_MP(SlashCommandInteractionEvent event, User target) {
+        super(event, target);
     }
 
-    public User getUser() { return user; }
-    public User getMention() { return mention; }
-    public UserInfo getMentionInfo() { return mentionInfo; }
-    //
-    public void setUser(User u) { user = u; }
-    public void setMention(User m) { mention = m; }
-    public void setMentionInfo(UserInfo mi) { mentionInfo = mi; }
-
     @Override
-    public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, int page) {
+    public EmbedBuilder buildEmbed(User target, Server server) {
+        UserInfo userInfo = getUserInfo(), targetInfo = getTargetInfo();
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
-        desc += EmoteConsts.XP + " " + FormatUtils.formatNumber(mention.getXP()) + "/" + FormatUtils.formatNumber(mention.getMaxXP()) + " until next level\n";
+        desc += EmoteConsts.XP + " " + FormatUtils.formatNumber(target.getXP()) + "/" + FormatUtils.formatNumber(target.getMaxXP()) + " until next level\n";
         desc += "┅┅\n";
-        desc += EmoteConsts.token + " **Tokens** ┇ " + FormatUtils.formatNumber(mention.getTokens()) + "\n";
-        desc += EmoteConsts.credits + " **Credits** ┇ " + FormatUtils.formatNumber(mention.getCredits()) + "\n";
-        desc += EmoteConsts.star + " **Stars** ┇ " + FormatUtils.formatNumber(mention.getStars()) + "\n";
-        desc += EmoteConsts.key + " **Keys** ┇ " + FormatUtils.formatNumber(mention.getKeys()) + "\n";
+        desc += EmoteConsts.TOKEN + " **Tokens** ┇ " + FormatUtils.formatNumber(target.getTokens()) + "\n";
+        desc += EmoteConsts.CREDITS + " **Credits** ┇ " + FormatUtils.formatNumber(target.getCredits()) + "\n";
+        desc += EmoteConsts.STAR + " **Stars** ┇ " + FormatUtils.formatNumber(target.getStars()) + "\n";
+        desc += EmoteConsts.KEY + " **Keys** ┇ " + FormatUtils.formatNumber(target.getKeys()) + "\n";
         desc += "┅┅\n";
 
-        if(mention.getBadges().size() > 0) {
+        if(target.getBadges().size() > 0) {
             desc += "**Badges** ┇ ";
-            for(String badge : mention.getBadges()) {
+            for(String badge : target.getBadges()) {
                 if(badge.equalsIgnoreCase("dev")) {
-                    desc += EmoteConsts.devBadge + " ";
+                    desc += EmoteConsts.DEV_BADGE + " ";
                     break;
                 }
             }
-            for(String badge : mention.getBadges()) {
+            for(String badge : target.getBadges()) {
                 if(badge.equalsIgnoreCase("staff")) {
-                    desc += EmoteConsts.staffBadge + " ";
+                    desc += EmoteConsts.STAFF_BADGE + " ";
                     break;
                 }
             }
-            for(String badge : mention.getBadges()) {
+            for(String badge : target.getBadges()) {
                 if(badge.equalsIgnoreCase("veteran")) {
-                    desc += EmoteConsts.veteranBadge + " ";
+                    desc += EmoteConsts.VETERAN_BADGE + " ";
                     break;
                 }
             }
-            for(String badge : mention.getBadges()) {
+            for(String badge : target.getBadges()) {
                 if(badge.equalsIgnoreCase("master")) {
-                    desc += EmoteConsts.masterBadge + " ";
+                    desc += EmoteConsts.MASTER_BADGE + " ";
                     break;
                 }
             }
-            for(String badge : mention.getBadges()) {
+            for(String badge : target.getBadges()) {
                 if(badge.equalsIgnoreCase("bday")) {
-                    desc += EmoteConsts.bdayBadge + " ";
+                    desc += EmoteConsts.BDAY_BADGE + " ";
                     break;
                 }
             }
-            for(String badge : mention.getBadges()) {
+            for(String badge : target.getBadges()) {
                 if(badge.equalsIgnoreCase("original")) {
-                    desc += EmoteConsts.originalBagde + " ";
+                    desc += EmoteConsts.ORIGINAL_BADGE + " ";
                     break;
                 }
             }
         }
-        if(!mention.getPinnedCard().equals("") && mention.ownsPinnedCard()) {
-            embed.setImage(mention.getPinnedCard());
+        if(!target.getPinnedCard().equals("") && target.ownsPinnedCard()) {
+            embed.setImage(target.getPinnedCard());
         }
-        embed.setTitle(ui.getUserName() + " ➜ " + mentionInfo.getUserName()
-        + " ┇ Level " + mention.getLevel());
-        embed.setThumbnail(mentionInfo.getUserIcon());
+        embed.setTitle(userInfo.getUserName() + " ➜ " + targetInfo.getUserName()
+        + " ┇ Level " + target.getLevel());
+        embed.setThumbnail(targetInfo.getUserIcon());
         embed.setDescription(desc);
-        embed.setColor(mention.getGameColor());
+        embed.setColor(target.getGameColor());
         return embed;
     }
 }

@@ -12,17 +12,17 @@ public class CooldownConsts {
         return hrs * 3600;
     }
 
-    public static final int redeemCooldown = minutesToSeconds(30);
+    public static final int REDEEM_CD = minutesToSeconds(30);
 
-    public static final int dailyCooldown = hoursToSeconds(24);
+    public static final int DAILY_CD = hoursToSeconds(24);
 
-    public static final int marketResetCooldown = hoursToSeconds(24);
+    public static final int MARKET_RESET_CD = hoursToSeconds(24);
 
-    public static final int buyCooldown = minutesToSeconds(15);
+    public static final int BUY_CD = minutesToSeconds(15);
 
-    public static final int minigameCooldown = minutesToSeconds(60);
+    public static final int MINIGAME_CD = minutesToSeconds(60);
 
-    public static final int openCooldown = 5;
+    public static final int OPEN_CD = 5;
 
-    public static final int voteCooldown = hoursToSeconds(12);
+    public static final int VOTE_CD = hoursToSeconds(12);
 }

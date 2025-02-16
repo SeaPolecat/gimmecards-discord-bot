@@ -9,32 +9,21 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 public class ViewCmds_MP {
     
     public static void viewCard_(SlashCommandInteractionEvent event) {
-        User user = User.findUser(event);
-        ViewDisplay_MP disp = new ViewDisplay_MP();
-        //
         OptionMapping cardNum = event.getOption("card-number");
-        OptionMapping user_ = event.getOption("user");
-
-        user.addDisplay(disp);
-
-        if(cardNum == null || user_ == null) { return; }
+        OptionMapping targetOption = event.getOption("user");
+        //
+        User user = User.findUser(event);
+        User target = User.findTargetUser(event, targetOption.getAsUser().getId());
+        ViewDisplay_MP disp = (ViewDisplay_MP) user.addDisplay(new ViewDisplay_MP(event, target, cardNum.getAsInt())); 
 
         try {
-            User mention = User.findOtherUser(event, user_.getAsUser().getId());
-            int page = cardNum.getAsInt();
+            if(target.getCardContainers().size() < 1)
+                JDAUtils.sendMessage(event, ColorConsts.RED, "❌", "That user doesn't have any cards yet!");
+            else
+                JDAUtils.sendDynamicEmbed(event, disp, user, target, new User[]{user}, null, true);
 
-            if(mention.getCardContainers().size() < 1) {
-                JDAUtils.sendMessage(event, ColorConsts.red, "❌", "That user doesn't have any cards yet!");
-
-            } else {
-                disp.setUser(user);
-                disp.setMention(mention);
-                disp.setMentionInfo(new UserInfo(mention, event));
-    
-                JDAUtils.sendDynamicEmbed(event, user, null, disp, page);
-            }
         } catch(NumberFormatException | ArithmeticException | IndexOutOfBoundsException e) {
-            JDAUtils.sendMessage(event, ColorConsts.red, "❌", "Whoops, I couldn't find that card...");
+            JDAUtils.sendMessage(event, ColorConsts.RED, "❌", "Whoops, I couldn't find that card...");
         }
     }
 }

@@ -21,9 +21,9 @@ public class CardCmds {
         desc += "**Servers** ┇ " + event.getJDA().getGuilds().size() + "\n";
         desc += "┅┅\n";
 
-        embed.setTitle(EmoteConsts.mascot + " Current Stats " + EmoteConsts.mascot);
+        embed.setTitle(EmoteConsts.MASCOT + " Current Stats " + EmoteConsts.MASCOT);
         embed.setDescription(desc);
-        embed.setColor(ColorConsts.blue);
+        embed.setColor(ColorConsts.BLUE);
         JDAUtils.sendEmbed(event, embed);
     }
 
@@ -36,16 +36,16 @@ public class CardCmds {
 
         if(type.equalsIgnoreCase("new")) {
             sets = CardSet.sets;
-            title = EmoteConsts.mascot + " **Card Sets** " + EmoteConsts.mascot;
+            title = EmoteConsts.MASCOT + " **Card Sets** " + EmoteConsts.MASCOT;
         } else if(type.equalsIgnoreCase("old")) {
             sets = CardSet.oldSets;
-            title = EmoteConsts.mascot + " **Old Card Sets** " + EmoteConsts.mascot;
+            title = EmoteConsts.MASCOT + " **Old Card Sets** " + EmoteConsts.MASCOT;
         } else if(type.equalsIgnoreCase("rare")) {
             sets = CardSet.rareSets;
-            title = EmoteConsts.mascot + " **Rare Card Sets** " + EmoteConsts.mascot;
+            title = EmoteConsts.MASCOT + " **Rare Card Sets** " + EmoteConsts.MASCOT;
         } else if(type.equalsIgnoreCase("promo")) {
             sets = CardSet.promoSets;
-            title = EmoteConsts.mascot + " **Promo Card Sets** " + EmoteConsts.mascot;
+            title = EmoteConsts.MASCOT + " **Promo Card Sets** " + EmoteConsts.MASCOT;
         }
         for(int i = 0; i < sets.length; i++) {
             if(sets[i] == null) {
@@ -61,7 +61,7 @@ public class CardCmds {
         }
         embed.setTitle(title);
         embed.setDescription(desc);
-        embed.setColor(ColorConsts.blue);
+        embed.setColor(ColorConsts.BLUE);
         JDAUtils.sendEmbed(event, embed);
     }
 
@@ -79,7 +79,7 @@ public class CardCmds {
         for(int i = 0; i < CardSet.promoSets.length; i++) {
             CardSet.promoSets[i] = null;
         }
-        JDAUtils.sendMessage(event, ColorConsts.blue, "", "`Successfully wiped all card sets.`");
+        JDAUtils.sendMessage(event, ColorConsts.BLUE, "", "`Successfully wiped all card sets.`");
         try { DataUtils.saveSets(); } catch(Exception e) {}
         try { DataUtils.saveOldSets(); } catch(Exception e) {}
         try { DataUtils.saveRareSets(); } catch(Exception e) {}
@@ -100,10 +100,10 @@ public class CardCmds {
             }
             CardSet.sets = newSets;
     
-            JDAUtils.sendMessage(event, ColorConsts.blue, "", "`Card set length changed by " + lengthChange + " unit(s).`");
+            JDAUtils.sendMessage(event, ColorConsts.BLUE, "", "`Card set length changed by " + lengthChange + " unit(s).`");
             try { DataUtils.saveSets(); } catch(Exception e) {}
         } catch(NumberFormatException e) {
-            JDAUtils.sendMessage(event, ColorConsts.red, "", "`Invalid length. Please use any integer.`");
+            JDAUtils.sendMessage(event, ColorConsts.RED, "", "`Invalid length. Please use any integer.`");
         }
     }
 
@@ -114,7 +114,7 @@ public class CardCmds {
             JsonArray rawContents;
             String msg = "";
     
-            JDAUtils.sendMessage(event, ColorConsts.blue, "", "`Counting the specified card set...`");
+            JDAUtils.sendMessage(event, ColorConsts.BLUE, "", "`Counting the specified card set...`");
             rawContents = CardSet.crawlPokemonAPI(setCode);
 
             for(JsonElement j : rawContents) {
@@ -143,9 +143,9 @@ public class CardCmds {
             + "Total: " + rawContents.size() + "\n"
             + "```";
 
-            JDAUtils.sendMessage(event, ColorConsts.blue, "", msg);
+            JDAUtils.sendMessage(event, ColorConsts.BLUE, "", msg);
         } catch(IOException e) {
-            JDAUtils.sendMessage(event, ColorConsts.red, "", "`Rate limit reached. Please wait for a bit.`");
+            JDAUtils.sendMessage(event, ColorConsts.RED, "", "`Rate limit reached. Please wait for a bit.`");
         }
     }
 
@@ -155,15 +155,15 @@ public class CardCmds {
             String setCode = "";
 
             if(isNew) {
-                setCode = SetCodeConsts.setCodes.get(setNum);
+                setCode = SetCodeConsts.SET_CODES.get(setNum);
             } else {
-                setCode = SetCodeConsts.oldSetCodes.get(setNum);
+                setCode = SetCodeConsts.OLD_SET_CODES.get(setNum);
             }
             if(setCode == null) {
                 Integer.parseInt("$");
 
             } else {
-                JDAUtils.sendMessage(event, ColorConsts.blue, "", "`Adding cards for set " + setNum + "...`");
+                JDAUtils.sendMessage(event, ColorConsts.BLUE, "", "`Adding cards for set " + setNum + "...`");
 
                 String setEmote = event.getJDA().getEmojisByName(setCode, true).get(0).getAsMention();
                 CardSet contents = CardSet.findContents(setEmote, setCode);
@@ -177,7 +177,7 @@ public class CardCmds {
                 } else {
                     CardSet.oldSets[setNum - 1] = contents;
                 }
-                JDAUtils.sendMessage(event, ColorConsts.blue, "", "`...and successful!`\n"
+                JDAUtils.sendMessage(event, ColorConsts.BLUE, "", "`...and successful!`\n"
                 + "```\n"
                 + contents.getSetName() + "\n"
                 + "-----\n"
@@ -197,10 +197,10 @@ public class CardCmds {
             }
         } catch(NumberFormatException | IOException e) {
             if(e.toString().startsWith("java.lang.NumberFormatException:")) {
-                JDAUtils.sendMessage(event, ColorConsts.red, "", "`The specified card set does not exist.`");
+                JDAUtils.sendMessage(event, ColorConsts.RED, "", "`The specified card set does not exist.`");
 
             } else if(e.toString().startsWith("java.io.IOException:")) {
-                JDAUtils.sendMessage(event, ColorConsts.red, "", "`Rate limit reached. Please wait for a bit.`");
+                JDAUtils.sendMessage(event, ColorConsts.RED, "", "`Rate limit reached. Please wait for a bit.`");
             }
         }
     }
@@ -211,15 +211,15 @@ public class CardCmds {
             String setCode = "";
 
             if(isRare) {
-                setCode = SetCodeConsts.rareSetCodes.get(setNum);
+                setCode = SetCodeConsts.RARE_SET_CODES.get(setNum);
             } else {
-                setCode = SetCodeConsts.promoSetCodes.get(setNum);
+                setCode = SetCodeConsts.PROMO_SET_CODES.get(setNum);
             }
             if(setCode == null) {
                 Integer.parseInt("$");
 
             } else {
-                JDAUtils.sendMessage(event, ColorConsts.blue, "", "`Adding cards for set " + setNum + "...`");
+                JDAUtils.sendMessage(event, ColorConsts.BLUE, "", "`Adding cards for set " + setNum + "...`");
 
                 String setEmote;
                 CardSet contents;
@@ -227,7 +227,7 @@ public class CardCmds {
                     setEmote = event.getJDA().getEmojisByName(setCode, true).get(0).getAsMention();
                     contents = CardSet.findRareContents(setEmote, setCode);
                 } else {
-                    setEmote = EmoteConsts.promostar;
+                    setEmote = EmoteConsts.PROMOSTAR;
                     contents = CardSet.findPromoContents(setEmote, setCode);
                 }
                 ArrayList<Card> specs = contents.getSpecials();
@@ -237,7 +237,7 @@ public class CardCmds {
                 } else {
                     CardSet.promoSets[setNum - 1] = contents;
                 }
-                JDAUtils.sendMessage(event, ColorConsts.blue, "", "`...and successful!`\n"
+                JDAUtils.sendMessage(event, ColorConsts.BLUE, "", "`...and successful!`\n"
                 + "```\n"
                 + contents.getSetName() + "\n"
                 + "-----\n"
@@ -252,10 +252,10 @@ public class CardCmds {
             }
         }  catch(NumberFormatException | IOException e) {
             if(e.toString().startsWith("java.lang.NumberFormatException:")) {
-                JDAUtils.sendMessage(event, ColorConsts.red, "", "`The specified card set does not exist.`");
+                JDAUtils.sendMessage(event, ColorConsts.RED, "", "`The specified card set does not exist.`");
                 
             } else if(e.toString().startsWith("java.io.IOException:")) {
-                JDAUtils.sendMessage(event, ColorConsts.red, "", "`Rate limit reached. Please wait for a bit.`");
+                JDAUtils.sendMessage(event, ColorConsts.RED, "", "`Rate limit reached. Please wait for a bit.`");
             }
         }
     }

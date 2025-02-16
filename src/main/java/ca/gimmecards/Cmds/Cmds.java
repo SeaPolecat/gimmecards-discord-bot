@@ -1,10 +1,6 @@
 package ca.gimmecards.cmds;
 import ca.gimmecards.consts.*;
-import ca.gimmecards.display.CollectionDisplay;
-import ca.gimmecards.display.Display;
-import ca.gimmecards.display.ViewDisplay;
-import ca.gimmecards.display_mp.CollectionDisplay_MP;
-import ca.gimmecards.display_mp.ViewDisplay_MP;
+import ca.gimmecards.display.*;
 import ca.gimmecards.main.*;
 import ca.gimmecards.utils.*;
 import ca.gimmecards.cmds_mp.*;
@@ -265,7 +261,7 @@ public class Cmds extends ListenerAdapter {
                     Commands.slash("reject", "End a trade instantly")
                 ).queue();
 
-                JDAUtils.sendMessage(event, ColorConsts.blue, "", "`Successfully updated this guild's slash commands.`");
+                JDAUtils.sendMessage(event, ColorConsts.BLUE, "", "`Successfully updated this guild's slash commands.`");
             }
         }
     }
@@ -281,11 +277,11 @@ public class Cmds extends ListenerAdapter {
         //LOCK
         if(event.getUser().getId().equals("454773340163538955") && event.getName().equals("plmnko")) {
             isLocked = false;
-            JDAUtils.sendMessage(event, ColorConsts.blue, "", "`Unlocked Gimme Cards.`");
+            JDAUtils.sendMessage(event, ColorConsts.BLUE, "", "`Unlocked Gimme Cards.`");
         }
 
         if(isLocked) {
-            JDAUtils.sendMessage(event, ColorConsts.red, "⏰", 
+            JDAUtils.sendMessage(event, ColorConsts.RED, "⏰", 
             "The developer has locked *Gimme Cards*, either to fix a bug or prepare for an update; "
             + "please wait until it comes back online!");
             return;
@@ -293,7 +289,7 @@ public class Cmds extends ListenerAdapter {
 
         if(event.getUser().getId().equals("454773340163538955") && event.getName().equals("qazxsw")) {
             isLocked = true;
-            JDAUtils.sendMessage(event, ColorConsts.blue, "", "`Locked Gimme Cards.`");
+            JDAUtils.sendMessage(event, ColorConsts.BLUE, "", "`Locked Gimme Cards.`");
         }
         
         //PRIVACY
@@ -328,17 +324,17 @@ public class Cmds extends ListenerAdapter {
         if(event.getName().equals("badges")) {
             HelpCmds.viewBadges(event);
         }
-        if(event.getName().equals("premium")) {
+        /*if(event.getName().equals("premium")) {
             HelpCmds.viewPremium(event);
-        }
+        }*/
         if(event.getName().equals("changelog")) {
             HelpCmds.viewChangelog(event);
         }
 
         //LEADERBOARD
-        if(event.getName().equals("ranks")) {
+        /*if(event.getName().equals("ranks")) {
             LeaderboardCmds.viewRanks(event);
-        }
+        }*/
         if(event.getName().equals("leaderboard")) {
             LeaderboardCmds.viewLeaderboard(event);
         }
@@ -495,128 +491,53 @@ public class Cmds extends ListenerAdapter {
      */
     public void onButtonInteraction(ButtonInteractionEvent event) {
         User user = User.findUser(event);
-        String buttonId = event.getComponentId();
-        int semiColIndex = buttonId.indexOf(";");
-        int underscoreIndex = buttonId.indexOf("_");
-        String userId = buttonId.substring(0, semiColIndex);
-        String slashId = buttonId.substring(semiColIndex + 1, underscoreIndex);
-        String buttonType = buttonId.substring(underscoreIndex + 1);
+        Server server = Server.findServer(event);
+        String[] buttonArgs = event.getComponentId().split(";");
+        String buttonSlashId = buttonArgs[0];
+        String buttonType = buttonArgs[1];
+        String buttonUserId = buttonArgs[2];
+        String buttonTargetId = "";
+        Display disp = user.findDisplay(buttonSlashId);
 
         event.deferEdit().queue();
 
-        if(!user.getUserId().equals(userId)) {
+        if(buttonArgs.length > 3)
+            buttonTargetId = buttonArgs[3];
+
+        if(buttonTargetId.isEmpty() && !user.getUserId().equals(buttonUserId)
+        || !buttonTargetId.isEmpty() && !user.getUserId().equals(buttonUserId) && !user.getUserId().equals(buttonTargetId)) {
+
             event.getHook().sendMessage("This is not your button!").setEphemeral(true).queue();
-
-        } else {
-            if(buttonType.equals("deleteaccount_yes")) {
-                PrivacyCmds.confirmDeletion(event);
-
-            } else if(buttonType.equals("deleteaccount_no")) {
-                PrivacyCmds.denyDeletion(event);
-
-            } else if(buttonType.equals("premium")) {
-                HelpCmds.viewPremium(event);
-
-            } else {
-                Server server = Server.findServer(event);
-                Display disp = user.findDisplay(slashId);
-
-                if(disp == null)
-                    event.getHook().sendMessage("This button is outdated. Please send a new command!").setEphemeral(true).queue();
-                else
-                    flipPage(event, user, server, disp);
-            }
+            return;
         }
-    }
-
-    /**
-     * flips the page on a dynamic embed (one that can be page-flipped or refreshed)
-     * @param event the button event
-     * @param user the player
-     * @param server the server
-     * @param disp the type of display that's being page-flipped
-     */
-    private void flipPage(ButtonInteractionEvent event, User user, Server server, Display disp) {
-        String buttonId = event.getComponentId();
-        int underscoreIndex = buttonId.indexOf("_");
-        String buttonType = buttonId.substring(underscoreIndex + 1);
-
-        if(disp instanceof CollectionDisplay) {
-            if(user.getCardContainers().size() < 1) {
-                disp.setPage(1);
-                event.getMessage().delete().queue();
-                return;
-
-            } else if(user.getCardContainers().size() <= (disp.getPage() * 15) - 15) {
-                do {
-                    disp.prevPage();
-                } while(user.getCardContainers().size() <= (disp.getPage() * 15) - 15);
-                
-                JDAUtils.editEmbed(event, user, server, disp, disp.getPage());
-                return;
-            }
-
-        } else if(disp instanceof CollectionDisplay_MP) {
-            User mention = ((CollectionDisplay_MP) disp).getMention();
-
-            if(mention.getCardContainers().size() < 1) {
-                disp.setPage(1);
-                event.getMessage().delete().queue();
-                return;
-
-            } else if(mention.getCardContainers().size() <= (disp.getPage() * 15) - 15) {
-                while(mention.getCardContainers().size() <= (disp.getPage() * 15) - 15) {
-                    disp.prevPage();
-                }
-                JDAUtils.editEmbed(event, user, server, disp, disp.getPage());
-                return; 
-            }
-
-        } else if(disp instanceof ViewDisplay) {
-            if(user.getCardContainers().size() < 1) {
-                disp.setPage(1);
-                event.getMessage().delete().queue();
-                return;
-
-            } else if(user.getCardContainers().size() < disp.getPage()) {
-                while(user.getCardContainers().size() < disp.getPage()) {
-                    disp.prevPage();
-                }
-                JDAUtils.editEmbed(event, user, server, disp, disp.getPage());
-                return;
-            }
-
-        } else if(disp instanceof ViewDisplay_MP) {
-            User mention = ((ViewDisplay_MP) disp).getMention();
-
-            if(mention.getCardContainers().size() < 1) {
-                disp.setPage(1);
-                event.getMessage().delete().queue();
-                return;
-
-            } else if(mention.getCardContainers().size() < disp.getPage()) {
-                while(mention.getCardContainers().size() < disp.getPage()) {
-                    disp.prevPage();
-                }
-                JDAUtils.editEmbed(event, user, server, disp, disp.getPage());
-                return;
-            }
+        if(disp == null) {
+            event.getHook().sendMessage("This button is outdated. Please send a new command!").setEphemeral(true).queue();
+            return;
         }
 
-        if(buttonType.equals("left")) {
-            if(disp.getPage() <= 1)
-                disp.setPage(disp.getMaxPage());
-            else
-                disp.prevPage();
+        if(buttonType.equals("deleteaccount_yes")) {
+            PrivacyCmds.confirmDeletion(event);
+            return;
+
+        } else if(buttonType.equals("deleteaccount_no")) {
+            PrivacyCmds.denyDeletion(event);
+            return;
+
+        } else if(buttonType.equals("left")) {
+            disp.prevPage();
 
         } else if(buttonType.equals("right")) {
-            if(disp.getPage() >= disp.getMaxPage())
-                disp.setPage(1);
-            else
-                disp.nextPage();
+            disp.nextPage();
         }
-        // if the buttonType is not 'left' or 'right', flip to the same page
-        JDAUtils.editEmbed(event, user, server, disp, disp.getPage());
+
+        if(disp.getTargetId().isEmpty()) {
+            JDAUtils.editEmbed(event, disp, user, server);
+
+        } else {
+            User target = User.findTargetUser(event, disp.getTargetId());
+
+            JDAUtils.editEmbed(event, disp, target, server);
+        }
     }
 
     //===============================================[ PRIVATE FUNCTIONS ]=============================================================
@@ -645,7 +566,7 @@ public class Cmds extends ListenerAdapter {
                     }
                     guidance = guidance.trim();
     
-                    JDAUtils.sendMessage(event, ColorConsts.red, "❌", "Please follow the format: `" + args[0] + " " + guidance + "`");
+                    JDAUtils.sendMessage(event, ColorConsts.RED, "❌", "Please follow the format: `" + args[0] + " " + guidance + "`");
                 }
             }
         }

@@ -2,9 +2,9 @@ package ca.gimmecards.consts;
 
 public class ChangelogConsts {
 
-    public static final String updateMsg = "🟠 New update on 10/14/2023 ┇ `/changelog`";
+    public static final String UPDATE_MESSAGE = "🟠 New update on 10/14/2023 ┇ `/changelog`";
     
-    public static final String[] changelog = {
+    public static final String[] CHANGELOG = {
 
         //1
         "**Update 7/19/2021**\n"

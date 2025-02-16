@@ -9,21 +9,17 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 public class SearchCmds {
 
     public static void searchCards(SlashCommandInteractionEvent event) {
-        User user = User.findUser(event);
-        SearchDisplay disp = new SearchDisplay();
-        //
         OptionMapping location = event.getOption("location");
         OptionMapping filter = event.getOption("filter");
         OptionMapping isExact = event.getOption("exact-match");
         OptionMapping keywords = event.getOption("keywords");
-
-        user.addDisplay(disp);
-
-        if(location == null || filter == null || isExact == null || keywords == null) { return; }
+        //
+        User user = User.findUser(event);
+        SearchDisplay disp = (SearchDisplay) user.addDisplay(new SearchDisplay(event));
 
         if(location.getAsString().equalsIgnoreCase("collection")) {
             if(user.getCardContainers().size() < 1) {
-                JDAUtils.sendMessage(event, ColorConsts.red, "❌", "You don't have any cards yet!");
+                JDAUtils.sendMessage(event, ColorConsts.RED, "❌", "You don't have any cards yet!");
 
             } else {
                 disp.modifyVariables(
@@ -32,7 +28,7 @@ public class SearchCmds {
                     isExact.getAsBoolean(),
                     keywords.getAsString()
                 );
-                JDAUtils.sendDynamicEmbed(event, user, null, disp, 1);
+                JDAUtils.sendDynamicEmbed(event, disp, user, null, true);
             }
 
         } else if(location.getAsString().equalsIgnoreCase("pokedex")) {
@@ -42,16 +38,14 @@ public class SearchCmds {
                 isExact.getAsBoolean(),
                 keywords.getAsString()
             );
-            JDAUtils.sendDynamicEmbed(event, user, null, disp, 1);
+            JDAUtils.sendDynamicEmbed(event, disp, user, null, true);
         }
     }
 
     public static void viewAnyCard(SlashCommandInteractionEvent event) {
-        UserInfo ui = new UserInfo(event);
-        //
         OptionMapping cardId = event.getOption("card-id");
-
-        if(cardId == null) { return; }
+        //
+        UserInfo ui = new UserInfo(event);
 
         try {
             Card card = Card.findCardById(cardId.getAsString());
@@ -60,7 +54,7 @@ public class SearchCmds {
             card.displayCard(event, ui, "", footer, false);
 
         } catch(NullPointerException e) {
-            JDAUtils.sendMessage(event, ColorConsts.red, "❌", "Whoops, I couldn't find that card...");
+            JDAUtils.sendMessage(event, ColorConsts.RED, "❌", "Whoops, I couldn't find that card...");
         }
     }
 }

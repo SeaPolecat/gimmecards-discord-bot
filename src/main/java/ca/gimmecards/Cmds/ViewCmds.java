@@ -9,26 +9,20 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 public class ViewCmds {
 
     public static void viewCard(SlashCommandInteractionEvent event) {
-        User user = User.findUser(event);
-        ViewDisplay disp = new ViewDisplay();
-        //
         OptionMapping cardNum = event.getOption("card-number");
-
-        user.addDisplay(disp);
-
-        if(cardNum == null) { return; }
+        //
+        User user = User.findUser(event);
+        ViewDisplay disp = (ViewDisplay) user.addDisplay(new ViewDisplay(event, cardNum.getAsInt()));
 
         try {
             if(user.getCardContainers().size() < 1) {
-                JDAUtils.sendMessage(event, ColorConsts.red, "❌", "You don't have any cards yet!");
+                JDAUtils.sendMessage(event, ColorConsts.RED, "❌", "You don't have any cards yet!");
 
             } else {
-                int page = cardNum.getAsInt();
-
-                JDAUtils.sendDynamicEmbed(event, user, null, disp, page);
+                JDAUtils.sendDynamicEmbed(event, disp, user, null, true);
             }
         } catch(NumberFormatException | ArithmeticException | IndexOutOfBoundsException e) {
-            JDAUtils.sendMessage(event, ColorConsts.red, "❌", "Whoops, I couldn't find that card...");
+            JDAUtils.sendMessage(event, ColorConsts.RED, "❌", "Whoops, I couldn't find that card...");
         }
     }
 }

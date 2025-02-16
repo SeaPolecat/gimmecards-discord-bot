@@ -16,10 +16,10 @@ public class VoteCmds {
 
     public static void voteBot(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
-        int cooldownLeft = TimeUtils.findCooldownLeft(CooldownConsts.voteCooldown, user.getVoteEpoch());
+        int cooldownLeft = TimeUtils.findCooldownLeft(CooldownConsts.VOTE_CD, user.getVoteEpoch());
 
         if(cooldownLeft > 0) {
-            JDAUtils.sendMessage(event, ColorConsts.red, "⏰", "Please wait another " 
+            JDAUtils.sendMessage(event, ColorConsts.RED, "⏰", "Please wait another " 
             + FormatUtils.formatCooldown(cooldownLeft));
 
         } else {
@@ -29,9 +29,9 @@ public class VoteCmds {
     
             desc += "Click the button below to vote, then type " + FormatUtils.formatCmd("claim") + " to claim your reward!\n\n";
     
-            embed.setTitle(EmoteConsts.lootbox + " Voting Reward " + EmoteConsts.lootbox);
+            embed.setTitle(EmoteConsts.LOOTBOX + " Voting Reward " + EmoteConsts.LOOTBOX);
             embed.setDescription(desc);
-            embed.setColor(ColorConsts.voteColor);
+            embed.setColor(ColorConsts.VOTE_COLOR);
 
             event.getHook().editOriginalEmbeds(embed.build())
             .setActionRow(
@@ -42,10 +42,11 @@ public class VoteCmds {
     
     public static void claimReward(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
-        int cooldownLeft = TimeUtils.findCooldownLeft(CooldownConsts.voteCooldown, user.getVoteEpoch());
+        UserInfo ui = new UserInfo(event);
+        int cooldownLeft = TimeUtils.findCooldownLeft(CooldownConsts.VOTE_CD, user.getVoteEpoch());
 
         if(cooldownLeft > 0) {
-            JDAUtils.sendMessage(event, ColorConsts.red, "⏰", "Please wait another " 
+            JDAUtils.sendMessage(event, ColorConsts.RED, "⏰", "Please wait another " 
             + FormatUtils.formatCooldown(cooldownLeft));
 
         } else {
@@ -54,13 +55,13 @@ public class VoteCmds {
                 HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("https://top.gg/api/bots/814025499381727232/check?userId=" + user.getUserId()))
                 .GET()
-                .header("Authorization", PasswordConsts.dblToken)
+                .header("Authorization", PasswordConsts.DBL_TOKEN)
                 .build();
                 String response = client.send(request, HttpResponse.BodyHandlers.ofString()).body().toString();
                 boolean hasVoted = response.contains("1");
     
                 if(!hasVoted) {
-                    JDAUtils.sendMessage(event, ColorConsts.red, "❌", "You haven't voted for *Gimme Cards* yet! "
+                    JDAUtils.sendMessage(event, ColorConsts.RED, "❌", "You haven't voted for *Gimme Cards* yet! "
                     + "Please use " + FormatUtils.formatCmd("vote"));
 
                 } else {
@@ -68,12 +69,12 @@ public class VoteCmds {
 
                     user.resetVoteEpoch();
 
-                    msg += FormatUtils.formatName(event) + " claimed their gift! Thank you for voting 😊";
-                    msg += user.updateTokens(RewardConsts.claimTokens, true);
-                    msg += user.updateCredits(NumberUtils.randRange(RewardConsts.claimCredits_min, RewardConsts.claimCredits_max), false);
-                    msg += user.updateStars(RewardConsts.claimStars, false);
+                    msg += ui.getUserPing() + " claimed their gift! Thank you for voting 😊";
+                    msg += user.updateTokens(RewardConsts.CLAIM_TOKENS, true);
+                    msg += user.updateCredits(NumberUtils.randRange(RewardConsts.CLAIM_CREDITS_MIN, RewardConsts.CLAIM_CREDITS_MAX), false);
+                    msg += user.updateStars(RewardConsts.CLAIM_STARS, false);
 
-                    JDAUtils.sendMessage(event, user.getGameColor(), EmoteConsts.lootbox, msg);
+                    JDAUtils.sendMessage(event, user.getGameColor(), EmoteConsts.LOOTBOX, msg);
                     try { DataUtils.saveUsers(); } catch(Exception e) {}
                 }
             } catch(IOException | InterruptedException e) {}

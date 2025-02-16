@@ -1,6 +1,7 @@
 package ca.gimmecards.display;
 import ca.gimmecards.main.*;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 // should be an abstract class, but this CAN'T be an abstract class (due to complications with loading data on startup)
 public class Display {
@@ -10,32 +11,70 @@ public class Display {
     private String slashId;     // the slash command ID of this display
     private Integer page;       // the page number of this display
     private Integer maxPage;    // the maximum page of this display
+    private UserInfo userInfo;
+    private UserInfo targetInfo;
+    private String targetId;
 
     //=============================================[ CONSTRUCTORS ]====================================================================
 
-    /**
-     * default constructor for Display
-     */
-    public Display() {
-        this.slashId = "";
+    public Display(SlashCommandInteractionEvent event) {
+        this.slashId = event.getInteraction().getId();
         this.page = 1;
         this.maxPage = 1;
+        this.userInfo = new UserInfo(event);
+        this.targetInfo = null;
+        this.targetId = "";
+    }
+
+    // single-sided multiplayer
+    public Display(SlashCommandInteractionEvent event, User target) {
+        this(event);
+
+        this.targetInfo = new UserInfo(event, target);
+        this.targetId = target.getUserId();
+    }
+
+    // double-sided multiplayer
+    public Display(SlashCommandInteractionEvent event, User user, User target) {
+        this(event, target);
+        
+        this.userInfo = new UserInfo(event, user);
     }
 
     //===============================================[ GETTERS ] ======================================================================
     
-    public String getSlashId() { return this.slashId; }
-    public int getPage() { return this.page; }
-    public int getMaxPage() { return this.maxPage; }
+    public String getSlashId() { return slashId; }
+    public int getPage() { return page; }
+    public int getMaxPage() { return maxPage; }
+    public UserInfo getUserInfo() { return userInfo; }
+    public UserInfo getTargetInfo() { return targetInfo; }
+    public String getTargetId() { return targetId; }
     
     //================================================[ SETTERS ]======================================================================
-
-    public void setSlashId(String slashId) { this.slashId = slashId; }
+    
     public void setPage(int page) { this.page = page; }
-    public void nextPage() { this.page++; }
-    public void prevPage() { this.page--; }
     public void setMaxPage(int maxPage) { this.maxPage = maxPage; }
-    public void addMaxPage() { this.maxPage++; }
+
+    public void nextPage() {
+        page++;
+
+        if(page > maxPage)
+            page = 1;
+    }
+    public void prevPage() {
+        page--;
+
+        if(page < 1)
+            page = maxPage;
+    }
+
+    public void checkOverflow() {
+        if(page < 0)
+            page = 1;
+
+        else if(page > maxPage + 1)
+            page = maxPage;
+    }
 
     //==============================================[ PUBLIC NON-STATIC FUNCTIONS ]=====================================================
 
@@ -47,5 +86,5 @@ public class Display {
      * @param page the page that this embed should initially show
      * @return the completed embed
      */
-    public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, int page) { return null; }
+    public EmbedBuilder buildEmbed(User user, Server server) { return null; }
 }

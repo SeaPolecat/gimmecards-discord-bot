@@ -8,14 +8,13 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 public class SellCmds {
 
     public static void sellSingle(SlashCommandInteractionEvent event) {
-        User user = User.findUser(event);
-        //
         OptionMapping cardNum = event.getOption("card-number");
-
-        if(cardNum == null) { return; }
+        //
+        User user = User.findUser(event);
+        UserInfo ui = new UserInfo(event);
         
         if(user.getCardContainers().size() < 1) {
-            JDAUtils.sendMessage(event, ColorConsts.red, "❌", "You don't have any cards to sell!");
+            JDAUtils.sendMessage(event, ColorConsts.RED, "❌", "You don't have any cards to sell!");
 
         } else {
             try {
@@ -23,15 +22,15 @@ public class SellCmds {
                 CardContainer cc = user.getCardContainers().get(index);
                 String cardTitle = cc.getCard().findCardTitle(cc.getIsFav());
                 int profit = findSingleProfit(user, index);
-                int creditsReward = (int)(profit * RewardConsts.sellCredits_percent);
+                int creditsReward = (int)(profit * RewardConsts.SELL_CREDITS_PERCENT);
                 
                 if(profit == -1) {
-                    JDAUtils.sendMessage(event, ColorConsts.red, "❌", "Sorry, that card is in your favourites!");
+                    JDAUtils.sendMessage(event, ColorConsts.RED, "❌", "Sorry, that card is in your favourites!");
 
                 } else {
                     String msg = "";
 
-                    msg += FormatUtils.formatName(event) + " sold **" + cardTitle + "**";
+                    msg += ui.getUserPing() + " sold **" + cardTitle + "**";
                     msg += user.updateXP(profit, true);
                     if(creditsReward > 0) {
                         msg += user.updateCredits(creditsReward, false);
@@ -42,31 +41,32 @@ public class SellCmds {
                     try { DataUtils.saveUsers(); } catch(Exception e) {}
                 }
             } catch(NumberFormatException | ArithmeticException | IndexOutOfBoundsException e) {
-                JDAUtils.sendMessage(event, ColorConsts.red, "❌", "Whoops, I couldn't find that card...");
+                JDAUtils.sendMessage(event, ColorConsts.RED, "❌", "Whoops, I couldn't find that card...");
             }
         }
     }
 
     public static void sellDuplicates(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
+        UserInfo ui = new UserInfo(event);
 
         if(user.getCardContainers().size() < 1) {
-            JDAUtils.sendMessage(event, ColorConsts.red, "❌", "You don't have any cards to sell!");
+            JDAUtils.sendMessage(event, ColorConsts.RED, "❌", "You don't have any cards to sell!");
 
         } else if(!hasDuplicates(user)) {
-            JDAUtils.sendMessage(event, ColorConsts.red, "❌", "You don't have any duplicate cards!");
+            JDAUtils.sendMessage(event, ColorConsts.RED, "❌", "You don't have any duplicate cards!");
 
         } else {
             int profit = findDuplicatesProfit(user);
-            int creditsReward = (int)(profit * RewardConsts.sellCredits_percent);
+            int creditsReward = (int)(profit * RewardConsts.SELL_CREDITS_PERCENT);
             
             if(profit == -1) {
-                JDAUtils.sendMessage(event, ColorConsts.red, "❌", "Sorry, all your duplicate cards are in your favourites!");
+                JDAUtils.sendMessage(event, ColorConsts.RED, "❌", "Sorry, all your duplicate cards are in your favourites!");
                 
             } else {
                 String msg = "";
 
-                msg += FormatUtils.formatName(event) + " sold all duplicates!";
+                msg += ui.getUserPing() + " sold all duplicates!";
                 msg += user.updateXP(profit, true);
                 if(creditsReward > 0) {
                     msg += user.updateCredits(creditsReward, false);
@@ -81,21 +81,22 @@ public class SellCmds {
 
     public static void sellAll(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
+        UserInfo ui = new UserInfo(event);
         
         if(user.getCardContainers().size() < 1) {
-            JDAUtils.sendMessage(event, ColorConsts.red, "❌", "You don't have any cards to sell!");
+            JDAUtils.sendMessage(event, ColorConsts.RED, "❌", "You don't have any cards to sell!");
 
         } else {
             int profit = findAllProfit(user);
-            int creditsReward = (int)(profit * RewardConsts.sellCredits_percent);
+            int creditsReward = (int)(profit * RewardConsts.SELL_CREDITS_PERCENT);
 
             if(profit == -1) {
-                JDAUtils.sendMessage(event, ColorConsts.red, "❌", "Sorry, all your cards are in your favourites!");
+                JDAUtils.sendMessage(event, ColorConsts.RED, "❌", "Sorry, all your cards are in your favourites!");
 
             } else {
                 String msg = "";
 
-                msg += FormatUtils.formatName(event) + " sold all their cards! (except favourites)";
+                msg += ui.getUserPing() + " sold all their cards! (except favourites)";
                 msg += user.updateXP(profit, true);
                 if(creditsReward > 0) {
                     msg += user.updateCredits(creditsReward, false);

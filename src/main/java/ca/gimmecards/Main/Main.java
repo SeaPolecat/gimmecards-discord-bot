@@ -26,15 +26,15 @@ public class Main {
 
     public static void main(String[] args) throws LoginException {
 
-        encryptor.setPassword(PasswordConsts.encryptorPassword);
+        encryptor.setPassword(PasswordConsts.ENCRYPTOR_PASSWORD);
 
         dbl = new DiscordBotListAPI.Builder()
-        .token(PasswordConsts.dblToken)
+        .token(PasswordConsts.DBL_TOKEN)
         .botId("814025499381727232")
         .build();
 
         jda = JDABuilder
-        .createDefault(PasswordConsts.testToken, // change this token accordingly
+        .createDefault(PasswordConsts.TEST_TOKEN, // change this token accordingly
         GatewayIntent.MESSAGE_CONTENT, // comment this line out before releasing an update (the actual bot isn't allowed to have this)
         GatewayIntent.GUILD_MESSAGES,
         GatewayIntent.GUILD_MEMBERS,
@@ -43,6 +43,7 @@ public class Main {
         .setMemberCachePolicy(MemberCachePolicy.ALL)
         .enableCache(CacheFlag.EMOJI)
         .disableCache(CacheFlag.VOICE_STATE)
+        .disableCache(CacheFlag.SCHEDULED_EVENTS)
         .build();
 
         jda.getPresence().setStatus(OnlineStatus.ONLINE);

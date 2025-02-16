@@ -9,35 +9,35 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 public class CollectionCmds {
 
     public static void viewCards(SlashCommandInteractionEvent event) {
-        User user = User.findUser(event);
-        CollectionDisplay disp = new CollectionDisplay();
-        //
         OptionMapping page = event.getOption("page");
+        //
+        User user = User.findUser(event);
+        CollectionDisplay disp = null;
+
+        if(page == null)
+            disp = new CollectionDisplay(event, 1);
+        else
+            disp = new CollectionDisplay(event, page.getAsInt());
 
         user.addDisplay(disp);
 
         if(user.getCardContainers().size() < 1) {
-            JDAUtils.sendMessage(event, ColorConsts.red, "❌", "You don't have any cards yet!");
+            JDAUtils.sendMessage(event, ColorConsts.RED, "❌", "You don't have any cards yet!");
 
         } else {
-            if(page != null) {
-                try {
-                    JDAUtils.sendDynamicEmbed(event, user, null, disp, page.getAsInt());
-                } catch(IndexOutOfBoundsException e) {
-                    JDAUtils.sendMessage(event, ColorConsts.red, "❌", "Whoops, I couldn't find that page...");
-                }
-            } else {
-                JDAUtils.sendDynamicEmbed(event, user, null, disp, 1);
+            try {
+                JDAUtils.sendDynamicEmbed(event, disp, user, null, true);
+
+            } catch(NumberFormatException | ArithmeticException | IndexOutOfBoundsException e) {
+                JDAUtils.sendMessage(event, ColorConsts.RED, "❌", "Whoops, I couldn't find that page...");
             }
         }
     }
 
     public static void favouriteCard(SlashCommandInteractionEvent event) {
-        User user = User.findUser(event);
-        //
         OptionMapping cardNum = event.getOption("card-number");
-
-        if(cardNum == null) { return; }
+        //
+        User user = User.findUser(event);
 
         try {
             int index = cardNum.getAsInt() - 1;
@@ -45,7 +45,7 @@ public class CollectionCmds {
             String cardTitle = cc.getCard().findCardTitle(false);
 
             if(cc.getIsFav()) {
-                JDAUtils.sendMessage(event, ColorConsts.red, "❌", "That card is already in your favorites!");
+                JDAUtils.sendMessage(event, ColorConsts.RED, "❌", "That card is already in your favorites!");
 
             } else {
                 cc.setIsFav(true);
@@ -54,16 +54,14 @@ public class CollectionCmds {
                 try { DataUtils.saveUsers(); } catch(Exception e) {}
             }
         } catch(NumberFormatException | ArithmeticException | IndexOutOfBoundsException e) {
-            JDAUtils.sendMessage(event, ColorConsts.red, "❌", "Whoops, I couldn't find that card...");
+            JDAUtils.sendMessage(event, ColorConsts.RED, "❌", "Whoops, I couldn't find that card...");
         }
     }
 
     public static void unfavouriteCard(SlashCommandInteractionEvent event) {
-        User user = User.findUser(event);
-        //
         OptionMapping cardNum = event.getOption("card-number");
-
-        if(cardNum == null) { return; }
+        //
+        User user = User.findUser(event);
 
         try {
             int index = cardNum.getAsInt() - 1;
@@ -71,7 +69,7 @@ public class CollectionCmds {
             String cardTitle = cc.getCard().findCardTitle(false);
 
             if(!cc.getIsFav()) {
-                JDAUtils.sendMessage(event, ColorConsts.red, "❌", "That card is already non-favorited!");
+                JDAUtils.sendMessage(event, ColorConsts.RED, "❌", "That card is already non-favorited!");
                 
             } else {
                 cc.setIsFav(false);
@@ -80,7 +78,7 @@ public class CollectionCmds {
                 try { DataUtils.saveUsers(); } catch(Exception e) {}
             }
         } catch(NumberFormatException | ArithmeticException | IndexOutOfBoundsException e) {
-            JDAUtils.sendMessage(event, ColorConsts.red, "❌", "Whoops, I couldn't find that card...");
+            JDAUtils.sendMessage(event, ColorConsts.RED, "❌", "Whoops, I couldn't find that card...");
         }
     }
 
@@ -95,7 +93,7 @@ public class CollectionCmds {
             }
         }
         if(!exists) {
-            JDAUtils.sendMessage(event, ColorConsts.red, "❌", "Sorry, you have no shiny cards left to favorite!");
+            JDAUtils.sendMessage(event, ColorConsts.RED, "❌", "Sorry, you have no shiny cards left to favorite!");
 
         } else {
             JDAUtils.sendMessage(event, user.getGameColor(), "💞", "Added all your shiny cards to your favorites!");
@@ -104,12 +102,10 @@ public class CollectionCmds {
     }
 
     public static void sortCards(SlashCommandInteractionEvent event) {
-        User user = User.findUser(event);
-        //
         OptionMapping option = event.getOption("option");
         OptionMapping order = event.getOption("order");
-
-        if(option == null || order == null) { return; }
+        //
+        User user = User.findUser(event);
 
         if(option.getAsString().equalsIgnoreCase("alphabetical")) {
             user.setSortMethod("alphabetical");

@@ -1,18 +1,20 @@
 package ca.gimmecards.display;
-import net.dv8tion.jda.api.EmbedBuilder;
-import java.util.ArrayList;
-
 import ca.gimmecards.main.*;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+
+import java.util.ArrayList;
 
 public class OpenDisplay extends Display {
 
     private ArrayList<Card> newCards;
     private String message;
 
-    public OpenDisplay() {
-        super();
+    public OpenDisplay(SlashCommandInteractionEvent event) {
+        super(event);
         newCards = new ArrayList<Card>();
-        message = "";
+
+        setMaxPage(newCards.size());
     }
 
     public ArrayList<Card> getNewCards() { return newCards; }
@@ -22,14 +24,13 @@ public class OpenDisplay extends Display {
     public void setMessage(String m) { message = m; }
     
     @Override
-    public EmbedBuilder buildEmbed(User user, UserInfo ui, Server server, int page) {
-        Card card = newCards.get(page - 1);
+    public EmbedBuilder buildEmbed(User user, Server server) {
+        UserInfo ui = getUserInfo();
+        Card card = newCards.get(getPage() - 1);
         String cardTitle = card.findCardTitle(false);
         Boolean isSellable = card.isCardSellable();
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
-
-        setMaxPage(newCards.size());
 
         if(!user.ownsCard(card)) {
             cardTitle += " 🆕";
@@ -44,7 +45,7 @@ public class OpenDisplay extends Display {
         embed.setTitle(cardTitle);
         embed.setDescription(desc);
         embed.setImage(card.getCardImage());
-        embed.setFooter("Page " + page + " of " + getMaxPage(), ui.getUserIcon());
+        embed.setFooter("Page " + getPage() + " of " + getMaxPage(), ui.getUserIcon());
         embed.setColor(card.findEmbedColour());
         return embed;
     }
