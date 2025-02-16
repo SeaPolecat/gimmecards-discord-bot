@@ -55,7 +55,7 @@ public class VoteCmds {
                 HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("https://top.gg/api/bots/814025499381727232/check?userId=" + user.getUserId()))
                 .GET()
-                .header("Authorization", PasswordConsts.DBL_TOKEN)
+                .header("Authorization", Main.dotenv.get("DBL_TOKEN"))
                 .build();
                 String response = client.send(request, HttpResponse.BodyHandlers.ofString()).body().toString();
                 boolean hasVoted = response.contains("1");
