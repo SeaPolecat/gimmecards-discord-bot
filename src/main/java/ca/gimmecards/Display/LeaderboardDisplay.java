@@ -6,16 +6,10 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 public class LeaderboardDisplay extends Display {
-
-    int selfRank;
     
     public LeaderboardDisplay(SlashCommandInteractionEvent event) {
         super(event);
-
-        selfRank = 0;
     }
-
-    public void setSelfRank(int selfRank) { this.selfRank = selfRank; }
 
     @Override
     public EmbedBuilder buildEmbed(User user, Server server) {
@@ -24,7 +18,7 @@ public class LeaderboardDisplay extends Display {
         String desc = "";
 
         desc += ui.getUserPing() + " is `#";
-        desc += (selfRank + 1) + "` in the world\n";
+        desc += findSelfRank(user) + "` in the world\n";
         desc += "┅┅\n";
 
         desc += findMiddle();
@@ -36,6 +30,18 @@ public class LeaderboardDisplay extends Display {
         embed.setFooter("Page " + getPage() + " of " + getMaxPage(), ui.getUserIcon());
 
         return embed;
+    }
+
+    private int findSelfRank(User user) {
+        int i = 0;
+
+        while(i < User.usersRanked.size()) {
+            User userRanked = User.usersRanked.get(i);
+
+            if(userRanked.getUserId().equals(user.getUserId()))
+                break;
+        }
+        return i + 1;
     }
 
     private String findMiddle() {

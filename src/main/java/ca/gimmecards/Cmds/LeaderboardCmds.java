@@ -13,8 +13,6 @@ public class LeaderboardCmds {
 
         synchronized(User.usersRanked) {
             Collections.sort(User.usersRanked);
-
-            disp.setSelfRank(User.searchForUserRanked(user));
         }
         JDAUtils.sendDynamicEmbed(event, disp, user, null, false);
     }
