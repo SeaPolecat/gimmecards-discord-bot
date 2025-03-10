@@ -40,6 +40,8 @@ public class LeaderboardDisplay extends Display {
 
             if(userRanked.getUserId().equals(user.getUserId()))
                 break;
+
+            i++;
         }
         return i + 1;
     }
@@ -59,7 +61,7 @@ public class LeaderboardDisplay extends Display {
             else
                 middle += "`#" + (i+1) + "`";
                 
-            middle += " ┇ **" + Main.jda.getUserById(userRanked.getUserId()).getEffectiveName() + "**"
+            middle += " ┇ **" + /*Main.jda.getUserById(userRanked.getUserId()).getEffectiveName() +*/ "**"
             + " ┇ *" + "Lvl. " + userRanked.getLevel() + "*"
             + " ┇ " + EmoteConsts.XP + " `" + FormatUtils.formatNumber(userRanked.getXP()) 
             + " / " + FormatUtils.formatNumber(userRanked.getMaxXP()) + "`\n";
