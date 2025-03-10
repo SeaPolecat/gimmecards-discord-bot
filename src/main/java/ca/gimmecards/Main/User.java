@@ -17,6 +17,8 @@ public class User implements Comparable<User> {
      * a list of type User that's saved and loaded from Users.json; edited on a regular basis
      */
     public static List<User> users = Collections.synchronizedList(new ArrayList<User>());
+
+    public static List<User> usersRanked;
     
     //==========================================[ INSTANCE VARIABLES ]===================================================================
 
@@ -613,7 +615,7 @@ public class User implements Comparable<User> {
     
             if(index == users.size() || userToFind.compareTo(users.get(index)) != 0) {
                 users.add(index, userToFind);
-                UserRanked.usersRanked.add(new UserRanked("", userToFind));
+                //UserRanked.usersRanked.add(new UserRanked("", userToFind));
 
             } else {
                 userToFind = users.get(index);
