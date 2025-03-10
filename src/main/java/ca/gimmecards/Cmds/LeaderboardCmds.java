@@ -1,5 +1,4 @@
 package ca.gimmecards.cmds;
-import java.util.Collections;
 import ca.gimmecards.display.*;
 import ca.gimmecards.main.*;
 import ca.gimmecards.utils.*;
@@ -11,9 +10,6 @@ public class LeaderboardCmds {
         User user = User.findUser(event);
         LeaderboardDisplay disp = (LeaderboardDisplay) user.addDisplay(new LeaderboardDisplay(event));
 
-        synchronized(User.usersRanked) {
-            Collections.sort(User.usersRanked);
-        }
         JDAUtils.sendDynamicEmbed(event, disp, user, null, false);
     }
 }

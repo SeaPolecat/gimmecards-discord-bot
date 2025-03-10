@@ -4,6 +4,7 @@ import ca.gimmecards.main.*;
 import ca.gimmecards.utils.FormatUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import java.util.Collections;
 
 public class LeaderboardDisplay extends Display {
 
@@ -17,6 +18,10 @@ public class LeaderboardDisplay extends Display {
     public EmbedBuilder buildEmbed(User user, Server server) {
         UserInfo ui = getUserInfo();
         EmbedBuilder embed = new EmbedBuilder();
+
+        synchronized(User.usersRanked) {
+            Collections.sort(User.usersRanked, User.BY_LEVEL_DESCENDING);
+        }
 
         embed.setTitle(EmoteConsts.MASCOT + " World's Top Collectors " + EmoteConsts.MASCOT);
         embed.setColor(ColorConsts.BLUE);
