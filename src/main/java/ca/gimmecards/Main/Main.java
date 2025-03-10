@@ -27,6 +27,8 @@ public class Main {
 
     public static void main(String[] args) throws LoginException {
 
+        encryptor.setPassword(dotenv.get("ENCRYPTOR_PASSWORD"));
+
         dbl = new DiscordBotListAPI.Builder()
         .token(dotenv.get("DBL_TOKEN"))
         .botId("814025499381727232")
