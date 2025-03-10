@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.entities.Guild;
 import java.util.ArrayList;
 import java.util.Calendar;
-
+import java.util.List;
 import ca.gimmecards.utils.*;
 
 public class Server extends ListenerAdapter implements Comparable<Server> {
@@ -15,7 +15,7 @@ public class Server extends ListenerAdapter implements Comparable<Server> {
     /**
      * a list of type Server that's saved and loaded from Servers.json; edited on a regular basis
      */
-    public static ArrayList<Server> servers = new ArrayList<Server>();
+    public static List<Server> servers;
     
     //==========================================[ INSTANCE VARIABLES ]===================================================================
 

@@ -17,7 +17,7 @@ public class User implements Comparable<User> {
     /**
      * a list of type User that's saved and loaded from Users.json; edited on a regular basis
      */
-    public static List<User> users = Collections.synchronizedList(new ArrayList<User>());
+    public static List<User> users;
 
     public static List<User> usersRanked;
     

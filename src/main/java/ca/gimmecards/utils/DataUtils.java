@@ -5,6 +5,7 @@ import java.nio.file.*;
 import com.google.gson.*;
 import com.google.gson.reflect.*;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class DataUtils {
 
@@ -44,17 +45,17 @@ public class DataUtils {
         try {
             Reader reader = new InputStreamReader(new FileInputStream(findSaveAddress(USER_ADDRESS)), "UTF-8");
 
-            User.users = new Gson().fromJson(reader, new TypeToken<ArrayList<User>>() {}.getType());
-            reader.close();
+            User.users = Collections.synchronizedList(new Gson().fromJson(reader, new TypeToken<ArrayList<User>>() {}.getType()));
 
             // displays are supposed to be temporary, so clear any that were accidentally saved
             for(User u : User.users)
                 u.getDisplays().clear();
 
             // make usersRanked a shallow copy of users
-            User.usersRanked = new ArrayList<>(User.users);
+            User.usersRanked = Collections.synchronizedList(new ArrayList<>(User.users));
 
             saveUsers();
+            reader.close();
 
         } catch(Exception e) {
             System.out.println(e.toString());
@@ -68,7 +69,8 @@ public class DataUtils {
     public static void loadServers() {
         try {
             Reader reader = new InputStreamReader(new FileInputStream(findSaveAddress(SERVER_ADDRESS)), "UTF-8");
-            Server.servers = new Gson().fromJson(reader, new TypeToken<ArrayList<Server>>() {}.getType());
+            
+            Server.servers = Collections.synchronizedList(new Gson().fromJson(reader, new TypeToken<ArrayList<Server>>() {}.getType()));
     
             for(Server s : Server.servers) {
                 s.setServerId(Main.encryptor.decrypt(s.getServerId()));
