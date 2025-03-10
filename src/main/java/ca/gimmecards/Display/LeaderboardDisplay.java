@@ -15,24 +15,64 @@ public class LeaderboardDisplay extends Display {
     public EmbedBuilder buildEmbed(User user, Server server) {
         UserInfo ui = getUserInfo();
         EmbedBuilder embed = new EmbedBuilder();
-        String desc = "";
 
-        desc += ui.getUserPing() + " is `#";
-        desc += findSelfRank(user) + "` in the world\n";
-        desc += "┅┅\n";
-
-        desc += findMiddle();
-
-        desc += "┅┅\n";
         embed.setTitle(EmoteConsts.MASCOT + " World's Top Collectors " + EmoteConsts.MASCOT);
         embed.setColor(ColorConsts.BLUE);
-        embed.setDescription(desc);
+        embed.setDescription(findDescription(user, ui));
         embed.setFooter("Page " + getPage() + " of " + getMaxPage(), ui.getUserIcon());
 
         return embed;
     }
 
-    private int findSelfRank(User user) {
+    private String findDescription(User user, UserInfo ui) {
+        String desc = "";
+        int rankNum = 1, loopEnd = 25;
+        boolean foundSelfRankWithinT25 = false;
+        int selfRank = 0;
+
+        for(int i = 0; i < loopEnd; i++) {
+            try {
+                User userRanked = User.usersRanked.get(i);
+                String userName = Main.jda.getUserById(userRanked.getUserId()).getEffectiveName();
+
+                if(i == 0)
+                    desc += "🥇";
+                else if(i == 1)
+                    desc += "🥈";
+                else if(i == 2)
+                    desc += "🥉";
+                else
+                    desc += "`#" + rankNum + "`";
+                    
+                desc += " ┇ **" + userName + "**"
+                + " ┇ *" + "Lvl. " + userRanked.getLevel() + "*"
+                + " ┇ " + EmoteConsts.XP + " `" + FormatUtils.formatNumber(userRanked.getXP()) 
+                + " / " + FormatUtils.formatNumber(userRanked.getMaxXP()) + "`\n";
+
+                if(userRanked.getUserId().equals(user.getUserId())) {
+                    foundSelfRankWithinT25 = true;
+                    selfRank = rankNum;
+                }
+                rankNum++;
+
+            } catch(NullPointerException e) {
+                loopEnd++;
+            }
+        }
+        
+        if(!foundSelfRankWithinT25)
+            selfRank = findSelfRankBelowT25(user);
+
+        desc = "┅┅\n" + desc;
+        desc = selfRank + "` in the world\n" + desc;
+        desc = ui.getUserPing() + " is `#" + desc;
+
+        desc += "┅┅\n";
+
+        return desc;
+    }
+
+    private int findSelfRankBelowT25(User user) {
         int i = 0;
 
         while(i < User.usersRanked.size()) {
@@ -44,28 +84,5 @@ public class LeaderboardDisplay extends Display {
             i++;
         }
         return i + 1;
-    }
-
-    private String findMiddle() {
-        String middle = "";
-
-        for(int i = 0; i < 25; i++) {
-            User userRanked = User.usersRanked.get(i);
-
-            if(i == 0)
-                middle += "🥇";
-            else if(i == 1)
-                middle += "🥈";
-            else if(i == 2)
-                middle += "🥉";
-            else
-                middle += "`#" + (i+1) + "`";
-                
-            middle += " ┇ **" + /*Main.jda.getUserById(userRanked.getUserId()).getEffectiveName() +*/ "**"
-            + " ┇ *" + "Lvl. " + userRanked.getLevel() + "*"
-            + " ┇ " + EmoteConsts.XP + " `" + FormatUtils.formatNumber(userRanked.getXP()) 
-            + " / " + FormatUtils.formatNumber(userRanked.getMaxXP()) + "`\n";
-        }
-        return middle;
     }
 }
