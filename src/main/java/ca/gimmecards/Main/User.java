@@ -619,7 +619,7 @@ public class User implements Comparable<User> {
     
             if(index == users.size() || userToFind.compareTo(users.get(index)) != 0) {
                 users.add(index, userToFind);
-                //UserRanked.usersRanked.add(new UserRanked("", userToFind));
+                usersRanked.add(0, userToFind);
 
             } else {
                 userToFind = users.get(index);
