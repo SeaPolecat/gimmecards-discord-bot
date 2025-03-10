@@ -48,13 +48,12 @@ public class DataUtils {
             reader.close();
 
             // displays are supposed to be temporary, so clear any that were accidentally saved
-            for(User u : User.users) {
+            for(User u : User.users)
                 u.getDisplays().clear();
 
-                synchronized(UserRanked.usersRanked) {
-                    UserRanked.usersRanked.add(new UserRanked("", u));
-                }
-            }
+            // make usersRanked a shallow copy of users
+            User.usersRanked = new ArrayList<>(User.users);
+
             saveUsers();
 
         } catch(Exception e) {
