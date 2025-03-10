@@ -6,6 +6,8 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 public class LeaderboardDisplay extends Display {
+
+    private static final int NUM_ON_TOP = 25;
     
     public LeaderboardDisplay(SlashCommandInteractionEvent event) {
         super(event);
@@ -26,8 +28,8 @@ public class LeaderboardDisplay extends Display {
 
     private String findDescription(User user, UserInfo ui) {
         String desc = "";
-        int rankNum = 1, loopEnd = 25;
-        boolean foundSelfRankWithinT25 = false;
+        int rankNum = 1, loopEnd = NUM_ON_TOP;
+        boolean foundSelfRankWithinTop = false;
         int selfRank = 0;
 
         for(int i = 0; i < loopEnd; i++) {
@@ -50,7 +52,7 @@ public class LeaderboardDisplay extends Display {
                 + " / " + FormatUtils.formatNumber(userRanked.getMaxXP()) + "`\n";
 
                 if(userRanked.getUserId().equals(user.getUserId())) {
-                    foundSelfRankWithinT25 = true;
+                    foundSelfRankWithinTop = true;
                     selfRank = rankNum;
                 }
                 rankNum++;
@@ -60,8 +62,8 @@ public class LeaderboardDisplay extends Display {
             }
         }
         
-        if(!foundSelfRankWithinT25)
-            selfRank = findSelfRankBelowT25(user);
+        if(!foundSelfRankWithinTop)
+            selfRank = findSelfRankBelowTop(user);
 
         desc = "┅┅\n" + desc;
         desc = selfRank + "` in the world\n" + desc;
@@ -72,7 +74,7 @@ public class LeaderboardDisplay extends Display {
         return desc;
     }
 
-    private int findSelfRankBelowT25(User user) {
+    private int findSelfRankBelowTop(User user) {
         int i = 0;
 
         while(i < User.usersRanked.size()) {
