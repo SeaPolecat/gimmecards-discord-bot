@@ -4,17 +4,18 @@ import ca.gimmecards.main.*;
 import ca.gimmecards.utils.FormatUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import java.util.Collections;
 
 public class LeaderboardDisplay extends Display {
 
-    public static final int MAX_PAGE = 3;
+    int selfRank;
     
     public LeaderboardDisplay(SlashCommandInteractionEvent event) {
         super(event);
 
-        setMaxPage(MAX_PAGE);
+        selfRank = 0;
     }
+
+    public void setSelfRank(int selfRank) { this.selfRank = selfRank; }
 
     @Override
     public EmbedBuilder buildEmbed(User user, Server server) {
@@ -22,43 +23,26 @@ public class LeaderboardDisplay extends Display {
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
 
-        synchronized(UserRanked.usersRanked) {
-            Collections.sort(UserRanked.usersRanked);
+        desc += ui.getUserPing() + " is `#";
+        desc += (selfRank + 1) + "` in the world\n";
+        desc += "┅┅\n";
 
-            desc += ui.getUserPing() + " is `#";
-            desc += findSelfRank(user.getUserId()) + "` in the world\n";
-            desc += "┅┅\n";
-    
-            desc += findMiddle();
-    
-            desc += "┅┅\n";
-            embed.setTitle(EmoteConsts.MASCOT + " World's Top Collectors " + EmoteConsts.MASCOT);
-            embed.setColor(ColorConsts.BLUE);
-            embed.setDescription(desc);
-            embed.setFooter("Page " + getPage() + " of " + getMaxPage(), ui.getUserIcon());
-        }
+        desc += findMiddle();
+
+        desc += "┅┅\n";
+        embed.setTitle(EmoteConsts.MASCOT + " World's Top Collectors " + EmoteConsts.MASCOT);
+        embed.setColor(ColorConsts.BLUE);
+        embed.setDescription(desc);
+        embed.setFooter("Page " + getPage() + " of " + getMaxPage(), ui.getUserIcon());
+
         return embed;
-    }
-
-    private static int findSelfRank(String userId) {
-        synchronized(UserRanked.usersRanked) {
-            for(int i = 0; i < UserRanked.usersRanked.size(); i++) {
-                UserRanked userRanked = UserRanked.usersRanked.get(i);
-    
-                if(userRanked.getUser().getUserId().equals(userId)) {
-                    return i + 1;
-                }
-            }
-            return -1;
-        }
     }
 
     private String findMiddle() {
         String middle = "";
-        int startIndex = getPage() * 15 - 15;
 
-        for(int i = startIndex; i < startIndex + 15; i++) {
-            UserRanked userRanked = UserRanked.usersRanked.get(i);
+        for(int i = 0; i < 25; i++) {
+            User userRanked = User.usersRanked.get(i);
 
             if(i == 0)
                 middle += "🥇";
@@ -69,10 +53,10 @@ public class LeaderboardDisplay extends Display {
             else
                 middle += "`#" + (i+1) + "`";
                 
-            middle += " ┇ **" + userRanked.getUserName() + "**"
-            + " ┇ *" + "Lvl. " + userRanked.getUser().getLevel() + "*"
-            + " ┇ " + EmoteConsts.XP + " `" + FormatUtils.formatNumber(userRanked.getUser().getXP()) 
-            + " / " + FormatUtils.formatNumber(userRanked.getUser().getMaxXP()) + "`\n";
+            middle += " ┇ **" + Main.jda.getUserById(userRanked.getUserId()).getEffectiveName() + "**"
+            + " ┇ *" + "Lvl. " + userRanked.getLevel() + "*"
+            + " ┇ " + EmoteConsts.XP + " `" + FormatUtils.formatNumber(userRanked.getXP()) 
+            + " / " + FormatUtils.formatNumber(userRanked.getMaxXP()) + "`\n";
         }
         return middle;
     }
