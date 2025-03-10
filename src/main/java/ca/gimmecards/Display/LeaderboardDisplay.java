@@ -38,32 +38,34 @@ public class LeaderboardDisplay extends Display {
         int selfRank = 0;
 
         for(int i = 0; i < loopEnd; i++) {
-            try {
-                User userRanked = User.usersRanked.get(i);
-                String userName = Main.jda.getUserById(userRanked.getUserId()).getEffectiveName();
+            synchronized(User.usersRanked) {
+                try {
+                    User userRanked = User.usersRanked.get(i);
+                    String userName = Main.jda.getUserById(userRanked.getUserId()).getEffectiveName();
 
-                if(i == 0)
-                    desc += "🥇";
-                else if(i == 1)
-                    desc += "🥈";
-                else if(i == 2)
-                    desc += "🥉";
-                else
-                    desc += "`#" + rankNum + "`";
-                    
-                desc += " ┇ **" + userName + "**"
-                + " ┇ *" + "Lvl. " + userRanked.getLevel() + "*"
-                + " ┇ " + EmoteConsts.XP + " `" + FormatUtils.formatNumber(userRanked.getXP()) 
-                + " / " + FormatUtils.formatNumber(userRanked.getMaxXP()) + "`\n";
+                    if(i == 0)
+                        desc += "🥇";
+                    else if(i == 1)
+                        desc += "🥈";
+                    else if(i == 2)
+                        desc += "🥉";
+                    else
+                        desc += "`#" + rankNum + "`";
+                        
+                    desc += " ┇ **" + userName + "**"
+                    + " ┇ *" + "Lvl. " + userRanked.getLevel() + "*"
+                    + " ┇ " + EmoteConsts.XP + " `" + FormatUtils.formatNumber(userRanked.getXP()) 
+                    + " / " + FormatUtils.formatNumber(userRanked.getMaxXP()) + "`\n";
 
-                if(userRanked.getUserId().equals(user.getUserId())) {
-                    foundSelfRankWithinTop = true;
-                    selfRank = rankNum;
+                    if(userRanked.getUserId().equals(user.getUserId())) {
+                        foundSelfRankWithinTop = true;
+                        selfRank = rankNum;
+                    }
+                    rankNum++;
+
+                } catch(NullPointerException e) {
+                    loopEnd++;
                 }
-                rankNum++;
-
-            } catch(NullPointerException e) {
-                loopEnd++;
             }
         }
         
@@ -83,12 +85,14 @@ public class LeaderboardDisplay extends Display {
         int i = 0;
 
         while(i < User.usersRanked.size()) {
-            User userRanked = User.usersRanked.get(i);
+            synchronized(User.usersRanked) {
+                User userRanked = User.usersRanked.get(i);
 
-            if(userRanked.getUserId().equals(user.getUserId()))
-                break;
+                if(userRanked.getUserId().equals(user.getUserId()))
+                    break;
 
-            i++;
+                i++;
+            }
         }
         return i + 1;
     }
