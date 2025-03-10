@@ -190,10 +190,6 @@ public class User implements Comparable<User> {
         return searchForUser(targetId);
     }
 
-    public static int searchForUserRanked(User userToFind) {
-        return SearchUtils.binarySearch(usersRanked, userToFind);
-    }
-
     //==============================================[ INSTANCE METHODS ]=====================================================
     
     @Override
