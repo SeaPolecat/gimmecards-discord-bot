@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -199,6 +200,8 @@ public class User implements Comparable<User> {
 
         return userId.compareTo(otherId);
     }
+
+    public static final Comparator<User> BY_LEVEL_DESCENDING = Comparator.<User, Integer> comparing(user -> user.getLevel()).reversed();
 
     private void removeDisplay(Display dispToRemove) {
         for(int i = 0; i < displays.size(); i++) {
