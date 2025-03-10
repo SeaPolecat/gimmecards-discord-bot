@@ -13,7 +13,7 @@ public class DataUtils {
     /**
      * the address of this game's local save files; please change this accordingly (remember the 2 backslashes at the end)
      */
-    private static final String PREFIX = "C:\\Users\\wangw\\Downloads\\GimmeCards\\src\\main\\java\\ca\\gimmecards\\storage\\";
+    private static final String PREFIX = "C:\\Users\\wangw\\Documents\\DocumentsV2\\GimmeCards\\src\\main\\java\\ca\\gimmecards\\storage\\";
 
     private static final String SETS_ADDRESS = "CardSets.json";
     private static final String OLD_SETS_ADDRESS = "OldCardSets.json";
