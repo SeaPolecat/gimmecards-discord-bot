@@ -130,7 +130,11 @@ public class SearchDisplay extends Display {
         int numFullPages = searchedCards.size() / 15;
         int remainder = searchedCards.size() % 15;
 
-        setMaxPage(numFullPages + (remainder / remainder));
+        if(remainder == 0)
+            setMaxPage(numFullPages);
+        else
+            setMaxPage(numFullPages + (remainder / remainder));
+            
         checkOverflow();
     }
 

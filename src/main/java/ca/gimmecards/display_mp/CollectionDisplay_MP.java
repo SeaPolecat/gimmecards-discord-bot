@@ -17,7 +17,11 @@ public class CollectionDisplay_MP extends Display {
         int numFullPages = target.getCardContainers().size() / 15;
         int remainder = target.getCardContainers().size() % 15;
 
-        setMaxPage(numFullPages + (remainder / remainder));
+        if(remainder == 0)
+            setMaxPage(numFullPages);
+        else
+            setMaxPage(numFullPages + (remainder / remainder));
+            
         checkOverflow();
     }
 

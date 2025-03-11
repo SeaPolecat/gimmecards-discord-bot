@@ -16,7 +16,11 @@ public class CollectionDisplay extends Display {
         int numFullPages = user.getCardContainers().size() / 15;
         int remainder = user.getCardContainers().size() % 15;
 
-        setMaxPage(numFullPages + (remainder / remainder));
+        if(remainder == 0)
+            setMaxPage(numFullPages);
+        else
+            setMaxPage(numFullPages + (remainder / remainder));
+
         checkOverflow();
     }
 

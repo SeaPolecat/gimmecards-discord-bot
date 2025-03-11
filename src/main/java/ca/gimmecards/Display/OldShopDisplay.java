@@ -12,7 +12,10 @@ public class OldShopDisplay extends Display {
         int numFullPages = CardSet.oldSets.length / 8;
         int remainder = CardSet.oldSets.length % 8;
 
-        setMaxPage(numFullPages + (remainder / remainder));
+        if(remainder == 0)
+            setMaxPage(numFullPages);
+        else
+            setMaxPage(numFullPages + (remainder / remainder));
     }
 
     @Override
