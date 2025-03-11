@@ -45,7 +45,6 @@ public class User implements Comparable<User> {
     private ArrayList<String> badges;                   // list of names of the badges the player owns
     private ArrayList<String> packs;                    // list of names of the packs the player owns
     private ArrayList<CardContainer> cardContainers;    // the player's cards
-    private LinkedList<Display> displays;
 
     //=============================================[ CONSTRUCTORS ]====================================================================
     
@@ -76,7 +75,6 @@ public class User implements Comparable<User> {
         this.badges = badges;
         this.packs = packs;
         this.cardContainers = cardContainers;
-        this.displays = displays;
     }
 
     /**
@@ -106,7 +104,6 @@ public class User implements Comparable<User> {
         this.badges = new ArrayList<String>();
         this.packs = new ArrayList<String>();
         this.cardContainers = new ArrayList<CardContainer>();
-        this.displays = new LinkedList<Display>();
     }
 
     //===============================================[ GETTERS ] ======================================================================
@@ -135,7 +132,6 @@ public class User implements Comparable<User> {
     public ArrayList<String> getBadges() { return this.badges; }
     public ArrayList<String> getPacks() { return this.packs; }
     public ArrayList<CardContainer> getCardContainers() { return this.cardContainers; }
-    public LinkedList<Display> getDisplays() { return displays; }
     
     //================================================[ SETTERS ]======================================================================
     
