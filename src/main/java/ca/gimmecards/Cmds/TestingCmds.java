@@ -110,8 +110,10 @@ public class TestingCmds {
         }
         System.out.println(dupes + " duplicates found!");*/
 
+        /* USERS =======================================================================*/
+
         // clearing half of users so i can actually see the storage file
-        int OGsize = User.users.size() / 2;
+        /*int OGsize = User.users.size() / 2;
 
         for(int i = 0; i < OGsize; i++) {
             User.users.remove(0);
@@ -164,7 +166,23 @@ public class TestingCmds {
 
         User.users.get(0).getCardContainers().clear();
 
-        try { DataUtils.saveUsers(); } catch(Exception e) {}
+        try { DataUtils.saveUsers(); } catch(Exception e) {}*/
+
+        /* SERVERS =======================================================================*/
+
+        Collections.sort(Server.servers);
+
+        for(int i = 1; i < Server.servers.size(); i++) {
+            Server s = Server.servers.get(i);
+            Server prevS = Server.servers.get(i - 1);
+            long diff = Long.parseLong(s.getServerId()) - Long.parseLong(prevS.getServerId());
+
+            if(diff < 0)
+                System.out.println("found negative!");
+        }
+
+        try { DataUtils.saveServers(); } catch(Exception e) {}
+        
         JDAUtils.sendMessage(event, ColorConsts.BLUE, "", "done testing!");
     }
 }
