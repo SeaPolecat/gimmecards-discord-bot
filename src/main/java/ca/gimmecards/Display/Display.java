@@ -10,7 +10,7 @@ public class Display {
 
     public static Hashtable<String, LinkedList<Display>> globalDisplays = new Hashtable<>();
 
-    private LinkedList<Display> findDisplays(User user) {
+    private static LinkedList<Display> findDisplays(User user) {
 
         if(globalDisplays.get(user.getUserId()) == null)
             globalDisplays.put(user.getUserId(), new LinkedList<>());
@@ -18,7 +18,7 @@ public class Display {
         return globalDisplays.get(user.getUserId());
     }
 
-    private void removeDisplay(LinkedList<Display> displays, Display dispToRemove) {
+    private static void removeDisplay(LinkedList<Display> displays, Display dispToRemove) {
 
         for(int i = 0; i < displays.size(); i++) {
             Display disp = displays.get(i);
@@ -30,7 +30,7 @@ public class Display {
         }
     }
 
-    public Display addDisplay(User user, Display dispToAdd) {
+    public static Display addDisplay(User user, Display dispToAdd) {
         LinkedList<Display> displays = findDisplays(user);
 
         removeDisplay(displays, dispToAdd);
@@ -39,7 +39,7 @@ public class Display {
         return dispToAdd;
     }
 
-    public <T> Display findDisplay(User user, Class<T> clazz) {
+    public static <T> Display findDisplay(User user, Class<T> clazz) {
         LinkedList<Display> displays = findDisplays(user);
         Display result = null;
 
@@ -52,7 +52,7 @@ public class Display {
         return result;
     }
 
-    public Display findDisplay(User user, String slashId) {
+    public static Display findDisplay(User user, String slashId) {
         LinkedList<Display> displays = findDisplays(user);
         Display result = null;
 
