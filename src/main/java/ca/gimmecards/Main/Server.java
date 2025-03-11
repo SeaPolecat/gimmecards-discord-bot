@@ -52,7 +52,7 @@ public class Server extends ListenerAdapter implements Comparable<Server> {
 
     //===============================================[ GETTERS ] ======================================================================
 
-    public String getServerId() { return this.serverId; }
+    public String getServerId() { return Main.encryptor.decrypt(this.serverId); }
     public ArrayList<Card> getMarket() { return this.market; }
     public long getMarketEpoch() { return this.marketEpoch; }
     
@@ -69,7 +69,11 @@ public class Server extends ListenerAdapter implements Comparable<Server> {
      * @return the local Server
      */
     public static Server findServer(GuildReadyEvent event) {
-        String serverId = event.getGuild().getId();
+        String serverId = "";
+        Guild guild = event.getGuild();
+
+        if(guild != null)
+            serverId = guild.getId();
 
         return searchForServer(serverId);
     }
@@ -83,9 +87,9 @@ public class Server extends ListenerAdapter implements Comparable<Server> {
         String serverId = "";
         Guild guild = event.getGuild();
 
-        if(guild != null) {
+        if(guild != null)
             serverId = guild.getId();
-        }
+
         return searchForServer(serverId);
     }
 
@@ -98,9 +102,9 @@ public class Server extends ListenerAdapter implements Comparable<Server> {
         String serverId = "";
         Guild guild = event.getGuild();
 
-        if(guild != null) {
+        if(guild != null)
             serverId = guild.getId();
-        }
+
         return searchForServer(serverId);
     }
 
@@ -108,8 +112,10 @@ public class Server extends ListenerAdapter implements Comparable<Server> {
 
     @Override
     public int compareTo(Server other) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'compareTo'");
+        Long serverId = Long.parseLong(this.getServerId());
+        Long otherId = Long.parseLong(other.getServerId());
+
+        return serverId.compareTo(otherId);
     }
 
     /**
@@ -132,7 +138,7 @@ public class Server extends ListenerAdapter implements Comparable<Server> {
      * @param serverId the ID of the server to search for
      * @return the server to be searched
      */
-    private static Server searchForServer(String serverId) {
+    /*private static Server searchForServer(String serverId) {
         for(Server s : servers) {
             if(s.getServerId().equals(serverId)) {
                 return s;
@@ -140,6 +146,22 @@ public class Server extends ListenerAdapter implements Comparable<Server> {
         }
         servers.add(0, new Server(serverId));
         return servers.get(0);
+    }*/
+
+    private static Server searchForServer(String serverId) {
+        Server serverToFind = new Server(serverId);
+
+        synchronized(servers) {
+            int index = SearchUtils.binarySearch(servers, serverToFind);
+    
+            if(index == servers.size() || serverToFind.compareTo(servers.get(index)) != 0) {
+                servers.add(index, serverToFind);
+
+            } else {
+                serverToFind = servers.get(index);
+            }
+        }
+        return serverToFind;
     }
 
     //==============================================[ JDA EVENT METHODS ]================================================================
