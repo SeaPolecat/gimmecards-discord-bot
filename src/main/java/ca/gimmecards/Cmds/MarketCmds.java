@@ -49,7 +49,7 @@ public class MarketCmds {
         //
         User user = User.findUser(event);
         Server server = Server.findServer(event);
-        MarketDisplay disp = (MarketDisplay) user.addDisplay(new MarketDisplay(event, server, cardNum.getAsInt()));
+        MarketDisplay disp = (MarketDisplay) Display.addDisplay(user, new MarketDisplay(event, server, cardNum.getAsInt()));
 
         try {
             JDAUtils.sendDynamicEmbed(event, disp, user, server, true);

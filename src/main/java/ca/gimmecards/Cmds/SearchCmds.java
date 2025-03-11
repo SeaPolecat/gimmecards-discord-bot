@@ -15,7 +15,7 @@ public class SearchCmds {
         OptionMapping keywords = event.getOption("keywords");
         //
         User user = User.findUser(event);
-        SearchDisplay disp = (SearchDisplay) user.addDisplay(new SearchDisplay(event));
+        SearchDisplay disp = (SearchDisplay) Display.addDisplay(user, new SearchDisplay(event));
 
         if(location.getAsString().equalsIgnoreCase("collection")) {
             if(user.getCardContainers().size() < 1) {

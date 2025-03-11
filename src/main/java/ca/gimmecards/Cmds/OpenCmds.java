@@ -14,7 +14,7 @@ public class OpenCmds {
         //
         User user = User.findUser(event);
         UserInfo ui = new UserInfo(event);
-        OpenDisplay disp = (OpenDisplay) user.addDisplay(new OpenDisplay(event));
+        OpenDisplay disp = (OpenDisplay) Display.addDisplay(user, new OpenDisplay(event));
         int cooldownLeft = TimeUtils.findCooldownLeft(CooldownConsts.OPEN_CD, user.getOpenEpoch());
 
         if(cooldownLeft > 0) {
@@ -112,7 +112,7 @@ public class OpenCmds {
         //
         User user = User.findUser(event);
         UserInfo ui = new UserInfo(event);
-        OpenBoxDisplay disp = (OpenBoxDisplay) user.addDisplay(new OpenBoxDisplay(event));
+        OpenBoxDisplay disp = (OpenBoxDisplay) Display.addDisplay(user, new OpenBoxDisplay(event));
         int cooldownLeft = TimeUtils.findCooldownLeft(CooldownConsts.OPEN_CD, user.getOpenEpoch());
 
         if(cooldownLeft > 0) {

@@ -1,5 +1,6 @@
 package ca.gimmecards.cmds_mp;
 import ca.gimmecards.consts.*;
+import ca.gimmecards.display.*;
 import ca.gimmecards.display_mp.*;
 import ca.gimmecards.main.*;
 import ca.gimmecards.utils.*;
@@ -14,7 +15,7 @@ public class ViewCmds_MP {
         //
         User user = User.findUser(event);
         User target = User.findTargetUser(event, targetOption.getAsUser().getId());
-        ViewDisplay_MP disp = (ViewDisplay_MP) user.addDisplay(new ViewDisplay_MP(event, target, cardNum.getAsInt())); 
+        ViewDisplay_MP disp = (ViewDisplay_MP) Display.addDisplay(user, new ViewDisplay_MP(event, target, cardNum.getAsInt())); 
 
         try {
             if(target.getCardContainers().size() < 1)

@@ -12,7 +12,7 @@ public class ViewCmds {
         OptionMapping cardNum = event.getOption("card-number");
         //
         User user = User.findUser(event);
-        ViewDisplay disp = (ViewDisplay) user.addDisplay(new ViewDisplay(event, cardNum.getAsInt()));
+        ViewDisplay disp = (ViewDisplay) Display.addDisplay(user, new ViewDisplay(event, cardNum.getAsInt()));
 
         try {
             if(user.getCardContainers().size() < 1) {

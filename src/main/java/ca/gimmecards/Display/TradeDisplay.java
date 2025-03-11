@@ -38,7 +38,7 @@ public class TradeDisplay extends Display {
         UserInfo userInfo = getUserInfo(), targetInfo = getTargetInfo();
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
-        TradeDisplay targetDisp = (TradeDisplay) target.findDisplay(TradeDisplay.class);
+        TradeDisplay targetDisp = (TradeDisplay) Display.findDisplay(target, TradeDisplay.class);
 
         String firstPing = "", secondPing = "";
         boolean firstHasRejected = false, secondHasRejected = false;

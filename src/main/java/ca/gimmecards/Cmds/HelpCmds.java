@@ -93,7 +93,7 @@ public class HelpCmds {
     public static void viewChangelog(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
         Server server = Server.findServer(event);
-        HelpDisplay disp = (HelpDisplay) user.addDisplay(new HelpDisplay(event));
+        HelpDisplay disp = (HelpDisplay) Display.addDisplay(user, new HelpDisplay(event));
 
         JDAUtils.sendDynamicEmbed(event, disp, user, server, true);
     }

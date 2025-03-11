@@ -11,7 +11,7 @@ public class BackpackCmds {
 
     public static void viewBackpack(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
-        BackpackDisplay disp = (BackpackDisplay) user.addDisplay(new BackpackDisplay(event));
+        BackpackDisplay disp = (BackpackDisplay) Display.addDisplay(user, new BackpackDisplay(event));
 
         JDAUtils.sendDynamicEmbed(event, disp, user, null, false);
     }

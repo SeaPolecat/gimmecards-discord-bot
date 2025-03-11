@@ -1,5 +1,6 @@
 package ca.gimmecards.cmds_mp;
 import ca.gimmecards.consts.*;
+import ca.gimmecards.display.*;
 import ca.gimmecards.display_mp.*;
 import ca.gimmecards.main.*;
 import ca.gimmecards.utils.*;
@@ -21,7 +22,7 @@ public class CollectionCmds_MP {
         else
             disp = new CollectionDisplay_MP(event, target, page.getAsInt());
 
-        user.addDisplay(disp);
+        Display.addDisplay(user, disp);
 
         if(target.getCardContainers().size() < 1) {
             JDAUtils.sendMessage(event, ColorConsts.RED, "❌", "That user doesn't have any cards yet!");

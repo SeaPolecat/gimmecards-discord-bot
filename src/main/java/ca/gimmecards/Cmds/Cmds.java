@@ -497,7 +497,7 @@ public class Cmds extends ListenerAdapter {
         String buttonType = buttonArgs[1];
         String buttonUserId = buttonArgs[2];
         String buttonTargetId = "";
-        Display disp = user.findDisplay(buttonSlashId);
+        Display disp = Display.findDisplay(user, buttonSlashId);
 
         event.deferEdit().queue();
 

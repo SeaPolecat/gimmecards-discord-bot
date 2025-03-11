@@ -8,7 +8,7 @@ public class LeaderboardCmds {
 
     public static void viewLeaderboard(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
-        LeaderboardDisplay disp = (LeaderboardDisplay) user.addDisplay(new LeaderboardDisplay(event));
+        LeaderboardDisplay disp = (LeaderboardDisplay) Display.addDisplay(user, new LeaderboardDisplay(event));
 
         JDAUtils.sendDynamicEmbed(event, disp, user, null, false);
     }

@@ -11,14 +11,14 @@ public class ShopCmds {
 
     public static void viewShop(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
-        ShopDisplay disp = (ShopDisplay) user.addDisplay(new ShopDisplay(event));
+        ShopDisplay disp = (ShopDisplay) Display.addDisplay(user, new ShopDisplay(event));
 
         JDAUtils.sendDynamicEmbed(event, disp, user, null, true);
     }
     
     public static void viewOldShop(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
-        OldShopDisplay disp = (OldShopDisplay) user.addDisplay(new OldShopDisplay(event));
+        OldShopDisplay disp = (OldShopDisplay) Display.addDisplay(user, new OldShopDisplay(event));
 
         JDAUtils.sendDynamicEmbed(event, disp, user, null, true);
     }

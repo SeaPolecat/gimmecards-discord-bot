@@ -14,8 +14,8 @@ public class TradeCmds {
         //
         User user = User.findUser(event);
         User target = User.findTargetUser(event, userOption.getAsUser().getId());
-        TradeDisplay userDisp = (TradeDisplay) user.findDisplay(TradeDisplay.class);
-        TradeDisplay targetDisp = (TradeDisplay) target.findDisplay(TradeDisplay.class);
+        TradeDisplay userDisp = (TradeDisplay) Display.findDisplay(user, TradeDisplay.class);
+        TradeDisplay targetDisp = (TradeDisplay) Display.findDisplay(target, TradeDisplay.class);
 
         if(userDisp != null && !userDisp.getHasCompleted()) {
             JDAUtils.sendMessage(event, ColorConsts.RED, "❌", "You're in a trade already!");
@@ -27,9 +27,9 @@ public class TradeCmds {
             JDAUtils.sendMessage(event, ColorConsts.RED, "❌", "You can't trade with yourself!");
 
         } else {
-            userDisp = (TradeDisplay) user.addDisplay(new TradeDisplay(event, user, target, true));
+            userDisp = (TradeDisplay) Display.addDisplay(user,new TradeDisplay(event, user, target, true));
 
-            target.addDisplay(new TradeDisplay(event, target, user, false));
+            Display.addDisplay(target, new TradeDisplay(event, target, user, false));
 
             JDAUtils.sendDynamicEmbed(event, userDisp, user, target, new User[]{user, target}, null, false);
         }
@@ -40,14 +40,14 @@ public class TradeCmds {
         //
         User user = User.findUser(event);
         UserInfo ui = new UserInfo(event);
-        TradeDisplay userDisp = (TradeDisplay) user.findDisplay(TradeDisplay.class);
+        TradeDisplay userDisp = (TradeDisplay) Display.findDisplay(user, TradeDisplay.class);
 
         if(userDisp == null || userDisp.getHasCompleted()) {
             JDAUtils.sendMessage(event, ColorConsts.RED, "❌", "You haven't started a trade yet!");
 
         } else {
             User target = User.findTargetUser(event, userDisp.getTargetId());
-            TradeDisplay targetDisp = (TradeDisplay) target.findDisplay(TradeDisplay.class);
+            TradeDisplay targetDisp = (TradeDisplay) Display.findDisplay(target, TradeDisplay.class);
 
             if(userDisp.getHasAccepted() || targetDisp.getHasAccepted()) {
                 JDAUtils.sendMessage(event, ColorConsts.RED, "❌", "Both players must unaccept first!");
@@ -80,14 +80,14 @@ public class TradeCmds {
         //
         User user = User.findUser(event);
         UserInfo ui = new UserInfo(event);
-        TradeDisplay userDisp = (TradeDisplay) user.findDisplay(TradeDisplay.class);
+        TradeDisplay userDisp = (TradeDisplay) Display.findDisplay(user, TradeDisplay.class);
 
         if(userDisp == null || userDisp.getHasCompleted()) {
             JDAUtils.sendMessage(event, ColorConsts.RED, "❌", "You haven't started a trade yet!");
 
         } else {
             User target = User.findTargetUser(event, userDisp.getTargetId());
-            TradeDisplay targetDisp = (TradeDisplay) target.findDisplay(TradeDisplay.class);
+            TradeDisplay targetDisp = (TradeDisplay) Display.findDisplay(target, TradeDisplay.class);
 
             if(userDisp.getHasAccepted() || targetDisp.getHasAccepted()) {
                 JDAUtils.sendMessage(event, ColorConsts.RED, "❌", "Both players must unaccept first!");
@@ -115,14 +115,14 @@ public class TradeCmds {
     public static void acceptOffer(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
         UserInfo ui = new UserInfo(event);
-        TradeDisplay userDisp = (TradeDisplay) user.findDisplay(TradeDisplay.class);
+        TradeDisplay userDisp = (TradeDisplay) Display.findDisplay(user, TradeDisplay.class);
 
         if(userDisp == null || userDisp.getHasCompleted()) {
             JDAUtils.sendMessage(event, ColorConsts.RED, "❌", "You haven't started a trade yet!");
 
         } else {
             User target = User.findTargetUser(event, userDisp.getTargetId());
-            TradeDisplay targetDisp = (TradeDisplay) target.findDisplay(TradeDisplay.class);
+            TradeDisplay targetDisp = (TradeDisplay) Display.findDisplay(target, TradeDisplay.class);
 
             if(userDisp.getHasAccepted()) {
                 JDAUtils.sendMessage(event, ColorConsts.RED, "❌", "You've already accepted the trade!");
@@ -155,7 +155,7 @@ public class TradeCmds {
     public static void unacceptOffer(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
         UserInfo ui = new UserInfo(event);
-        TradeDisplay userDisp = (TradeDisplay) user.findDisplay(TradeDisplay.class);
+        TradeDisplay userDisp = (TradeDisplay) Display.findDisplay(user, TradeDisplay.class);
 
         if(userDisp == null || userDisp.getHasCompleted()) {
             JDAUtils.sendMessage(event, ColorConsts.RED, "❌", "You haven't started a trade yet!");
@@ -176,14 +176,14 @@ public class TradeCmds {
     public static void rejectOffer(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
         UserInfo ui = new UserInfo(event);
-        TradeDisplay userDisp = (TradeDisplay) user.findDisplay(TradeDisplay.class);
+        TradeDisplay userDisp = (TradeDisplay) Display.findDisplay(user, TradeDisplay.class);
 
         if(userDisp == null || userDisp.getHasCompleted()) {
             JDAUtils.sendMessage(event, ColorConsts.RED, "❌", "You haven't started a trade yet!");
 
         } else {
             User target = User.findTargetUser(event, userDisp.getTargetId());
-            TradeDisplay targetDisp = (TradeDisplay) target.findDisplay(TradeDisplay.class);
+            TradeDisplay targetDisp = (TradeDisplay) Display.findDisplay(target, TradeDisplay.class);
 
             userDisp.setHasRejected(true);
             

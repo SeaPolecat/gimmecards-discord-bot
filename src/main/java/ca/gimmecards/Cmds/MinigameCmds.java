@@ -10,7 +10,7 @@ public class MinigameCmds {
     
     public static void startMinigame(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
-        MinigameDisplay disp = (MinigameDisplay) user.addDisplay(new MinigameDisplay(event));
+        MinigameDisplay disp = (MinigameDisplay) Display.addDisplay(user, new MinigameDisplay(event));
         int cooldownLeft = TimeUtils.findCooldownLeft(CooldownConsts.MINIGAME_CD, user.getMinigameEpoch());
 
         if(cooldownLeft > 0) {
@@ -32,7 +32,7 @@ public class MinigameCmds {
         //
         User user = User.findUser(event);
         UserInfo ui = new UserInfo(event);
-        MinigameDisplay disp = (MinigameDisplay) user.findDisplay(MinigameDisplay.class);
+        MinigameDisplay disp = (MinigameDisplay) Display.findDisplay(user, MinigameDisplay.class);
 
         if(disp == null || disp.getHasCompleted()) {
             JDAUtils.sendMessage(event, ColorConsts.RED, "❌", "You haven't started a minigame yet!");

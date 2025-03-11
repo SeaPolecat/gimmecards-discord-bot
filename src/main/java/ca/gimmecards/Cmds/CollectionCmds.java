@@ -19,7 +19,7 @@ public class CollectionCmds {
         else
             disp = new CollectionDisplay(event, page.getAsInt());
 
-        user.addDisplay(disp);
+        Display.addDisplay(user, disp);
 
         if(user.getCardContainers().size() < 1) {
             JDAUtils.sendMessage(event, ColorConsts.RED, "❌", "You don't have any cards yet!");
