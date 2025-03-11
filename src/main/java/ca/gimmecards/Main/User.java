@@ -202,48 +202,6 @@ public class User implements Comparable<User> {
 
     public static final Comparator<User> BY_LEVEL_DESCENDING = Comparator.<User, Integer> comparing(user -> user.getLevel()).reversed();
 
-    private void removeDisplay(Display dispToRemove) {
-        for(int i = 0; i < displays.size(); i++) {
-            Display disp = displays.get(i);
-
-            if(disp.getClass().equals(dispToRemove.getClass())) {
-                displays.remove(i);
-                break;
-            }
-        }
-    }
-
-    public Display addDisplay(Display dispToAdd) {
-        removeDisplay(dispToAdd);
-        displays.addFirst(dispToAdd);
-
-        return dispToAdd;
-    }
-
-    public <T> Display findDisplay(Class<T> clazz) {
-        Display result = null;
-
-        for(Display disp : displays) {
-            if(clazz.isInstance(disp)) {
-                result = disp;
-                break;
-            }
-        }
-        return result;
-    }
-
-    public Display findDisplay(String slashId) {
-        Display result = null;
-
-        for(Display disp : displays) {
-            if(disp.getSlashId().equals(slashId)) {
-                result = disp;
-                break;
-            }
-        }
-        return result;
-    }
-
     /**
      * handles a player levelling up
      */
