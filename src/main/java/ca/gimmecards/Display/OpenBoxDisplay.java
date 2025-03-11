@@ -2,10 +2,11 @@ package ca.gimmecards.display;
 import ca.gimmecards.main.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-
 import java.util.ArrayList;
 
 public class OpenBoxDisplay extends Display {
+
+    private static final int BOX_SIZE = 10;
 
     private ArrayList<ArrayList<Card>> newPacks;
     private String message;
@@ -14,7 +15,7 @@ public class OpenBoxDisplay extends Display {
         super(event);
         newPacks = new ArrayList<ArrayList<Card>>();
 
-        setMaxPage(newPacks.size());
+        setMaxPage(BOX_SIZE);
     }
 
     public ArrayList<ArrayList<Card>> getNewPacks() { return this.newPacks; }

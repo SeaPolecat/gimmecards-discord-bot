@@ -7,6 +7,8 @@ import java.util.ArrayList;
 
 public class OpenDisplay extends Display {
 
+    private static final int PACK_SIZE = 10;
+
     private ArrayList<Card> newCards;
     private String message;
 
@@ -14,7 +16,7 @@ public class OpenDisplay extends Display {
         super(event);
         newCards = new ArrayList<Card>();
 
-        setMaxPage(newCards.size());
+        setMaxPage(PACK_SIZE);
     }
 
     public ArrayList<Card> getNewCards() { return newCards; }
