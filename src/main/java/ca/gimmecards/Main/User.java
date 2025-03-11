@@ -138,8 +138,7 @@ public class User implements Comparable<User> {
     public LinkedList<Display> getDisplays() { return displays; }
     
     //================================================[ SETTERS ]======================================================================
-
-    public void setUserId(String userId) { this.userId = userId; }
+    
     public void setGameColor(int gameColor) { this.gameColor = gameColor; }
     public void addCardCount() { this.cardCount++; }
     public void addXP(int XP) { this.XP += XP; }
