@@ -2,9 +2,68 @@ package ca.gimmecards.display;
 import ca.gimmecards.main.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import java.util.Hashtable;
+import java.util.LinkedList;
 
 // should be an abstract class, but this CAN'T be an abstract class (due to complications with loading data on startup)
 public class Display {
+
+    public static Hashtable<String, LinkedList<Display>> globalDisplays = new Hashtable<>();
+
+    private LinkedList<Display> findDisplays(User user) {
+
+        if(globalDisplays.get(user.getUserId()) == null)
+            globalDisplays.put(user.getUserId(), new LinkedList<>());
+
+        return globalDisplays.get(user.getUserId());
+    }
+
+    private void removeDisplay(LinkedList<Display> displays, Display dispToRemove) {
+
+        for(int i = 0; i < displays.size(); i++) {
+            Display disp = displays.get(i);
+
+            if(disp.getClass().equals(dispToRemove.getClass())) {
+                displays.remove(i);
+                break;
+            }
+        }
+    }
+
+    public Display addDisplay(User user, Display dispToAdd) {
+        LinkedList<Display> displays = findDisplays(user);
+
+        removeDisplay(displays, dispToAdd);
+        displays.addFirst(dispToAdd);
+
+        return dispToAdd;
+    }
+
+    public <T> Display findDisplay(User user, Class<T> clazz) {
+        LinkedList<Display> displays = findDisplays(user);
+        Display result = null;
+
+        for(Display disp : displays) {
+            if(clazz.isInstance(disp)) {
+                result = disp;
+                break;
+            }
+        }
+        return result;
+    }
+
+    public Display findDisplay(User user, String slashId) {
+        LinkedList<Display> displays = findDisplays(user);
+        Display result = null;
+
+        for(Display disp : displays) {
+            if(disp.getSlashId().equals(slashId)) {
+                result = disp;
+                break;
+            }
+        }
+        return result;
+    }
 
     //==========================================[ INSTANCE VARIABLES ]===================================================================
 
