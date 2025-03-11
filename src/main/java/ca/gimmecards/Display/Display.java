@@ -31,7 +31,7 @@ public class Display {
         this(event);
 
         this.targetInfo = new UserInfo(event, target);
-        this.targetId = target.getUserId();
+        this.targetId = Main.encryptor.encrypt(target.getUserId());
     }
 
     // double-sided multiplayer
@@ -48,7 +48,13 @@ public class Display {
     public int getMaxPage() { return maxPage; }
     public UserInfo getUserInfo() { return userInfo; }
     public UserInfo getTargetInfo() { return targetInfo; }
-    public String getTargetId() { return targetId; }
+
+    public String getTargetId() {
+        if(targetId.isEmpty())
+            return targetId;
+        else
+            return Main.encryptor.decrypt(targetId);
+    }
     
     //================================================[ SETTERS ]======================================================================
     
