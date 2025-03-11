@@ -35,19 +35,9 @@ public class Server extends ListenerAdapter implements Comparable<Server> {
      * @param serverId the server's Discord ID
      */
     public Server(String serverId) {
-        this.serverId = serverId;
+        this.serverId = Main.encryptor.encrypt(serverId);
         this.market = new ArrayList<Card>();
         this.marketEpoch = (long)(0);
-    }
-
-    /**
-     * duplicates a Server, and encrypts their Discord ID to comply with Discord security guidelines
-     * @param server the Server to duplicate
-     */
-    public Server(Server server) {
-        this.serverId = Main.encryptor.encrypt(server.getServerId());
-        this.market = server.getMarket();
-        this.marketEpoch = server.getMarketEpoch();
     }
 
     //===============================================[ GETTERS ] ======================================================================
@@ -58,7 +48,6 @@ public class Server extends ListenerAdapter implements Comparable<Server> {
     
     //================================================[ SETTERS ]======================================================================
 
-    public void setServerId(String serverId) { this.serverId = serverId; }
     public void resetMarketEpoch() { this.marketEpoch = Calendar.getInstance().getTimeInMillis() / 1000; }
 
     //=============================================[ STATIC METHODS ]==============================================================
@@ -138,16 +127,6 @@ public class Server extends ListenerAdapter implements Comparable<Server> {
      * @param serverId the ID of the server to search for
      * @return the server to be searched
      */
-    /*private static Server searchForServer(String serverId) {
-        for(Server s : servers) {
-            if(s.getServerId().equals(serverId)) {
-                return s;
-            }
-        }
-        servers.add(0, new Server(serverId));
-        return servers.get(0);
-    }*/
-
     private static Server searchForServer(String serverId) {
         Server serverToFind = new Server(serverId);
 

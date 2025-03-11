@@ -14,7 +14,7 @@ public class DataUtils {
     /**
      * the address of this game's local save files; please change this accordingly (remember the 2 backslashes at the end)
      */
-    private static final String PREFIX = "C:\\Users\\wangw\\Documents\\DocumentsV2\\GimmeCards\\src\\main\\java\\ca\\gimmecards\\storage\\";
+    private static final String PREFIX = "/Users/waynewang/Downloads/GimmeCards/src/main/java/ca/gimmecards/storage/";//"C:\\Users\\wangw\\Documents\\DocumentsV2\\GimmeCards\\src\\main\\java\\ca\\gimmecards\\storage\\";
 
     private static final String SETS_ADDRESS = "CardSets.json";
     private static final String OLD_SETS_ADDRESS = "OldCardSets.json";
@@ -71,10 +71,7 @@ public class DataUtils {
             Reader reader = new InputStreamReader(new FileInputStream(findSaveAddress(SERVER_ADDRESS)), "UTF-8");
             
             Server.servers = Collections.synchronizedList(new Gson().fromJson(reader, new TypeToken<ArrayList<Server>>() {}.getType()));
-    
-            for(Server s : Server.servers) {
-                s.setServerId(Main.encryptor.decrypt(s.getServerId()));
-            }
+            
             reader.close();
             
         } catch(Exception e) {
@@ -161,8 +158,6 @@ public class DataUtils {
 
         } catch(Exception e) {
             System.out.println(e.toString());
-
-            System.out.println("AAAAAA HEREEEEE");
         }
     }
 
@@ -174,12 +169,8 @@ public class DataUtils {
         try {
             Gson gson = new GsonBuilder().create();
             Writer writer = new OutputStreamWriter(new FileOutputStream(findSaveAddress(SERVER_ADDRESS)), "UTF-8");
-            ArrayList<Server> encServers = new ArrayList<Server>();
-            
-            for(Server s : Server.servers) {
-                encServers.add(new Server(s));
-            }
-            gson.toJson(encServers, writer);
+
+            gson.toJson(Server.servers, writer);
             writer.close();
 
         } catch(Exception e) {
