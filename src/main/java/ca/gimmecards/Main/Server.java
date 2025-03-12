@@ -150,13 +150,15 @@ public class Server extends ListenerAdapter implements Comparable<Server> {
      * @param event the GuildLeave event
      */
     public void onGuildLeave(GuildLeaveEvent event) {
-        for(int i = 0; i < servers.size(); i++) {
-            Server s = servers.get(i);
-
-            if(s.getServerId().equals(event.getGuild().getId())) {
-                servers.remove(i);
-                try { DataUtils.saveServers(); } catch(Exception e) {}
-                break;
+        synchronized(servers) {
+            for(int i = 0; i < servers.size(); i++) {
+                Server s = servers.get(i);
+    
+                if(s.getServerId().equals(event.getGuild().getId())) {
+                    servers.remove(i);
+                    try { DataUtils.saveServers(); } catch(Exception e) {}
+                    break;
+                }
             }
         }
     }
