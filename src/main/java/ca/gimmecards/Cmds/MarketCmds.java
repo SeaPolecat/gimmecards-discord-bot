@@ -22,8 +22,12 @@ public class MarketCmds {
 
             if(cooldownLeft == 0) {
                 server.refreshMarket();
+
+                desc += "✨ **The market has refreshed** ✨\n\n";
+
+            } else {
+                desc += "Next refresh in " + FormatUtils.formatCooldown(cooldownLeft) + "\n\n";
             }
-            desc += "Next refresh in " + FormatUtils.formatCooldown(cooldownLeft) + "\n\n";
             desc += "`/mview (card #)` to view a card\n";
             desc += "┅┅\n";
 
