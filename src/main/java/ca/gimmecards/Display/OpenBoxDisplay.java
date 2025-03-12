@@ -6,16 +6,11 @@ import java.util.ArrayList;
 
 public class OpenBoxDisplay extends Display {
 
-    private static final int BOX_SIZE = 10;
-
     private ArrayList<ArrayList<Card>> newPacks;
     private String message;
     
     public OpenBoxDisplay(SlashCommandInteractionEvent event) {
         super(event);
-        newPacks = new ArrayList<ArrayList<Card>>();
-
-        setMaxPage(BOX_SIZE);
     }
 
     public ArrayList<ArrayList<Card>> getNewPacks() { return this.newPacks; }
@@ -24,11 +19,17 @@ public class OpenBoxDisplay extends Display {
     public void setNewPacks(ArrayList<ArrayList<Card>> newPacks) { this.newPacks = newPacks; }
     public void setMessage(String message) { this.message = message; }
 
+    private void getValidPage() {
+        setMaxPage(newPacks.size());
+    }
+
     @Override
     public EmbedBuilder buildEmbed(User user, Server server) {
         UserInfo ui = getUserInfo();
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
+
+        getValidPage();
 
         desc += message;
         desc += "\n┅┅\n";

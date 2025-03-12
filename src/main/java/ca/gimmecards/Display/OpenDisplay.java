@@ -2,21 +2,15 @@ package ca.gimmecards.display;
 import ca.gimmecards.main.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-
 import java.util.ArrayList;
 
 public class OpenDisplay extends Display {
-
-    private static final int PACK_SIZE = 10;
 
     private ArrayList<Card> newCards;
     private String message;
 
     public OpenDisplay(SlashCommandInteractionEvent event) {
         super(event);
-        newCards = new ArrayList<Card>();
-
-        setMaxPage(PACK_SIZE);
     }
 
     public ArrayList<Card> getNewCards() { return newCards; }
@@ -24,6 +18,10 @@ public class OpenDisplay extends Display {
     //
     public void setNewCards(ArrayList<Card> nc) { newCards = nc; }
     public void setMessage(String m) { message = m; }
+
+    private void getValidPage() {
+        setMaxPage(newCards.size());
+    }
     
     @Override
     public EmbedBuilder buildEmbed(User user, Server server) {
@@ -33,6 +31,8 @@ public class OpenDisplay extends Display {
         Boolean isSellable = card.isCardSellable();
         EmbedBuilder embed = new EmbedBuilder();
         String desc = "";
+
+        getValidPage();
 
         if(!user.ownsCard(card)) {
             cardTitle += " 🆕";
