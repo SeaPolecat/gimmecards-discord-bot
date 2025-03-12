@@ -5,13 +5,11 @@ import ca.gimmecards.main.*;
 import ca.gimmecards.utils.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
+import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 public class PrivacyCmds {
-    
-    // fix this bruh
-    // add a PrivacyDisplay or something
 
     public static void deleteAccount(SlashCommandInteractionEvent event) {
         User user = User.findUser(event);
@@ -60,9 +58,11 @@ public class PrivacyCmds {
                     User.users.remove(i);
     
                     event.getHook().editOriginalEmbeds(embed.build())
-                    .setActionRow(
-                        Button.danger("temp", "Yes").asDisabled(),
-                        Button.secondary("temp2", "No").asDisabled()
+                    .setComponents(
+                        ActionRow.of(
+                            Button.danger("temp", "Yes").asDisabled(),
+                            Button.secondary("temp2", "No").asDisabled()
+                        )
                     ).queue();
     
                     try { DataUtils.saveUsers(); } catch(Exception e) {}
@@ -86,9 +86,11 @@ public class PrivacyCmds {
         embed.setColor(ColorConsts.BLUE);
 
         event.getHook().editOriginalEmbeds(embed.build())
-        .setActionRow(
-            Button.danger("temp", "Yes").asDisabled(),
-            Button.secondary("temp2", "No").asDisabled()
+        .setComponents(
+            ActionRow.of(
+                Button.danger("temp", "Yes").asDisabled(),
+                Button.secondary("temp2", "No").asDisabled()
+            )
         ).queue();
     }
 }

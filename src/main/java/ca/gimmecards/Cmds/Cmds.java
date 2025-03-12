@@ -501,6 +501,7 @@ public class Cmds extends ListenerAdapter {
 
         event.deferEdit().queue();
 
+        // checking button owner
         if(buttonArgs.length > 3)
             buttonTargetId = buttonArgs[3];
 
@@ -510,11 +511,8 @@ public class Cmds extends ListenerAdapter {
             event.getHook().sendMessage("This is not your button!").setEphemeral(true).queue();
             return;
         }
-        if(disp == null) {
-            event.getHook().sendMessage("This button is outdated. Please send a new command!").setEphemeral(true).queue();
-            return;
-        }
 
+        // alternate button types
         if(buttonType.equals("deleteaccount_yes")) {
             PrivacyCmds.confirmDeletion(event);
             return;
@@ -522,8 +520,15 @@ public class Cmds extends ListenerAdapter {
         } else if(buttonType.equals("deleteaccount_no")) {
             PrivacyCmds.denyDeletion(event);
             return;
+        }
 
-        } else if(buttonType.equals("left")) {
+        // left, right, and refresh buttons
+        if(disp == null) {
+            event.getHook().sendMessage("This button is outdated. Please send a new command!").setEphemeral(true).queue();
+            return;
+        }
+
+        if(buttonType.equals("left")) {
             disp.prevPage();
 
         } else if(buttonType.equals("right")) {
