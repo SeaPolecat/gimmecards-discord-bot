@@ -38,7 +38,7 @@ public class SearchDisplay extends Display {
         if(remainder == 0)
             setMaxPage(numFullPages);
         else
-            setMaxPage(numFullPages + (remainder / remainder));
+            setMaxPage(numFullPages + 1);
     }
 
     @Override
