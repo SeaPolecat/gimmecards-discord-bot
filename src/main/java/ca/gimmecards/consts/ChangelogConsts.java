@@ -2,7 +2,7 @@ package ca.gimmecards.consts;
 
 public class ChangelogConsts {
 
-    public static final String UPDATE_MESSAGE = "🟠 New update on 10/14/2023 ┇ `/changelog`";
+    public static final String UPDATE_MESSAGE = "🟡 New update on 3/12/2025 ┇ `/changelog`";
     
     public static final String[] CHANGELOG = {
 
@@ -333,6 +333,21 @@ public class ChangelogConsts {
         + "2. filter (card / pack / rarity)\n"
         + "3. exact-match (true / false)\n"
         + "4. keywords\n"
-        + "```"
+        + "```",
+
+        "**Update 3/12/2025**\n"
+        + "🔸New pack ***Scarlet & Violet***\n"
+        + "🔸New pack ***Paldea Evolved***\n"
+        + "🔸New pack ***Obsidian Flames***\n"
+        + "🔸New pack ***Paradox Rift***\n"
+        + "🔸New pack ***Temporal Forces***\n"
+        + "🔸New pack ***Twilight Masquerade***\n"
+        + "🔸New pack ***Stellar Crown***\n"
+        + "🔸New pack ***Surging Sparks***\n"
+        + "🔹Removed *Gimme Cards* premium: all features are free again!\n"
+        + "🔹Removed the trading fee: you don't need to pay credits to trade anymore\n"
+        + "🔹Removed the `/ranks` command\n"
+        + "🔹`/leaderboard` command now only shows the top 25 players (by level)\n"
+        + "🔹Some major optimizations (so hopefully the bot runs faster)"
     };
 }
