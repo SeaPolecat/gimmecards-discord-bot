@@ -21,11 +21,11 @@ public class BackpackCmds {
         UserInfo ui = new UserInfo(event);
         int cooldownLeft = TimeUtils.findCooldownLeft(CooldownConsts.REDEEM_CD, user.getRedeemEpoch());
 
-        //if(cooldownLeft > 0) {
-            //JDAUtils.sendMessage(event, ColorConsts.RED, "⏰", "Please wait another " 
-            //+ FormatUtils.formatCooldown(cooldownLeft));
+        if(cooldownLeft > 0) {
+            JDAUtils.sendMessage(event, ColorConsts.RED, "⏰", "Please wait another " 
+            + FormatUtils.formatCooldown(cooldownLeft));
 
-        //} else {
+        } else {
             String msg = "";
 
             user.resetRedeemEpoch();
@@ -39,7 +39,7 @@ public class BackpackCmds {
 
             JDAUtils.sendMessage(event, user.getGameColor(), "🎒", msg);
             try { DataUtils.saveUsers(); } catch(Exception e) {}
-        //}
+        }
     }
 
     public static void receiveDailyReward(SlashCommandInteractionEvent event) {
