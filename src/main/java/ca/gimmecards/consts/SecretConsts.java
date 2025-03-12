@@ -9,6 +9,8 @@ public class SecretConsts {
 
     public static final String TEST_TOKEN = dotenv.get("TEST_TOKEN");
 
+    public static final String POKETCG_KEY = dotenv.get("POKETCG_KEY");
+
     public static final String DBL_TOKEN = dotenv.get("DBL_TOKEN");
 
     public static final String ENCRYPTOR_PASSWORD = dotenv.get("ENCRYPTOR_PASSWORD");
