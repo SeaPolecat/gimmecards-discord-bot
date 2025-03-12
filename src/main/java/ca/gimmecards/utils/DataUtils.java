@@ -46,15 +46,7 @@ public class DataUtils {
             Reader reader = new InputStreamReader(new FileInputStream(findSaveAddress(USER_ADDRESS)), "UTF-8");
 
             User.users = Collections.synchronizedList(new Gson().fromJson(reader, new TypeToken<ArrayList<User>>() {}.getType()));
-
-            // displays are supposed to be temporary, so clear any that were accidentally saved
-            for(User u : User.users)
-                u.getDisplays().clear();
-
-            // make usersRanked a shallow copy of users
-            User.usersRanked = Collections.synchronizedList(new ArrayList<>(User.users));
-
-            saveUsers();
+            
             reader.close();
 
         } catch(Exception e) {
