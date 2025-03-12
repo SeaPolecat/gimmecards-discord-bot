@@ -10,61 +10,6 @@ public class Display {
 
     public static Hashtable<String, LinkedList<Display>> globalDisplays = new Hashtable<>();
 
-    private static LinkedList<Display> findDisplays(User user) {
-
-        if(globalDisplays.get(user.getUserId()) == null)
-            globalDisplays.put(user.getUserId(), new LinkedList<>());
-
-        return globalDisplays.get(user.getUserId());
-    }
-
-    private static void removeDisplay(LinkedList<Display> displays, Display dispToRemove) {
-
-        for(int i = 0; i < displays.size(); i++) {
-            Display disp = displays.get(i);
-
-            if(disp.getClass().equals(dispToRemove.getClass())) {
-                displays.remove(i);
-                break;
-            }
-        }
-    }
-
-    public static Display addDisplay(User user, Display dispToAdd) {
-        LinkedList<Display> displays = findDisplays(user);
-
-        removeDisplay(displays, dispToAdd);
-        displays.addFirst(dispToAdd);
-
-        return dispToAdd;
-    }
-
-    public static <T> Display findDisplay(User user, Class<T> clazz) {
-        LinkedList<Display> displays = findDisplays(user);
-        Display result = null;
-
-        for(Display disp : displays) {
-            if(clazz.isInstance(disp)) {
-                result = disp;
-                break;
-            }
-        }
-        return result;
-    }
-
-    public static Display findDisplay(User user, String slashId) {
-        LinkedList<Display> displays = findDisplays(user);
-        Display result = null;
-
-        for(Display disp : displays) {
-            if(disp.getSlashId().equals(slashId)) {
-                result = disp;
-                break;
-            }
-        }
-        return result;
-    }
-
     //==========================================[ INSTANCE VARIABLES ]===================================================================
 
     private String slashId;     // the slash command ID of this display
@@ -135,7 +80,66 @@ public class Display {
             page = maxPage;
     }
 
-    //==============================================[ PUBLIC NON-STATIC FUNCTIONS ]=====================================================
+    //==============================================[ PRIVATE METHODS ]========================================================
+
+    private static LinkedList<Display> getDisplaysFromGlobalDisplays(User user) {
+
+        if(globalDisplays.get(user.getUserId()) == null)
+            globalDisplays.put(user.getUserId(), new LinkedList<>());
+
+        return globalDisplays.get(user.getUserId());
+    }
+
+    private static void removeDisplay(LinkedList<Display> displays, Display dispToRemove) {
+
+        for(int i = 0; i < displays.size(); i++) {
+            Display disp = displays.get(i);
+
+            if(disp.getClass().equals(dispToRemove.getClass())) {
+                displays.remove(i);
+                break;
+            }
+        }
+    }
+
+    //==============================================[ PUBLIC STATIC METHODS ]========================================================
+
+    public static Display addDisplay(User user, Display dispToAdd) {
+        LinkedList<Display> displays = getDisplaysFromGlobalDisplays(user);
+
+        removeDisplay(displays, dispToAdd);
+        displays.addFirst(dispToAdd);
+
+        return dispToAdd;
+    }
+
+    public static <T> Display findDisplay(User user, Class<T> clazz) {
+        LinkedList<Display> displays = getDisplaysFromGlobalDisplays(user);
+        Display result = null;
+
+        for(Display disp : displays) {
+            if(clazz.isInstance(disp)) {
+                result = disp;
+                break;
+            }
+        }
+        return result;
+    }
+
+    public static Display findDisplay(User user, String slashId) {
+        LinkedList<Display> displays = getDisplaysFromGlobalDisplays(user);
+        Display result = null;
+
+        for(Display disp : displays) {
+            if(disp.getSlashId().equals(slashId)) {
+                result = disp;
+                break;
+            }
+        }
+        return result;
+    }
+
+    //==============================================[ PUBLIC NON-STATIC METHODS ]=====================================================
 
     /**
      * builds a dynamic embed (one that can be page-flipped or refreshed); this function should only be used by Display's subclasses
