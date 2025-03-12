@@ -1,4 +1,5 @@
 package ca.gimmecards.main;
+import ca.gimmecards.consts.*;
 import java.io.InputStreamReader;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -84,7 +85,7 @@ public class CardSet {
         int page = 1;
 
         while(true) {
-            URL url = new URL("https://api.pokemontcg.io/v2/cards?q=set.ptcgoCode:" + setCode + "%20&page=" + page + "/key=1bfc1133-79a4-46f6-93d6-6a4dab4b7335");
+            URL url = new URL("https://api.pokemontcg.io/v2/cards?q=set.id:" + setCode + "%20&page=" + page + "/key=" + SecretConsts.POKETCG_KEY);
             String jsonStr = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8")).readLine();
             JsonArray jsonArr = JsonParser.parseString(jsonStr).getAsJsonObject().getAsJsonArray("data");
 
