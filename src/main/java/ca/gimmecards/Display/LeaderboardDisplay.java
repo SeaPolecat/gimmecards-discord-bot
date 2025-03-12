@@ -4,6 +4,7 @@ import ca.gimmecards.main.*;
 import ca.gimmecards.utils.FormatUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import java.util.ArrayList;
 import java.util.Collections;
 
 public class LeaderboardDisplay extends Display {
@@ -18,59 +19,56 @@ public class LeaderboardDisplay extends Display {
     public EmbedBuilder buildEmbed(User user, Server server) {
         UserInfo ui = getUserInfo();
         EmbedBuilder embed = new EmbedBuilder();
+        ArrayList<User> usersRanked = new ArrayList<>(User.users);
 
-        synchronized(User.usersRanked) {
-            Collections.sort(User.usersRanked, User.BY_LEVEL_DESCENDING);
-        }
+        Collections.sort(usersRanked, User.BY_LEVEL_DESCENDING);
 
         embed.setTitle(EmoteConsts.MASCOT + " World's Top Collectors " + EmoteConsts.MASCOT);
         embed.setColor(ColorConsts.BLUE);
-        embed.setDescription(findDescription(user, ui));
+        embed.setDescription(findDescription(user, ui, usersRanked));
         embed.setFooter("Page " + getPage() + " of " + getMaxPage(), ui.getUserIcon());
 
         return embed;
     }
 
-    private String findDescription(User user, UserInfo ui) {
+    private String findDescription(User user, UserInfo ui, ArrayList<User> usersRanked) {
         String desc = "";
         int rankNum = 1, loopEnd = NUM_ON_TOP;
         boolean foundSelfRankWithinTop = false;
         int selfRank = 0;
 
         for(int i = 0; i < loopEnd; i++) {
-            synchronized(User.usersRanked) {
-                try {
-                    User userRanked = User.usersRanked.get(i);
-                    String userName = Main.jda.getUserById(userRanked.getUserId()).getEffectiveName();
+            try {
+                User userRanked = usersRanked.get(i);
+                String userName = Main.jda.getUserById(userRanked.getUserId()).getEffectiveName();
 
-                    if(i == 0)
-                        desc += "🥇";
-                    else if(i == 1)
-                        desc += "🥈";
-                    else if(i == 2)
-                        desc += "🥉";
-                    else
-                        desc += "`#" + rankNum + "`";
-                        
-                    desc += " ┇ **" + userName + "**"
-                    + " ┇ *" + "Lvl. " + userRanked.getLevel() + "*"
-                    + " ┇ " + EmoteConsts.XP + " `" + FormatUtils.formatNumber(userRanked.getXP()) 
-                    + " / " + FormatUtils.formatNumber(userRanked.getMaxXP()) + "`\n";
+                if(i == 0)
+                    desc += "🥇";
+                else if(i == 1)
+                    desc += "🥈";
+                else if(i == 2)
+                    desc += "🥉";
+                else
+                    desc += "`#" + rankNum + "`";
+                    
+                desc += " ┇ **" + userName + "**"
+                + " ┇ *" + "Lvl. " + userRanked.getLevel() + "*"
+                + " ┇ " + EmoteConsts.XP + " `" + FormatUtils.formatNumber(userRanked.getXP()) 
+                + " / " + FormatUtils.formatNumber(userRanked.getMaxXP()) + "`\n";
 
-                    if(userRanked.getUserId().equals(user.getUserId())) {
-                        foundSelfRankWithinTop = true;
-                        selfRank = rankNum;
-                    }
-                    rankNum++;
-
-                } catch(NullPointerException e) {
-                    loopEnd++;
+                if(userRanked.getUserId().equals(user.getUserId())) {
+                    foundSelfRankWithinTop = true;
+                    selfRank = rankNum;
                 }
+                rankNum++;
+
+            } catch(NullPointerException e) {
+                loopEnd++;
             }
         }
         
         if(!foundSelfRankWithinTop)
-            selfRank = findSelfRankBelowTop(user);
+            selfRank = findSelfRankBelowTop(user, usersRanked);
 
         desc = "┅┅\n" + desc;
         desc = selfRank + "` in the world\n" + desc;
@@ -81,18 +79,16 @@ public class LeaderboardDisplay extends Display {
         return desc;
     }
 
-    private int findSelfRankBelowTop(User user) {
+    private int findSelfRankBelowTop(User user, ArrayList<User> usersRanked) {
         int i = 0;
 
-        while(i < User.usersRanked.size()) {
-            synchronized(User.usersRanked) {
-                User userRanked = User.usersRanked.get(i);
+        while(i < usersRanked.size()) {
+            User userRanked = usersRanked.get(i);
 
-                if(userRanked.getUserId().equals(user.getUserId()))
-                    break;
+            if(userRanked.getUserId().equals(user.getUserId()))
+                break;
 
-                i++;
-            }
+            i++;
         }
         return i + 1;
     }
