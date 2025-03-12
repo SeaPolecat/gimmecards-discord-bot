@@ -52,7 +52,15 @@ public class SetCodeConsts {
         Map.entry(44, "BRS"),
         Map.entry(45, "ASR"),
         Map.entry(46, "LOR"),
-        Map.entry(47, "SIT")
+        Map.entry(47, "SIT"),
+        Map.entry(48, "sv1"), // SVI
+        Map.entry(49, "sv2"), // PAL
+        Map.entry(50, "sv3"), // OBF
+        Map.entry(51, "sv4"), // PAR
+        Map.entry(52, "sv5"), // TEF
+        Map.entry(53, "sv6"), // TWM
+        Map.entry(54, "sv7"), // SCR
+        Map.entry(55, "sv8") // SSP
     );
 
     public static final Map<Integer, String> OLD_SET_CODES = Map.ofEntries(
