@@ -1,5 +1,6 @@
 package ca.gimmecards.main;
 import ca.gimmecards.cmds.*;
+import ca.gimmecards.consts.*;
 import ca.gimmecards.utils.*;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -12,7 +13,6 @@ import net.dv8tion.jda.api.entities.Activity;
 import org.discordbots.api.client.DiscordBotListAPI;
 import org.jasypt.util.text.BasicTextEncryptor;
 import javax.security.auth.login.LoginException;
-import io.github.cdimascio.dotenv.Dotenv;
 
 public class Main {
 
@@ -21,21 +21,20 @@ public class Main {
     public static JDA jda;
     public static DiscordBotListAPI dbl;
     public static BasicTextEncryptor encryptor = new BasicTextEncryptor();
-    public static Dotenv dotenv = Dotenv.load();
 
     //============================================[ MAIN METHOD ]======================================================================
 
     public static void main(String[] args) throws LoginException {
 
-        encryptor.setPassword(dotenv.get("ENCRYPTOR_PASSWORD"));
+        encryptor.setPassword(SecretConsts.ENCRYPTOR_PASSWORD);
 
         dbl = new DiscordBotListAPI.Builder()
-        .token(dotenv.get("DBL_TOKEN"))
+        .token(SecretConsts.DBL_TOKEN)
         .botId("814025499381727232")
         .build();
 
         jda = JDABuilder
-        .createDefault(dotenv.get("TEST_TOKEN"), // change this token accordingly
+        .createDefault(SecretConsts.TEST_TOKEN, // change this token accordingly
         GatewayIntent.MESSAGE_CONTENT, // comment this line out before releasing an update (the actual bot isn't allowed to have this)
         GatewayIntent.GUILD_MESSAGES,
         GatewayIntent.GUILD_MEMBERS,
