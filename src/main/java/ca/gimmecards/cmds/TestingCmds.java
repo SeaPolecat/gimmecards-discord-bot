@@ -147,6 +147,15 @@ public class TestingCmds {
         }
 
         try { DataUtils.saveServers(); } catch(Exception e) {}*/
+
+        /*for(User u : User.users) {
+            u.setUserId(Main.encryptor.encrypt(u.getUserId()));
+        }
+        for(Server s : Server.servers) {
+            s.setServerId(Main.encryptor.encrypt(s.getServerId()));
+        }
+        try { DataUtils.saveUsers(); } catch(Exception e) {}
+        try { DataUtils.saveServers(); } catch(Exception e) {}*/
         
         JDAUtils.sendMessage(event, ColorConsts.BLUE, "", "done testing!");
     }
