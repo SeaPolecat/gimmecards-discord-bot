@@ -1,4 +1,8 @@
 .env
+.DS_Store
+
+# don't track the target folder
+target/
 
 # Compiled class file
 *.class
