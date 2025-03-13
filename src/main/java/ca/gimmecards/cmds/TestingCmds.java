@@ -117,43 +117,10 @@ public class TestingCmds {
 
         for(int i = 0; i < OGsize; i++) {
             User.users.remove(0);
-        }
-        
-        for(int i = 0; i < User.users.size(); i++) {
-            User u = User.users.get(i);
-            User user = new User(
-                u.getUserIdUnencrypted(),
-                u.getGameColor(),
-                u.getCardCount(),
-                u.getLevel(),
-                u.getXP(),
-                u.getMaxXP(),
-                u.getTokens(),
-                u.getCredits(),
-                u.getStars(),
-                u.getKeys(),
-                u.getOpenEpoch(),
-                u.getVoteEpoch(),
-                u.getDailyEpoch(),
-                u.getRedeemEpoch(),
-                u.getMinigameEpoch(),
-                u.getMarketEpoch(),
-                u.getSortMethod(),
-                u.getIsSortIncreasing(),
-                u.getPinnedCard(),
-                u.getBadges(),
-                u.getPacks(),
-                u.getCardContainers(),
-                new LinkedList<Display>()
-            );
-            User.users.set(i, user);
-        }
-        for(User u : User.users) {
-            System.out.println(u.getDisplays());
-        }
+        }*/
 
         // sorting for binary search
-        Collections.sort(User.users);
+        /*Collections.sort(User.users);
 
         for(int i = 1; i < User.users.size(); i++) {
             User u = User.users.get(i);
@@ -164,13 +131,11 @@ public class TestingCmds {
                 System.out.println("found negative!");
         }
 
-        User.users.get(0).getCardContainers().clear();
-
         try { DataUtils.saveUsers(); } catch(Exception e) {}*/
 
         /* SERVERS =======================================================================*/
 
-        Collections.sort(Server.servers);
+        /*Collections.sort(Server.servers);
 
         for(int i = 1; i < Server.servers.size(); i++) {
             Server s = Server.servers.get(i);
@@ -181,7 +146,7 @@ public class TestingCmds {
                 System.out.println("found negative!");
         }
 
-        try { DataUtils.saveServers(); } catch(Exception e) {}
+        try { DataUtils.saveServers(); } catch(Exception e) {}*/
         
         JDAUtils.sendMessage(event, ColorConsts.BLUE, "", "done testing!");
     }
