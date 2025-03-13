@@ -73,7 +73,7 @@
                         <manifest>
                           <addClasspath>true</addClasspath>
                           <classpathPrefix>lib/</classpathPrefix>
-                          <mainClass>ca.gimmecards.Main.Main</mainClass>
+                          <mainClass>ca.gimmecards.main.Main</mainClass>
                         </manifest>
                       </archive>
                     </configuration>
