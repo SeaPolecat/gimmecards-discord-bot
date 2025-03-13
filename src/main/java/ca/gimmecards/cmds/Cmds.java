@@ -87,9 +87,9 @@ public class Cmds extends ListenerAdapter {
                 guild.updateCommands().addCommands(
 
                     //LOCK
-                    Commands.slash("qazxsw", "[REDACTED]"),
+                    Commands.slash("lockbot", "Locks Gimme Cards (developer-only command)"),
                     
-                    Commands.slash("plmnko", "[REDACTED]"),
+                    Commands.slash("unlockbot", "Unlocks Gimme Cards (developer-only command)"),
 
                     //PRIVACY
                     Commands.slash("deleteaccount", "Delete your Gimme Cards account (this action is irreversible!)"),
@@ -127,9 +127,7 @@ public class Cmds extends ListenerAdapter {
                     Commands.slash("changelog", "See the latest updates to the game"),
     
                     //LEADERBOARD
-                    Commands.slash("ranks", "See the top collectors in your current server"),
-    
-                    Commands.slash("leaderboard", "See the top collectors in the world"),
+                    Commands.slash("leaderboard", "See the top 25 collectors in the world"),
     
                     //BACKPACK
                     Commands.slash("backpack", "See your current level, items, and badges")
@@ -275,7 +273,7 @@ public class Cmds extends ListenerAdapter {
         event.deferReply().queue();
 
         //LOCK
-        if(event.getUser().getId().equals("454773340163538955") && event.getName().equals("plmnko")) {
+        if(event.getUser().getId().equals("454773340163538955") && event.getName().equals("unlockbot")) {
             isLocked = false;
             JDAUtils.sendMessage(event, ColorConsts.BLUE, "", "`Unlocked Gimme Cards.`");
         }
@@ -287,7 +285,7 @@ public class Cmds extends ListenerAdapter {
             return;
         }
 
-        if(event.getUser().getId().equals("454773340163538955") && event.getName().equals("qazxsw")) {
+        if(event.getUser().getId().equals("454773340163538955") && event.getName().equals("lockbot")) {
             isLocked = true;
             JDAUtils.sendMessage(event, ColorConsts.BLUE, "", "`Locked Gimme Cards.`");
         }
@@ -324,17 +322,11 @@ public class Cmds extends ListenerAdapter {
         if(event.getName().equals("badges")) {
             HelpCmds.viewBadges(event);
         }
-        /*if(event.getName().equals("premium")) {
-            HelpCmds.viewPremium(event);
-        }*/
         if(event.getName().equals("changelog")) {
             HelpCmds.viewChangelog(event);
         }
 
         //LEADERBOARD
-        /*if(event.getName().equals("ranks")) {
-            LeaderboardCmds.viewRanks(event);
-        }*/
         if(event.getName().equals("leaderboard")) {
             LeaderboardCmds.viewLeaderboard(event);
         }
@@ -589,9 +581,9 @@ public class Cmds extends ListenerAdapter {
         /*Main.jda.updateCommands().addCommands(
 
             //LOCK
-            Commands.slash("qazxsw", "[REDACTED]"),
+            Commands.slash("lockbot", "Locks Gimme Cards (developer-only command)"),
             
-            Commands.slash("plmnko", "[REDACTED]"),
+            Commands.slash("unlockbot", "Unlocks Gimme Cards (developer-only command)"),
 
             //PRIVACY
             Commands.slash("deleteaccount", "Delete your Gimme Cards account (this action is irreversible!)"),
@@ -629,9 +621,7 @@ public class Cmds extends ListenerAdapter {
             Commands.slash("changelog", "See the latest updates to the game"),
 
             //LEADERBOARD
-            Commands.slash("ranks", "See the top collectors in your current server"),
-
-            Commands.slash("leaderboard", "See the top collectors in the world"),
+            Commands.slash("leaderboard", "See the top 25 collectors in the world"),
 
             //BACKPACK
             Commands.slash("backpack", "See your current level, items, and badges")
