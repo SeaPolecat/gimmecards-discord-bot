@@ -4,7 +4,7 @@
 
 *Gimme Cards* is Discord chat bot that lets you collect virtual Pokémon cards on-the-go. You can choose from over ***100*** different packs to open, featuring additional cards from legacy, promo, and special expansions.
 
-<br>
+---
 
 ## 🔧 My Technical Work
 
@@ -12,15 +12,15 @@ I built this using Java and the [Java Discord API (JDA)](https://jda.wiki/introd
 
 User data is encrypted and stored in JSON files, then loaded into memory and cached in lists on startup. I implemented custom mergesort and binary search functions to efficiently manage user sessions and improve scalability.
 
-<br>
+---
 
 ## ❓ How to Use:
 
 1. Invite Gimme Cards to your Discord server by using the [following URL](https://discord.com/oauth2/authorize?client_id=814025499381727232&permissions=0&scope=bot%20applications.commands).
 
-2. In your Discord server, type the `/help` command to get started. It'll point you to some important resources.
+2. In your Discord server, type the <span style="color:darkorange">**/help**</span> command to get started. It'll point you to some important resources.
 
-<br>
+---
 
 ## 📚 Additional Resources
 
@@ -30,27 +30,27 @@ User data is encrypted and stored in JSON files, then loaded into memory and cac
 
 - [Top.gg Site](https://top.gg/bot/814025499381727232): Where you can vote for the bot to help it gain recognition and receive in-game rewards.
 
-<br>
+---
 
 ## 💡 Helpful Commands
 
 Here are a few commands to help you get started:
 
-- <span style="color:orange">`/redeem`</span>: Redeem a single ***token***, a currency used to open packs.
+- <span style="color:darkorange">**/redeem**</span> - Redeem a single ***token***, a currency used to open packs.
 
-- `/shop`: Visit the Pokémon packs shop.
+- <span style="color:darkorange">**/shop**</span> - Visit the Pokémon packs shop.
 
-- `/unlock (pack name)`: Unlock a pack from the shop using a ***key***, another currency.
+- <span style="color:darkorange">**/unlock (pack name)**</span> - Unlock a pack from the shop using a ***key***, another currency.
 
-- `/open (pack name)`: Open a pack using a ***token***.
+- <span style="color:darkorange">**/open (pack name)**</span> - Open a pack using a ***token***.
 
-- `/collection`: See your current card collection.
+- <span style="color:darkorange">**/collection**</span> - See your current card collection.
 
-- `/view (card #)`: Show the details of a card you own.
+- <span style="color:darkorange">**/view (card #)**</span> - Show the details of a card you own.
 
-- `/backpack`: See your current level, items, and badges.
+- <span style="color:darkorange">**/backpack**</span> - See your current level, items, and badges.
 
-<br>
+---
 
 ## 🌟 Visuals
 
