@@ -26,7 +26,7 @@ User data is encrypted and stored in JSON files, then loaded into memory and cac
 
 - [Gimme Cards Website](https://www.gimmecards.ca/): Features a full tutorial, with descriptions of every in-game command and upcoming features.
 
-- [Our Official Discord Server](): Get help from our staff and find real people to play, trade and learn from.
+- [Our Official Discord Server](https://discord.com/invite/wmVvK2cyzM): Get help from our staff and find real people to play, trade and learn from.
 
 - [Top.gg Site](https://top.gg/bot/814025499381727232): Where you can vote for the bot to help it gain recognition and receive in-game rewards.
 
@@ -36,7 +36,7 @@ User data is encrypted and stored in JSON files, then loaded into memory and cac
 
 Here are a few commands to help you get started:
 
-- `/redeem`: Redeem a single ***token***, a currency used to open packs.
+- <span style="color:orange">`/redeem`</span>: Redeem a single ***token***, a currency used to open packs.
 
 - `/shop`: Visit the Pokémon packs shop.
 
