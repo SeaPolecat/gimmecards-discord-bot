@@ -60,7 +60,13 @@ public class SetCodeConsts {
         Map.entry(52, "sv5"), // TEF
         Map.entry(53, "sv6"), // TWM
         Map.entry(54, "sv7"), // SCR
-        Map.entry(55, "sv8") // SSP
+        Map.entry(55, "sv8"), // SSP
+        Map.entry(56, "sv8pt5"), // PRE
+        Map.entry(57, "sv9"), // JTG
+        Map.entry(58, "sv10"), // DRI
+        Map.entry(59, "zsv10pt5"), // BLK
+        Map.entry(60, "rsv10pt5"), // WHT
+        Map.entry(61, "me1") // MEG
     );
 
     public static final Map<Integer, String> OLD_SET_CODES = Map.ofEntries(
@@ -130,6 +136,7 @@ public class SetCodeConsts {
         Map.entry(3, "HS"),
         Map.entry(4, "BLW"),
         Map.entry(5, "XY"),
-        Map.entry(6, "SW")
+        Map.entry(6, "SW"),
+        Map.entry(7, "SV")
     );
 }
