@@ -53,20 +53,21 @@ public class SetCodeConsts {
         Map.entry(45, "ASR"),
         Map.entry(46, "LOR"),
         Map.entry(47, "SIT"),
-        Map.entry(48, "sv1"), // SVI
-        Map.entry(49, "sv2"), // PAL
-        Map.entry(50, "sv3"), // OBF
-        Map.entry(51, "sv4"), // PAR
-        Map.entry(52, "sv5"), // TEF
-        Map.entry(53, "sv6"), // TWM
-        Map.entry(54, "sv7"), // SCR
-        Map.entry(55, "sv8"), // SSP
-        Map.entry(56, "sv8pt5"), // PRE
-        Map.entry(57, "sv9"), // JTG
-        Map.entry(58, "sv10"), // DRI
-        Map.entry(59, "zsv10pt5"), // BLK
-        Map.entry(60, "rsv10pt5"), // WHT
-        Map.entry(61, "me1") // MEG
+        Map.entry(48, "CRZ"),
+        Map.entry(49, "sv1"), // SVI
+        Map.entry(50, "sv2"), // PAL
+        Map.entry(51, "sv3"), // OBF
+        Map.entry(52, "sv4"), // PAR
+        Map.entry(53, "sv5"), // TEF
+        Map.entry(54, "sv6"), // TWM
+        Map.entry(55, "sv7"), // SCR
+        Map.entry(56, "sv8"), // SSP
+        Map.entry(57, "sv8pt5"), // PRE
+        Map.entry(58, "sv9"), // JTG
+        Map.entry(59, "sv10"), // DRI
+        Map.entry(60, "zsv10pt5"), // BLK
+        Map.entry(61, "rsv10pt5"), // WHT
+        Map.entry(62, "me1") // MEG
     );
 
     public static final Map<Integer, String> OLD_SET_CODES = Map.ofEntries(
@@ -140,3 +141,4 @@ public class SetCodeConsts {
         Map.entry(7, "SV")
     );
 }
+
