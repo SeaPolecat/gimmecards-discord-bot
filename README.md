@@ -37,18 +37,3 @@ Here are a few commands to help you get started:
 - `/view (card #)` - Show the details of a card you own.
 
 - `/backpack` - See your current level, items, and badges.
-
-<table>
-    <tr>
-        <td><img src="https://waynewang.netlify.app/images/gimmecards/gimmecards-backpack.png" width="500"></td>    
-        <td><img src="https://waynewang.netlify.app/images/gimmecards/gimmecards-collection.png" width="500"></td>
-    </tr>
-    <tr>
-        <td><img src="https://waynewang.netlify.app/images/gimmecards/gimmecards-open.png" width="500"></td>
-        <td><img src="https://waynewang.netlify.app/images/gimmecards/gimmecards-minigame.png" width="500"></td>
-    </tr>
-    <tr>
-        <td><img src="https://waynewang.netlify.app/images/gimmecards/gimmecards-market.png" width="500"></td>
-        <td><img src="https://waynewang.netlify.app/images/gimmecards/gimmecards-trade.png" width="500"></td>
-    </tr>
-</table>
