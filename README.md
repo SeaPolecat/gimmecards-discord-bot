@@ -1,14 +1,10 @@
 <img src="https://www.gimmecards.ca/images/logo2.png" style="width:400px">
 
-# Gimme Cards (Full-Stack Discord Bot in Java)
+# Gimme Cards
 
 *Gimme Cards* is Discord chat bot that lets you collect virtual Pokémon cards on-the-go. You can choose from over ***100*** different packs to open, featuring additional cards from legacy, promo, and special expansions.
 
-## My Technical Work
-
 I built this using Java and the [Java Discord API (JDA)](https://jda.wiki/introduction/jda/), with Maven for dependency management. It supports inventory tracking, rate limiting (for command cooldowns), and uses event-driven, modular command handlers.
-
-User data is encrypted and stored in JSON files, then loaded into memory and cached in lists on startup. I implemented custom mergesort and binary search functions to efficiently manage user sessions and improve scalability.
 
 ## How to Use:
 
@@ -41,10 +37,6 @@ Here are a few commands to help you get started:
 - `/view (card #)` - Show the details of a card you own.
 
 - `/backpack` - See your current level, items, and badges.
-
-## 🌟 Visuals
-
-Here are some visuals that capture the in-game experience:
 
 <table>
     <tr>
